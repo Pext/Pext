@@ -56,6 +56,8 @@ class ViewModel():
 
         passDir = expanduser("~") + "/.password-store/"
         for root, dirs, files in os.walk(passDir):
+            dirs.sort()
+            files.sort()
             for name in files:
                 if name[0] == ".":
                     continue
