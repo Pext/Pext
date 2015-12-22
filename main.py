@@ -30,6 +30,7 @@ class ViewModel():
         self.getPasswords()
         self.filteredPasswordList = self.passwordList
         self.listViewModelPasswordList = QStringListModel(self.filteredPasswordList)
+        self.listViewModelIndexMax = len(self.passwordList)
 
     def bindViews(self, searchInput, listView):
         self.searchInput = searchInput
@@ -62,6 +63,10 @@ class ViewModel():
                 self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
 
     def search(self):
+        currentIndex = QQmlProperty.read(self.listView, "currentIndex")
+        if currentIndex < 0:
+            currentIndex = 0
+
         self.filteredPasswordList = [];
         runningCommand = False
 
@@ -69,6 +74,9 @@ class ViewModel():
         for password in self.passwordList:
             if all(searchString in password.lower() for searchString in searchStrings):
                 self.filteredPasswordList.append(password)
+
+        self.listViewModelIndexMax = len(self.filteredPasswordList) - 1
+        QQmlProperty.write(self.listView, "maximumIndex", self.listViewModelIndexMax)
 
         for command in self.commandsText:
             if (searchStrings[0] in command):
@@ -81,11 +89,19 @@ class ViewModel():
                     self.filteredPasswordList.append(password)
 
         QQmlProperty.write(self.listView, "model", QStringListModel(self.filteredPasswordList))
+        if (currentIndex > self.listViewModelIndexMax):
+            QQmlProperty.write(self.listView, "currentIndex", self.listViewModelIndexMax)
+        else:
+            QQmlProperty.write(self.listView, "currentIndex", currentIndex)
 
     def select(self):
         if len(self.filteredPasswordList) == 0: return
 
-        chosenEntry = self.filteredPasswordList[0]
+        currentIndex = QQmlProperty.read(self.listView, "currentIndex")
+        if currentIndex == -1:
+            currentIndex = 0
+
+        chosenEntry = self.filteredPasswordList[currentIndex]
 
         if chosenEntry in self.commandsText:
             callCommand = ["pass"] + QQmlProperty.read(self.searchInput, "text").split(" ") + self.supportedCommands[chosenEntry.split(" ")[0]]
@@ -94,7 +110,7 @@ class ViewModel():
             QQmlProperty.write(self.searchInput, "text", "")
             return
 
-        exit(call(["pass", "-c", self.filteredPasswordList[0]]))
+        exit(call(["pass", "-c", chosenEntry]))
         
 class Window(QDialog):
     def __init__(self, parent=None):
@@ -103,7 +119,10 @@ class Window(QDialog):
         self.engine = QQmlApplicationEngine(self)
 
         self.vm = ViewModel()
-        self.engine.rootContext().setContextProperty("listViewModel", self.vm.listViewModelPasswordList)
+
+        context = self.engine.rootContext()
+        context.setContextProperty("listViewModel", self.vm.listViewModelPasswordList)
+        context.setContextProperty("listViewModelIndexMax", self.vm.listViewModelIndexMax)
 
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))
 

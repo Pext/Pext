@@ -15,7 +15,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.2
+import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.2
 import QtQuick.Window 2.1
@@ -28,6 +28,36 @@ ApplicationWindow {
     height: 185
 
     flags: Qt.FramelessWindowHint | Qt.Window
+
+    function moveUp() {
+        if (resultList.currentIndex > 0)
+            resultList.currentIndex = resultList.currentIndex - 1
+    }
+
+    function moveDown() {
+        if (resultList.currentIndex < resultList.maximumIndex)
+            resultList.currentIndex = resultList.currentIndex + 1
+    }
+
+    Shortcut {
+        sequence: "Up"
+        onActivated: moveUp()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+K"
+        onActivated: moveUp()
+    }
+
+    Shortcut {
+        sequence: "Down"
+        onActivated: moveDown()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+J"
+        onActivated: moveDown()
+    }
 
     ColumnLayout {
         anchors.fill: parent
@@ -48,12 +78,17 @@ ApplicationWindow {
             Layout.fillWidth: true
 
             ListView {
+                id: resultList
                 objectName: "resultList"
 
+                property int maximumIndex: listViewModelIndexMax
+
                 model: listViewModel
+
                 delegate: Text { 
                     text: display
                     font.pixelSize: 18
+                    color: resultList.currentIndex === index ? "red" : "steelblue"
                 }
 
                 Layout.fillHeight: true
