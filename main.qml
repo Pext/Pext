@@ -24,10 +24,8 @@ ApplicationWindow {
     id: applicationWindow
     title: 'PyPass'
     property int margin: 10
-    width: 500
+    width: Screen.width
     height: 185
-
-    x: (Screen.width - width) / 2
 
     flags: Qt.FramelessWindowHint | Qt.Window
 

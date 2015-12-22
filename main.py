@@ -18,7 +18,7 @@
 import sys
 import os
 from os.path import expanduser
-from subprocess import call
+from subprocess import call, check_output
 
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog
@@ -26,12 +26,29 @@ from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 class ViewModel():
     def __init__(self):
+        self.getCommands()
         self.getPasswords()
         self.filteredPasswordList = self.passwordList
         self.listViewModelPasswordList = QStringListModel(self.filteredPasswordList)
 
-    def bindListView(self, listView):
+    def bindViews(self, searchInput, listView):
+        self.searchInput = searchInput
         self.listView = listView
+
+    def getCommands(self):
+        self.commandsText = []
+
+        self.supportedCommands = {"generate": [], "rm": ["-f"], "mv": ["-f"], "cp": ["-f"]}
+
+        commandText = check_output(["pass", "--help"])
+        
+        for line in commandText.splitlines():
+            strippedLine = line.lstrip().decode("utf-8")
+            if strippedLine[:4] == "pass":
+                command = strippedLine[5:]
+                for supportedCommand in self.supportedCommands:
+                    if command.startswith(supportedCommand):
+                        self.commandsText.append(command)
 
     def getPasswords(self):
         self.passwordList = []
@@ -44,17 +61,38 @@ class ViewModel():
 
                 self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
 
-    def search(self, text):
+    def search(self):
         self.filteredPasswordList = [];
-        searchStrings = text.lower().split(" ")
+        runningCommand = False
+
+        searchStrings = QQmlProperty.read(self.searchInput, "text").lower().split(" ")
         for password in self.passwordList:
             if all(searchString in password.lower() for searchString in searchStrings):
                 self.filteredPasswordList.append(password)
+
+        for command in self.commandsText:
+            if (searchStrings[0] in command):
+                runningCommand = True
+                self.filteredPasswordList.append(command)
+
+        if runningCommand:
+            for password in self.passwordList:
+                if(all(searchString in password.lower() for searchString in searchStrings[1:])):
+                    self.filteredPasswordList.append(password)
 
         QQmlProperty.write(self.listView, "model", QStringListModel(self.filteredPasswordList))
 
     def select(self):
         if len(self.filteredPasswordList) == 0: return
+
+        chosenEntry = self.filteredPasswordList[0]
+
+        if chosenEntry in self.commandsText:
+            callCommand = ["pass"] + QQmlProperty.read(self.searchInput, "text").split(" ") + self.supportedCommands[chosenEntry.split(" ")[0]]
+            call(callCommand)
+            self.getPasswords()
+            QQmlProperty.write(self.searchInput, "text", "")
+            return
 
         exit(call(["pass", "-c", self.filteredPasswordList[0]]))
         
@@ -74,9 +112,9 @@ class Window(QDialog):
         searchInput = self.window.findChild(QObject, "searchInput")
         resultList = self.window.findChild(QObject, "resultList")
 
-        self.vm.bindListView(resultList)
+        self.vm.bindViews(searchInput, resultList)
 
-        searchInput.textChanged.connect(lambda: self.vm.search(QQmlProperty.read(searchInput, "text")))
+        searchInput.textChanged.connect(self.vm.search)
         searchInput.accepted.connect(self.vm.select)
 
     def show(self):
