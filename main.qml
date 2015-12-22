@@ -31,12 +31,12 @@ ApplicationWindow {
 
     function moveUp() {
         if (resultList.currentIndex > 0)
-            resultList.currentIndex = resultList.currentIndex - 1
+            resultList.currentIndex -= 1
     }
 
     function moveDown() {
         if (resultList.currentIndex < resultList.maximumIndex)
-            resultList.currentIndex = resultList.currentIndex + 1
+            resultList.currentIndex += 1
     }
 
     Shortcut {

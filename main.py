@@ -30,7 +30,7 @@ class ViewModel():
         self.getPasswords()
         self.filteredPasswordList = self.passwordList
         self.listViewModelPasswordList = QStringListModel(self.filteredPasswordList)
-        self.listViewModelIndexMax = len(self.passwordList)
+        self.listViewModelIndexMax = len(self.passwordList) - 1
 
     def bindViews(self, searchInput, listView):
         self.searchInput = searchInput
@@ -64,11 +64,11 @@ class ViewModel():
 
     def search(self):
         currentIndex = QQmlProperty.read(self.listView, "currentIndex")
-        if currentIndex < 0:
+        if currentIndex == -1:
             currentIndex = 0
 
         self.filteredPasswordList = [];
-        runningCommand = False
+        commandList = []
 
         searchStrings = QQmlProperty.read(self.searchInput, "text").lower().split(" ")
         for password in self.passwordList:
@@ -80,13 +80,15 @@ class ViewModel():
 
         for command in self.commandsText:
             if (searchStrings[0] in command):
-                runningCommand = True
-                self.filteredPasswordList.append(command)
+                commandList.append(command)
 
-        if runningCommand:
+        if len(self.filteredPasswordList) == 0 and len(commandList) > 0:
+            self.filteredPasswordList = commandList
             for password in self.passwordList:
                 if(all(searchString in password.lower() for searchString in searchStrings[1:])):
                     self.filteredPasswordList.append(password)
+        else:
+            self.filteredPasswordList += commandList
 
         QQmlProperty.write(self.listView, "model", QStringListModel(self.filteredPasswordList))
         if (currentIndex > self.listViewModelIndexMax):
