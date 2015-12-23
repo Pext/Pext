@@ -19,11 +19,11 @@ import sys
 import os
 import time
 from os.path import expanduser
-from subprocess import call, check_output, CalledProcessError
+from subprocess import call, check_output, Popen, CalledProcessError, PIPE
 from threading import Timer
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog, QErrorMessage
+from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 class ViewModel():
@@ -45,17 +45,13 @@ class ViewModel():
     def stop(self):
         self.clearOldErrorUpdateTimer.cancel()
 
-    def runCommand(self, command):
-        try:
-            return check_output(command)
-        except CalledProcessError as e:
-            output = ": " + e.output.decode("utf-8")
-            if output == ": ":
-                output = ""
-
-            errorMessage = "Error code {} running '{}'{}. More info may be logged to the console.".format(str(e.returncode), " ".join(e.cmd), output)
-
-            QQmlProperty.write(self.errorMessage, "text", errorMessage)
+    def runCommand(self, command, closeWhenDone=False):
+        proc = Popen(command, stdout=PIPE, stderr=PIPE)
+        output, error = proc.communicate()
+        if (proc.returncode == 0):
+            return output
+        else:
+            QQmlProperty.write(self.errorMessage, "text", error.decode("utf-8").rstrip() if error else "Error code {} running '{}'. More info may be logged to the console".format(str(errorCode), " ".join(command)))
             QQmlProperty.write(self.errorMessage, "lineHeight", 1)
 
             self.errorUpdateTime = time.time()
@@ -77,6 +73,8 @@ class ViewModel():
 
         self.supportedCommands = {"generate": [], "rm": ["-f"], "mv": ["-f"], "cp": ["-f"]}
 
+        # We will crash here if pass is not installed.
+        # TODO: Find a nice way to notify the user they need to install pass
         commandText = check_output(["pass", "--help"])
         
         for line in commandText.splitlines():
@@ -151,8 +149,14 @@ class ViewModel():
             QQmlProperty.write(self.searchInput, "text", "")
             return
 
-        if self.runCommand(["pass", "-c", chosenEntry]) != None:
-            exit()
+        # pass forks itself to sleep for 45 seconds before clearing the 
+        # clipboard, which means we can't use self.runCommand here, or we 
+        # just plain lock up.
+        # TODO: Find a way to check for issues copying the password to the 
+        # clipboard. This could fail for example if the GPG key used for 
+        # decrypting is not available, among other reasons.
+        self.stop()
+        exit(call(["pass", "-c", chosenEntry]))
         
 class Window(QDialog):
     def __init__(self, vm, parent=None):
