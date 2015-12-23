@@ -93,7 +93,7 @@ class ViewModel():
             dirs.sort()
             files.sort()
             for name in files:
-                if name[0] == ".":
+                if name[-4:] != ".gpg":
                     continue
 
                 self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
