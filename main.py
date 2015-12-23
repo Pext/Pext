@@ -17,11 +17,13 @@
 
 import sys
 import os
+import time
 from os.path import expanduser
-from subprocess import call, check_output
+from subprocess import call, check_output, CalledProcessError
+from threading import Timer
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QErrorMessage
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 class ViewModel():
@@ -32,9 +34,43 @@ class ViewModel():
         self.listViewModelPasswordList = QStringListModel(self.filteredPasswordList)
         self.listViewModelIndexMax = len(self.passwordList) - 1
 
-    def bindViews(self, searchInput, listView):
+    def bindViews(self, searchInput, listView, errorMessage):
         self.searchInput = searchInput
         self.listView = listView
+        self.errorMessage = errorMessage
+
+        self.errorUpdateTime = time.time()
+        self.clearOldError()
+
+    def stop(self):
+        self.clearOldErrorUpdateTimer.cancel()
+
+    def runCommand(self, command):
+        try:
+            return check_output(command)
+        except CalledProcessError as e:
+            output = ": " + e.output.decode("utf-8")
+            if output == ": ":
+                output = ""
+
+            errorMessage = "Error code {} running '{}'{}. More info may be logged to the console.".format(str(e.returncode), " ".join(e.cmd), output)
+
+            QQmlProperty.write(self.errorMessage, "text", errorMessage)
+            QQmlProperty.write(self.errorMessage, "lineHeight", 1)
+
+            self.errorUpdateTime = time.time()
+
+            return None
+
+    def clearOldError(self):
+        if time.time() - self.errorUpdateTime > 5:
+            QQmlProperty.write(self.errorMessage, "text", "")
+
+        if QQmlProperty.read(self.errorMessage, "text") == "":
+            QQmlProperty.write(self.errorMessage, "lineHeight", 0)
+
+        self.clearOldErrorUpdateTimer = Timer(1, self.clearOldError)
+        self.clearOldErrorUpdateTimer.start()
 
     def getCommands(self):
         self.commandsText = []
@@ -109,20 +145,22 @@ class ViewModel():
 
         if chosenEntry in self.commandsText:
             callCommand = ["pass"] + QQmlProperty.read(self.searchInput, "text").split(" ") + self.supportedCommands[chosenEntry.split(" ")[0]]
-            call(callCommand)
+            self.runCommand(callCommand)
+
             self.getPasswords()
             QQmlProperty.write(self.searchInput, "text", "")
             return
 
-        exit(call(["pass", "-c", chosenEntry]))
+        if self.runCommand(["pass", "-c", chosenEntry]) != None:
+            exit()
         
 class Window(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, vm, parent=None):
         super().__init__(parent)
 
         self.engine = QQmlApplicationEngine(self)
 
-        self.vm = ViewModel()
+        self.vm = vm
 
         context = self.engine.rootContext()
         context.setContextProperty("listViewModel", self.vm.listViewModelPasswordList)
@@ -134,8 +172,9 @@ class Window(QDialog):
 
         searchInput = self.window.findChild(QObject, "searchInput")
         resultList = self.window.findChild(QObject, "resultList")
+        errorMessage = self.window.findChild(QObject, "errorMessage")
 
-        self.vm.bindViews(searchInput, resultList)
+        self.vm.bindViews(searchInput, resultList, errorMessage)
 
         searchInput.textChanged.connect(self.vm.search)
         searchInput.accepted.connect(self.vm.select)
@@ -144,8 +183,10 @@ class Window(QDialog):
         self.window.show()
 
 if __name__ == "__main__":
+    vm = ViewModel()
     app = QApplication(sys.argv)
-    w = Window()
+    app.aboutToQuit.connect(vm.stop)
+    w = Window(vm)
     w.show()
     sys.exit(app.exec_())
 

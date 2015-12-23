@@ -16,16 +16,16 @@
 */
 
 import QtQuick 2.5
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.2
-import QtQuick.Window 2.1
+import QtQuick.Controls 1.0
+import QtQuick.Layouts 1.0
+import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
     title: 'PyPass'
     property int margin: 10
     width: Screen.width
-    height: 185
+    height: 195
 
     flags: Qt.FramelessWindowHint | Qt.Window
 
@@ -94,6 +94,10 @@ ApplicationWindow {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
+        }
+        Text {
+            objectName: "errorMessage"
+            color: "black"
         }
     }
 }
