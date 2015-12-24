@@ -30,14 +30,18 @@ class ViewModel():
     def __init__(self):
         self.getCommands()
         self.getPasswords()
-        self.filteredPasswordList = self.passwordList
-        self.listViewModelPasswordList = QStringListModel(self.filteredPasswordList)
-        self.listViewModelIndexMax = len(self.passwordList) - 1
 
-    def bindViews(self, searchInput, listView, errorMessage):
+        # To be initialized after binding
+        self.listViewModelPasswordList = QStringListModel()
+        self.listViewModelIndexMax = -1
+
+    def bindViews(self, context, searchInput, listView, errorMessage):
+        self.context = context
         self.searchInput = searchInput
         self.listView = listView
         self.errorMessage = errorMessage
+
+        self.search()
 
         self.errorUpdateTime = time.time()
         self.clearOldError()
@@ -112,7 +116,7 @@ class ViewModel():
                 self.filteredPasswordList.append(password)
 
         self.listViewModelIndexMax = len(self.filteredPasswordList) - 1
-        QQmlProperty.write(self.listView, "maximumIndex", self.listViewModelIndexMax)
+        self.context.setContextProperty("listViewModelIndexMax", self.listViewModelIndexMax)
 
         for command in self.commandsText:
             if (searchStrings[0] in command):
@@ -126,7 +130,9 @@ class ViewModel():
         else:
             self.filteredPasswordList += commandList
 
-        QQmlProperty.write(self.listView, "model", QStringListModel(self.filteredPasswordList))
+        self.listViewModelPasswordList = QStringListModel(self.filteredPasswordList)
+        self.context.setContextProperty("listViewModel", self.listViewModelPasswordList)
+
         if (currentIndex > self.listViewModelIndexMax):
             QQmlProperty.write(self.listView, "currentIndex", self.listViewModelIndexMax)
         else:
@@ -178,7 +184,7 @@ class Window(QDialog):
         resultList = self.window.findChild(QObject, "resultList")
         errorMessage = self.window.findChild(QObject, "errorMessage")
 
-        self.vm.bindViews(searchInput, resultList, errorMessage)
+        self.vm.bindViews(context, searchInput, resultList, errorMessage)
 
         searchInput.textChanged.connect(self.vm.search)
         searchInput.accepted.connect(self.vm.select)
