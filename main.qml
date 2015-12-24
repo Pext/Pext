@@ -88,6 +88,7 @@ ApplicationWindow {
                 delegate: Text { 
                     text: display
                     font.pixelSize: 18
+                    font.italic: text.indexOf(' ') >= 0 ? true : false
                     color: resultList.currentIndex === index ? "red" : "steelblue"
                 }
 
