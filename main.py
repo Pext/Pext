@@ -33,8 +33,8 @@ class ViewModel():
 
         # Temporary values to allow binding. These will be properly set when 
         # possible and relevant.
-        self.filteredPasswordList = []
-        self.resultListModelPasswordList = QStringListModel()
+        self.filteredList = []
+        self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
         self.errorMessageModelText = ""
         self.errorUpdateTime = time.time()
@@ -99,37 +99,41 @@ class ViewModel():
                 self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
 
     def search(self):
+        if self.passwordEntryContent != None:
+            self.searchChosenEntry()
+            return
+
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if currentIndex == -1 or len(self.filteredPasswordList) < currentIndex + 1:
+        if currentIndex == -1 or len(self.filteredList) < currentIndex + 1:
             currentItem = None
         else:
-            currentItem = self.filteredPasswordList[currentIndex]
+            currentItem = self.filteredList[currentIndex]
 
-        self.filteredPasswordList = [];
+        self.filteredList = [];
         commandList = []
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
         for password in self.passwordList:
             if all(searchString in password.lower() for searchString in searchStrings):
-                self.filteredPasswordList.append(password)
+                self.filteredList.append(password)
 
-        self.resultListModelMaxIndex = len(self.filteredPasswordList) - 1
+        self.resultListModelMaxIndex = len(self.filteredList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
 
         for command in self.commandsText:
             if searchStrings[0] in command:
                 commandList.append(command)
 
-        if len(self.filteredPasswordList) == 0 and len(commandList) > 0:
-            self.filteredPasswordList = commandList
+        if len(self.filteredList) == 0 and len(commandList) > 0:
+            self.filteredList = commandList
             for password in self.passwordList:
                 if all(searchString in password.lower() for searchString in searchStrings[1:]):
-                    self.filteredPasswordList.append(password)
+                    self.filteredList.append(password)
         else:
-            self.filteredPasswordList += commandList
+            self.filteredList += commandList
 
-        self.resultListModelPasswordList = QStringListModel(self.filteredPasswordList)
-        self.context.setContextProperty("resultListModel", self.resultListModelPasswordList)
+        self.resultListModelList = QStringListModel(self.filteredList)
+        self.context.setContextProperty("resultListModel", self.resultListModelList)
 
         if self.resultListModelMaxIndex == -1:
             currentIndex = -1
@@ -137,9 +141,31 @@ class ViewModel():
             currentIndex = 0
         else:
             try:
-                currentIndex = self.filteredPasswordList.index(currentItem)
+                currentIndex = self.filteredList.index(currentItem)
             except ValueError:
                 currentIndex = 0
+
+        QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
+
+    def searchChosenEntry(self):
+        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+        currentItem = self.passwordEntryContent[currentIndex]
+
+        searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
+
+        self.filteredList = []
+
+        for entry in self.passwordEntryContent:
+            if any(searchString in entry.lower() for searchString in searchStrings):
+                self.filteredList.append(entry)
+
+        try:
+           currentIndex = self.filteredList.index(currentItem)
+        except ValueError:
+           currentIndex = 0
+
+        self.resultListModelList = QStringListModel(self.filteredList)
+        self.context.setContextProperty("resultListModel", self.resultListModelList)
 
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
@@ -148,13 +174,13 @@ class ViewModel():
             self.selectField()
             return
 
-        if len(self.filteredPasswordList) == 0: return
+        if len(self.filteredList) == 0: return
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if currentIndex == -1:
             currentIndex = 0
 
-        self.chosenEntry = self.filteredPasswordList[currentIndex]
+        self.chosenEntry = self.filteredList[currentIndex]
 
         if self.chosenEntry in self.commandsText:
             callCommand = ["pass"] + QQmlProperty.read(self.searchInputModel, "text").split(" ") + self.supportedCommands[self.chosenEntry.split(" ")[0]]
@@ -178,14 +204,16 @@ class ViewModel():
         # If the password entry has more than one line, fill the result list 
         # with all lines, so the user can choose the line they want to copy to 
         # the clipboard
-        self.context.setContextProperty("resultListModel", QStringListModel(self.passwordEntryContent))
+        self.resultListModelList = QStringListModel(self.passwordEntryContent)
+        self.context.setContextProperty("resultListModel", self.resultListModelList)
         self.resultListModelMaxIndex = len(self.passwordEntryContent) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
         self.context.setContextProperty("resultListModelMakeItalic", False)
         QQmlProperty.write(self.resultListModel, "currentIndex", 0)
+        QQmlProperty.write(self.searchInputModel, "text", "")
 
     def selectField(self):
-        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+        currentIndex = self.passwordEntryContent.index(self.filteredList[QQmlProperty.read(self.resultListModel, "currentIndex")])
         if currentIndex == 0:
             exit(call(["pass", "-c", self.chosenEntry]))
 
@@ -211,7 +239,7 @@ class Window(QDialog):
         self.vm = ViewModel()
 
         context = self.engine.rootContext()
-        context.setContextProperty("resultListModel", self.vm.resultListModelPasswordList)
+        context.setContextProperty("resultListModel", self.vm.resultListModelList)
         context.setContextProperty("resultListModelMaxIndex", self.vm.resultListModelMaxIndex)
         context.setContextProperty("resultListModelMakeItalic", True)
         context.setContextProperty("errorMessageModelText", self.vm.errorMessageModelText)
