@@ -1,6 +1,6 @@
 ## PyPass
 PyPass is a Python-based front-end for [pass](http://www.passwordstore.org/), 
-built using QML.
+built using QML, heavily inspired by [GoPass](https://github.com/cortex/gopass).
 
 ![Screencast](screencast.gif)
 *Note: The background image is the default KDE Plasma 5.4 wallpaper and not 
