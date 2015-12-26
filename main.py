@@ -31,46 +31,42 @@ class ViewModel():
         self.getCommands()
         self.getPasswords()
 
-        # To be initialized after binding
-        self.listViewModelPasswordList = QStringListModel()
-        self.listViewModelIndexMax = -1
+        # Temporary values to allow binding. These will be properly set when 
+        # possible and relevant.
+        self.filteredPasswordList = []
+        self.resultListModelPasswordList = QStringListModel()
+        self.resultListModelMaxIndex = -1
+        self.errorMessageModelText = ""
+        self.errorUpdateTime = time.time()
+        self.chosenEntry = None
+        self.passwordEntryContent = None
 
-    def bindViews(self, context, searchInput, listView, errorMessage):
+    def bindContext(self, context, searchInputModel, resultListModel):
         self.context = context
-        self.searchInput = searchInput
-        self.listView = listView
-        self.errorMessage = errorMessage
+        self.searchInputModel = searchInputModel
+        self.resultListModel = resultListModel
 
         self.search()
 
-        self.errorUpdateTime = time.time()
-        self.clearOldError()
-
-    def stop(self):
-        self.clearOldErrorUpdateTimer.cancel()
-
-    def runCommand(self, command, closeWhenDone=False):
+    def runCommand(self, command):
         proc = Popen(command, stdout=PIPE, stderr=PIPE)
         output, error = proc.communicate()
-        if (proc.returncode == 0):
+        if proc.returncode == 0:
             return output
         else:
-            QQmlProperty.write(self.errorMessage, "text", error.decode("utf-8").rstrip() if error else "Error code {} running '{}'. More info may be logged to the console".format(str(errorCode), " ".join(command)))
-            QQmlProperty.write(self.errorMessage, "lineHeight", 1)
+            self.errorMessageModelText = error.decode("utf-8").rstrip() if error else "Error code {} running '{}'. More info may be logged to the console".format(str(errorCode), " ".join(command))
+            self.context.setContextProperty("errorMessageModelText", self.errorMessageModelText)
+            self.context.setContextProperty("errorMessageModelLineHeight", 1)
 
             self.errorUpdateTime = time.time()
 
             return None
 
     def clearOldError(self):
-        if time.time() - self.errorUpdateTime > 5:
-            QQmlProperty.write(self.errorMessage, "text", "")
-
-        if QQmlProperty.read(self.errorMessage, "text") == "":
-            QQmlProperty.write(self.errorMessage, "lineHeight", 0)
-
-        self.clearOldErrorUpdateTimer = Timer(1, self.clearOldError)
-        self.clearOldErrorUpdateTimer.start()
+        if time.time() - self.errorUpdateTime > 3:
+            self.errorMessageModelText = ""
+            self.context.setContextProperty("errorMessageModelText", self.errorMessageModelText)
+            self.context.setContextProperty("errorMessageModelLineHeight", 0)
 
     def getCommands(self):
         self.commandsText = []
@@ -103,100 +99,145 @@ class ViewModel():
                 self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
 
     def search(self):
-        currentIndex = QQmlProperty.read(self.listView, "currentIndex")
-        if currentIndex == -1:
-            currentIndex = 0
+        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+        if currentIndex == -1 or len(self.filteredPasswordList) < currentIndex + 1:
+            currentItem = None
+        else:
+            currentItem = self.filteredPasswordList[currentIndex]
 
         self.filteredPasswordList = [];
         commandList = []
 
-        searchStrings = QQmlProperty.read(self.searchInput, "text").lower().split(" ")
+        searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
         for password in self.passwordList:
             if all(searchString in password.lower() for searchString in searchStrings):
                 self.filteredPasswordList.append(password)
 
-        self.listViewModelIndexMax = len(self.filteredPasswordList) - 1
-        self.context.setContextProperty("listViewModelIndexMax", self.listViewModelIndexMax)
+        self.resultListModelMaxIndex = len(self.filteredPasswordList) - 1
+        self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
 
         for command in self.commandsText:
-            if (searchStrings[0] in command):
+            if searchStrings[0] in command:
                 commandList.append(command)
 
         if len(self.filteredPasswordList) == 0 and len(commandList) > 0:
             self.filteredPasswordList = commandList
             for password in self.passwordList:
-                if(all(searchString in password.lower() for searchString in searchStrings[1:])):
+                if all(searchString in password.lower() for searchString in searchStrings[1:]):
                     self.filteredPasswordList.append(password)
         else:
             self.filteredPasswordList += commandList
 
-        self.listViewModelPasswordList = QStringListModel(self.filteredPasswordList)
-        self.context.setContextProperty("listViewModel", self.listViewModelPasswordList)
+        self.resultListModelPasswordList = QStringListModel(self.filteredPasswordList)
+        self.context.setContextProperty("resultListModel", self.resultListModelPasswordList)
 
-        if (currentIndex > self.listViewModelIndexMax):
-            QQmlProperty.write(self.listView, "currentIndex", self.listViewModelIndexMax)
+        if self.resultListModelMaxIndex == -1:
+            currentIndex = -1
+        elif currentItem == None:
+            currentIndex = 0
         else:
-            QQmlProperty.write(self.listView, "currentIndex", currentIndex)
+            try:
+                currentIndex = self.filteredPasswordList.index(currentItem)
+            except ValueError:
+                currentIndex = 0
+
+        QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def select(self):
+        if self.passwordEntryContent != None:
+            self.selectField()
+            return
+
         if len(self.filteredPasswordList) == 0: return
 
-        currentIndex = QQmlProperty.read(self.listView, "currentIndex")
+        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if currentIndex == -1:
             currentIndex = 0
 
-        chosenEntry = self.filteredPasswordList[currentIndex]
+        self.chosenEntry = self.filteredPasswordList[currentIndex]
 
-        if chosenEntry in self.commandsText:
-            callCommand = ["pass"] + QQmlProperty.read(self.searchInput, "text").split(" ") + self.supportedCommands[chosenEntry.split(" ")[0]]
-            self.runCommand(callCommand)
+        if self.chosenEntry in self.commandsText:
+            callCommand = ["pass"] + QQmlProperty.read(self.searchInputModel, "text").split(" ") + self.supportedCommands[self.chosenEntry.split(" ")[0]]
+            result = self.runCommand(callCommand)
 
-            self.getPasswords()
-            QQmlProperty.write(self.searchInput, "text", "")
+            if result != None:
+                self.getPasswords()
+                QQmlProperty.write(self.searchInputModel, "text", "")
+
             return
 
-        # pass forks itself to sleep for 45 seconds before clearing the 
-        # clipboard, which means we can't use self.runCommand here, or we 
-        # just plain lock up.
-        # TODO: Find a way to check for issues copying the password to the 
-        # clipboard. This could fail for example if the GPG key used for 
-        # decrypting is not available, among other reasons.
-        self.stop()
-        exit(call(["pass", "-c", chosenEntry]))
+        self.passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).decode("utf-8").rstrip().split("\n")
+
+        if len(self.passwordEntryContent) == 1:
+            exit(call(["pass", "-c", self.chosenEntry]))
+
+        # The first line is most likely the password. Do not show this on the 
+        # screen
+        self.passwordEntryContent[0] = "********"
+
+        # If the password entry has more than one line, fill the result list 
+        # with all lines, so the user can choose the line they want to copy to 
+        # the clipboard
+        self.context.setContextProperty("resultListModel", QStringListModel(self.passwordEntryContent))
+        self.resultListModelMaxIndex = len(self.passwordEntryContent) - 1
+        self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
+        self.context.setContextProperty("resultListModelMakeItalic", False)
+        QQmlProperty.write(self.resultListModel, "currentIndex", 0)
+
+    def selectField(self):
+        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+        if currentIndex == 0:
+            exit(call(["pass", "-c", self.chosenEntry]))
+
+        # Only copy the final part. For example, if the entry is named 
+        # "URL: https://example.org/", only copy "https://example.org/" to the 
+        # clipboard
+        copyStringParts = self.passwordEntryContent[currentIndex].split(": ", 1)
+
+        copyString = copyStringParts[1] if len(copyStringParts) > 1 else copyStringParts[0]
+
+        # Use the same clipboard that password store is set to use (untested)
+        selection = os.getenv("PASSWORD_STORE_X_SELECTION", "clipboard")
+
+        proc = Popen(["xclip", "-selection", selection], stdin=PIPE)
+        exit(proc.communicate(copyString.encode("ascii")))
         
 class Window(QDialog):
-    def __init__(self, vm, parent=None):
+    def __init__(self, parent=None):
         super().__init__(parent)
 
         self.engine = QQmlApplicationEngine(self)
 
-        self.vm = vm
+        self.vm = ViewModel()
 
         context = self.engine.rootContext()
-        context.setContextProperty("listViewModel", self.vm.listViewModelPasswordList)
-        context.setContextProperty("listViewModelIndexMax", self.vm.listViewModelIndexMax)
+        context.setContextProperty("resultListModel", self.vm.resultListModelPasswordList)
+        context.setContextProperty("resultListModelMaxIndex", self.vm.resultListModelMaxIndex)
+        context.setContextProperty("resultListModelMakeItalic", True)
+        context.setContextProperty("errorMessageModelText", self.vm.errorMessageModelText)
+        context.setContextProperty("errorMessageModelLineHeight", 0)
 
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))
 
         self.window = self.engine.rootObjects()[0]
 
-        searchInput = self.window.findChild(QObject, "searchInput")
-        resultList = self.window.findChild(QObject, "resultList")
-        errorMessage = self.window.findChild(QObject, "errorMessage")
+        searchInputModel = self.window.findChild(QObject, "searchInputModel")
+        resultListModel = self.window.findChild(QObject, "resultListModel")
+        clearErrorMessageTimer = self.window.findChild(QObject, "clearErrorMessageTimer")
 
-        self.vm.bindViews(context, searchInput, resultList, errorMessage)
+        self.vm.bindContext(context, searchInputModel, resultListModel)
 
-        searchInput.textChanged.connect(self.vm.search)
-        searchInput.accepted.connect(self.vm.select)
+        searchInputModel.textChanged.connect(self.vm.search)
+        searchInputModel.accepted.connect(self.vm.select)
+
+        clearErrorMessageTimer.triggered.connect(self.vm.clearOldError)
 
     def show(self):
         self.window.show()
 
 if __name__ == "__main__":
-    vm = ViewModel()
     app = QApplication(sys.argv)
-    app.aboutToQuit.connect(vm.stop)
-    w = Window(vm)
+    w = Window()
     w.show()
     sys.exit(app.exec_())
 

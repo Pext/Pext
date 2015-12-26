@@ -25,9 +25,16 @@ ApplicationWindow {
     title: 'PyPass'
     property int margin: 10
     width: Screen.width
-    height: 195
+    height: searchInput.height + resultList.contentHeight + errorMessage.height + 3 * margin
+    maximumHeight: 0.5 * Screen.height
 
     flags: Qt.FramelessWindowHint | Qt.Window
+
+    Behavior on height {
+        PropertyAnimation {
+            duration: 50
+        }
+    }
 
     function moveUp() {
         if (resultList.currentIndex > 0)
@@ -65,7 +72,8 @@ ApplicationWindow {
         RowLayout {
             Layout.fillWidth: true
             TextField {
-                objectName: "searchInput"
+                id: searchInput
+                objectName: "searchInputModel"
 
                 font.pixelSize: 24
                 focus: true
@@ -79,18 +87,20 @@ ApplicationWindow {
 
             ListView {
                 id: resultList
-                objectName: "resultList"
+                objectName: "resultListModel"
 
-                property int maximumIndex: listViewModelIndexMax
+                property int maximumIndex: resultListModelMaxIndex
+                property bool makeItalic: resultListModelMakeItalic
 
-                model: listViewModel
+                model: resultListModel
 
                 delegate: Text { 
                     text: display
                     textFormat: Text.PlainText
                     font.pixelSize: 18
-                    font.italic: text.indexOf(' ') >= 0 ? true : false
+                    font.italic: resultList.makeItalic && text.indexOf(' ') >= 0 ? true : false
                     color: resultList.currentIndex === index ? "red" : "steelblue"
+                    Behavior on color { PropertyAnimation {} }
                 }
 
                 Layout.fillHeight: true
@@ -98,8 +108,21 @@ ApplicationWindow {
             }
         }
         Text {
-            objectName: "errorMessage"
-            color: "black"
+            id: errorMessage
+
+            text: errorMessageModelText
+
+            Timer {
+                objectName: "clearErrorMessageTimer"
+
+                interval: 1000;
+                running: true;
+                repeat: true;
+            }
+
+            lineHeight: errorMessageModelLineHeight
+
+            color: "red"
         }
     }
 }
