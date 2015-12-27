@@ -148,8 +148,11 @@ class ViewModel():
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def searchChosenEntry(self):
-        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        currentItem = self.filteredList[currentIndex]
+        if len(self.filteredList) == 0:
+            currentItem = None
+        else:
+            currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+            currentItem = self.filteredList[currentIndex]
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
 
@@ -174,7 +177,8 @@ class ViewModel():
             self.selectField()
             return
 
-        if len(self.filteredList) == 0: return
+        if len(self.filteredList) == 0:
+            return
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if currentIndex == -1:
@@ -216,6 +220,9 @@ class ViewModel():
         QQmlProperty.write(self.searchInputModel, "text", "")
 
     def selectField(self):
+        if len(self.filteredList) == 0:
+            return
+
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if self.filteredList[currentIndex] == "********":
             exit(call(["pass", "-c", self.chosenEntry]))
