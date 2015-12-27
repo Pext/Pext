@@ -39,6 +39,7 @@ class ViewModel():
         self.errorMessageModelText = ""
         self.errorUpdateTime = time.time()
         self.chosenEntry = None
+        self.chosenEntryList = []
 
     def bindContext(self, context, searchInputModel, resultListModel):
         self.context = context
@@ -148,13 +149,13 @@ class ViewModel():
 
     def searchChosenEntry(self):
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        currentItem = self.passwordEntryContent[currentIndex]
+        currentItem = self.filteredList[currentIndex]
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
 
         self.filteredList = []
 
-        for entry in self.passwordEntryContent:
+        for entry in self.chosenEntryList:
             if any(searchString in entry.lower() for searchString in searchStrings):
                 self.filteredList.append(entry)
 
@@ -203,6 +204,7 @@ class ViewModel():
         # If the password entry has more than one line, fill the result list 
         # with all lines, so the user can choose the line they want to copy to 
         # the clipboard
+        self.chosenEntryList = passwordEntryContent
         self.filteredList = passwordEntryContent
 
         self.resultListModelList = QStringListModel(self.filteredList)
