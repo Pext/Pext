@@ -217,7 +217,7 @@ class ViewModel():
 
     def selectField(self):
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if currentIndex == 0:
+        if self.filteredList[currentIndex] == "********":
             exit(call(["pass", "-c", self.chosenEntry]))
 
         # Only copy the final part. For example, if the entry is named 
