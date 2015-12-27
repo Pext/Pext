@@ -94,13 +94,37 @@ ApplicationWindow {
 
                 model: resultListModel
 
-                delegate: Text { 
-                    text: display
-                    textFormat: Text.PlainText
-                    font.pixelSize: 18
-                    font.italic: resultList.makeItalic && text.indexOf(' ') >= 0 ? true : false
-                    color: resultList.currentIndex === index ? "red" : "steelblue"
-                    Behavior on color { PropertyAnimation {} }
+                delegate: Component {
+                    Item {
+                        property variant itemData: model.modelData
+                        width: parent.width
+                        height: 23
+                        Column {
+                            Text { 
+                                text: display
+                                textFormat: Text.PlainText
+                                font.pixelSize: 18
+                                font.italic: resultList.makeItalic && text.indexOf(' ') >= 0 ? true : false
+                                color: resultList.currentIndex === index ? "red" : "steelblue"
+                                Behavior on color { PropertyAnimation {} }
+                            }
+                        }
+                        MouseArea {
+                            objectName: "resultListMouseModel"
+                            anchors.fill: parent
+
+                            hoverEnabled: true
+
+                            onPositionChanged: {
+                                if (index <= resultListModelMaxIndex)
+                                    resultList.currentIndex = index
+                            }
+                            onClicked: {
+                                if (index <= resultListModelMaxIndex)
+                                    searchInput.accepted()
+                            }
+                        }
+                    }
                 }
 
                 Layout.fillHeight: true

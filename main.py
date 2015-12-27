@@ -39,7 +39,6 @@ class ViewModel():
         self.errorMessageModelText = ""
         self.errorUpdateTime = time.time()
         self.chosenEntry = None
-        self.passwordEntryContent = None
 
     def bindContext(self, context, searchInputModel, resultListModel):
         self.context = context
@@ -99,7 +98,7 @@ class ViewModel():
                 self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
 
     def search(self):
-        if self.passwordEntryContent != None:
+        if self.chosenEntry != None:
             self.searchChosenEntry()
             return
 
@@ -170,7 +169,7 @@ class ViewModel():
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def select(self):
-        if self.passwordEntryContent != None:
+        if self.chosenEntry != None:
             self.selectField()
             return
 
@@ -192,35 +191,37 @@ class ViewModel():
 
             return
 
-        self.passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).decode("utf-8").rstrip().split("\n")
+        passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).decode("utf-8").rstrip().split("\n")
 
-        if len(self.passwordEntryContent) == 1:
+        if len(passwordEntryContent) == 1:
             exit(call(["pass", "-c", self.chosenEntry]))
 
         # The first line is most likely the password. Do not show this on the 
         # screen
-        self.passwordEntryContent[0] = "********"
+        passwordEntryContent[0] = "********"
 
         # If the password entry has more than one line, fill the result list 
         # with all lines, so the user can choose the line they want to copy to 
         # the clipboard
-        self.resultListModelList = QStringListModel(self.passwordEntryContent)
+        self.filteredList = passwordEntryContent
+
+        self.resultListModelList = QStringListModel(self.filteredList)
         self.context.setContextProperty("resultListModel", self.resultListModelList)
-        self.resultListModelMaxIndex = len(self.passwordEntryContent) - 1
+        self.resultListModelMaxIndex = len(self.filteredList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
         self.context.setContextProperty("resultListModelMakeItalic", False)
         QQmlProperty.write(self.resultListModel, "currentIndex", 0)
         QQmlProperty.write(self.searchInputModel, "text", "")
 
     def selectField(self):
-        currentIndex = self.passwordEntryContent.index(self.filteredList[QQmlProperty.read(self.resultListModel, "currentIndex")])
+        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if currentIndex == 0:
             exit(call(["pass", "-c", self.chosenEntry]))
 
         # Only copy the final part. For example, if the entry is named 
         # "URL: https://example.org/", only copy "https://example.org/" to the 
         # clipboard
-        copyStringParts = self.passwordEntryContent[currentIndex].split(": ", 1)
+        copyStringParts = self.filteredList[currentIndex].split(": ", 1)
 
         copyString = copyStringParts[1] if len(copyStringParts) > 1 else copyStringParts[0]
 

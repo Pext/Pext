@@ -14,7 +14,8 @@ be executed straight from PyPass.
 
 Of course, you can also select another entry in the list, either with the 
 arrow keys or with vim-style Ctrl+K and Ctrl+J bindings. The selected entry is 
-highlighted in red.
+highlighted in red. If mice are your thing, your trustworthy rodent can select 
+an entry with a single click.
 
 To get the most out of PyPass, set up your system to start it with a global 
 hotkey, so you can always quickly access a password when you need it.
