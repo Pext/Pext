@@ -36,8 +36,7 @@ class ViewModel():
         self.filteredList = []
         self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
-        self.errorMessageModelText = ""
-        self.errorUpdateTime = time.time()
+        self.errorMessageList = []
         self.chosenEntry = None
         self.chosenEntryList = []
 
@@ -48,30 +47,47 @@ class ViewModel():
 
         self.search()
 
+    def showError(self, errorMessage=None):
+        if errorMessage:
+            self.errorMessageList.append([errorMessage, time.time()])
+
+        self.context.setContextProperty("errorMessageModelText", "\n".join([errorMessage[0] for errorMessage in self.errorMessageList]))
+        self.context.setContextProperty("errorMessageModelLineHeight", 1 if len(self.errorMessageList) > 0 else 0)
+
     def runCommand(self, command):
         proc = Popen(command, stdout=PIPE, stderr=PIPE)
         output, error = proc.communicate()
         if proc.returncode == 0:
             return output
         else:
-            self.errorMessageModelText = error.decode("utf-8").rstrip() if error else "Error code {} running '{}'. More info may be logged to the console".format(str(errorCode), " ".join(command))
-            self.context.setContextProperty("errorMessageModelText", self.errorMessageModelText)
-            self.context.setContextProperty("errorMessageModelLineHeight", 1)
-
-            self.errorUpdateTime = time.time()
+            self.showError(error.decode("utf-8").rstrip() if error else "Error code {} running '{}'. More info may be logged to the console".format(str(errorCode), " ".join(command)))
 
             return None
 
     def clearOldError(self):
-        if time.time() - self.errorUpdateTime > 3:
-            self.errorMessageModelText = ""
-            self.context.setContextProperty("errorMessageModelText", self.errorMessageModelText)
-            self.context.setContextProperty("errorMessageModelLineHeight", 0)
+        if len(self.errorMessageList) == 0:
+            return
+
+        # Remove every error message older than 5 seconds and redraw the error list
+        currentTime = time.time()
+        self.errorMessageList = [errorMessage for errorMessage in self.errorMessageList if currentTime - errorMessage[1] < 5]
+        self.showError()
 
     def getCommands(self):
         self.commandsText = []
 
-        self.supportedCommands = {"generate": [], "rm": ["-f"], "mv": ["-f"], "cp": ["-f"]}
+        # supportedCommands is a list of supported commands, followed by a 
+        # list of required arguments that will always be added and a list of 
+        # supported arguments.
+        # Do note that arguments that cause no issues may not be in the 
+        # supported list because they are useless.
+        self.supportedCommands = {
+                                    "insert": [["--force","-f"], []],
+                                    "generate": [["--force","-f"], []],
+                                    "rm": [["--force","-f"], ["--recursive","-r"]],
+                                    "mv": [["--force","-f"], []],
+                                    "cp": [["--force","-f"], []]
+                                 }
 
         # We will crash here if pass is not installed.
         # TODO: Find a nice way to notify the user they need to install pass
@@ -83,7 +99,24 @@ class ViewModel():
                 command = strippedLine[5:]
                 for supportedCommand in self.supportedCommands:
                     if command.startswith(supportedCommand):
-                        self.commandsText.append(command)
+                        # First, we replace | with ] [ so that commands such 
+                        # as "pass insert [--echo,-e | --multiline,-m]" 
+                        # become "pass insert [--echo,-e] [--multiline,-m]" 
+                        # and thus easier to parse. This is not completely 
+                        # correct, but good enough for the time being.
+                        # Then, we go through each argument to check if we 
+                        # support it being run, so we do not show the user any 
+                        # arguments we do not support
+                        commandTextSplit = command.replace(" | ", "] [").split(" ")
+                        commandDescription = []
+                        for part in commandTextSplit:
+                            if part[0] == "[":
+                                if not any(supportedFlag in part for supportedFlag in self.supportedCommands[supportedCommand][1] if supportedFlag[1] == "-"):
+                                    continue
+
+                            commandDescription.append(part)
+
+                        self.commandsText.append(" ".join(commandDescription))
 
     def getPasswords(self):
         self.passwordList = []
@@ -127,7 +160,7 @@ class ViewModel():
         if len(self.filteredList) == 0 and len(commandList) > 0:
             self.filteredList = commandList
             for password in self.passwordList:
-                if all(searchString in password.lower() for searchString in searchStrings[1:]):
+                if any(searchString in password.lower() for searchString in searchStrings[1:]):
                     self.filteredList.append(password)
         else:
             self.filteredList += commandList
@@ -181,13 +214,38 @@ class ViewModel():
             return
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+
         if currentIndex == -1:
-            currentIndex = 0
+            commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
+            if commandTyped[0] not in self.supportedCommands:
+                return
 
-        self.chosenEntry = self.filteredList[currentIndex]
+            chosenCommandData = self.supportedCommands[commandTyped[0]]
 
-        if self.chosenEntry in self.commandsText:
-            callCommand = ["pass"] + QQmlProperty.read(self.searchInputModel, "text").split(" ") + self.supportedCommands[self.chosenEntry.split(" ")[0]]
+            # Prevent the user from typing any unsupported arguments
+            for part in commandTyped:
+                if len(part) > 1 and part[0] == "-":
+                    # Make sure to count -rf as -r and -f
+                    if part[1] != "-":
+                        checkParts = list(part[1:])
+                        for i, checkPart in enumerate(checkParts):
+                            checkParts[i] = "-" + checkPart
+                    else:
+                        checkParts = [part]
+
+                    for checkPart in checkParts:
+                        if checkPart not in chosenCommandData[1]:
+                            if checkPart in chosenCommandData[0]:
+                                self.showError("Warning: " + checkPart + " is already enforced")
+                            else:
+                                self.showError("Invalid argument: " + checkPart)
+                                return
+
+            # We don't give pass short arguments. While pass doesn't seem to 
+            # mind to have arguments passed twice, once in long and once in 
+            # short form, this seems like very bad practice. This could still 
+            # be cleaned up, but works for the time being.
+            callCommand = ["pass"] + commandTyped + [forcedCommand for forcedCommand in chosenCommandData[0] if not(forcedCommand[0] == "-" and forcedCommand[1] != "-")]
             result = self.runCommand(callCommand)
 
             if result != None:
@@ -196,6 +254,7 @@ class ViewModel():
 
             return
 
+        self.chosenEntry = self.filteredList[currentIndex]
         passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).decode("utf-8").rstrip().split("\n")
 
         if len(passwordEntryContent) == 1:
@@ -252,7 +311,7 @@ class Window(QDialog):
         context.setContextProperty("resultListModel", self.vm.resultListModelList)
         context.setContextProperty("resultListModelMaxIndex", self.vm.resultListModelMaxIndex)
         context.setContextProperty("resultListModelMakeItalic", True)
-        context.setContextProperty("errorMessageModelText", self.vm.errorMessageModelText)
+        context.setContextProperty("errorMessageModelText", "")
         context.setContextProperty("errorMessageModelLineHeight", 0)
 
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))
