@@ -78,11 +78,13 @@ class ViewModel():
 
     def runCommand(self, command, printOnSuccess=False):
         proc = pexpect.spawn(command[0], command[1:])
-        result = proc.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=2)
+        result = proc.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=1)
         if result == 0:
             exitCode = proc.sendline("echo $?")
         elif result == 1:
-            self.addError("Timeout error while running '{}'".format(" ".join(command)))
+            self.addError("Timeout error while running '{}'. The command was most likely waiting for input, which is not supported yet.".format(" ".join(command)))
+            if proc.before:
+                self.addError("Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")).rstrip()))
 
             return None
 
@@ -105,27 +107,15 @@ class ViewModel():
         if len(self.messageList) == 0:
             return
 
-        # Remove every error message older than 3 seconds and redraw the error list
+        # Remove every error message older than 5 seconds and redraw the error list
         currentTime = time.time()
-        self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
+        self.messageList = [message for message in self.messageList if currentTime - message[1] < 5]
         self.showMessages()
 
     def getCommands(self):
         self.commandsText = []
 
-        # supportedCommands is a list of supported commands, followed by a 
-        # list of required arguments that will always be added and a list of 
-        # supported arguments.
-        # Do note that arguments that cause no issues may not be in the 
-        # supported list because they are useless.
-        self.supportedCommands = {
-                                    "init": [[], ["--path","-p"]],
-                                    "insert": [["--force","-f"], []],
-                                    "generate": [["--force","-f"], ["--no-symbols","-n","--clip","-c"]],
-                                    "rm": [["--force","-f"], ["--recursive","-r"]],
-                                    "mv": [["--force","-f"], []],
-                                    "cp": [["--force","-f"], []]
-                                 }
+        self.supportedCommands = ["init", "insert", "generate", "rm", "mv", "cp"]
 
         # We will crash here if pass is not installed.
         # TODO: Find a nice way to notify the user they need to install pass
@@ -137,30 +127,7 @@ class ViewModel():
                 command = strippedLine[5:]
                 for supportedCommand in self.supportedCommands:
                     if command.startswith(supportedCommand):
-                        # First, we replace | with ] [ so that commands such 
-                        # as "pass insert [--echo,-e | --multiline,-m]" 
-                        # become "pass insert [--echo,-e] [--multiline,-m]" 
-                        # and thus easier to parse. This is not completely 
-                        # correct, but good enough for the time being.
-                        # Then, we go through each argument to check if we 
-                        # support it being run, so we do not show the user any 
-                        # arguments we do not support
-                        commandTextSplit = command.replace(" | ", "] [").split(" ")
-                        commandDescription = []
-                        for part in commandTextSplit:
-                            if part[0] == "[":
-                                # If the argument is required, list the first 
-                                # part of it. For example, "[--force,-f]" 
-                                # becomes "--force"
-                                if any(requiredFlag in part for requiredFlag in self.supportedCommands[supportedCommand][0] if requiredFlag[1] == "-"):
-                                    part = part[1:-1].split(",")[0]
-                                # If the argument is not supported, don't show it
-                                elif not any(supportedFlag in part for supportedFlag in self.supportedCommands[supportedCommand][1] if supportedFlag[1] == "-"):
-                                    continue
-
-                            commandDescription.append(part)
-
-                        self.commandsText.append(" ".join(commandDescription))
+                        self.commandsText.append(command)
 
     def getPasswords(self):
         self.passwordList = []
@@ -264,33 +231,7 @@ class ViewModel():
             if commandTyped[0] not in self.supportedCommands:
                 return
 
-            chosenCommandData = self.supportedCommands[commandTyped[0]]
-
-            # Prevent the user from typing any unsupported arguments
-            for part in commandTyped:
-                part = part.split("=")[0]
-                if len(part) > 1 and part[0] == "-":
-                    # Make sure to count -rf as -r and -f
-                    if part[1] != "-":
-                        checkParts = list(part[1:])
-                        for i, checkPart in enumerate(checkParts):
-                            checkParts[i] = "-" + checkPart
-                    else:
-                        checkParts = [part]
-
-                    for checkPart in checkParts:
-                        if checkPart not in chosenCommandData[1]:
-                            if checkPart in chosenCommandData[0]:
-                                self.addMessage("Warning: " + checkPart + " is already enforced")
-                            else:
-                                self.addError("Invalid argument: " + checkPart)
-                                return
-
-            # We don't give pass short arguments. While pass doesn't seem to 
-            # mind to have arguments passed twice, once in long and once in 
-            # short form, this seems like very bad practice. This could still 
-            # be cleaned up, but works for the time being.
-            callCommand = ["pass"] + commandTyped + [forcedCommand for forcedCommand in chosenCommandData[0] if not(forcedCommand[0] == "-" and forcedCommand[1] != "-")]
+            callCommand = ["pass"] + commandTyped
             result = self.runCommand(callCommand, True)
 
             if result != None:
