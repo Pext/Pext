@@ -82,6 +82,7 @@ class ViewModel():
         # Do note that arguments that cause no issues may not be in the 
         # supported list because they are useless.
         self.supportedCommands = {
+                                    "init": [[], ["--path","-p"]],
                                     "insert": [["--force","-f"], []],
                                     "generate": [["--force","-f"], ["--no-symbols","-n"]],
                                     "rm": [["--force","-f"], ["--recursive","-r"]],
@@ -224,6 +225,7 @@ class ViewModel():
 
             # Prevent the user from typing any unsupported arguments
             for part in commandTyped:
+                part = part.split("=")[0]
                 if len(part) > 1 and part[0] == "-":
                     # Make sure to count -rf as -r and -f
                     if part[1] != "-":
