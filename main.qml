@@ -25,7 +25,7 @@ ApplicationWindow {
     title: 'PyPass'
     property int margin: 10
     width: Screen.width
-    height: searchInput.height + resultList.contentHeight + errorMessage.height + 3 * margin
+    height: searchInput.height + resultList.contentHeight + messageListModel.contentHeight + 3 * margin
     maximumHeight: 0.5 * Screen.height
 
     flags: Qt.FramelessWindowHint | Qt.Window
@@ -69,17 +69,18 @@ ApplicationWindow {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: margin
-        RowLayout {
-            Layout.fillWidth: true
-            TextField {
-                id: searchInput
-                objectName: "searchInputModel"
+        TextField {
+            id: searchInput
+            objectName: "searchInputModel"
 
-                font.pixelSize: 24
-                focus: true
+            font.pixelSize: 24
+            focus: true
 
-                Layout.fillWidth: true
+            onFocusChanged: {
+                focus = true
             }
+
+            Layout.fillWidth: true
         }
         ScrollView {
             Layout.fillHeight: true
@@ -100,7 +101,7 @@ ApplicationWindow {
                         width: parent.width
                         height: 23
                         Column {
-                            Text { 
+                             Text {
                                 text: display
                                 textFormat: Text.PlainText
                                 font.pixelSize: 18
@@ -126,27 +127,27 @@ ApplicationWindow {
                         }
                     }
                 }
-
-                Layout.fillHeight: true
-                Layout.fillWidth: true
             }
         }
-        Text {
-            id: errorMessage
+        ListView {
+            id: messageListModel
+            model: messageListModelList
 
-            text: errorMessageModelText
-
-            Timer {
-                objectName: "clearErrorMessageTimer"
-
-                interval: 1000;
-                running: true;
-                repeat: true;
+            delegate: Text {
+                text: display
+                textFormat: Text.RichText
             }
 
-            lineHeight: errorMessageModelLineHeight
+            Timer {
+                objectName: "clearOldMessagesTimer"
 
-            color: "red"
+                interval: 1000
+                running: true
+                repeat: true
+            }
+
+            Layout.fillWidth: true
+            Layout.minimumHeight: contentHeight
         }
     }
 }

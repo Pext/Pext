@@ -15,8 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 import os
+import re
+import sys
 import time
 from os.path import expanduser
 from subprocess import call, check_output, Popen, CalledProcessError, PIPE
@@ -26,17 +27,22 @@ from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
+import pexpect
+
 class ViewModel():
     def __init__(self):
         self.getCommands()
         self.getPasswords()
+
+        self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
 
         # Temporary values to allow binding. These will be properly set when 
         # possible and relevant.
         self.filteredList = []
         self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
-        self.errorMessageList = []
+        self.messageList = []
+        self.messageListModelList = QStringListModel()
         self.chosenEntry = None
         self.chosenEntryList = []
 
@@ -47,31 +53,62 @@ class ViewModel():
 
         self.search()
 
-    def showError(self, errorMessage=None):
-        if errorMessage:
-            self.errorMessageList.append([errorMessage, time.time()])
+    def addError(self, message):
+        messagePrepended = []
+        for line in message.splitlines():
+            messagePrepended.append("<font color='red'>{}</color>".format(line))
 
-        self.context.setContextProperty("errorMessageModelText", "\n".join([errorMessage[0] for errorMessage in self.errorMessageList]))
-        self.context.setContextProperty("errorMessageModelLineHeight", 1 if len(self.errorMessageList) > 0 else 0)
+        self.messageList.append(["\n".join(messagePrepended), time.time()])
+        self.showMessages()
 
-    def runCommand(self, command):
-        proc = Popen(command, stdout=PIPE, stderr=PIPE)
-        output, error = proc.communicate()
-        if proc.returncode == 0:
-            return output
-        else:
-            self.showError(error.decode("utf-8").rstrip() if error else "Error code {} running '{}'. More info may be logged to the console".format(str(errorCode), " ".join(command)))
+    def addMessage(self, message):
+        messagePrepended = []
+        for line in message.splitlines():
+            messagePrepended.append(line)
+
+        self.messageList.append(["\n".join(messagePrepended), time.time()])
+        self.showMessages()
+
+    def showMessages(self):
+        messageListForModel = []
+        for message in self.messageList:
+            messageListForModel.append(message[0])
+        self.messageListModelList = QStringListModel(messageListForModel)
+        self.context.setContextProperty("messageListModelList", self.messageListModelList)
+
+    def runCommand(self, command, printOnSuccess=False):
+        proc = pexpect.spawn(command[0], command[1:])
+        result = proc.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=2)
+        if result == 0:
+            exitCode = proc.sendline("echo $?")
+        elif result == 1:
+            self.addError("Timeout error while running '{}'".format(" ".join(command)))
 
             return None
 
-    def clearOldError(self):
-        if len(self.errorMessageList) == 0:
+        proc.close()
+        exitCode = proc.exitstatus
+
+        message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")).rstrip() if proc.before else ""
+
+        if exitCode == 0:
+            if printOnSuccess and message:
+                self.addMessage(message)
+
+            return message
+        else:
+            self.addError(message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command)))
+
+            return None
+
+    def clearOldMessages(self):
+        if len(self.messageList) == 0:
             return
 
-        # Remove every error message older than 5 seconds and redraw the error list
+        # Remove every error message older than 3 seconds and redraw the error list
         currentTime = time.time()
-        self.errorMessageList = [errorMessage for errorMessage in self.errorMessageList if currentTime - errorMessage[1] < 5]
-        self.showError()
+        self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
+        self.showMessages()
 
     def getCommands(self):
         self.commandsText = []
@@ -84,7 +121,7 @@ class ViewModel():
         self.supportedCommands = {
                                     "init": [[], ["--path","-p"]],
                                     "insert": [["--force","-f"], []],
-                                    "generate": [["--force","-f"], ["--no-symbols","-n"]],
+                                    "generate": [["--force","-f"], ["--no-symbols","-n","--clip","-c"]],
                                     "rm": [["--force","-f"], ["--recursive","-r"]],
                                     "mv": [["--force","-f"], []],
                                     "cp": [["--force","-f"], []]
@@ -244,9 +281,9 @@ class ViewModel():
                     for checkPart in checkParts:
                         if checkPart not in chosenCommandData[1]:
                             if checkPart in chosenCommandData[0]:
-                                self.showError("Warning: " + checkPart + " is already enforced")
+                                self.addMessage("Warning: " + checkPart + " is already enforced")
                             else:
-                                self.showError("Invalid argument: " + checkPart)
+                                self.addError("Invalid argument: " + checkPart)
                                 return
 
             # We don't give pass short arguments. While pass doesn't seem to 
@@ -254,7 +291,7 @@ class ViewModel():
             # short form, this seems like very bad practice. This could still 
             # be cleaned up, but works for the time being.
             callCommand = ["pass"] + commandTyped + [forcedCommand for forcedCommand in chosenCommandData[0] if not(forcedCommand[0] == "-" and forcedCommand[1] != "-")]
-            result = self.runCommand(callCommand)
+            result = self.runCommand(callCommand, True)
 
             if result != None:
                 self.getPasswords()
@@ -263,7 +300,7 @@ class ViewModel():
             return
 
         self.chosenEntry = self.filteredList[currentIndex]
-        passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).decode("utf-8").rstrip().split("\n")
+        passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).rstrip().split("\n")
 
         if len(passwordEntryContent) == 1:
             exit(call(["pass", "-c", self.chosenEntry]))
@@ -319,8 +356,7 @@ class Window(QDialog):
         context.setContextProperty("resultListModel", self.vm.resultListModelList)
         context.setContextProperty("resultListModelMaxIndex", self.vm.resultListModelMaxIndex)
         context.setContextProperty("resultListModelMakeItalic", True)
-        context.setContextProperty("errorMessageModelText", "")
-        context.setContextProperty("errorMessageModelLineHeight", 0)
+        context.setContextProperty("messageListModelList", self.vm.messageListModelList)
 
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))
 
@@ -328,14 +364,14 @@ class Window(QDialog):
 
         searchInputModel = self.window.findChild(QObject, "searchInputModel")
         resultListModel = self.window.findChild(QObject, "resultListModel")
-        clearErrorMessageTimer = self.window.findChild(QObject, "clearErrorMessageTimer")
+        clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
 
         self.vm.bindContext(context, searchInputModel, resultListModel)
 
         searchInputModel.textChanged.connect(self.vm.search)
         searchInputModel.accepted.connect(self.vm.select)
 
-        clearErrorMessageTimer.triggered.connect(self.vm.clearOldError)
+        clearOldMessagesTimer.triggered.connect(self.vm.clearOldMessages)
 
     def show(self):
         self.window.show()
