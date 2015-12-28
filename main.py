@@ -83,7 +83,7 @@ class ViewModel():
         # supported list because they are useless.
         self.supportedCommands = {
                                     "insert": [["--force","-f"], []],
-                                    "generate": [["--force","-f"], []],
+                                    "generate": [["--force","-f"], ["--no-symbols","-n"]],
                                     "rm": [["--force","-f"], ["--recursive","-r"]],
                                     "mv": [["--force","-f"], []],
                                     "cp": [["--force","-f"], []]
