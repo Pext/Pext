@@ -112,7 +112,13 @@ class ViewModel():
                         commandDescription = []
                         for part in commandTextSplit:
                             if part[0] == "[":
-                                if not any(supportedFlag in part for supportedFlag in self.supportedCommands[supportedCommand][1] if supportedFlag[1] == "-"):
+                                # If the argument is required, list the first 
+                                # part of it. For example, "[--force,-f]" 
+                                # becomes "--force"
+                                if any(requiredFlag in part for requiredFlag in self.supportedCommands[supportedCommand][0] if requiredFlag[1] == "-"):
+                                    part = part[1:-1].split(",")[0]
+                                # If the argument is not supported, don't show it
+                                elif not any(supportedFlag in part for supportedFlag in self.supportedCommands[supportedCommand][1] if supportedFlag[1] == "-"):
                                     continue
 
                             commandDescription.append(part)
