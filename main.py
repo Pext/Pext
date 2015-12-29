@@ -78,15 +78,16 @@ class ViewModel():
 
     def runCommand(self, command, printOnSuccess=False):
         proc = pexpect.spawn(command[0], command[1:])
-        result = proc.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=1)
-        if result == 0:
-            exitCode = proc.sendline("echo $?")
-        elif result == 1:
-            self.addError("Timeout error while running '{}'. The command was most likely waiting for input, which is not supported yet.".format(" ".join(command)))
-            if proc.before:
+        while True:
+            result = proc.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=0.1)
+            if result == 0:
+                exitCode = proc.sendline("echo $?")
+                break
+            elif result == 1 and proc.before:
+                self.addError("Timeout error while running '{}'. The command was most likely waiting for input, which is not supported yet.".format(" ".join(command)))
                 self.addError("Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")).rstrip()))
 
-            return None
+                return None
 
         proc.close()
         exitCode = proc.exitstatus
