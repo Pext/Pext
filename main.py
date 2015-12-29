@@ -147,7 +147,6 @@ class ViewModel():
         if self.chosenEntry == None:
             exit(0)
 
-        QQmlProperty.write(self.searchInputModel, "text", "")
         self.chosenEntry = None
         self.search()
 
