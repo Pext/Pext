@@ -24,7 +24,7 @@ from subprocess import call, check_output, Popen, CalledProcessError, PIPE
 from threading import Timer
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 import pexpect
@@ -46,8 +46,9 @@ class ViewModel():
         self.chosenEntry = None
         self.chosenEntryList = []
 
-    def bindContext(self, context, searchInputModel, resultListModel):
+    def bindContext(self, context, window, searchInputModel, resultListModel):
         self.context = context
+        self.window = window
         self.searchInputModel = searchInputModel
         self.resultListModel = resultListModel
 
@@ -55,12 +56,16 @@ class ViewModel():
 
     def addError(self, message):
         for line in message.splitlines():
+            if line.isspace():
+                continue
             self.messageList.append(["<font color='red'>{}</color>".format(line), time.time()])
 
         self.showMessages()
 
     def addMessage(self, message):
         for line in message.splitlines():
+            if line.isspace():
+                continue
             self.messageList.append([line, time.time()])
 
         self.showMessages()
@@ -75,20 +80,29 @@ class ViewModel():
     def runCommand(self, command, printOnSuccess=False):
         proc = pexpect.spawn(command[0], command[1:])
         while True:
-            result = proc.expect([pexpect.EOF, pexpect.TIMEOUT], timeout=0.1)
+            result = proc.expect([pexpect.EOF, pexpect.TIMEOUT, "\[Y/n\]", "\[y/N\]"], timeout=0.1)
             if result == 0:
                 exitCode = proc.sendline("echo $?")
                 break
             elif result == 1 and proc.before:
                 self.addError("Timeout error while running '{}'. The command was most likely waiting for input, which is not supported yet.".format(" ".join(command)))
-                self.addError("Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")).rstrip()))
+                self.addError("Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8"))))
 
                 return None
+            elif result == 2 or result == 3:
+                proc.setecho(False)
+                answer = QMessageBox.question(self.window, "Confirmation", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
+                proc.waitnoecho()
+                if answer == QMessageBox.Yes:
+                    proc.sendline('y')
+                else:
+                    proc.sendline('n')
+                proc.setecho(True)
 
         proc.close()
         exitCode = proc.exitstatus
 
-        message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")).rstrip() if proc.before else ""
+        message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
 
         if exitCode == 0:
             if printOnSuccess and message:
@@ -316,7 +330,7 @@ class Window(QDialog):
         resultListModel = self.window.findChild(QObject, "resultListModel")
         clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
 
-        self.vm.bindContext(context, searchInputModel, resultListModel)
+        self.vm.bindContext(context, self, searchInputModel, resultListModel)
 
         escapeShortcut.activated.connect(self.vm.goUp)
 
