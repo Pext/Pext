@@ -54,19 +54,15 @@ class ViewModel():
         self.search()
 
     def addError(self, message):
-        messagePrepended = []
         for line in message.splitlines():
-            messagePrepended.append("<font color='red'>{}</color>".format(line))
+            self.messageList.append(["<font color='red'>{}</color>".format(line), time.time()])
 
-        self.messageList.append(["\n".join(messagePrepended), time.time()])
         self.showMessages()
 
     def addMessage(self, message):
-        messagePrepended = []
         for line in message.splitlines():
-            messagePrepended.append(line)
+            self.messageList.append([line, time.time()])
 
-        self.messageList.append(["\n".join(messagePrepended), time.time()])
         self.showMessages()
 
     def showMessages(self):
@@ -154,7 +150,7 @@ class ViewModel():
         else:
             currentItem = self.filteredList[currentIndex]
 
-        self.filteredList = [];
+        self.filteredList = []
         commandList = []
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
