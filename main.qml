@@ -40,6 +40,11 @@ ApplicationWindow {
     }
 
     Shortcut {
+        objectName: "escapeShortcut"
+        sequence: "Escape"
+    }
+
+    Shortcut {
         sequence: "Up"
         onActivated: moveUp()
     }

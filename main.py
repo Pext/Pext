@@ -139,6 +139,18 @@ class ViewModel():
 
                 self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
 
+    def goUp(self):
+        if QQmlProperty.read(self.searchInputModel, "text") != "":
+            QQmlProperty.write(self.searchInputModel, "text", "")
+            return
+
+        if self.chosenEntry == None:
+            exit(0)
+
+        QQmlProperty.write(self.searchInputModel, "text", "")
+        self.chosenEntry = None
+        self.search()
+
     def search(self):
         if self.chosenEntry != None:
             self.searchChosenEntry()
@@ -300,11 +312,14 @@ class Window(QDialog):
 
         self.window = self.engine.rootObjects()[0]
 
+        escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
         searchInputModel = self.window.findChild(QObject, "searchInputModel")
         resultListModel = self.window.findChild(QObject, "resultListModel")
         clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
 
         self.vm.bindContext(context, searchInputModel, resultListModel)
+
+        escapeShortcut.activated.connect(self.vm.goUp)
 
         searchInputModel.textChanged.connect(self.vm.search)
         searchInputModel.accepted.connect(self.vm.select)
