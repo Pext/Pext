@@ -135,7 +135,7 @@ ApplicationWindow {
 
             delegate: Text {
                 text: display
-                textFormat: Text.RichText
+                textFormat: Text.StyledText
             }
 
             Timer {
