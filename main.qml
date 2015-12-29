@@ -25,16 +25,9 @@ ApplicationWindow {
     title: 'PyPass'
     property int margin: 10
     width: Screen.width
-    height: searchInput.height + resultList.contentHeight + messageListModel.contentHeight + 3 * margin
-    maximumHeight: 0.5 * Screen.height
+    height: 0.3 * Screen.height
 
     flags: Qt.FramelessWindowHint | Qt.Window
-
-    Behavior on height {
-        PropertyAnimation {
-            duration: 50
-        }
-    }
 
     function moveUp() {
         if (resultList.currentIndex > 0)
