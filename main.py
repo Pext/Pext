@@ -24,7 +24,7 @@ from subprocess import call, check_output, Popen, CalledProcessError, PIPE
 from threading import Timer
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox
+from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QVBoxLayout, QLabel, QTextEdit, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 import pexpect
@@ -56,7 +56,7 @@ class ViewModel():
 
     def addError(self, message):
         for line in message.splitlines():
-            if line.isspace():
+            if not line or line.isspace():
                 continue
             self.messageList.append(["<font color='red'>{}</color>".format(line), time.time()])
 
@@ -64,7 +64,7 @@ class ViewModel():
 
     def addMessage(self, message):
         for line in message.splitlines():
-            if line.isspace():
+            if not line or line.isspace():
                 continue
             self.messageList.append([line, time.time()])
 
@@ -80,12 +80,12 @@ class ViewModel():
     def runCommand(self, command, printOnSuccess=False):
         proc = pexpect.spawn(command[0], command[1:])
         while True:
-            result = proc.expect([pexpect.EOF, pexpect.TIMEOUT, "\[Y/n\]", "\[y/N\]"], timeout=0.1)
+            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", " and press Ctrl+D when finished:"], timeout=0.1)
             if result == 0:
                 exitCode = proc.sendline("echo $?")
                 break
             elif result == 1 and proc.before:
-                self.addError("Timeout error while running '{}'. The command was most likely waiting for input, which is not supported yet.".format(" ".join(command)))
+                self.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by PyPass.".format(" ".join(command)))
                 self.addError("Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8"))))
 
                 return None
@@ -97,6 +97,20 @@ class ViewModel():
                     proc.sendline('y')
                 else:
                     proc.sendline('n')
+                proc.setecho(True)
+            elif result == 4:
+                dialog = InputDialog(proc.before.decode("utf-8").lstrip(), self.window)
+
+                accepted = 0
+                while accepted != 1:
+                    result = dialog.show()
+                    accepted = result[1]
+
+                proc.setecho(False)
+                proc.waitnoecho()
+                for line in result[0].splitlines():
+                    proc.sendline(line)
+                proc.sendcontrol("d")
                 proc.setecho(True)
 
         proc.close()
@@ -306,6 +320,25 @@ class ViewModel():
 
         proc = Popen(["xclip", "-selection", selection], stdin=PIPE)
         exit(proc.communicate(copyString.encode("ascii")))
+
+class InputDialog(QDialog):
+    def __init__(self, text, parent=None):
+        super().__init__(parent)
+
+        self.setWindowTitle("Input needed")
+
+        layout = QVBoxLayout(self)
+
+        layout.addWidget(QLabel(text))
+        self.textEdit = QTextEdit(self)
+        layout.addWidget(self.textEdit)
+        button = QDialogButtonBox(QDialogButtonBox.Ok)
+        button.accepted.connect(self.accept)
+        layout.addWidget(button)
+
+    def show(self):
+        result = self.exec_()
+        return (self.textEdit.toPlainText(), result == QDialog.Accepted)
         
 class Window(QDialog):
     def __init__(self, parent=None):
