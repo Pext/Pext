@@ -9,8 +9,9 @@ wallpaper and not part of PyPass.*
 
 ## Usage
 Just start typing. When the password you want to use is displayed at the top, 
-hit enter to copy it to your clipboard. A small list of pass commands can also 
-be executed straight from PyPass.
+hit enter to copy it to your clipboard. Many useful pass commands can also be 
+executed straight from PyPass. Entries can be tab-completed, even when typing 
+a command.
 
 Of course, you can also select another entry in the list, either with the 
 arrow keys or with vim-style Ctrl+K and Ctrl+J bindings. The selected entry is 
