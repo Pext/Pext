@@ -336,8 +336,8 @@ class InputDialog(QDialog):
         layout = QVBoxLayout(self)
 
         layout.addWidget(QLabel(question))
-        self.textEdit = QTextEdit(text, self)
-        self.textEdit.acceptRichText = False
+        self.textEdit = QTextEdit(self)
+        self.textEdit.setPlainText(text)
         layout.addWidget(self.textEdit)
         button = QDialogButtonBox(QDialogButtonBox.Ok)
         button.accepted.connect(self.accept)
