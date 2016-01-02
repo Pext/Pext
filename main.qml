@@ -26,6 +26,7 @@ ApplicationWindow {
     property int margin: 10
     width: Screen.width
     height: 0.3 * Screen.height
+    maximumHeight: 0.3 * Screen.height
 
     flags: Qt.FramelessWindowHint | Qt.Window
 
