@@ -268,8 +268,10 @@ class ViewModel():
                 return
 
             if commandTyped[0] == "edit" and len(commandTyped) == 2:
-                prefillData = self.runCommand(["pass", commandTyped[1]]).rstrip()
-                result = self.runCommand(["pass", "insert", "-fm", commandTyped[1]], True, prefillData)
+                prefillData = self.runCommand(["pass", commandTyped[1]])
+                if prefillData == None:
+                    prefillData = ''
+                result = self.runCommand(["pass", "insert", "-fm", commandTyped[1]], True, prefillData.rstrip())
             else:
                 callCommand = ["pass"] + commandTyped
                 result = self.runCommand(callCommand, True)
