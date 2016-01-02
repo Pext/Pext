@@ -132,9 +132,9 @@ class ViewModel():
         if len(self.messageList) == 0:
             return
 
-        # Remove every error message older than 5 seconds and redraw the error list
+        # Remove every error message older than 3 seconds and redraw the error list
         currentTime = time.time()
-        self.messageList = [message for message in self.messageList if currentTime - message[1] < 5]
+        self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
         self.showMessages()
 
     def getCommands(self):
@@ -176,6 +176,35 @@ class ViewModel():
             exit(0)
 
         self.chosenEntry = None
+        self.search()
+
+    def tabComplete(self):
+        currentInput = QQmlProperty.read(self.searchInputModel, "text")
+        stringToMatch = None
+        for entry in self.filteredList:
+            if entry in self.commandsText:
+                continue
+
+            if stringToMatch == None:
+                stringToMatch = entry
+            else:
+                for i in range(0, len(stringToMatch)):
+                    if entry[i] != stringToMatch[i]:
+                        stringToMatch = stringToMatch[:i]
+                        break
+
+        possibleCommand = currentInput.split(" ", 1)[0]
+        output = stringToMatch
+        for command in self.commandsText:
+            if command.startswith(possibleCommand):
+                output = possibleCommand + " " + stringToMatch
+                break
+
+        if len(output) <= len(currentInput):
+            self.addError("No tab completion possible")
+            return
+
+        QQmlProperty.write(self.searchInputModel, "text", output)
         self.search()
 
     def search(self):
@@ -366,6 +395,7 @@ class Window(QDialog):
         self.window = self.engine.rootObjects()[0]
 
         escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
+        tabShortcut = self.window.findChild(QObject, "tabShortcut")
         searchInputModel = self.window.findChild(QObject, "searchInputModel")
         resultListModel = self.window.findChild(QObject, "resultListModel")
         clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
@@ -373,6 +403,7 @@ class Window(QDialog):
         self.vm.bindContext(context, self, searchInputModel, resultListModel)
 
         escapeShortcut.activated.connect(self.vm.goUp)
+        tabShortcut.activated.connect(self.vm.tabComplete)
 
         searchInputModel.textChanged.connect(self.vm.search)
         searchInputModel.accepted.connect(self.vm.select)

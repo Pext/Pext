@@ -45,6 +45,11 @@ ApplicationWindow {
     }
 
     Shortcut {
+        objectName: "tabShortcut"
+        sequence: "Tab"
+    }
+
+    Shortcut {
         sequence: "Up"
         onActivated: moveUp()
     }
