@@ -77,7 +77,7 @@ class ViewModel():
         self.messageListModelList = QStringListModel(messageListForModel)
         self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
-    def runCommand(self, command, printOnSuccess=False):
+    def runCommand(self, command, printOnSuccess=False, prefillInput=''):
         proc = pexpect.spawn(command[0], command[1:])
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", " and press Ctrl+D when finished:"], timeout=0.1)
@@ -99,7 +99,7 @@ class ViewModel():
                     proc.sendline('n')
                 proc.setecho(True)
             elif result == 4:
-                dialog = InputDialog(proc.before.decode("utf-8").lstrip(), self.window)
+                dialog = InputDialog(proc.before.decode("utf-8").lstrip(), prefillInput, self.window)
 
                 accepted = 0
                 while accepted != 1:
@@ -140,7 +140,7 @@ class ViewModel():
     def getCommands(self):
         self.commandsText = []
 
-        self.supportedCommands = ["init", "insert", "generate", "rm", "mv", "cp"]
+        self.supportedCommands = ["init", "insert", "edit", "generate", "rm", "mv", "cp"]
 
         # We will crash here if pass is not installed.
         # TODO: Find a nice way to notify the user they need to install pass
@@ -267,8 +267,12 @@ class ViewModel():
             if commandTyped[0] not in self.supportedCommands:
                 return
 
-            callCommand = ["pass"] + commandTyped
-            result = self.runCommand(callCommand, True)
+            if commandTyped[0] == "edit" and len(commandTyped) == 2:
+                prefillData = self.runCommand(["pass", commandTyped[1]]).rstrip()
+                result = self.runCommand(["pass", "insert", "-fm", commandTyped[1]], True, prefillData)
+            else:
+                callCommand = ["pass"] + commandTyped
+                result = self.runCommand(callCommand, True)
 
             if result != None:
                 self.getPasswords()
@@ -322,15 +326,16 @@ class ViewModel():
         exit(proc.communicate(copyString.encode("ascii")))
 
 class InputDialog(QDialog):
-    def __init__(self, text, parent=None):
+    def __init__(self, question, text, parent=None):
         super().__init__(parent)
 
         self.setWindowTitle("Input needed")
 
         layout = QVBoxLayout(self)
 
-        layout.addWidget(QLabel(text))
-        self.textEdit = QTextEdit(self)
+        layout.addWidget(QLabel(question))
+        self.textEdit = QTextEdit(text, self)
+        self.textEdit.acceptRichText = False
         layout.addWidget(self.textEdit)
         button = QDialogButtonBox(QDialogButtonBox.Ok)
         button.accepted.connect(self.accept)
