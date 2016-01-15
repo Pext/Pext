@@ -21,13 +21,38 @@ import sys
 import time
 from os.path import expanduser
 from subprocess import call, check_output, Popen, CalledProcessError, PIPE
-from threading import Timer
+from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QVBoxLayout, QLabel, QTextEdit, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
+import pyinotify
 import pexpect
+
+class EventHandler(pyinotify.ProcessEvent):
+    def __init__(self, vm, q):
+        self.vm = vm
+        self.q = q
+
+    def process_IN_CREATE(self, event):
+        if event.dir:
+            return
+
+        passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
+
+        self.vm.passwordList.append(passwordName)
+        self.vm.passwordList.sort()
+        self.q.put("created")
+
+    def process_IN_DELETE(self, event):
+        if event.dir:
+            return
+
+        passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
+
+        self.vm.passwordList.remove(passwordName)
+        self.q.put("deleted")
 
 class ViewModel():
     def __init__(self):
@@ -36,7 +61,7 @@ class ViewModel():
 
         self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
 
-        # Temporary values to allow binding. These will be properly set when 
+        # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
         self.filteredList = []
         self.resultListModelList = QStringListModel()
@@ -145,7 +170,7 @@ class ViewModel():
         # We will crash here if pass is not installed.
         # TODO: Find a nice way to notify the user they need to install pass
         commandText = check_output(["pass", "--help"])
-        
+
         for line in commandText.splitlines():
             strippedLine = line.lstrip().decode("utf-8")
             if strippedLine[:4] == "pass":
@@ -257,6 +282,14 @@ class ViewModel():
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def searchChosenEntry(self):
+        # Ensure this entry still exists
+        if self.chosenEntry not in self.passwordList:
+            self.addError(self.chosenEntry + " is no longer available")
+            self.chosenEntry = None
+            QQmlProperty.write(self.searchInputModel, "text", "")
+            self.search()
+            return
+
         if len(self.filteredList) == 0:
             currentItem = None
         else:
@@ -306,7 +339,6 @@ class ViewModel():
                 result = self.runCommand(callCommand, True)
 
             if result != None:
-                self.getPasswords()
                 QQmlProperty.write(self.searchInputModel, "text", "")
 
             return
@@ -317,12 +349,12 @@ class ViewModel():
         if len(passwordEntryContent) == 1:
             exit(call(["pass", "-c", self.chosenEntry]))
 
-        # The first line is most likely the password. Do not show this on the 
+        # The first line is most likely the password. Do not show this on the
         # screen
         passwordEntryContent[0] = "********"
 
-        # If the password entry has more than one line, fill the result list 
-        # with all lines, so the user can choose the line they want to copy to 
+        # If the password entry has more than one line, fill the result list
+        # with all lines, so the user can choose the line they want to copy to
         # the clipboard
         self.chosenEntryList = passwordEntryContent
         self.filteredList = passwordEntryContent
@@ -343,8 +375,8 @@ class ViewModel():
         if self.filteredList[currentIndex] == "********":
             exit(call(["pass", "-c", self.chosenEntry]))
 
-        # Only copy the final part. For example, if the entry is named 
-        # "URL: https://example.org/", only copy "https://example.org/" to the 
+        # Only copy the final part. For example, if the entry is named
+        # "URL: https://example.org/", only copy "https://example.org/" to the
         # clipboard
         copyStringParts = self.filteredList[currentIndex].split(": ", 1)
 
@@ -375,14 +407,14 @@ class InputDialog(QDialog):
     def show(self):
         result = self.exec_()
         return (self.textEdit.toPlainText(), result == QDialog.Accepted)
-        
+
 class Window(QDialog):
-    def __init__(self, parent=None):
+    def __init__(self, vm, parent=None):
         super().__init__(parent)
 
         self.engine = QQmlApplicationEngine(self)
 
-        self.vm = ViewModel()
+        self.vm = vm
 
         context = self.engine.rootContext()
         context.setContextProperty("resultListModel", self.vm.resultListModelList)
@@ -410,12 +442,37 @@ class Window(QDialog):
 
         clearOldMessagesTimer.triggered.connect(self.vm.clearOldMessages)
 
-    def show(self):
+    def show(self, q, app):
         self.window.show()
 
+        while True:
+            try:
+                q.get_nowait()
+            except Empty:
+                app.processEvents()
+                continue
+
+            self.vm.search()
+            self.update()
+            q.task_done()
+
 if __name__ == "__main__":
+    q = Queue()
+
     app = QApplication(sys.argv)
-    w = Window()
-    w.show()
+
+    viewModel = ViewModel()
+    window = Window(viewModel)
+
+    eventHandler = EventHandler(viewModel, q)
+    watchManager = pyinotify.WatchManager()
+    notifier = pyinotify.ThreadedNotifier(watchManager, eventHandler)
+    watchManager.add_watch(expanduser("~") + "/.password-store/", pyinotify.IN_DELETE | pyinotify.IN_CREATE, rec=True, auto_add=True)
+    notifier.daemon = True
+    notifier.start()
+
+    window.show(q, app)
+
     sys.exit(app.exec_())
+    notifier.stop()
 
