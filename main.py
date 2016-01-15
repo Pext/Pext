@@ -15,10 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import getopt
 import os
-import re
 import signal
 import sys
+import re
 import time
 from os.path import expanduser
 from subprocess import call, check_output, Popen, CalledProcessError, PIPE
@@ -218,7 +219,7 @@ class ViewModel():
             return
 
         if self.chosenEntry == None:
-            self.window.hide()
+            self.window.close()
             return
 
         self.chosenEntry = None
@@ -369,7 +370,7 @@ class ViewModel():
 
         if len(passwordEntryContent) == 1:
             call(["pass", "-c", self.chosenEntry])
-            self.window.hide()
+            self.window.close()
             return
 
         # The first line is most likely the password. Do not show this on the
@@ -397,7 +398,7 @@ class ViewModel():
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if self.filteredList[currentIndex] == "********":
             call(["pass", "-c", self.chosenEntry])
-            self.window.hide()
+            self.window.close()
             return
 
         # Only copy the final part. For example, if the entry is named
@@ -412,7 +413,7 @@ class ViewModel():
 
         proc = Popen(["xclip", "-selection", selection], stdin=PIPE)
         proc.communicate(copyString.encode("ascii"))
-        self.window.hide()
+        self.window.close()
         return
 
 class InputDialog(QDialog):
@@ -436,7 +437,7 @@ class InputDialog(QDialog):
         return (self.textEdit.toPlainText(), result == QDialog.Accepted)
 
 class Window(QDialog):
-    def __init__(self, vm, parent=None):
+    def __init__(self, vm, settings, parent=None):
         super().__init__(parent)
 
         self.engine = QQmlApplicationEngine(self)
@@ -473,25 +474,44 @@ class Window(QDialog):
         self.window.show()
         self.activateWindow()
 
-    def hide(self):
-        self.window.hide()
-        QQmlProperty.write(self.vm.searchInputModel, "text", "")
-        self.vm.chosenEntry = None
-        self.vm.search()
+    def close(self):
+        if not settings['closeWhenDone']:
+            self.window.hide()
+            QQmlProperty.write(self.vm.searchInputModel, "text", "")
+            self.vm.chosenEntry = None
+            self.vm.search()
+        else:
+            sys.exit(0)
 
-def mainLoop(app, q, vm, window):
-    while True:
-        try:
-            q.get_nowait()
-        except Empty:
-            app.processEvents()
-            continue
+def loadSettings(argv):
+    # Default options
+    settings = {'closeWhenDone': False}
 
-        vm.search()
-        window.update()
-        q.task_done()
+    try:
+        opts, args = getopt.getopt(argv, "h", ["--help", "close-when-done"])
+    except getopt.GetoptError:
+        usage()
+        sys.exit(1)
 
-if __name__ == "__main__":
+    for opt, args in opts:
+        if opt in ("-h", "--help"):
+            usage()
+            sys.exit()
+        elif opt == "--close-when-done":
+            settings['closeWhenDone'] = True
+
+    return settings
+
+def usage():
+    print("Options:")
+    print("")
+    print("--close-when-done : close after completing an action such as copying")
+    print("                    a password or closing the application (through ")
+    print("                    escape or (on most systems) Alt+F4) instead of ")
+    print("                    staying in memory. This also allows multiple ")
+    print("                    instances to be ran at once.")
+
+def initPersist():
     # Ensure only one PyPass instance is running. If one already exists,
     # signal it to open the password selection window.
     # This way, we can keep the password list in memory and start up extra
@@ -507,6 +527,24 @@ if __name__ == "__main__":
     pid = str(os.getpid())
     open(pidfile, 'w').write(pid)
 
+def mainLoop(app, q, vm, window):
+    while True:
+        try:
+            q.get_nowait()
+        except Empty:
+            app.processEvents()
+            continue
+
+        vm.search()
+        window.update()
+        q.task_done()
+
+if __name__ == "__main__":
+    settings = loadSettings(sys.argv[1:])
+
+    if not settings['closeWhenDone']:
+        initPersist()
+
     # Set up a queue so that the EventHandler can tell the main thread to
     # redraw the UI.
     q = Queue()
@@ -515,7 +553,7 @@ if __name__ == "__main__":
 
     # Set up the window
     viewModel = ViewModel()
-    window = Window(viewModel)
+    window = Window(viewModel, settings)
 
     # Handle signal
     signalHandler = SignalHandler(window)
@@ -534,5 +572,7 @@ if __name__ == "__main__":
     mainLoop(app, q, viewModel, window)
     sys.exit(app.exec_())
     notifier.stop()
-    os.unlink(pidfile)
+
+    if not settings['closeWhenDone']:
+        os.unlink(pidfile)
 
