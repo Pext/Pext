@@ -17,6 +17,7 @@
 
 import os
 import re
+import signal
 import sys
 import time
 from os.path import expanduser
@@ -61,6 +62,14 @@ class EventHandler(pyinotify.ProcessEvent):
         self.vm.passwordList.remove(passwordName)
         self.vm.passwordList = [passwordName] + self.vm.passwordList
         self.q.put("opened")
+
+class SignalHandler():
+    def __init__(self, window):
+        self.window = window
+
+    def handle(self, signum, frame):
+        # Signal received
+        self.window.show()
 
 class ViewModel():
     def __init__(self):
@@ -209,7 +218,8 @@ class ViewModel():
             return
 
         if self.chosenEntry == None:
-            exit(0)
+            self.window.hide()
+            return
 
         self.chosenEntry = None
         self.search()
@@ -358,7 +368,9 @@ class ViewModel():
         passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).rstrip().split("\n")
 
         if len(passwordEntryContent) == 1:
-            exit(call(["pass", "-c", self.chosenEntry]))
+            call(["pass", "-c", self.chosenEntry])
+            self.window.hide()
+            return
 
         # The first line is most likely the password. Do not show this on the
         # screen
@@ -384,7 +396,9 @@ class ViewModel():
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if self.filteredList[currentIndex] == "********":
-            exit(call(["pass", "-c", self.chosenEntry]))
+            call(["pass", "-c", self.chosenEntry])
+            self.window.hide()
+            return
 
         # Only copy the final part. For example, if the entry is named
         # "URL: https://example.org/", only copy "https://example.org/" to the
@@ -397,7 +411,9 @@ class ViewModel():
         selection = os.getenv("PASSWORD_STORE_X_SELECTION", "clipboard")
 
         proc = Popen(["xclip", "-selection", selection], stdin=PIPE)
-        exit(proc.communicate(copyString.encode("ascii")))
+        proc.communicate(copyString.encode("ascii"))
+        self.window.hide()
+        return
 
 class InputDialog(QDialog):
     def __init__(self, question, text, parent=None):
@@ -453,28 +469,59 @@ class Window(QDialog):
 
         clearOldMessagesTimer.triggered.connect(self.vm.clearOldMessages)
 
-    def show(self, q, app):
+    def show(self):
         self.window.show()
+        self.activateWindow()
 
-        while True:
-            try:
-                q.get_nowait()
-            except Empty:
-                app.processEvents()
-                continue
+    def hide(self):
+        self.window.hide()
+        QQmlProperty.write(self.vm.searchInputModel, "text", "")
+        self.vm.chosenEntry = None
+        self.vm.search()
 
-            self.vm.search()
-            self.update()
-            q.task_done()
+def mainLoop(app, q, vm, window):
+    while True:
+        try:
+            q.get_nowait()
+        except Empty:
+            app.processEvents()
+            continue
+
+        vm.search()
+        window.update()
+        q.task_done()
 
 if __name__ == "__main__":
+    # Ensure only one PyPass instance is running. If one already exists,
+    # signal it to open the password selection window.
+    # This way, we can keep the password list in memory and start up extra
+    # quickly.
+    pidfile = "/tmp/pypass.pid"
+
+    if os.path.isfile(pidfile):
+        # Notify the main process
+        os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
+        sys.exit()
+
+    # We are the only instance, claim our pidfile
+    pid = str(os.getpid())
+    open(pidfile, 'w').write(pid)
+
+    # Set up a queue so that the EventHandler can tell the main thread to
+    # redraw the UI.
     q = Queue()
 
     app = QApplication(sys.argv)
 
+    # Set up the window
     viewModel = ViewModel()
     window = Window(viewModel)
 
+    # Handle signal
+    signalHandler = SignalHandler(window)
+    signal.signal(signal.SIGUSR1, signalHandler.handle)
+
+    # Initialize the EventHandler and make it watch the password store
     eventHandler = EventHandler(viewModel, q)
     watchManager = pyinotify.WatchManager()
     notifier = pyinotify.ThreadedNotifier(watchManager, eventHandler)
@@ -482,8 +529,9 @@ if __name__ == "__main__":
     notifier.daemon = True
     notifier.start()
 
-    window.show(q, app)
-
+    # Run until the app quits, then clean up
+    mainLoop(app, q, viewModel, window)
     sys.exit(app.exec_())
     notifier.stop()
+    os.unlink(pidfile)
 
