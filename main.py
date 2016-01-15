@@ -530,6 +530,7 @@ if __name__ == "__main__":
     notifier.start()
 
     # Run until the app quits, then clean up
+    window.show()
     mainLoop(app, q, viewModel, window)
     sys.exit(app.exec_())
     notifier.stop()
