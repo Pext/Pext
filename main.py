@@ -41,8 +41,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
         passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
 
-        self.vm.passwordList.append(passwordName)
-        self.vm.passwordList.sort()
+        self.vm.passwordList = [passwordName] + self.vm.passwordList
         self.q.put("created")
 
     def process_IN_DELETE(self, event):
@@ -53,6 +52,15 @@ class EventHandler(pyinotify.ProcessEvent):
 
         self.vm.passwordList.remove(passwordName)
         self.q.put("deleted")
+
+    def process_IN_OPEN(self, event):
+        if event.dir:
+            return
+
+        passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
+        self.vm.passwordList.remove(passwordName)
+        self.vm.passwordList = [passwordName] + self.vm.passwordList
+        self.q.put("opened")
 
 class ViewModel():
     def __init__(self):
@@ -183,14 +191,17 @@ class ViewModel():
         self.passwordList = []
 
         passDir = expanduser("~") + "/.password-store/"
+
+        unsortedPasswords = []
         for root, dirs, files in os.walk(passDir):
-            dirs.sort()
-            files.sort()
             for name in files:
                 if name[-4:] != ".gpg":
                     continue
 
-                self.passwordList.append(os.path.join(root, name)[len(passDir):-4])
+                unsortedPasswords.append(os.path.join(root, name))
+
+        for password in sorted(unsortedPasswords, key=lambda name: os.path.getatime(os.path.join(root, name)), reverse=True):
+            self.passwordList.append(password[len(passDir):-4])
 
     def goUp(self):
         if QQmlProperty.read(self.searchInputModel, "text") != "":
@@ -467,7 +478,7 @@ if __name__ == "__main__":
     eventHandler = EventHandler(viewModel, q)
     watchManager = pyinotify.WatchManager()
     notifier = pyinotify.ThreadedNotifier(watchManager, eventHandler)
-    watchManager.add_watch(expanduser("~") + "/.password-store/", pyinotify.IN_DELETE | pyinotify.IN_CREATE, rec=True, auto_add=True)
+    watchManager.add_watch(expanduser("~") + "/.password-store/", pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_OPEN, rec=True, auto_add=True)
     notifier.daemon = True
     notifier.start()
 
