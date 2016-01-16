@@ -75,7 +75,20 @@ class Store():
 
         return passwordList
 
+    def copyPasswordToClipboard(self, passwordName):
+        return self.call(["-c", passwordName])
+
+    def getAllPasswordFields(self, passwordName):
+        return self.runCommand([passwordName]).rstrip().split("\n")
+
     def runCommand(self, command, printOnSuccess=False, prefillInput=''):
+        # If we edit a password, make sure to get the original input first so we can show the user
+        if command[0] == "edit" and len(command) == 2:
+            prefillData = self.runCommand([command[1]])
+            if prefillData == None:
+                prefillData = ''
+            return self.runCommand(["insert", "-fm", command[1]], True, prefillData.rstrip())
+
         proc = pexpect.spawn("pass", command)
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)

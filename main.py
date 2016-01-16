@@ -234,13 +234,7 @@ class ViewModel():
             if commandTyped[0] not in self.store.getSupportedCommands():
                 return
 
-            if commandTyped[0] == "edit" and len(commandTyped) == 2:
-                prefillData = self.store.runCommand([commandTyped[1]])
-                if prefillData == None:
-                    prefillData = ''
-                result = self.store.runCommand(["insert", "-fm", commandTyped[1]], True, prefillData.rstrip())
-            else:
-                result = self.store.runCommand(commandTyped, True)
+            result = self.store.runCommand(commandTyped, True)
 
             if result != None:
                 QQmlProperty.write(self.searchInputModel, "text", "")
@@ -248,10 +242,10 @@ class ViewModel():
             return
 
         self.chosenEntry = self.filteredList[currentIndex]
-        passwordEntryContent = self.store.runCommand([self.chosenEntry]).rstrip().split("\n")
+        passwordEntryContent = self.store.getAllPasswordFields(self.chosenEntry)
 
         if len(passwordEntryContent) == 1:
-            self.store.call(["-c", self.chosenEntry])
+            self.store.copyPasswordToClipboard(self.chosenEntry)
             self.window.close()
             return
 
@@ -279,7 +273,7 @@ class ViewModel():
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if self.filteredList[currentIndex] == "********":
-            self.store.call(["-c", self.chosenEntry])
+            self.store.copyPasswordToClipboard(self.chosenEntry)
             self.window.close()
             return
 
