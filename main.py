@@ -55,12 +55,26 @@ class EventHandler(pyinotify.ProcessEvent):
         self.vm.passwordList.remove(passwordName)
         self.q.put("deleted")
 
+    def process_IN_MOVED_FROM(self, event):
+        self.process_IN_DELETE(event)
+
+    def process_IN_MOVED_TO(self, event):
+        self.process_IN_CREATE(event)
+
     def process_IN_OPEN(self, event):
         if event.dir:
             return
 
         passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
-        self.vm.passwordList.remove(passwordName)
+
+        try:
+            self.vm.passwordList.remove(passwordName)
+        except ValueError:
+            # process_IN_OPEN is also called when moving files, after the
+            # initial move event. In this case, we want to do nothing and let
+            # IN_MOVED_FROM and IN_MOVED_TO handle this
+            return
+
         self.vm.passwordList = [passwordName] + self.vm.passwordList
         self.q.put("opened")
 
@@ -563,7 +577,8 @@ if __name__ == "__main__":
     eventHandler = EventHandler(viewModel, q)
     watchManager = pyinotify.WatchManager()
     notifier = pyinotify.ThreadedNotifier(watchManager, eventHandler)
-    watchManager.add_watch(expanduser("~") + "/.password-store/", pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_OPEN, rec=True, auto_add=True)
+    watchedEvents = pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO | pyinotify.IN_OPEN
+    watchManager.add_watch(expanduser("~") + "/.password-store/", watchedEvents, rec=True, auto_add=True)
     notifier.daemon = True
     notifier.start()
 
