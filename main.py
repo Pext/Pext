@@ -41,7 +41,7 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
+        passwordName = event.pathname[len(expanduser("~") + "/.password-store/"):-4]
 
         self.vm.passwordList = [passwordName] + self.vm.passwordList
         self.q.put("created")
@@ -50,7 +50,7 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
+        passwordName = event.pathname[len(expanduser("~") + "/.password-store/"):-4]
 
         self.vm.passwordList.remove(passwordName)
         self.q.put("deleted")
@@ -65,7 +65,7 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        passwordName = event.pathname.lstrip(expanduser("~") + "/.password-store/")[:-4]
+        passwordName = event.pathname[len(expanduser("~") + "/.password-store/"):-4]
 
         try:
             self.vm.passwordList.remove(passwordName)
