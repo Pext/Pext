@@ -26,7 +26,7 @@ from subprocess import call, check_output, Popen, CalledProcessError, PIPE
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog, QMessageBox, QVBoxLayout, QLabel, QTextEdit, QDialogButtonBox
+from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QMessageBox, QVBoxLayout, QLabel, QLineEdit, QTextEdit, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 import pyinotify
@@ -137,7 +137,7 @@ class ViewModel():
     def runCommand(self, command, printOnSuccess=False, prefillInput=''):
         proc = pexpect.spawn(command[0], command[1:])
         while True:
-            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", " and press Ctrl+D when finished:"], timeout=3)
+            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)
             if result == 0:
                 exitCode = proc.sendline("echo $?")
                 break
@@ -155,7 +155,17 @@ class ViewModel():
                 else:
                     proc.sendline('n')
                 proc.setecho(True)
-            elif result == 4:
+            elif result == 4 or result == 5:
+                printOnSuccess = False
+                proc.setecho(False)
+                answer, ok = QInputDialog.getText(self.window, "Input", proc.after.decode("utf-8"), QLineEdit.Password)
+                if not ok:
+                    break
+
+                proc.waitnoecho()
+                proc.sendline(answer)
+                proc.setecho(True)
+            elif result == 6:
                 dialog = InputDialog(proc.before.decode("utf-8").lstrip(), prefillInput, self.window)
 
                 accepted = 0
