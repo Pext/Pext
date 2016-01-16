@@ -21,62 +21,12 @@ import signal
 import sys
 import re
 import time
-from os.path import expanduser
-from subprocess import call, check_output, Popen, CalledProcessError, PIPE
+from subprocess import Popen, PIPE
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QMessageBox, QVBoxLayout, QLabel, QLineEdit, QTextEdit, QDialogButtonBox
+from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QTextEdit, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
-
-import pyinotify
-import pexpect
-
-class EventHandler(pyinotify.ProcessEvent):
-    def __init__(self, vm, q):
-        self.vm = vm
-        self.q = q
-
-    def process_IN_CREATE(self, event):
-        if event.dir:
-            return
-
-        passwordName = event.pathname[len(expanduser("~") + "/.password-store/"):-4]
-
-        self.vm.passwordList = [passwordName] + self.vm.passwordList
-        self.q.put("created")
-
-    def process_IN_DELETE(self, event):
-        if event.dir:
-            return
-
-        passwordName = event.pathname[len(expanduser("~") + "/.password-store/"):-4]
-
-        self.vm.passwordList.remove(passwordName)
-        self.q.put("deleted")
-
-    def process_IN_MOVED_FROM(self, event):
-        self.process_IN_DELETE(event)
-
-    def process_IN_MOVED_TO(self, event):
-        self.process_IN_CREATE(event)
-
-    def process_IN_OPEN(self, event):
-        if event.dir:
-            return
-
-        passwordName = event.pathname[len(expanduser("~") + "/.password-store/"):-4]
-
-        try:
-            self.vm.passwordList.remove(passwordName)
-        except ValueError:
-            # process_IN_OPEN is also called when moving files, after the
-            # initial move event. In this case, we want to do nothing and let
-            # IN_MOVED_FROM and IN_MOVED_TO handle this
-            return
-
-        self.vm.passwordList = [passwordName] + self.vm.passwordList
-        self.q.put("opened")
 
 class SignalHandler():
     def __init__(self, window):
@@ -88,9 +38,6 @@ class SignalHandler():
 
 class ViewModel():
     def __init__(self):
-        self.getCommands()
-        self.getPasswords()
-
         self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
 
         # Temporary values to allow binding. These will be properly set when
@@ -108,6 +55,12 @@ class ViewModel():
         self.window = window
         self.searchInputModel = searchInputModel
         self.resultListModel = resultListModel
+
+    def bindStore(self, store):
+        self.store = store
+
+        self.commandsText = self.store.getCommands()
+        self.passwordList = self.store.getPasswords()
 
         self.search()
 
@@ -134,67 +87,6 @@ class ViewModel():
         self.messageListModelList = QStringListModel(messageListForModel)
         self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
-    def runCommand(self, command, printOnSuccess=False, prefillInput=''):
-        proc = pexpect.spawn(command[0], command[1:])
-        while True:
-            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)
-            if result == 0:
-                exitCode = proc.sendline("echo $?")
-                break
-            elif result == 1 and proc.before:
-                self.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by PyPass.".format(" ".join(command)))
-                self.addError("Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8"))))
-
-                return None
-            elif result == 2 or result == 3:
-                proc.setecho(False)
-                answer = QMessageBox.question(self.window, "Confirmation", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
-                proc.waitnoecho()
-                if answer == QMessageBox.Yes:
-                    proc.sendline('y')
-                else:
-                    proc.sendline('n')
-                proc.setecho(True)
-            elif result == 4 or result == 5:
-                printOnSuccess = False
-                proc.setecho(False)
-                answer, ok = QInputDialog.getText(self.window, "Input", proc.after.decode("utf-8"), QLineEdit.Password)
-                if not ok:
-                    break
-
-                proc.waitnoecho()
-                proc.sendline(answer)
-                proc.setecho(True)
-            elif result == 6:
-                dialog = InputDialog(proc.before.decode("utf-8").lstrip(), prefillInput, self.window)
-
-                accepted = 0
-                while accepted != 1:
-                    result = dialog.show()
-                    accepted = result[1]
-
-                proc.setecho(False)
-                proc.waitnoecho()
-                for line in result[0].splitlines():
-                    proc.sendline(line)
-                proc.sendcontrol("d")
-                proc.setecho(True)
-
-        proc.close()
-        exitCode = proc.exitstatus
-
-        message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
-
-        if exitCode == 0:
-            if printOnSuccess and message:
-                self.addMessage(message)
-
-            return message
-        else:
-            self.addError(message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command)))
-
-            return None
-
     def clearOldMessages(self):
         if len(self.messageList) == 0:
             return
@@ -203,39 +95,6 @@ class ViewModel():
         currentTime = time.time()
         self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
         self.showMessages()
-
-    def getCommands(self):
-        self.commandsText = []
-
-        self.supportedCommands = ["init", "insert", "edit", "generate", "rm", "mv", "cp"]
-
-        # We will crash here if pass is not installed.
-        # TODO: Find a nice way to notify the user they need to install pass
-        commandText = check_output(["pass", "--help"])
-
-        for line in commandText.splitlines():
-            strippedLine = line.lstrip().decode("utf-8")
-            if strippedLine[:4] == "pass":
-                command = strippedLine[5:]
-                for supportedCommand in self.supportedCommands:
-                    if command.startswith(supportedCommand):
-                        self.commandsText.append(command)
-
-    def getPasswords(self):
-        self.passwordList = []
-
-        passDir = expanduser("~") + "/.password-store/"
-
-        unsortedPasswords = []
-        for root, dirs, files in os.walk(passDir):
-            for name in files:
-                if name[-4:] != ".gpg":
-                    continue
-
-                unsortedPasswords.append(os.path.join(root, name))
-
-        for password in sorted(unsortedPasswords, key=lambda name: os.path.getatime(os.path.join(root, name)), reverse=True):
-            self.passwordList.append(password[len(passDir):-4])
 
     def goUp(self):
         if QQmlProperty.read(self.searchInputModel, "text") != "":
@@ -372,17 +231,16 @@ class ViewModel():
 
         if currentIndex == -1:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
-            if commandTyped[0] not in self.supportedCommands:
+            if commandTyped[0] not in self.store.getSupportedCommands():
                 return
 
             if commandTyped[0] == "edit" and len(commandTyped) == 2:
-                prefillData = self.runCommand(["pass", commandTyped[1]])
+                prefillData = self.store.runCommand([commandTyped[1]])
                 if prefillData == None:
                     prefillData = ''
-                result = self.runCommand(["pass", "insert", "-fm", commandTyped[1]], True, prefillData.rstrip())
+                result = self.store.runCommand(["insert", "-fm", commandTyped[1]], True, prefillData.rstrip())
             else:
-                callCommand = ["pass"] + commandTyped
-                result = self.runCommand(callCommand, True)
+                result = self.store.runCommand(commandTyped, True)
 
             if result != None:
                 QQmlProperty.write(self.searchInputModel, "text", "")
@@ -390,10 +248,10 @@ class ViewModel():
             return
 
         self.chosenEntry = self.filteredList[currentIndex]
-        passwordEntryContent = self.runCommand(["pass", self.chosenEntry]).rstrip().split("\n")
+        passwordEntryContent = self.store.runCommand([self.chosenEntry]).rstrip().split("\n")
 
         if len(passwordEntryContent) == 1:
-            call(["pass", "-c", self.chosenEntry])
+            self.store.call(["-c", self.chosenEntry])
             self.window.close()
             return
 
@@ -421,7 +279,7 @@ class ViewModel():
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if self.filteredList[currentIndex] == "********":
-            call(["pass", "-c", self.chosenEntry])
+            self.store.call(["-c", self.chosenEntry])
             self.window.close()
             return
 
@@ -509,7 +367,7 @@ class Window(QDialog):
 
 def loadSettings(argv):
     # Default options
-    settings = {'closeWhenDone': False}
+    settings = {'closeWhenDone': False, 'passwordStore': 'pass'}
 
     try:
         opts, args = getopt.getopt(argv, "h", ["--help", "close-when-done"])
@@ -567,11 +425,13 @@ def mainLoop(app, q, vm, window):
 if __name__ == "__main__":
     settings = loadSettings(sys.argv[1:])
 
+    if settings['passwordStore'] == 'pass':
+        from store_pass import Store
+
     if not settings['closeWhenDone']:
         initPersist()
 
-    # Set up a queue so that the EventHandler can tell the main thread to
-    # redraw the UI.
+    # Set up a queue so that the store can communicate with the main thread
     q = Queue()
 
     app = QApplication(sys.argv)
@@ -580,24 +440,18 @@ if __name__ == "__main__":
     viewModel = ViewModel()
     window = Window(viewModel, settings)
 
+    store = Store(viewModel, window, q)
+    viewModel.bindStore(store)
+
     # Handle signal
     signalHandler = SignalHandler(window)
     signal.signal(signal.SIGUSR1, signalHandler.handle)
-
-    # Initialize the EventHandler and make it watch the password store
-    eventHandler = EventHandler(viewModel, q)
-    watchManager = pyinotify.WatchManager()
-    notifier = pyinotify.ThreadedNotifier(watchManager, eventHandler)
-    watchedEvents = pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO | pyinotify.IN_OPEN
-    watchManager.add_watch(expanduser("~") + "/.password-store/", watchedEvents, rec=True, auto_add=True)
-    notifier.daemon = True
-    notifier.start()
 
     # Run until the app quits, then clean up
     window.show()
     mainLoop(app, q, viewModel, window)
     sys.exit(app.exec_())
-    notifier.stop()
+    store.stop()
 
     if not settings['closeWhenDone']:
         os.unlink(pidfile)
