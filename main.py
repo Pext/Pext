@@ -137,7 +137,7 @@ class ViewModel():
     def runCommand(self, command, printOnSuccess=False, prefillInput=''):
         proc = pexpect.spawn(command[0], command[1:])
         while True:
-            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", " and press Ctrl+D when finished:"], timeout=0.1)
+            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", " and press Ctrl+D when finished:"], timeout=3)
             if result == 0:
                 exitCode = proc.sendline("echo $?")
                 break
