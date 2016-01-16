@@ -547,6 +547,7 @@ def mainLoop(app, q, vm, window):
             q.get_nowait()
         except Empty:
             app.processEvents()
+            time.sleep(0.01)
             continue
 
         vm.search()
