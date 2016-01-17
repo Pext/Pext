@@ -119,7 +119,7 @@ class Store():
                 return None
             elif result == 2 or result == 3:
                 proc.setecho(False)
-                answer = QMessageBox.question(self.window, "Confirmation", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
+                answer = QMessageBox.question(self.window, "PyPass", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
                 proc.waitnoecho()
                 if answer == QMessageBox.Yes:
                     proc.sendline('y')
@@ -129,7 +129,7 @@ class Store():
             elif result == 4 or result == 5:
                 printOnSuccess = False
                 proc.setecho(False)
-                answer, ok = QInputDialog.getText(self.window, "Input", proc.after.decode("utf-8"), QLineEdit.Password)
+                answer, ok = QInputDialog.getText(self.window, "PyPass", proc.after.decode("utf-8"), QLineEdit.Password)
                 if not ok:
                     break
 

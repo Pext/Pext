@@ -296,7 +296,7 @@ class InputDialog(QDialog):
     def __init__(self, question, text, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle("Input needed")
+        self.setWindowTitle("PyPass")
 
         layout = QVBoxLayout(self)
 
