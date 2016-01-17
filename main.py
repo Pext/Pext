@@ -382,9 +382,9 @@ def usage():
     print("Options:")
     print("")
     print("--close-when-done : close after completing an action such as copying")
-    print("                    a password or closing the application (through ")
-    print("                    escape or (on most systems) Alt+F4) instead of ")
-    print("                    staying in memory. This also allows multiple ")
+    print("                    a password or closing the application (through")
+    print("                    escape or (on most systems) Alt+F4) instead of")
+    print("                    staying in memory. This also allows multiple")
     print("                    instances to be ran at once.")
 
 def initPersist():
