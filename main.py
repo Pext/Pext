@@ -403,8 +403,12 @@ def initPersist(store):
 
     if os.path.isfile(pidfile):
         # Notify the main process
-        os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
-        sys.exit()
+        try:
+            os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
+            sys.exit()
+        except ProcessLookupError:
+            # PyPass closed, but died not clean up its pidfile
+            pass
 
     # We are the only instance, claim our pidfile
     pid = str(os.getpid())
