@@ -74,8 +74,8 @@ class Store():
 
         return commandsText
 
-    def getPasswords(self):
-        passwordList = []
+    def getEntries(self):
+        entryList = []
 
         passDir = self.getStoreLocation()
 
@@ -88,15 +88,15 @@ class Store():
                 unsortedPasswords.append(os.path.join(root, name))
 
         for password in sorted(unsortedPasswords, key=lambda name: os.path.getatime(os.path.join(root, name)), reverse=True):
-            passwordList.append(password[len(passDir):-4])
+            entryList.append(password[len(passDir):-4])
 
-        return passwordList
+        return entryList
 
-    def copyPasswordToClipboard(self, passwordName):
-        return self.call(["-c", passwordName])
+    def copyEntryToClipboard(self, entryName):
+        self.call(["-c", entryName])
 
-    def getAllPasswordFields(self, passwordName):
-        return self.runCommand([passwordName]).rstrip().split("\n")
+    def getAllEntryFields(self, entryName):
+        return self.runCommand([entryName]).rstrip().split("\n")
 
     def runCommand(self, command, printOnSuccess=False, prefillInput=''):
         # If we edit a password, make sure to get the original input first so we can show the user
@@ -176,18 +176,18 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        passwordName = event.pathname[len(self.store.getStoreLocation()):-4]
+        entryName = event.pathname[len(self.store.getStoreLocation()):-4]
 
-        self.vm.passwordList = [passwordName] + self.vm.passwordList
+        self.vm.entryList = [entryName] + self.vm.entryList
         self.q.put("created")
 
     def process_IN_DELETE(self, event):
         if event.dir:
             return
 
-        passwordName = event.pathname[len(self.store.getStoreLocation()):-4]
+        entryName = event.pathname[len(self.store.getStoreLocation()):-4]
 
-        self.vm.passwordList.remove(passwordName)
+        self.vm.entryList.remove(entryName)
         self.q.put("deleted")
 
     def process_IN_MOVED_FROM(self, event):
@@ -200,16 +200,16 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        passwordName = event.pathname[len(self.store.getStoreLocation()):-4]
+        entryName = event.pathname[len(self.store.getStoreLocation()):-4]
 
         try:
-            self.vm.passwordList.remove(passwordName)
+            self.vm.entryList.remove(entryName)
         except ValueError:
             # process_IN_OPEN is also called when moving files, after the
             # initial move event. In this case, we want to do nothing and let
             # IN_MOVED_FROM and IN_MOVED_TO handle this
             return
 
-        self.vm.passwordList = [passwordName] + self.vm.passwordList
+        self.vm.entryList = [entryName] + self.vm.entryList
         self.q.put("opened")
 

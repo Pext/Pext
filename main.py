@@ -60,7 +60,7 @@ class ViewModel():
         self.store = store
 
         self.commandsText = self.store.getCommands()
-        self.passwordList = self.store.getPasswords()
+        self.entryList = self.store.getEntries()
 
         self.search()
 
@@ -152,9 +152,9 @@ class ViewModel():
         commandList = []
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
-        for password in self.passwordList:
-            if all(searchString in password.lower() for searchString in searchStrings):
-                self.filteredList.append(password)
+        for entry in self.entryList:
+            if all(searchString in entry.lower() for searchString in searchStrings):
+                self.filteredList.append(entry)
 
         self.resultListModelMaxIndex = len(self.filteredList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
@@ -165,9 +165,9 @@ class ViewModel():
 
         if len(self.filteredList) == 0 and len(commandList) > 0:
             self.filteredList = commandList
-            for password in self.passwordList:
-                if any(searchString in password.lower() for searchString in searchStrings[1:]):
-                    self.filteredList.append(password)
+            for entry in self.entryList:
+                if any(searchString in entry.lower() for searchString in searchStrings[1:]):
+                    self.filteredList.append(entry)
         else:
             self.filteredList += commandList
 
@@ -188,7 +188,7 @@ class ViewModel():
 
     def searchChosenEntry(self):
         # Ensure this entry still exists
-        if self.chosenEntry not in self.passwordList:
+        if self.chosenEntry not in self.entryList:
             self.addError(self.chosenEntry + " is no longer available")
             self.chosenEntry = None
             QQmlProperty.write(self.searchInputModel, "text", "")
@@ -242,22 +242,22 @@ class ViewModel():
             return
 
         self.chosenEntry = self.filteredList[currentIndex]
-        passwordEntryContent = self.store.getAllPasswordFields(self.chosenEntry)
+        entryContent = self.store.getAllEntryFields(self.chosenEntry)
 
-        if len(passwordEntryContent) == 1:
-            self.store.copyPasswordToClipboard(self.chosenEntry)
+        if len(entryContent) == 1:
+            self.store.copyEntryToClipboard(self.chosenEntry)
             self.window.close()
             return
 
         # The first line is most likely the password. Do not show this on the
         # screen
-        passwordEntryContent[0] = "********"
+        entryContent[0] = "********"
 
         # If the password entry has more than one line, fill the result list
         # with all lines, so the user can choose the line they want to copy to
         # the clipboard
-        self.chosenEntryList = passwordEntryContent
-        self.filteredList = passwordEntryContent
+        self.chosenEntryList = entryContent
+        self.filteredList = entryContent
 
         self.resultListModelList = QStringListModel(self.filteredList)
         self.context.setContextProperty("resultListModel", self.resultListModelList)
@@ -273,7 +273,7 @@ class ViewModel():
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if self.filteredList[currentIndex] == "********":
-            self.store.copyPasswordToClipboard(self.chosenEntry)
+            self.store.copyEntryToClipboard(self.chosenEntry)
             self.window.close()
             return
 
@@ -364,8 +364,10 @@ def loadSettings(argv):
     settings = {'closeWhenDone': False, 'passwordStore': 'pass'}
 
     try:
-        opts, args = getopt.getopt(argv, "h", ["--help", "close-when-done"])
-    except getopt.GetoptError:
+        opts, args = getopt.getopt(argv, "hs:", ["help", "close-when-done", "store="])
+    except getopt.GetoptError as err:
+        print(err)
+        print("")
         usage()
         sys.exit(1)
 
@@ -375,6 +377,8 @@ def loadSettings(argv):
             sys.exit()
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
+        elif opt in ("-s", "--store"):
+            settings['passwordStore'] = args;
 
     return settings
 
@@ -386,6 +390,9 @@ def usage():
     print("                    escape or (on most systems) Alt+F4) instead of")
     print("                    staying in memory. This also allows multiple")
     print("                    instances to be ran at once.")
+    print("")
+    print("--store           : use another store than pass. Currently supported")
+    print("                    are pass and todo.sh.")
 
 def initPersist():
     # Ensure only one PyPass instance is running. If one already exists,
@@ -421,6 +428,11 @@ if __name__ == "__main__":
 
     if settings['passwordStore'] == 'pass':
         from store_pass import Store
+    elif settings['passwordStore'] == 'todo.sh':
+        from store_todo_sh import Store
+    else:
+        print('Unsupported store requested.')
+        sys.exit(2);
 
     if not settings['closeWhenDone']:
         initPersist()
