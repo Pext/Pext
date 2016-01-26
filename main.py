@@ -394,12 +394,12 @@ def usage():
     print("--store           : use another store than pass. Currently supported")
     print("                    are pass and todo.sh.")
 
-def initPersist():
+def initPersist(store):
     # Ensure only one PyPass instance is running. If one already exists,
     # signal it to open the password selection window.
     # This way, we can keep the password list in memory and start up extra
     # quickly.
-    pidfile = "/tmp/pypass.pid"
+    pidfile = "/tmp/pypass-" + store + ".pid"
 
     if os.path.isfile(pidfile):
         # Notify the main process
@@ -435,7 +435,7 @@ if __name__ == "__main__":
         sys.exit(2);
 
     if not settings['closeWhenDone']:
-        initPersist()
+        initPersist(settings['passwordStore'])
 
     # Set up a queue so that the store can communicate with the main thread
     q = Queue()
