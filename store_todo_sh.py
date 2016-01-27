@@ -49,7 +49,7 @@ class Store():
 
         # We will crash here if todo.sh is not installed.
         # TODO: Find a nice way to notify the user they need to install todo.sh
-        commandText = self.call(["--help"], returnOutput=True)
+        commandText = self.call(["-h"], returnOutput=True)
 
         for line in commandText.splitlines():
             strippedLine = line.lstrip()
