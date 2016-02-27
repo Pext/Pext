@@ -27,7 +27,12 @@ from main import InputDialog
 import pyinotify
 
 class Store():
-    def __init__(self, vm, window, q):
+    def __init__(self, binary, vm, window, q):
+        if binary == None:
+            self.binary = "pass"
+        else:
+            self.binary = binary
+
         self.vm = vm
         self.window = window
         self.q = q
@@ -51,7 +56,7 @@ class Store():
         return expanduser("~") + "/.password-store/"
 
     def call(self, command):
-        callCommand = ["pass"] + command
+        callCommand = [self.binary] + command
         call(callCommand)
 
     def getSupportedCommands(self):
@@ -62,7 +67,7 @@ class Store():
 
         # We will crash here if pass is not installed.
         # TODO: Find a nice way to notify the user they need to install pass
-        commandText = check_output(["pass", "--help"])
+        commandText = check_output([self.binary, "--help"])
 
         for line in commandText.splitlines():
             strippedLine = line.lstrip().decode("utf-8")
@@ -106,7 +111,7 @@ class Store():
                 prefillData = ''
             return self.runCommand(["insert", "-fm", command[1]], True, prefillData.rstrip())
 
-        proc = pexpect.spawn("pass", command)
+        proc = pexpect.spawn(self.binary, command)
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)
             if result == 0:

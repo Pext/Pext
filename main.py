@@ -361,10 +361,10 @@ class Window(QDialog):
 
 def loadSettings(argv):
     # Default options
-    settings = {'closeWhenDone': False, 'passwordStore': 'pass'}
+    settings = {'binary': None, 'closeWhenDone': False, 'store': 'pass'}
 
     try:
-        opts, args = getopt.getopt(argv, "hs:", ["help", "close-when-done", "store="])
+        opts, args = getopt.getopt(argv, "hb:s:", ["help", "binary=", "close-when-done", "store="])
     except getopt.GetoptError as err:
         print(err)
         print("")
@@ -378,12 +378,18 @@ def loadSettings(argv):
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
         elif opt in ("-s", "--store"):
-            settings['passwordStore'] = args;
+            settings['store'] = args;
+        elif opt in ("-b", "--binary"):
+            settings['binary'] = args;
 
     return settings
 
 def usage():
     print("Options:")
+    print("")
+    print("--binary          : choose the name of the binary to use. Defaults")
+    print("                    to 'pass' for the pass store and todo.sh for")
+    print("                    the todo.sh store. Paths are allowed")
     print("")
     print("--close-when-done : close after completing an action such as copying")
     print("                    a password or closing the application (through")
@@ -430,16 +436,16 @@ def mainLoop(app, q, vm, window):
 if __name__ == "__main__":
     settings = loadSettings(sys.argv[1:])
 
-    if settings['passwordStore'] == 'pass':
+    if settings['store'] == 'pass':
         from store_pass import Store
-    elif settings['passwordStore'] == 'todo.sh':
+    elif settings['store'] == 'todo.sh':
         from store_todo_sh import Store
     else:
         print('Unsupported store requested.')
         sys.exit(2);
 
     if not settings['closeWhenDone']:
-        initPersist(settings['passwordStore'])
+        initPersist(settings['store'])
 
     # Set up a queue so that the store can communicate with the main thread
     q = Queue()
@@ -450,7 +456,7 @@ if __name__ == "__main__":
     viewModel = ViewModel()
     window = Window(viewModel, settings)
 
-    store = Store(viewModel, window, q)
+    store = Store(settings['binary'], viewModel, window, q)
     viewModel.bindStore(store)
 
     # Handle signal

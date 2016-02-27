@@ -23,7 +23,12 @@ from PyQt5.QtWidgets import QMessageBox
 import pexpect
 
 class Store():
-    def __init__(self, vm, window, q):
+    def __init__(self, binary, vm, window, q):
+        if binary == None:
+            self.binary = "todo.sh"
+        else:
+            self.binary = binary
+
         self.vm = vm
         self.window = window
 
@@ -35,9 +40,9 @@ class Store():
 
     def call(self, command, returnOutput=False):
         if returnOutput:
-            return check_output(["todo.sh"] + command).decode("utf-8")
+            return check_output([self.binary] + command).decode("utf-8")
         else:
-            call(["todo.sh"] + command)
+            call([self.binary] + command)
 
     def getSupportedCommands(self):
         return ["add", "addto", "append", "archive", "deduplicate", "rm", "depri", "do", "mv", "prepend", "pri", "replace"]
@@ -89,7 +94,7 @@ class Store():
         return ['']
 
     def runCommand(self, command, printOnSuccess=False):
-        proc = pexpect.spawn("todo.sh", command)
+        proc = pexpect.spawn(self.binary, command)
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "(y/n)"], timeout=3)
             if result == 0:
