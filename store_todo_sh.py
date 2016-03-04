@@ -18,6 +18,7 @@
 import os
 from os.path import expanduser
 from subprocess import call, check_output
+from shlex import quote
 
 from PyQt5.QtWidgets import QMessageBox
 import pexpect
@@ -82,7 +83,7 @@ class Store():
         for line in commandOutput:
             if line == '--':
                 break
-            
+
             entryList.append(line)
 
         return entryList
@@ -93,8 +94,8 @@ class Store():
     def getAllEntryFields(self, passwordName):
         return ['']
 
-    def runCommand(self, command, printOnSuccess=False):
-        proc = pexpect.spawn(self.binary, command)
+    def runCommand(self, command, printOnSuccess=False, hideErrors=False):
+        proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + quote(" ".join(command)) + " 2>/dev/null" if hideErrors else ""])
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "(y/n)"], timeout=3)
             if result == 0:

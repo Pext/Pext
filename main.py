@@ -234,7 +234,7 @@ class ViewModel():
             if commandTyped[0] not in self.store.getSupportedCommands():
                 return
 
-            result = self.store.runCommand(commandTyped, True)
+            result = self.store.runCommand(commandTyped, printOnSuccess=True)
 
             if result != None:
                 QQmlProperty.write(self.searchInputModel, "text", "")

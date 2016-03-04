@@ -18,6 +18,7 @@
 import os
 from os.path import expanduser
 from subprocess import call, check_output
+from shlex import quote
 
 from PyQt5.QtWidgets import QInputDialog, QMessageBox, QLineEdit
 import pexpect
@@ -101,9 +102,9 @@ class Store():
         self.call(["-c", entryName])
 
     def getAllEntryFields(self, entryName):
-        return self.runCommand([entryName]).rstrip().split("\n")
+        return self.runCommand([entryName], hideErrors=True).rstrip().split("\n")
 
-    def runCommand(self, command, printOnSuccess=False, prefillInput=''):
+    def runCommand(self, command, printOnSuccess=False, hideErrors=False, prefillInput=''):
         # If we edit a password, make sure to get the original input first so we can show the user
         if command[0] == "edit" and len(command) == 2:
             prefillData = self.runCommand([command[1]])
@@ -111,7 +112,7 @@ class Store():
                 prefillData = ''
             return self.runCommand(["insert", "-fm", command[1]], True, prefillData.rstrip())
 
-        proc = pexpect.spawn(self.binary, command)
+        proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + quote(" ".join(command)) + " 2>/dev/null" if hideErrors else ""])
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)
             if result == 0:
