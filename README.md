@@ -2,7 +2,7 @@
 PyPass is a Python-based password and todo-list manager, built using QML,
 heavily inspired by [GoPass](https://github.com/cortex/gopass).
 
-![Screencast](screencast.gif)
+![Screencast](screencast.gif)  
 *The above screencast is updated manually and may not be up-to-date with the
 latest development. Also, the background image is the default KDE Plasma 5.4
 wallpaper and not part of PyPass.*
@@ -25,6 +25,11 @@ an entry with a single click.
 To get the most out of PyPass, set up your system to start it with a global
 hotkey, so you can always quickly access a password (or your todo list) when
 you need it.
+
+## Dependencies
+### Debian
+
+    sudo apt-get install python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls python3-pexpect python3-pyinotify pass
 
 ## License
 GPLv3+.
