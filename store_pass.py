@@ -112,7 +112,11 @@ class Store():
                 prefillData = ''
             return self.runCommand(["insert", "-fm", command[1]], True, prefillData.rstrip())
 
-        proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + quote(" ".join(command)) + " 2>/dev/null" if hideErrors else ""])
+        sanitizedCommandList = []
+        for commandPart in command:
+            sanitizedCommandList.append(quote(commandPart))
+
+        proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + " ".join(sanitizedCommandList) + (" 2>/dev/null" if hideErrors else "")])
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)
             if result == 0:

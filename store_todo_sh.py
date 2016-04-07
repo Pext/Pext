@@ -95,7 +95,11 @@ class Store():
         return ['']
 
     def runCommand(self, command, printOnSuccess=False, hideErrors=False):
-        proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + quote(" ".join(command)) + " 2>/dev/null" if hideErrors else ""])
+        sanitizedCommandList = []
+        for commandPart in command:
+            sanitizedCommandList.append(quote(commandPart))
+
+        proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + " ".join(sanitizedCommandList) + (" 2>/dev/null" if hideErrors else "")])
         while True:
             result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "(y/n)"], timeout=3)
             if result == 0:
