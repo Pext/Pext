@@ -378,9 +378,9 @@ def loadSettings(argv):
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
         elif opt in ("-s", "--store"):
-            settings['store'] = args;
+            settings['store'] = args
         elif opt in ("-b", "--binary"):
-            settings['binary'] = args;
+            settings['binary'] = args
 
     return settings
 
@@ -436,13 +436,13 @@ def mainLoop(app, q, vm, window):
 if __name__ == "__main__":
     settings = loadSettings(sys.argv[1:])
 
-    if settings['store'] == 'pass':
-        from store_pass import Store
-    elif settings['store'] == 'todo.sh':
-        from store_todo_sh import Store
-    else:
+    try:
+        storeImport = __import__('store_' + settings['store'].replace('.', '_'), fromlist=['Store'])
+    except ImportError:
         print('Unsupported store requested.')
-        sys.exit(2);
+        sys.exit(2)
+
+    Store = getattr(storeImport, 'Store')
 
     if not settings['closeWhenDone']:
         initPersist(settings['store'])
