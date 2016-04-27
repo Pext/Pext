@@ -99,18 +99,18 @@ class Store():
         return entryList
 
     def copyEntryToClipboard(self, entryName):
-        self.call(["-c", entryName])
+        self.call(["show", "-c", entryName])
 
     def getAllEntryFields(self, entryName):
-        return self.runCommand([entryName], hideErrors=True).rstrip().split("\n")
+        return self.runCommand(["show", entryName], hideErrors=True).rstrip().split("\n")
 
     def runCommand(self, command, printOnSuccess=False, hideErrors=False, prefillInput=''):
         # If we edit a password, make sure to get the original input first so we can show the user
         if command[0] == "edit" and len(command) == 2:
-            prefillData = self.runCommand([command[1]])
+            prefillData = self.runCommand(["show", command[1]], hideErrors=True)
             if prefillData == None:
                 prefillData = ''
-            return self.runCommand(["insert", "-fm", command[1]], True, prefillData.rstrip())
+            return self.runCommand(["insert", "-fm", command[1]], printOnSuccess=True, prefillInput=prefillData.rstrip())
 
         sanitizedCommandList = []
         for commandPart in command:
