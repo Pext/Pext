@@ -366,8 +366,7 @@ def loadSettings(argv):
     try:
         opts, args = getopt.getopt(argv, "hb:s:", ["help", "binary=", "close-when-done", "store="])
     except getopt.GetoptError as err:
-        print(err)
-        print("")
+        print("%s\n" % err)
         usage()
         sys.exit(1)
 
@@ -385,20 +384,20 @@ def loadSettings(argv):
     return settings
 
 def usage():
-    print("Options:")
-    print("")
-    print("--binary          : choose the name of the binary to use. Defaults")
-    print("                    to 'pass' for the pass store and todo.sh for")
-    print("                    the todo.sh store. Paths are allowed")
-    print("")
-    print("--close-when-done : close after completing an action such as copying")
-    print("                    a password or closing the application (through")
-    print("                    escape or (on most systems) Alt+F4) instead of")
-    print("                    staying in memory. This also allows multiple")
-    print("                    instances to be ran at once.")
-    print("")
-    print("--store           : use another store than pass. Currently supported")
-    print("                    are pass and todo.sh.")
+    print('''Options:
+
+--binary          : choose the name of the binary to use. Defaults
+                    to 'pass' for the pass store and todo.sh for
+                    the todo.sh store. Paths are allowed
+
+--close-when-done : close after completing an action such as copying
+                    a password or closing the application (through
+                    escape or (on most systems) Alt+F4) instead of
+                    staying in memory. This also allows multiple
+                    instances to be ran at once.
+
+--store           : use another store than pass. Currently supported
+                    are pass and todo.sh.''')
 
 def initPersist(store):
     # Ensure only one PyPass instance is running. If one already exists,
