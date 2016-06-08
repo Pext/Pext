@@ -25,10 +25,7 @@ import pexpect
 
 class Store():
     def __init__(self, binary, vm, window, q):
-        if binary == None:
-            self.binary = "todo.sh"
-        else:
-            self.binary = binary
+        self.binary = "todo.sh" if (binary == None) else binary
 
         self.vm = vm
         self.window = window
@@ -114,10 +111,7 @@ class Store():
                 proc.setecho(False)
                 answer = QMessageBox.question(self.window, "PyPass", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No)
                 proc.waitnoecho()
-                if answer == QMessageBox.Yes:
-                    proc.sendline('y')
-                else:
-                    proc.sendline('n')
+                proc.sendline('y' if (answer == QMessageBox.Yes) else 'n')
                 proc.setecho(True)
 
         proc.close()

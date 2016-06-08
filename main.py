@@ -66,24 +66,20 @@ class ViewModel():
 
     def addError(self, message):
         for line in message.splitlines():
-            if not line or line.isspace():
-                continue
-            self.messageList.append(["<font color='red'>{}</color>".format(line), time.time()])
+            if not (not line or line.isspace()):
+                self.messageList.append(["<font color='red'>{}</color>".format(line), time.time()])
 
         self.showMessages()
 
     def addMessage(self, message):
         for line in message.splitlines():
-            if not line or line.isspace():
-                continue
-            self.messageList.append([line, time.time()])
+            if not (not line or line.isspace()):
+                self.messageList.append([line, time.time()])
 
         self.showMessages()
 
     def showMessages(self):
-        messageListForModel = []
-        for message in self.messageList:
-            messageListForModel.append(message[0])
+        messageListForModel = [message[0] for message in self.messageList]
         self.messageListModelList = QStringListModel(messageListForModel)
         self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
@@ -118,7 +114,7 @@ class ViewModel():
             if stringToMatch == None:
                 stringToMatch = entry
             else:
-                for i in range(0, len(stringToMatch)):
+                for i in range(len(stringToMatch)):
                     if entry[i] != stringToMatch[i]:
                         stringToMatch = stringToMatch[:i]
                         break

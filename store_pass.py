@@ -29,10 +29,7 @@ import pyinotify
 
 class Store():
     def __init__(self, binary, vm, window, q):
-        if binary == None:
-            self.binary = "pass"
-        else:
-            self.binary = binary
+        self.binary = "pass" if (binary == None) else binary
 
         self.vm = vm
         self.window = window
@@ -57,8 +54,7 @@ class Store():
         return expanduser("~") + "/.password-store/"
 
     def call(self, command):
-        callCommand = [self.binary] + command
-        call(callCommand)
+        call([self.binary] + command)
 
     def getSupportedCommands(self):
         return ["init", "insert", "edit", "generate", "rm", "mv", "cp"]
@@ -88,15 +84,10 @@ class Store():
         unsortedPasswords = []
         for root, dirs, files in os.walk(passDir):
             for name in files:
-                if name[-4:] != ".gpg":
-                    continue
+                if name[-4:] == ".gpg":
+                    unsortedPasswords.append(os.path.join(root, name))
 
-                unsortedPasswords.append(os.path.join(root, name))
-
-        for password in sorted(unsortedPasswords, key=lambda name: os.path.getatime(os.path.join(root, name)), reverse=True):
-            entryList.append(password[len(passDir):-4])
-
-        return entryList
+        return [password[len(passDir):-4] for password in sorted(unsortedPasswords, key=lambda name: os.path.getatime(os.path.join(root, name)), reverse=True)]
 
     def copyEntryToClipboard(self, entryName):
         self.call(["show", "-c", entryName])
@@ -112,9 +103,7 @@ class Store():
                 prefillData = ''
             return self.runCommand(["insert", "-fm", command[1]], printOnSuccess=True, prefillInput=prefillData.rstrip())
 
-        sanitizedCommandList = []
-        for commandPart in command:
-            sanitizedCommandList.append(quote(commandPart))
+        sanitizedCommandList = [quote(commandPart) for commandPart in command]
 
         proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + " ".join(sanitizedCommandList) + (" 2>/dev/null" if hideErrors else "")])
         while True:
@@ -131,10 +120,7 @@ class Store():
                 proc.setecho(False)
                 answer = QMessageBox.question(self.window, "PyPass", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
                 proc.waitnoecho()
-                if answer == QMessageBox.Yes:
-                    proc.sendline('y')
-                else:
-                    proc.sendline('n')
+                proc.sendline('y' if (answer == QMessageBox.Yes) else 'n')
                 proc.setecho(True)
             elif result == 4 or result == 5:
                 printOnSuccess = False
