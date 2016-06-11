@@ -362,7 +362,7 @@ def loadSettings(argv):
     try:
         opts, args = getopt.getopt(argv, "hb:s:", ["help", "binary=", "close-when-done", "store="])
     except getopt.GetoptError as err:
-        print("%s\n" % err)
+        print("{}\n".format(err))
         usage()
         sys.exit(1)
 
