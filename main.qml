@@ -1,7 +1,7 @@
 /*
-    This file is part of PyPass
+    This file is part of Pext
 
-    PyPass is free software: you can redistribute it and/or modify
+    Pext is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -22,7 +22,7 @@ import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
-    title: 'PyPass'
+    title: 'Pext'
     property int margin: 10
     width: Screen.width
     height: 0.3 * Screen.height

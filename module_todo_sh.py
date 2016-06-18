@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# This file is part of PyPass
+# This file is part of Pext
 #
-# PyPass is free software: you can redistribute it and/or modify
+# Pext is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -23,7 +23,7 @@ from shlex import quote
 from PyQt5.QtWidgets import QMessageBox
 import pexpect
 
-class Store():
+class Module():
     def __init__(self, binary, vm, window, q):
         self.binary = "todo.sh" if (binary == None) else binary
 
@@ -33,7 +33,7 @@ class Store():
     def stop(self):
         self.notifier.stop()
 
-    def getStoreLocation(self):
+    def getDataLocation(self):
         return expanduser("~") + "/.todo/todo.txt"
 
     def call(self, command, returnOutput=False):
@@ -103,13 +103,13 @@ class Store():
                 exitCode = proc.sendline("echo $?")
                 break
             elif result == 1 and proc.before:
-                self.vm.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by PyPass.".format(" ".join(command)))
+                self.vm.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command)))
                 self.vm.addError("Command output: {}".format(self.vm.ANSIEscapeRegex.sub('', proc.before.decode("utf-8"))))
 
                 return None
             else:
                 proc.setecho(False)
-                answer = QMessageBox.question(self.window, "PyPass", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No)
+                answer = QMessageBox.question(self.window, "Pext", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No)
                 proc.waitnoecho()
                 proc.sendline('y' if (answer == QMessageBox.Yes) else 'n')
                 proc.setecho(True)

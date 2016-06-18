@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# This file is part of PyPass
+# This file is part of Pext
 #
-# PyPass is free software: you can redistribute it and/or modify
+# Pext is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -27,7 +27,7 @@ from main import InputDialog
 
 import pyinotify
 
-class Store():
+class Module():
     def __init__(self, binary, vm, window, q):
         self.binary = "pass" if (binary == None) else binary
 
@@ -43,14 +43,14 @@ class Store():
         watchManager = pyinotify.WatchManager()
         self.notifier = pyinotify.ThreadedNotifier(watchManager, eventHandler)
         watchedEvents = pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO | pyinotify.IN_OPEN
-        watchManager.add_watch(self.getStoreLocation(), watchedEvents, rec=True, auto_add=True)
+        watchManager.add_watch(self.getDataLocation(), watchedEvents, rec=True, auto_add=True)
         self.notifier.daemon = True
         self.notifier.start()
 
     def stop(self):
         self.notifier.stop()
 
-    def getStoreLocation(self):
+    def getDataLocation(self):
         return expanduser("~") + "/.password-store/"
 
     def call(self, command):
@@ -79,7 +79,7 @@ class Store():
     def getEntries(self):
         entryList = []
 
-        passDir = self.getStoreLocation()
+        passDir = self.getDataLocation()
 
         unsortedPasswords = []
         for root, dirs, files in os.walk(passDir):
@@ -112,20 +112,20 @@ class Store():
                 exitCode = proc.sendline("echo $?")
                 break
             elif result == 1 and proc.before:
-                self.vm.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by PyPass.".format(" ".join(command)))
+                self.vm.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command)))
                 self.vm.addError("Command output: {}".format(self.vm.ANSIEscapeRegex.sub('', proc.before.decode("utf-8"))))
 
                 return None
             elif result == 2 or result == 3:
                 proc.setecho(False)
-                answer = QMessageBox.question(self.window, "PyPass", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
+                answer = QMessageBox.question(self.window, "Pext", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
                 proc.waitnoecho()
                 proc.sendline('y' if (answer == QMessageBox.Yes) else 'n')
                 proc.setecho(True)
             elif result == 4 or result == 5:
                 printOnSuccess = False
                 proc.setecho(False)
-                answer, ok = QInputDialog.getText(self.window, "PyPass", proc.after.decode("utf-8"), QLineEdit.Password)
+                answer, ok = QInputDialog.getText(self.window, "Pext", proc.after.decode("utf-8"), QLineEdit.Password)
                 if not ok:
                     break
 
@@ -172,7 +172,7 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        entryName = event.pathname[len(self.store.getStoreLocation()):-4]
+        entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
         self.vm.entryList = [entryName] + self.vm.entryList
         self.q.put("created")
@@ -181,7 +181,7 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        entryName = event.pathname[len(self.store.getStoreLocation()):-4]
+        entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
         self.vm.entryList.remove(entryName)
         self.q.put("deleted")
@@ -196,7 +196,7 @@ class EventHandler(pyinotify.ProcessEvent):
         if event.dir:
             return
 
-        entryName = event.pathname[len(self.store.getStoreLocation()):-4]
+        entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
         try:
             self.vm.entryList.remove(entryName)

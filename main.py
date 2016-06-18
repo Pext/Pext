@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# This file is part of PyPass
+# This file is part of Pext
 #
-# PyPass is free software: you can redistribute it and/or modify
+# Pext is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
@@ -56,11 +56,11 @@ class ViewModel():
         self.searchInputModel = searchInputModel
         self.resultListModel = resultListModel
 
-    def bindStore(self, store):
-        self.store = store
+    def bindModule(self, module):
+        self.module = module
 
-        self.commandsText = self.store.getCommands()
-        self.entryList = self.store.getEntries()
+        self.commandsText = self.module.getCommands()
+        self.entryList = self.module.getEntries()
 
         self.search()
 
@@ -227,10 +227,10 @@ class ViewModel():
 
         if currentIndex == -1:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
-            if commandTyped[0] not in self.store.getSupportedCommands():
+            if commandTyped[0] not in self.module.getSupportedCommands():
                 return
 
-            result = self.store.runCommand(commandTyped, printOnSuccess=True)
+            result = self.module.runCommand(commandTyped, printOnSuccess=True)
 
             if result != None:
                 QQmlProperty.write(self.searchInputModel, "text", "")
@@ -238,10 +238,10 @@ class ViewModel():
             return
 
         self.chosenEntry = self.filteredList[currentIndex]
-        entryContent = self.store.getAllEntryFields(self.chosenEntry)
+        entryContent = self.module.getAllEntryFields(self.chosenEntry)
 
         if len(entryContent) == 1:
-            self.store.copyEntryToClipboard(self.chosenEntry)
+            self.module.copyEntryToClipboard(self.chosenEntry)
             self.window.close()
             return
 
@@ -269,7 +269,7 @@ class ViewModel():
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if self.filteredList[currentIndex] == "********":
-            self.store.copyEntryToClipboard(self.chosenEntry)
+            self.module.copyEntryToClipboard(self.chosenEntry)
             self.window.close()
             return
 
@@ -292,7 +292,7 @@ class InputDialog(QDialog):
     def __init__(self, question, text, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle("PyPass")
+        self.setWindowTitle("Pext")
 
         layout = QVBoxLayout(self)
 
@@ -357,10 +357,10 @@ class Window(QDialog):
 
 def loadSettings(argv):
     # Default options
-    settings = {'binary': None, 'closeWhenDone': False, 'store': 'pass'}
+    settings = {'binary': None, 'closeWhenDone': False}
 
     try:
-        opts, args = getopt.getopt(argv, "hb:s:", ["help", "binary=", "close-when-done", "store="])
+        opts, args = getopt.getopt(argv, "hb:s:", ["help", "binary=", "close-when-done", "module="])
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -372,8 +372,8 @@ def loadSettings(argv):
             sys.exit()
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
-        elif opt in ("-s", "--store"):
-            settings['store'] = args
+        elif opt in ("-s", "--module"):
+            settings['module'] = args
         elif opt in ("-b", "--binary"):
             settings['binary'] = args
 
@@ -382,9 +382,9 @@ def loadSettings(argv):
 def usage():
     print('''Options:
 
---binary          : choose the name of the binary to use. Defaults
-                    to 'pass' for the pass store and todo.sh for
-                    the todo.sh store. Paths are allowed
+--binary          : choose the name of the binary to use. Defaults to 'pass' for
+                    the pass module and todo.sh for the todo.sh module. Paths
+                    are allowed.
 
 --close-when-done : close after completing an action such as copying
                     a password or closing the application (through
@@ -392,15 +392,15 @@ def usage():
                     staying in memory. This also allows multiple
                     instances to be ran at once.
 
---store           : use another store than pass. Currently supported
-                    are pass and todo.sh.''')
+--module          : name the module to use. Currently supported are pass and
+                    todo.sh.''')
 
-def initPersist(store):
-    # Ensure only one PyPass instance is running. If one already exists,
+def initPersist(module):
+    # Ensure only one Pext instance is running. If one already exists,
     # signal it to open the password selection window.
     # This way, we can keep the password list in memory and start up extra
     # quickly.
-    pidfile = "/tmp/pypass-" + store + ".pid"
+    pidfile = "/tmp/pext-" + module + ".pid"
 
     if os.path.isfile(pidfile):
         # Notify the main process
@@ -408,7 +408,7 @@ def initPersist(store):
             os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
             sys.exit()
         except ProcessLookupError:
-            # PyPass closed, but died not clean up its pidfile
+            # Pext closed, but died not clean up its pidfile
             pass
 
     # We are the only instance, claim our pidfile
@@ -431,18 +431,22 @@ def mainLoop(app, q, vm, window):
 if __name__ == "__main__":
     settings = loadSettings(sys.argv[1:])
 
-    try:
-        storeImport = __import__('store_' + settings['store'].replace('.', '_'), fromlist=['Store'])
-    except ImportError:
-        print('Unsupported store requested.')
+    if not 'module' in settings:
+        print('A module must be given.')
         sys.exit(2)
 
-    Store = getattr(storeImport, 'Store')
+    try:
+        moduleImport = __import__('module_' + settings['module'].replace('.', '_'), fromlist=['Module'])
+    except ImportError:
+        print('Unsupported module requested.')
+        sys.exit(2)
+
+    Module = getattr(moduleImport, 'Module')
 
     if not settings['closeWhenDone']:
-        initPersist(settings['store'])
+        initPersist(settings['module'])
 
-    # Set up a queue so that the store can communicate with the main thread
+    # Set up a queue so that the module can communicate with the main thread
     q = Queue()
 
     app = QApplication(sys.argv)
@@ -451,8 +455,8 @@ if __name__ == "__main__":
     viewModel = ViewModel()
     window = Window(viewModel, settings)
 
-    store = Store(settings['binary'], viewModel, window, q)
-    viewModel.bindStore(store)
+    module = Module(settings['binary'], viewModel, window, q)
+    viewModel.bindModule(module)
 
     # Handle signal
     signalHandler = SignalHandler(window)
@@ -462,7 +466,7 @@ if __name__ == "__main__":
     window.show()
     mainLoop(app, q, viewModel, window)
     sys.exit(app.exec_())
-    store.stop()
+    module.stop()
 
     if not settings['closeWhenDone']:
         os.unlink(pidfile)
