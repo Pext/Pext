@@ -27,9 +27,10 @@ from main import InputDialog
 
 import pyinotify
 
+
 class Module():
     def __init__(self, binary, vm, window, q):
-        self.binary = "pass" if (binary == None) else binary
+        self.binary = "pass" if (binary is None) else binary
 
         self.vm = vm
         self.window = window
@@ -77,8 +78,6 @@ class Module():
         return commandsText
 
     def getEntries(self):
-        entryList = []
-
         passDir = self.getDataLocation()
 
         unsortedPasswords = []
@@ -99,7 +98,7 @@ class Module():
         # If we edit a password, make sure to get the original input first so we can show the user
         if command[0] == "edit" and len(command) == 2:
             prefillData = self.runCommand(["show", command[1]], hideErrors=True)
-            if prefillData == None:
+            if prefillData is None:
                 prefillData = ''
             return self.runCommand(["insert", "-fm", command[1]], printOnSuccess=True, prefillInput=prefillData.rstrip())
 
@@ -162,6 +161,7 @@ class Module():
 
             return None
 
+
 class EventHandler(pyinotify.ProcessEvent):
     def __init__(self, vm, q, store):
         self.vm = vm
@@ -208,4 +208,3 @@ class EventHandler(pyinotify.ProcessEvent):
 
         self.vm.entryList = [entryName] + self.vm.entryList
         self.q.put("opened")
-

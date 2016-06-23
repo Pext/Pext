@@ -28,6 +28,7 @@ from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QTextEdit, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
+
 class SignalHandler():
     def __init__(self, window):
         self.window = window
@@ -35,6 +36,7 @@ class SignalHandler():
     def handle(self, signum, frame):
         # Signal received
         self.window.show()
+
 
 class ViewModel():
     def __init__(self):
@@ -97,7 +99,7 @@ class ViewModel():
             QQmlProperty.write(self.searchInputModel, "text", "")
             return
 
-        if self.chosenEntry == None:
+        if self.chosenEntry is None:
             self.window.close()
             return
 
@@ -111,7 +113,7 @@ class ViewModel():
             if entry in self.commandsText:
                 continue
 
-            if stringToMatch == None:
+            if stringToMatch is None:
                 stringToMatch = entry
             else:
                 for i in range(len(stringToMatch)):
@@ -134,7 +136,7 @@ class ViewModel():
         self.search()
 
     def search(self):
-        if self.chosenEntry != None:
+        if self.chosenEntry is not None:
             self.searchChosenEntry()
             return
 
@@ -172,7 +174,7 @@ class ViewModel():
 
         if self.resultListModelMaxIndex == -1:
             currentIndex = -1
-        elif currentItem == None:
+        elif currentItem is None:
             currentIndex = 0
         else:
             try:
@@ -206,9 +208,9 @@ class ViewModel():
                 self.filteredList.append(entry)
 
         try:
-           currentIndex = self.filteredList.index(currentItem)
+            currentIndex = self.filteredList.index(currentItem)
         except ValueError:
-           currentIndex = 0
+            currentIndex = 0
 
         self.resultListModelList = QStringListModel(self.filteredList)
         self.context.setContextProperty("resultListModel", self.resultListModelList)
@@ -216,7 +218,7 @@ class ViewModel():
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def select(self):
-        if self.chosenEntry != None:
+        if self.chosenEntry is not None:
             self.selectField()
             return
 
@@ -232,7 +234,7 @@ class ViewModel():
 
             result = self.module.runCommand(commandTyped, printOnSuccess=True)
 
-            if result != None:
+            if result is not None:
                 QQmlProperty.write(self.searchInputModel, "text", "")
 
             return
@@ -288,6 +290,7 @@ class ViewModel():
         self.window.close()
         return
 
+
 class InputDialog(QDialog):
     def __init__(self, question, text, parent=None):
         super().__init__(parent)
@@ -307,6 +310,7 @@ class InputDialog(QDialog):
     def show(self):
         result = self.exec_()
         return (self.textEdit.toPlainText(), result == QDialog.Accepted)
+
 
 class Window(QDialog):
     def __init__(self, vm, settings, parent=None):
@@ -355,6 +359,7 @@ class Window(QDialog):
         else:
             sys.exit(0)
 
+
 def loadSettings(argv):
     # Default options
     settings = {'binary': None, 'closeWhenDone': False}
@@ -379,6 +384,7 @@ def loadSettings(argv):
 
     return settings
 
+
 def usage():
     print('''Options:
 
@@ -394,6 +400,7 @@ def usage():
 
 --module          : name the module to use. Currently supported are pass and
                     todo.sh.''')
+
 
 def initPersist(module):
     # Ensure only one Pext instance is running. If one already exists,
@@ -415,6 +422,10 @@ def initPersist(module):
     pid = str(os.getpid())
     open(pidfile, 'w').write(pid)
 
+    # Return the filename to delete it later
+    return pidfile
+
+
 def mainLoop(app, q, vm, window):
     while True:
         try:
@@ -431,7 +442,7 @@ def mainLoop(app, q, vm, window):
 if __name__ == "__main__":
     settings = loadSettings(sys.argv[1:])
 
-    if not 'module' in settings:
+    if 'module' not in settings:
         print('A module must be given.')
         sys.exit(2)
 
@@ -444,7 +455,7 @@ if __name__ == "__main__":
     Module = getattr(moduleImport, 'Module')
 
     if not settings['closeWhenDone']:
-        initPersist(settings['module'])
+        pidfile = initPersist(settings['module'])
 
     # Set up a queue so that the module can communicate with the main thread
     q = Queue()
@@ -470,4 +481,3 @@ if __name__ == "__main__":
 
     if not settings['closeWhenDone']:
         os.unlink(pidfile)
-

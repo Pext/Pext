@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
 from os.path import expanduser
 from subprocess import call, check_output
 from shlex import quote
@@ -23,9 +22,10 @@ from shlex import quote
 from PyQt5.QtWidgets import QMessageBox
 import pexpect
 
+
 class Module():
     def __init__(self, binary, vm, window, q):
-        self.binary = "todo.sh" if (binary == None) else binary
+        self.binary = "todo.sh" if (binary is None) else binary
 
         self.vm = vm
         self.window = window
@@ -130,4 +130,3 @@ class Module():
             self.vm.addError(message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command)))
 
             return None
-
