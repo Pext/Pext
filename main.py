@@ -28,6 +28,7 @@ from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QTextEdit, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
+from module_base import ModuleBase
 
 class SignalHandler():
     def __init__(self, window):
@@ -454,6 +455,9 @@ if __name__ == "__main__":
 
     Module = getattr(moduleImport, 'Module')
 
+    # Ensure the module implements the base
+    assert issubclass(Module, ModuleBase)
+
     if not settings['closeWhenDone']:
         pidfile = initPersist(settings['module'])
 
@@ -466,7 +470,10 @@ if __name__ == "__main__":
     viewModel = ViewModel()
     window = Window(viewModel, settings)
 
+    # This will (correctly) fail if the module doesn't implement all necessary
+    # functionality
     module = Module(settings['binary'], viewModel, window, q)
+
     viewModel.bindModule(module)
 
     # Handle signal

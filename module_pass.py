@@ -24,11 +24,12 @@ from PyQt5.QtWidgets import QInputDialog, QMessageBox, QLineEdit
 import pexpect
 
 from main import InputDialog
+from module_base import ModuleBase
 
 import pyinotify
 
 
-class Module():
+class Module(ModuleBase):
     def __init__(self, binary, vm, window, q):
         self.binary = "pass" if (binary is None) else binary
 

@@ -22,8 +22,10 @@ from shlex import quote
 from PyQt5.QtWidgets import QMessageBox
 import pexpect
 
+from module_base import ModuleBase
 
-class Module():
+
+class Module(ModuleBase):
     def __init__(self, binary, vm, window, q):
         self.binary = "todo.sh" if (binary is None) else binary
 
