@@ -16,7 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from os.path import expanduser
-from subprocess import call, check_output
+from subprocess import call, check_output, Popen, PIPE
 from shlex import quote
 
 from PyQt5.QtWidgets import QMessageBox
@@ -87,10 +87,11 @@ class Module(ModuleBase):
 
         return entryList
 
-    def copyEntryToClipboard(self, passwordName):
-        pass
+    def copyEntryToClipboard(self, entryName):
+        proc = Popen(["xclip", "-selection", "clipboard"], stdin=PIPE)
+        proc.communicate(entryName.encode("ascii"))
 
-    def getAllEntryFields(self, passwordName):
+    def getAllEntryFields(self, entryName):
         return ['']
 
     def runCommand(self, command, printOnSuccess=False, hideErrors=False):
