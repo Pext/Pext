@@ -33,7 +33,7 @@ class Module(ModuleBase):
         self.window = window
 
     def stop(self):
-        self.notifier.stop()
+        pass
 
     def getDataLocation(self):
         return expanduser("~") + "/.todo/todo.txt"

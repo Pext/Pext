@@ -397,8 +397,7 @@ def usage():
                     staying in memory. This also allows multiple
                     instances to be ran at once.
 
---module          : name the module to use. Currently supported are pass and
-                    todo.sh.''')
+--module          : name the module to use.''')
 
 
 def initPersist(module):
@@ -445,11 +444,7 @@ if __name__ == "__main__":
         print('A module must be given.')
         sys.exit(2)
 
-    try:
-        moduleImport = __import__('module_' + settings['module'].replace('.', '_'), fromlist=['Module'])
-    except ImportError:
-        print('Unsupported module requested.')
-        sys.exit(2)
+    moduleImport = __import__('module_' + settings['module'].replace('.', '_'), fromlist=['Module'])
 
     Module = getattr(moduleImport, 'Module')
 

@@ -32,6 +32,10 @@ To get the most out of Pext, set up your system to start it with a global
 hotkey, so you can always quickly access it when you need it.
 
 ## Modules
+- emoji
+
+    Use Pext as an emoji selector using the [emoji](https://pypi.python.org/pypi/emoji/0.3.9) library
+
 - pass
 
 	Use Pext as a password manager using [pass](https://www.passwordstore.org/) as back-end
