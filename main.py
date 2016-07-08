@@ -262,7 +262,6 @@ class ViewModel():
         self.context.setContextProperty("resultListModel", self.resultListModelList)
         self.resultListModelMaxIndex = len(self.filteredList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
-        self.context.setContextProperty("resultListModelMakeItalic", False)
         QQmlProperty.write(self.resultListModel, "currentIndex", 0)
         QQmlProperty.write(self.searchInputModel, "text", "")
 
@@ -324,7 +323,6 @@ class Window(QDialog):
         context = self.engine.rootContext()
         context.setContextProperty("resultListModel", self.vm.resultListModelList)
         context.setContextProperty("resultListModelMaxIndex", self.vm.resultListModelMaxIndex)
-        context.setContextProperty("resultListModelMakeItalic", True)
         context.setContextProperty("messageListModelList", self.vm.messageListModelList)
 
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))

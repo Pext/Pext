@@ -95,7 +95,6 @@ ApplicationWindow {
                 objectName: "resultListModel"
 
                 property int maximumIndex: resultListModelMaxIndex
-                property bool makeItalic: resultListModelMakeItalic
 
                 model: resultListModel
 
@@ -109,7 +108,7 @@ ApplicationWindow {
                                 text: display
                                 textFormat: Text.PlainText
                                 font.pixelSize: 18
-                                font.italic: resultList.makeItalic && text.indexOf(' ') >= 0 ? true : false
+                                font.italic: index > resultListModelMaxIndex ? true : false
                                 color: resultList.currentIndex === index ? "red" : "steelblue"
                                 Behavior on color { PropertyAnimation {} }
                             }
