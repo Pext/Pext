@@ -108,7 +108,7 @@ ApplicationWindow {
                                 text: display
                                 textFormat: Text.PlainText
                                 font.pixelSize: 18
-                                font.italic: index > resultListModelMaxIndex ? true : false
+                                font.italic: index > resultListModelMaxIndex
                                 color: resultList.currentIndex === index ? "red" : "steelblue"
                                 Behavior on color { PropertyAnimation {} }
                             }
