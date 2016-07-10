@@ -167,8 +167,11 @@ class ViewModel():
             for entry in self.entryList:
                 if any(searchString in entry.lower() for searchString in searchStrings[1:]):
                     self.filteredList.append(entry)
+
+            self.context.setContextProperty("resultListModelCommandMode", True)
         else:
             self.filteredList += commandList
+            self.context.setContextProperty("resultListModelCommandMode", False)
 
         self.resultListModelList = QStringListModel(self.filteredList)
         self.context.setContextProperty("resultListModel", self.resultListModelList)
@@ -323,6 +326,7 @@ class Window(QDialog):
         context = self.engine.rootContext()
         context.setContextProperty("resultListModel", self.vm.resultListModelList)
         context.setContextProperty("resultListModelMaxIndex", self.vm.resultListModelMaxIndex)
+        context.setContextProperty("resultListModelCommandMode", False)
         context.setContextProperty("messageListModelList", self.vm.messageListModelList)
 
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))

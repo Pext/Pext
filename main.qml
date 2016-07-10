@@ -95,6 +95,7 @@ ApplicationWindow {
                 objectName: "resultListModel"
 
                 property int maximumIndex: resultListModelMaxIndex
+                property bool commandMode: resultListModelCommandMode
 
                 model: resultListModel
 
@@ -108,7 +109,12 @@ ApplicationWindow {
                                 text: display
                                 textFormat: Text.PlainText
                                 font.pixelSize: 18
-                                font.italic: index > resultListModelMaxIndex
+                                font.italic:
+                                    if (!resultListModelCommandMode) {
+                                        index > resultListModelMaxIndex
+                                    } else {
+                                        index == 0
+                                    }
                                 color: resultList.currentIndex === index ? "red" : "steelblue"
                                 Behavior on color { PropertyAnimation {} }
                             }
