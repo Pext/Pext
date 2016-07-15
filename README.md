@@ -45,7 +45,7 @@ hotkey, so you can always quickly access it when you need it.
 	Use Pext as a todo list manager using [todo.txt-cli](https://github.com/ginatrapani/todo.txt-cli) as back-end
 
 ## Dependencies
-### Debian
+### Debian (Stretch and later, no Jessie, sorry!)
 
     sudo apt-get install python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls python3-pexpect python3-pyinotify pass
 
