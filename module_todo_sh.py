@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
+
 from os.path import expanduser
 from subprocess import call, check_output, Popen, PIPE
 from shlex import quote
@@ -22,15 +24,18 @@ from shlex import quote
 from PyQt5.QtWidgets import QMessageBox
 import pexpect
 
+from helpers import Action
 from module_base import ModuleBase
 
 
 class Module(ModuleBase):
-    def __init__(self, binary, vm, window, q):
+    def __init__(self, binary, window, q):
         self.binary = "todo.sh" if (binary is None) else binary
 
-        self.vm = vm
         self.window = window
+        self.q = q
+
+        self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
 
     def stop(self):
         pass
@@ -77,7 +82,7 @@ class Module(ModuleBase):
     def getEntries(self):
         entryList = []
 
-        commandOutput = self.vm.ANSIEscapeRegex.sub('', self.call(["ls"], returnOutput=True)).splitlines()
+        commandOutput = self.ANSIEscapeRegex.sub('', self.call(["ls"], returnOutput=True)).splitlines()
 
         for line in commandOutput:
             if line == '--':
@@ -106,8 +111,8 @@ class Module(ModuleBase):
                 exitCode = proc.sendline("echo $?")
                 break
             elif result == 1 and proc.before:
-                self.vm.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command)))
-                self.vm.addError("Command output: {}".format(self.vm.ANSIEscapeRegex.sub('', proc.before.decode("utf-8"))))
+                self.q.put([Action.addError, "Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command))])
+                self.q.put([Action.addError, "Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")))])
 
                 return None
             else:
@@ -120,16 +125,16 @@ class Module(ModuleBase):
         proc.close()
         exitCode = proc.exitstatus
 
-        message = self.vm.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
+        message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
 
         if exitCode == 0:
             if printOnSuccess and message:
-                self.vm.addMessage(message)
+                self.q.put([Action.addMessage, message])
 
-            self.vm.entryList = self.getEntries()
+            self.q.put([Action.replaceEntryList, self.getEntries()])
 
             return message
         else:
-            self.vm.addError(message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command)))
+            self.q.put([Action.addError, message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command))])
 
             return None

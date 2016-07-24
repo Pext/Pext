@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import re
 import os
 from os.path import expanduser
 from subprocess import call, check_output
@@ -25,23 +26,25 @@ import pexpect
 
 from main import InputDialog
 from module_base import ModuleBase
+from helpers import Action
 
 import pyinotify
 
 
 class Module(ModuleBase):
-    def __init__(self, binary, vm, window, q):
+    def __init__(self, binary, window, q):
         self.binary = "pass" if (binary is None) else binary
 
-        self.vm = vm
         self.window = window
         self.q = q
 
-        self.initInotify(vm, q)
+        self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
 
-    def initInotify(self, vm, q):
+        self.initInotify(q)
+
+    def initInotify(self, q):
         # Initialize the EventHandler and make it watch the password store
-        eventHandler = EventHandler(vm, q, self)
+        eventHandler = EventHandler(q, self)
         watchManager = pyinotify.WatchManager()
         self.notifier = pyinotify.ThreadedNotifier(watchManager, eventHandler)
         watchedEvents = pyinotify.IN_CREATE | pyinotify.IN_DELETE | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO | pyinotify.IN_OPEN
@@ -112,8 +115,8 @@ class Module(ModuleBase):
                 exitCode = proc.sendline("echo $?")
                 break
             elif result == 1 and proc.before:
-                self.vm.addError("Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command)))
-                self.vm.addError("Command output: {}".format(self.vm.ANSIEscapeRegex.sub('', proc.before.decode("utf-8"))))
+                self.q.put([Action.addError, "Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command))])
+                self.q.put([Action.addError, "Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")))])
 
                 return None
             elif result == 2 or result == 3:
@@ -150,22 +153,21 @@ class Module(ModuleBase):
         proc.close()
         exitCode = proc.exitstatus
 
-        message = self.vm.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
+        message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
 
         if exitCode == 0:
             if printOnSuccess and message:
-                self.vm.addMessage(message)
+                self.q.put([Action.addMessage, message])
 
             return message
         else:
-            self.vm.addError(message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command)))
+            self.q.put([Action.addError, message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command))])
 
             return None
 
 
 class EventHandler(pyinotify.ProcessEvent):
-    def __init__(self, vm, q, store):
-        self.vm = vm
+    def __init__(self, q, store):
         self.q = q
         self.store = store
 
@@ -175,8 +177,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
         entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
-        self.vm.entryList = [entryName] + self.vm.entryList
-        self.q.put("created")
+        self.q.put([Action.prependEntry, entryName])
 
     def process_IN_DELETE(self, event):
         if event.dir:
@@ -184,8 +185,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
         entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
-        self.vm.entryList.remove(entryName)
-        self.q.put("deleted")
+        self.q.put([Action.removeEntry, entryName])
 
     def process_IN_MOVED_FROM(self, event):
         self.process_IN_DELETE(event)
@@ -199,13 +199,5 @@ class EventHandler(pyinotify.ProcessEvent):
 
         entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
-        try:
-            self.vm.entryList.remove(entryName)
-        except ValueError:
-            # process_IN_OPEN is also called when moving files, after the
-            # initial move event. In this case, we want to do nothing and let
-            # IN_MOVED_FROM and IN_MOVED_TO handle this
-            return
-
-        self.vm.entryList = [entryName] + self.vm.entryList
-        self.q.put("opened")
+        self.q.put([Action.prependEntry, entryName])
+        self.q.put([Action.removeEntry, entryName])

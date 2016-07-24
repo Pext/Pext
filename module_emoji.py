@@ -22,8 +22,7 @@ from module_base import ModuleBase
 
 
 class Module(ModuleBase):
-    def __init__(self, binary, vm, window, q):
-        self.vm = vm
+    def __init__(self, binary, window, q):
         self.window = window
 
     def stop(self):

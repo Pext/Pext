@@ -21,6 +21,7 @@ import signal
 import sys
 import re
 import time
+from helpers import Action
 from subprocess import Popen, PIPE
 from queue import Queue, Empty
 
@@ -29,6 +30,7 @@ from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QTextEdi
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 from module_base import ModuleBase
+
 
 class SignalHandler():
     def __init__(self, window):
@@ -417,7 +419,7 @@ def initPersist(module):
             os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
             sys.exit()
         except ProcessLookupError:
-            # Pext closed, but died not clean up its pidfile
+            # Pext closed, but did not clean up its pidfile
             pass
 
     # We are the only instance, claim our pidfile
@@ -431,15 +433,29 @@ def initPersist(module):
 def mainLoop(app, q, vm, window):
     while True:
         try:
-            q.get_nowait()
+            action = q.get_nowait()
+            if action[0] == Action.addMessage:
+                vm.addMessage(action[1])
+            elif action[0] == Action.addError:
+                vm.addError(action[1])
+            elif action[0] == Action.prependEntry:
+                vm.entryList = [action[1]] + vm.entryList
+            elif action[0] == Action.removeEntry:
+                vm.entryList.remove(action[1])
+            elif action[0] == Action.replaceEntryList:
+                vm.entryList = action[1]
+            else:
+                print('WARN: Module requested unknown action {}'.format(action[0]))
+
+            vm.search()
+            window.update()
+            q.task_done()
         except Empty:
             app.processEvents()
             time.sleep(0.01)
             continue
-
-        vm.search()
-        window.update()
-        q.task_done()
+        except Exception as e:
+            print('WARN: Module caused exception {} with call {}'.format(e, action))
 
 if __name__ == "__main__":
     settings = loadSettings(sys.argv[1:])
@@ -469,7 +485,7 @@ if __name__ == "__main__":
 
     # This will (correctly) fail if the module doesn't implement all necessary
     # functionality
-    module = Module(settings['binary'], viewModel, window, q)
+    module = Module(settings['binary'], window, q)
 
     viewModel.bindModule(module)
 
