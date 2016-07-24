@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class ModuleBase(ABC):
     @abstractmethod
-    def __init__(self, binary, vm, window, q):
+    def __init__(self, binary, window, q):
         pass
 
     @abstractmethod
