@@ -24,3 +24,9 @@ class Action(Enum):
     prependEntry = 3
     removeEntry = 4
     replaceEntryList = 5
+    setFilter = 6
+    askQuestionDefaultYes = 7
+    askQuestionDefaultNo = 8
+    askInput = 9
+    askInputPassword = 10
+    askInputMultiLine = 11

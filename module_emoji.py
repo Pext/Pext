@@ -22,8 +22,8 @@ from module_base import ModuleBase
 
 
 class Module(ModuleBase):
-    def __init__(self, binary, window, q):
-        self.window = window
+    def __init__(self, binary, q):
+        pass
 
     def stop(self):
         pass
@@ -50,4 +50,7 @@ class Module(ModuleBase):
         return ['']
 
     def runCommand(self, command, printOnSuccess=False, hideErrors=False):
+        pass
+
+    def processResponse(self, response):
         pass

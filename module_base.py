@@ -33,3 +33,7 @@ class ModuleBase(ABC):
     @abstractmethod
     def runCommand(self, command, printOnSuccess=False, hideErrors=False):
         pass
+
+    @abstractmethod
+    def processResponse(self, response):
+        pass

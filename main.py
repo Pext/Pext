@@ -26,7 +26,7 @@ from subprocess import Popen, PIPE
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog, QVBoxLayout, QLabel, QTextEdit, QDialogButtonBox
+from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QLabel, QLineEdit, QMessageBox, QTextEdit, QVBoxLayout, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
 from module_base import ModuleBase
@@ -444,6 +444,24 @@ def mainLoop(app, q, vm, window):
                 vm.entryList.remove(action[1])
             elif action[0] == Action.replaceEntryList:
                 vm.entryList = action[1]
+            elif action[0] == Action.setFilter:
+                QQmlProperty.write(vm.searchInputModel, "text", action[1])
+            elif action[0] == Action.askQuestionDefaultYes:
+                answer = QMessageBox.question(window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                vm.module.processResponse(True if (answer == QMessageBox.Yes) else False)
+            elif action[0] == Action.askQuestionDefaultNo:
+                answer = QMessageBox.question(window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                vm.module.processResponse(True if (answer == QMessageBox.Yes) else False)
+            elif action[0] == Action.askInput:
+                answer, ok = QInputDialog.getText(window, "Pext", action[1])
+                vm.module.processResponse(answer if ok else None)
+            elif action[0] == Action.askInputPassword:
+                answer, ok = QInputDialog.getText(window, "Pext", action[1], QLineEdit.Password)
+                vm.module.processResponse(answer if ok else None)
+            elif action[0] == Action.askInputMultiLine:
+                dialog = InputDialog(action[1], action[2] if action[2] else "", window)
+                answer, ok = dialog.show()
+                vm.module.processResponse(answer if ok else None)
             else:
                 print('WARN: Module requested unknown action {}'.format(action[0]))
 
@@ -485,7 +503,7 @@ if __name__ == "__main__":
 
     # This will (correctly) fail if the module doesn't implement all necessary
     # functionality
-    module = Module(settings['binary'], window, q)
+    module = Module(settings['binary'], q)
 
     viewModel.bindModule(module)
 

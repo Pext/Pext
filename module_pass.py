@@ -21,10 +21,8 @@ from os.path import expanduser
 from subprocess import call, check_output
 from shlex import quote
 
-from PyQt5.QtWidgets import QInputDialog, QMessageBox, QLineEdit
 import pexpect
 
-from main import InputDialog
 from module_base import ModuleBase
 from helpers import Action
 
@@ -32,10 +30,9 @@ import pyinotify
 
 
 class Module(ModuleBase):
-    def __init__(self, binary, window, q):
+    def __init__(self, binary, q):
         self.binary = "pass" if (binary is None) else binary
 
-        self.window = window
         self.q = q
 
         self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
@@ -109,51 +106,64 @@ class Module(ModuleBase):
         sanitizedCommandList = [quote(commandPart) for commandPart in command]
 
         proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + " ".join(sanitizedCommandList) + (" 2>/dev/null" if hideErrors else "")])
-        while True:
-            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)
-            if result == 0:
-                exitCode = proc.sendline("echo $?")
-                break
-            elif result == 1 and proc.before:
-                self.q.put([Action.addError, "Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command))])
-                self.q.put([Action.addError, "Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")))])
+        return self.processProcOutput(proc, printOnSuccess, hideErrors, prefillInput)
 
-                return None
-            elif result == 2 or result == 3:
-                proc.setecho(False)
-                answer = QMessageBox.question(self.window, "Pext", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes if result == 2 else QMessageBox.No)
-                proc.waitnoecho()
-                proc.sendline('y' if (answer == QMessageBox.Yes) else 'n')
-                proc.setecho(True)
-            elif result == 4 or result == 5:
-                printOnSuccess = False
-                proc.setecho(False)
-                answer, ok = QInputDialog.getText(self.window, "Pext", proc.after.decode("utf-8"), QLineEdit.Password)
-                if not ok:
-                    break
+    def processProcOutput(self, proc, printOnSuccess=False, hideErrors=False, prefillInput=''):
+        result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "[Y/n]", "[y/N]", "Enter password ", "Retype password ", " and press Ctrl+D when finished:"], timeout=3)
+        if result == 0:
+            exitCode = proc.sendline("echo $?")
+        elif result == 1 and proc.before:
+            self.q.put([Action.addError, "Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command))])
+            self.q.put([Action.addError, "Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")))])
+        elif result == 2 or result == 3:
+            proc.setecho(False)
+            question = proc.before.decode("utf-8")
 
-                proc.waitnoecho()
-                proc.sendline(answer)
-                proc.setecho(True)
-            elif result == 6:
-                dialog = InputDialog(proc.before.decode("utf-8").lstrip(), prefillInput, self.window)
+            if (result == 2):
+                self.proc = {'proc': proc,
+                             'type': Action.askQuestionDefaultYes,
+                             'printOnSuccess': printOnSuccess,
+                             'hideErrors': hideErrors,
+                             'prefillInput': prefillInput}
+                self.q.put([Action.askQuestionDefaultYes, question])
+            else:
+                self.proc = {'proc': proc,
+                             'type': Action.askQuestionDefaultNo,
+                             'printOnSuccess': printOnSuccess,
+                             'hideErrors': hideErrors,
+                             'prefillInput': prefillInput}
+                self.q.put([Action.askQuestionDefaultNo, question])
 
-                accepted = 0
-                while accepted != 1:
-                    result = dialog.show()
-                    accepted = result[1]
+            return
+        elif result == 4 or result == 5:
+            printOnSuccess = False
+            proc.setecho(False)
+            self.proc = {'proc': proc,
+                         'type': Action.askInputPassword,
+                         'printOnSuccess': printOnSuccess,
+                         'hideErrors': hideErrors,
+                         'prefillInput': prefillInput}
+            self.q.put([Action.askInputPassword, proc.after.decode("utf-8")])
 
-                proc.setecho(False)
-                proc.waitnoecho()
-                for line in result[0].splitlines():
-                    proc.sendline(line)
-                proc.sendcontrol("d")
-                proc.setecho(True)
+            return
+        elif result == 6:
+            self.proc = {'proc': proc,
+                         'type': Action.askInputMultiLine,
+                         'printOnSuccess': printOnSuccess,
+                         'hideErrors': hideErrors,
+                         'prefillInput': prefillInput}
+            self.q.put([Action.askInputMultiLine, proc.before.decode("utf-8").lstrip(), prefillInput])
+
+            proc.setecho(False)
+
+            return
 
         proc.close()
         exitCode = proc.exitstatus
 
         message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
+
+        self.q.put([Action.setFilter, ""])
 
         if exitCode == 0:
             if printOnSuccess and message:
@@ -165,6 +175,33 @@ class Module(ModuleBase):
 
             return None
 
+    def processResponse(self, response):
+        if self.proc['type'] == Action.askQuestionDefaultYes or self.proc['type'] == Action.askQuestionDefaultNo:
+            self.proc['proc'].waitnoecho()
+            self.proc['proc'].sendline('y' if response else 'n')
+            self.proc['proc'].setecho(True)
+        elif self.proc['type'] == Action.askInput or self.proc['type'] == Action.askInputPassword:
+            self.proc['proc'].waitnoecho()
+            if response is None:
+                self.proc['proc'].close()
+            else:
+                self.proc['proc'].sendline(response)
+                self.proc['proc'].setecho(True)
+        elif self.proc['type'] == Action.askInputMultiLine:
+            self.proc['proc'].waitnoecho()
+            if response is None:
+                # At this point, pass won't let us exit out safely, so we
+                # write the prefilled data
+                for line in self.proc['prefillInput'].splitlines():
+                    self.proc['proc'].sendline(line)
+            else:
+                for line in response.splitlines():
+                    self.proc['proc'].sendline(line)
+
+            self.proc['proc'].sendcontrol("d")
+            self.proc['proc'].setecho(True)
+
+        self.processProcOutput(self.proc['proc'], printOnSuccess=self.proc['printOnSuccess'], hideErrors=self.proc['hideErrors'], prefillInput=self.proc['prefillInput'])
 
 class EventHandler(pyinotify.ProcessEvent):
     def __init__(self, q, store):

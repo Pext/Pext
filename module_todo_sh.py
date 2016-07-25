@@ -21,7 +21,6 @@ from os.path import expanduser
 from subprocess import call, check_output, Popen, PIPE
 from shlex import quote
 
-from PyQt5.QtWidgets import QMessageBox
 import pexpect
 
 from helpers import Action
@@ -29,10 +28,9 @@ from module_base import ModuleBase
 
 
 class Module(ModuleBase):
-    def __init__(self, binary, window, q):
+    def __init__(self, binary, q):
         self.binary = "todo.sh" if (binary is None) else binary
 
-        self.window = window
         self.q = q
 
         self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
@@ -105,27 +103,31 @@ class Module(ModuleBase):
             sanitizedCommandList.append(quote(commandPart))
 
         proc = pexpect.spawn('/bin/sh', ['-c', self.binary + " " + " ".join(sanitizedCommandList) + (" 2>/dev/null" if hideErrors else "")])
-        while True:
-            result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "(y/n)"], timeout=3)
-            if result == 0:
-                exitCode = proc.sendline("echo $?")
-                break
-            elif result == 1 and proc.before:
-                self.q.put([Action.addError, "Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command))])
-                self.q.put([Action.addError, "Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")))])
+        return self.processProcOutput(proc, printOnSuccess, hideErrors)
 
-                return None
-            else:
-                proc.setecho(False)
-                answer = QMessageBox.question(self.window, "Pext", proc.before.decode("utf-8"), QMessageBox.Yes | QMessageBox.No)
-                proc.waitnoecho()
-                proc.sendline('y' if (answer == QMessageBox.Yes) else 'n')
-                proc.setecho(True)
+    def processProcOutput(self, proc, printOnSuccess=False, hideErrors=False):
+        result = proc.expect_exact([pexpect.EOF, pexpect.TIMEOUT, "(y/n)"], timeout=3)
+        if result == 0:
+            exitCode = proc.sendline("echo $?")
+        elif result == 1 and proc.before:
+            self.q.put([Action.addError, "Timeout error while running '{}'. This specific way of calling the command is most likely not supported yet by Pext.".format(" ".join(command))])
+            self.q.put([Action.addError, "Command output: {}".format(self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")))])
+        else:
+            proc.setecho(False)
+            self.proc = {'proc': proc,
+                         'type': Action.askQuestionDefaultNo,
+                         'printOnSuccess': printOnSuccess,
+                         'hideErrors': hideErrors}
+            self.q.put([Action.askQuestionDefaultNo, proc.before.decode("utf-8")])
+
+            return
 
         proc.close()
         exitCode = proc.exitstatus
 
         message = self.ANSIEscapeRegex.sub('', proc.before.decode("utf-8")) if proc.before else ""
+
+        self.q.put([Action.setFilter, ""])
 
         if exitCode == 0:
             if printOnSuccess and message:
@@ -138,3 +140,11 @@ class Module(ModuleBase):
             self.q.put([Action.addError, message if message else "Error code {} running '{}'. More info may be logged to the console".format(str(exitCode), " ".join(command))])
 
             return None
+
+    def processResponse(self, response):
+        self.proc['proc'].waitnoecho()
+        self.proc['proc'].sendline('y' if response else 'n')
+        self.proc['proc'].setecho(True)
+
+        self.processProcOutput(self.proc['proc'], printOnSuccess=self.proc['printOnSuccess'], hideErrors=self.proc['hideErrors'])
+
