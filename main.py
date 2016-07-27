@@ -42,7 +42,7 @@ class SignalHandler():
 
 
 class ViewModel():
-    def __init__(self):
+    def __init__(self, settings):
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
         self.filteredList = []
@@ -52,6 +52,8 @@ class ViewModel():
         self.messageListModelList = QStringListModel()
         self.chosenEntry = None
         self.chosenEntryList = []
+
+        self.settings = settings
 
     def bindContext(self, context, window, searchInputModel, resultListModel):
         self.context = context
@@ -71,7 +73,7 @@ class ViewModel():
         return [entry[element] for entry in pythonList]
 
     def copyToClipboard(self, data):
-        proc = Popen(["xclip", "-selection", "clipboard"], stdin=PIPE)
+        proc = Popen(["xclip", "-selection", self.settings["clipboard"]], stdin=PIPE)
         proc.communicate(data.encode('utf-8'))
 
     def addError(self, message):
@@ -355,10 +357,10 @@ class Window(QDialog):
 
 def loadSettings(argv):
     # Default options
-    settings = {'binary': None, 'closeWhenDone': False}
+    settings = {'binary': None, 'clipboard': 'clipboard', 'closeWhenDone': False}
 
     try:
-        opts, args = getopt.getopt(argv, "hb:m:", ["help", "binary=", "close-when-done", "module="])
+        opts, args = getopt.getopt(argv, "hb:c:m:", ["help", "binary=", "clipboard=", "close-when-done", "module="])
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -370,10 +372,16 @@ def loadSettings(argv):
             sys.exit()
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
-        elif opt in ("-m", "--module"):
-            settings['module'] = args
         elif opt in ("-b", "--binary"):
             settings['binary'] = args
+        elif opt in ("-c", "--clipboard"):
+            if not args in ["primary", "secondary", "clipboard"]:
+                print("Invalid clipboard requested")
+                exit(1)
+
+            settings['clipboard'] = args
+        elif opt in ("-m", "--module"):
+            settings['module'] = args
 
     return settings
 
@@ -384,6 +392,11 @@ def usage():
 --binary          : choose the name of the binary to use. Defaults to 'pass' for
                     the pass module and todo.sh for the todo.sh module. Paths
                     are allowed.
+
+--clipboard       : choose the clipboard to copy entries to. Acceptable values
+                    are "primary", "secondary" or "clipboard". See the xclip
+                    documentation for more information. Defaults to
+                    "clipboard".
 
 --close-when-done : close after completing an action such as copying
                     a password or closing the application (through
@@ -486,7 +499,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # Set up the window
-    viewModel = ViewModel()
+    viewModel = ViewModel(settings)
     window = Window(viewModel, settings)
 
     # This will (correctly) fail if the module doesn't implement all necessary
