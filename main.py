@@ -358,7 +358,7 @@ def loadSettings(argv):
     settings = {'binary': None, 'closeWhenDone': False}
 
     try:
-        opts, args = getopt.getopt(argv, "hb:s:", ["help", "binary=", "close-when-done", "module="])
+        opts, args = getopt.getopt(argv, "hb:m:", ["help", "binary=", "close-when-done", "module="])
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -370,7 +370,7 @@ def loadSettings(argv):
             sys.exit()
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
-        elif opt in ("-s", "--module"):
+        elif opt in ("-m", "--module"):
             settings['module'] = args
         elif opt in ("-b", "--binary"):
             settings['binary'] = args
