@@ -86,13 +86,9 @@ class Module(ModuleBase):
             if line == '--':
                 break
 
-            entryList.append(line)
+            entryList.append([line, line])
 
         return entryList
-
-    def copyEntryToClipboard(self, entryName):
-        proc = Popen(["xclip", "-selection", "clipboard"], stdin=PIPE)
-        proc.communicate(entryName.encode("ascii"))
 
     def getAllEntryFields(self, entryName):
         return ['']

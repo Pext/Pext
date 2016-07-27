@@ -38,13 +38,9 @@ class Module(ModuleBase):
         entryList = []
 
         for emoji, code in sorted(unicode_codes.UNICODE_EMOJI.items()):
-            entryList.append('{0} {1}'.format(emoji, code))
+            entryList.append([emoji, '{0} {1}'.format(emoji, code)])
 
         return entryList
-
-    def copyEntryToClipboard(self, entryName):
-        proc = Popen(["xclip", "-selection", "clipboard"], stdin=PIPE)
-        proc.communicate(entryName.split(" ")[0].encode("utf-8"))
 
     def getAllEntryFields(self, entryName):
         return ['']

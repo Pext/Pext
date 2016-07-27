@@ -67,6 +67,13 @@ class ViewModel():
 
         self.search()
 
+    def getElementsFromList(self, pythonList, element):
+        return [entry[element] for entry in pythonList]
+
+    def copyToClipboard(self, data):
+        proc = Popen(["xclip", "-selection", "clipboard"], stdin=PIPE)
+        proc.communicate(data.encode('utf-8'))
+
     def addError(self, message):
         for line in message.splitlines():
             if not (not line or line.isspace()):
@@ -152,7 +159,7 @@ class ViewModel():
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
         for entry in self.entryList:
-            if all(searchString in entry.lower() for searchString in searchStrings):
+            if all(searchString in entry[1].lower() for searchString in searchStrings):
                 self.filteredList.append(entry)
 
         self.resultListModelMaxIndex = len(self.filteredList) - 1
@@ -160,12 +167,14 @@ class ViewModel():
 
         for command in self.commandsText:
             if searchStrings[0] in command:
-                commandList.append(command)
+                # [command, command] is merely for consistency with the rest of
+                # the filtered list
+                commandList.append([command, command])
 
         if len(self.filteredList) == 0 and len(commandList) > 0:
             self.filteredList = commandList
             for entry in self.entryList:
-                if any(searchString in entry.lower() for searchString in searchStrings[1:]):
+                if any(searchString in entry[1].lower() for searchString in searchStrings[1:]):
                     self.filteredList.append(entry)
 
             self.context.setContextProperty("resultListModelCommandMode", True)
@@ -173,7 +182,7 @@ class ViewModel():
             self.filteredList += commandList
             self.context.setContextProperty("resultListModelCommandMode", False)
 
-        self.resultListModelList = QStringListModel(self.filteredList)
+        self.resultListModelList = QStringListModel(self.getElementsFromList(self.filteredList, 1))
         self.context.setContextProperty("resultListModel", self.resultListModelList)
 
         if self.resultListModelMaxIndex == -1:
@@ -208,7 +217,7 @@ class ViewModel():
         self.filteredList = []
 
         for entry in self.chosenEntryList:
-            if any(searchString in entry.lower() for searchString in searchStrings):
+            if any(searchString in entry[1].lower() for searchString in searchStrings):
                 self.filteredList.append(entry)
 
         try:
@@ -216,7 +225,7 @@ class ViewModel():
         except ValueError:
             currentIndex = 0
 
-        self.resultListModelList = QStringListModel(self.filteredList)
+        self.resultListModelList = QStringListModel(self.getElementsFromList(self.filteredList, 1))
         self.context.setContextProperty("resultListModel", self.resultListModelList)
 
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
@@ -244,24 +253,20 @@ class ViewModel():
             return
 
         self.chosenEntry = self.filteredList[currentIndex]
-        entryContent = self.module.getAllEntryFields(self.chosenEntry)
+        entryContent = self.module.getAllEntryFields(self.chosenEntry[0])
 
         if len(entryContent) == 1:
-            self.module.copyEntryToClipboard(self.chosenEntry)
+            self.copyToClipboard(self.chosenEntry[0])
             self.window.close()
             return
 
-        # The first line is most likely the password. Do not show this on the
-        # screen
-        entryContent[0] = "********"
-
-        # If the password entry has more than one line, fill the result list
-        # with all lines, so the user can choose the line they want to copy to
-        # the clipboard
+        # If the entry has more than one line, fill the result list with all
+        # lines, so the user can choose the line they want to copy to the
+        # clipboard
         self.chosenEntryList = entryContent
         self.filteredList = entryContent
 
-        self.resultListModelList = QStringListModel(self.filteredList)
+        self.resultListModelList = QStringListModel(self.getElementsFromList(self.filteredList, 1))
         self.context.setContextProperty("resultListModel", self.resultListModelList)
         self.resultListModelMaxIndex = len(self.filteredList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
@@ -273,23 +278,8 @@ class ViewModel():
             return
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if self.filteredList[currentIndex] == "********":
-            self.module.copyEntryToClipboard(self.chosenEntry)
-            self.window.close()
-            return
 
-        # Only copy the final part. For example, if the entry is named
-        # "URL: https://example.org/", only copy "https://example.org/" to the
-        # clipboard
-        copyStringParts = self.filteredList[currentIndex].split(": ", 1)
-
-        copyString = copyStringParts[1] if len(copyStringParts) > 1 else copyStringParts[0]
-
-        # Use the same clipboard that password store is set to use (untested)
-        selection = os.getenv("PASSWORD_STORE_X_SELECTION", "clipboard")
-
-        proc = Popen(["xclip", "-selection", selection], stdin=PIPE)
-        proc.communicate(copyString.encode("ascii"))
+        self.copyToClipboard(self.filteredList[currentIndex][0])
         self.window.close()
         return
 

@@ -87,13 +87,28 @@ class Module(ModuleBase):
                 if name[-4:] == ".gpg":
                     unsortedPasswords.append(os.path.join(root, name))
 
-        return [password[len(passDir):-4] for password in sorted(unsortedPasswords, key=lambda name: os.path.getatime(os.path.join(root, name)), reverse=True)]
+        entries = []
+        for password in sorted(unsortedPasswords, key=lambda name: os.path.getatime(os.path.join(root, name)), reverse=True):
+            entry = password[len(passDir):-4]
+            entries.append([entry, entry])
 
-    def copyEntryToClipboard(self, entryName):
-        self.call(["show", "-c", entryName])
+        return entries
 
     def getAllEntryFields(self, entryName):
-        return self.runCommand(["show", entryName], hideErrors=True).rstrip().split("\n")
+        entries = []
+        for entry in self.runCommand(["show", entryName], hideErrors=True).rstrip().splitlines():
+            if len(entries) == 0:
+                entries.append([entry, "********"])
+            else:
+                # Get the final part to prepare for copying. For example, if
+                # the entry is named URL: https://example.org/", only copy
+                # "https://example.org/" to the clipboard
+                copyStringParts = entry.split(": ", 1)
+
+                copyString = copyStringParts[1] if len(copyStringParts) > 1 else copyStringParts[0]
+                entries.append([copyString, entry])
+
+        return entries
 
     def runCommand(self, command, printOnSuccess=False, hideErrors=False, prefillInput=''):
         # If we edit a password, make sure to get the original input first so we can show the user
@@ -214,7 +229,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
         entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
-        self.q.put([Action.prependEntry, entryName])
+        self.q.put([Action.prependEntry, [entryName, entryName]])
 
     def process_IN_DELETE(self, event):
         if event.dir:
@@ -222,7 +237,7 @@ class EventHandler(pyinotify.ProcessEvent):
 
         entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
-        self.q.put([Action.removeEntry, entryName])
+        self.q.put([Action.removeEntry, [entryName, entryName]])
 
     def process_IN_MOVED_FROM(self, event):
         self.process_IN_DELETE(event)
@@ -236,5 +251,5 @@ class EventHandler(pyinotify.ProcessEvent):
 
         entryName = event.pathname[len(self.store.getDataLocation()):-4]
 
-        self.q.put([Action.prependEntry, entryName])
-        self.q.put([Action.removeEntry, entryName])
+        self.q.put([Action.prependEntry, [entryName, entryName]])
+        self.q.put([Action.removeEntry, [entryName, entryName]])

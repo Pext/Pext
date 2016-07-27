@@ -23,10 +23,6 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def copyEntryToClipboard(self, entryName):
-        pass
-
-    @abstractmethod
     def getAllEntryFields(self, entryName):
         pass
 
