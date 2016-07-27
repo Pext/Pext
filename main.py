@@ -43,8 +43,6 @@ class SignalHandler():
 
 class ViewModel():
     def __init__(self):
-        self.ANSIEscapeRegex = re.compile('(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
-
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
         self.filteredList = []
