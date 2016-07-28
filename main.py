@@ -15,22 +15,23 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import configparser
 import getopt
 import os
 import signal
 import sys
 import re
 import time
-from helpers import Action
-from subprocess import Popen, PIPE
+from shutil import rmtree
+from subprocess import call, Popen, PIPE
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QLabel, QLineEdit, QMessageBox, QTextEdit, QVBoxLayout, QDialogButtonBox
 from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
 
-from module_base import ModuleBase
-
+from pext_base import ModuleBase
+from pext_helpers import Action
 
 class SignalHandler():
     def __init__(self, window):
@@ -357,10 +358,16 @@ class Window(QDialog):
 
 def loadSettings(argv):
     # Default options
-    settings = {'binary': None, 'clipboard': 'clipboard', 'closeWhenDone': False}
+    settings = {'binary': None,
+                'clipboard': 'clipboard',
+                'closeWhenDone': False,
+                'installModules': [],
+                'uninstallModules': [],
+                'listModules': False,
+                'updateModules': False}
 
     try:
-        opts, args = getopt.getopt(argv, "hb:c:m:", ["help", "binary=", "clipboard=", "close-when-done", "module="])
+        opts, args = getopt.getopt(argv, "hb:c:m:", ["help", "binary=", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "list-modules", "update-modules"])
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -377,11 +384,22 @@ def loadSettings(argv):
         elif opt in ("-c", "--clipboard"):
             if not args in ["primary", "secondary", "clipboard"]:
                 print("Invalid clipboard requested")
-                exit(1)
+                sys.exit(3)
 
             settings['clipboard'] = args
         elif opt in ("-m", "--module"):
+            if not args.startswith('pext_module_'):
+                args = 'pext_module_' + args
+
             settings['module'] = args
+        elif opt == "--install-module":
+            settings['installModules'].append(args)
+        elif opt == "--uninstall-module":
+            settings['uninstallModules'].append(args)
+        elif opt == "--list-modules":
+            settings['listModules'] = True
+        elif opt == "--update-modules":
+            settings['updateModules'] = True
 
     return settings
 
@@ -389,22 +407,30 @@ def loadSettings(argv):
 def usage():
     print('''Options:
 
---binary          : choose the name of the binary to use. Defaults to 'pass' for
-                    the pass module and todo.sh for the todo.sh module. Paths
-                    are allowed.
+--binary           : choose the name of the binary to use. Defaults to 'pass' for
+                     the pass module and todo.sh for the todo.sh module. Paths
+                     are allowed.
 
---clipboard       : choose the clipboard to copy entries to. Acceptable values
-                    are "primary", "secondary" or "clipboard". See the xclip
-                    documentation for more information. Defaults to
-                    "clipboard".
+--clipboard        : choose the clipboard to copy entries to. Acceptable values
+                     are "primary", "secondary" or "clipboard". See the xclip
+                     documentation for more information. Defaults to
+                     "clipboard".
 
---close-when-done : close after completing an action such as copying
-                    a password or closing the application (through
-                    escape or (on most systems) Alt+F4) instead of
-                    staying in memory. This also allows multiple
-                    instances to be ran at once.
+--close-when-done  : close after completing an action such as copying
+                     a password or closing the application (through
+                     escape or (on most systems) Alt+F4) instead of
+                     staying in memory. This also allows multiple
+                     instances to be ran at once.
 
---module          : name the module to use.''')
+--module           : name the module to use.
+
+--install-module   : download and install a module from the given git URL.
+
+--uninstall-module : uninstall a module by name.
+
+--list-modules     : list all installed modules.
+
+--update-modules   : update all installed modules using git pull.''')
 
 
 def initPersist(module):
@@ -477,13 +503,42 @@ def mainLoop(app, q, vm, window):
             print('WARN: Module caused exception {} with call {}'.format(e, action))
 
 if __name__ == "__main__":
+    # Ensure our necessary directories exist
+    try:
+        os.mkdir(os.path.expanduser('~/.config/pext'))
+        os.mkdir(os.path.expanduser('~/.config/pext/modules'))
+    except OSError:
+        # Probably already exists, that's okay
+        pass
+
     settings = loadSettings(sys.argv[1:])
 
-    if 'module' not in settings:
-        print('A module must be given.')
-        sys.exit(2)
+    # First, we uninstall, update and install modules as desired
+    for module in settings['uninstallModules']:
+        rmtree(os.path.expanduser('~/.config/pext/modules/pext_module_{}'.format(module)))
 
-    moduleImport = __import__('module_' + settings['module'].replace('.', '_'), fromlist=['Module'])
+    if settings['updateModules']:
+        for directory in os.listdir(os.path.expanduser('~/.config/pext/modules/')):
+            call(['git', 'pull'], cwd=os.path.expanduser('~/.config/pext/modules/{}'.format(directory)))
+
+    for module in settings['installModules']:
+        storename = module.split("/")[-1]
+        if not storename.startswith('pext_module_'):
+            storename = 'pext_module_' + storename
+
+        call(['git', 'clone', module, storename], cwd=os.path.expanduser('~/.config/pext/modules/'))
+
+    if settings['listModules']:
+        print('Installed modules:')
+        for directory in os.listdir(os.path.expanduser('~/.config/pext/modules/')):
+            print(directory[len('pext_module_'):])
+
+    if 'module' not in settings:
+        print('No module given. Not launching.')
+        sys.exit(0)
+
+    sys.path.append(os.path.expanduser('~/.config/pext/modules'))
+    moduleImport = __import__(settings['module'], fromlist=['Module'])
 
     Module = getattr(moduleImport, 'Module')
 

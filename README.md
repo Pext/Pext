@@ -1,4 +1,4 @@
-## Pext
+# Pext
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is build using
 Python 3 and QML and intended to have its behaviour decided by modules. Its user
 interface is heavily inspired by [GoPass](https://github.com/cortex/gopass).
@@ -10,44 +10,41 @@ version.
 The background image is the default KDE Plasma 5.4 wallpaper and not
 part of Pext.*
 
-## Usage
-Launch Pext with your preferred module. For example, to start it with the pass
-module, launch it as such:
+# Usage
+First, you will want to install one or more modules you want to use. You do
+this by using the --install-module command, followed by the URL of a git
+repository.
+
+For example, to install the official
+[pass module](https://github.com/Pext/pext_module_pass), run the following
+command:
+
+    python3 main.py --install-module=https://github.com/Pext/pext_module_pass
+
+For more modules, check out the
+[Pext organisation on GitHub](https://github.com/Pext).
+
+After you have installed a module you want to use, launch Pext with with
+--module parameter. For example, to use the pass module, launch it as such:
 
     python3 main.py --module=pass
 
-Use the `--help` flag for a list of options.
+Once Pext has launched, you can use the search bar on top to search through the
+module, or type a command. Once the selected entry is highlighted or you have
+typed the command you want to run, press enter to select or execute it.
 
-Then, just start typing. When the entry you want to use is displayed at the
-top, hit enter to interact with it or, if no further interaction is supported,
-copy it to your clipboard. Entries can be tab-completed, even when typing a
-command.
-
-Of course, you can also select another entry in the list, either with the
-arrow keys or with vim-style Ctrl+K and Ctrl+J bindings. The selected entry is
-highlighted in red. If mice are your thing, your trustworthy rodent can select
-an entry with a single click.
+Aside from switching entries with the up and down arrow keys, vi-style Ctrl+K
+and Ctrl+J bindings, mouse support and basic tab completion are supported.
 
 To get the most out of Pext, set up your system to start it with a global
 hotkey, so you can always quickly access it when you need it.
 
-## Modules
-- emoji
-
-    Use Pext as an emoji selector using the [emoji](https://pypi.python.org/pypi/emoji/0.3.9) library
-
-- pass
-
-	Use Pext as a password manager using [pass](https://www.passwordstore.org/) as back-end
-
-- todo.sh
-
-	Use Pext as a todo list manager using [todo.txt-cli](https://github.com/ginatrapani/todo.txt-cli) as back-end
+You can always use the `--help` flag for a list of options.
 
 ## Dependencies
 ### Debian (Stretch and later, no Jessie, sorry!)
 
-    sudo apt-get install python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls python3-pexpect python3-pyinotify pass
+    sudo apt-get install python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls
 
 ## License
 GPLv3+.
