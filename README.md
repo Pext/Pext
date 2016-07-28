@@ -44,7 +44,7 @@ You can always use the `--help` flag for a list of options.
 ## Dependencies
 ### Debian (Stretch and later, no Jessie, sorry!)
 
-    sudo apt-get install python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls
+    sudo apt-get install git python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls
 
 ## License
 GPLv3+.
