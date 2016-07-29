@@ -73,6 +73,32 @@ class ViewModel():
     def getElementsFromList(self, pythonList, element):
         return [entry[element] for entry in pythonList]
 
+    def getLongestCommonString(self, entries, start=""):
+        # Filter out all entries that don't match at the start
+        entryList = []
+        for entry in entries:
+            if entry.startswith(start):
+                entryList.append(entry)
+
+        commonChars = list(start)
+
+        try:
+            while True:
+                commonChar = None
+                for entry in entryList:
+                    if commonChar is None:
+                        commonChar = entry[len(commonChars)]
+                    elif commonChar != entry[len(commonChars)]:
+                        return ''.join(commonChars)
+
+                if commonChar is None:
+                    return None
+
+                commonChars.append(commonChar)
+        except IndexError:
+            # We fully match a string
+            return ''.join(commonChars)
+
     def copyToClipboard(self, data):
         proc = Popen(["xclip", "-selection", self.settings["clipboard"]], stdin=PIPE)
         proc.communicate(data.encode('utf-8'))
@@ -119,31 +145,28 @@ class ViewModel():
 
     def tabComplete(self):
         currentInput = QQmlProperty.read(self.searchInputModel, "text")
-        stringToMatch = None
-        for entry in self.filteredList:
-            if entry in self.commandsText:
-                continue
 
-            if stringToMatch is None:
-                stringToMatch = entry
+        start = currentInput
+
+        possibles = currentInput.split(" ", 1)
+        command = self.getLongestCommonString(self.module.getSupportedCommands(), start=possibles[0])
+        # If we didn't complete the command, see if we can complete the text
+        if command is None or len(command) == len(possibles[0]):
+            if command is None:
+                command = "" # We string concat this later
             else:
-                for i in range(len(stringToMatch)):
-                    if entry[i] != stringToMatch[i]:
-                        stringToMatch = stringToMatch[:i]
-                        break
+                command += " "
 
-        possibleCommand = currentInput.split(" ", 1)[0]
-        output = stringToMatch
-        for command in self.commandsText:
-            if command.startswith(possibleCommand):
-                output = possibleCommand + " " + stringToMatch
-                break
+            start = possibles[1] if len(possibles) > 1 else ""
+            entry = self.getLongestCommonString([listEntry[1] for listEntry in self.filteredList if listEntry[1] not in self.commandsText], start=start)
 
-        if len(output) <= len(currentInput):
-            self.addError("No tab completion possible")
-            return
+            if entry is None or len(entry) <= len(start):
+                self.addError("No tab completion possible")
+                return
+        else:
+            entry = " " # Add an extra space to simplify typing for the user
 
-        QQmlProperty.write(self.searchInputModel, "text", output)
+        QQmlProperty.write(self.searchInputModel, "text", command + entry)
         self.search()
 
     def search(self):
