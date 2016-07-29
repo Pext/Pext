@@ -281,7 +281,7 @@ class ViewModel():
         entryContent = self.module.getAllEntryFields(self.chosenEntry[0])
 
         if len(entryContent) == 1:
-            self.copyToClipboard(self.chosenEntry[0])
+            self.copyToClipboard(entryContent[0][0])
             self.window.close()
             return
 
