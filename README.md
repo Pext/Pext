@@ -24,7 +24,7 @@ command:
 For more modules, check out the
 [Pext organisation on GitHub](https://github.com/Pext).
 
-After you have installed a module you want to use, launch Pext with with
+After you have installed a module you want to use, launch Pext with the
 --module parameter. For example, to use the pass module, launch it as such:
 
     python3 main.py --module=pass
