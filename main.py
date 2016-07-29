@@ -65,7 +65,7 @@ class ViewModel():
     def bindModule(self, module):
         self.module = module
 
-        self.commandsText = self.module.getCommands()
+        self.commandList = self.module.getCommands()
         self.entryList = self.module.getEntries()
 
         self.search()
@@ -147,9 +147,10 @@ class ViewModel():
         currentInput = QQmlProperty.read(self.searchInputModel, "text")
 
         start = currentInput
+        searchableCommands = [listEntry[0] for listEntry in self.commandList]
 
         possibles = currentInput.split(" ", 1)
-        command = self.getLongestCommonString(self.module.getSupportedCommands(), start=possibles[0])
+        command = self.getLongestCommonString(searchableCommands, start=possibles[0])
         # If we didn't complete the command, see if we can complete the text
         if command is None or len(command) == len(possibles[0]):
             if command is None:
@@ -158,7 +159,7 @@ class ViewModel():
                 command += " "
 
             start = possibles[1] if len(possibles) > 1 else ""
-            entry = self.getLongestCommonString([listEntry[1] for listEntry in self.filteredList if listEntry[1] not in self.commandsText], start=start)
+            entry = self.getLongestCommonString([listEntry[1] for listEntry in self.filteredList if listEntry[1] not in searchableCommands], start=start)
 
             if entry is None or len(entry) <= len(start):
                 self.addError("No tab completion possible")
@@ -191,11 +192,9 @@ class ViewModel():
         self.resultListModelMaxIndex = len(self.filteredList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
 
-        for command in self.commandsText:
-            if searchStrings[0] in command:
-                # [command, command] is merely for consistency with the rest of
-                # the filtered list
-                commandList.append([command, command])
+        for command in self.commandList:
+            if searchStrings[0] in command[1]:
+                commandList.append(command)
 
         if len(self.filteredList) == 0 and len(commandList) > 0:
             self.filteredList = commandList
@@ -268,7 +267,7 @@ class ViewModel():
 
         if currentIndex == -1:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
-            if commandTyped[0] not in self.module.getSupportedCommands():
+            if commandTyped[0] not in [entry[1] for entry in self.commandList]:
                 return
 
             result = self.module.runCommand(commandTyped, printOnSuccess=True)

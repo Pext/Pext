@@ -11,10 +11,6 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def getSupportedCommands(self):
-        pass
-
-    @abstractmethod
     def getCommands(self):
         pass
 
