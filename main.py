@@ -321,7 +321,7 @@ class ViewModel():
 
         if currentIndex == -1:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
-            if commandTyped[0] not in [entry[1] for entry in self.commandList]:
+            if commandTyped[0] not in [entry[0] for entry in self.commandList]:
                 return
 
             result = self.module.runCommand(commandTyped, printOnSuccess=True)
