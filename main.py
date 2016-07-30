@@ -34,16 +34,20 @@ from pext_base import ModuleBase
 from pext_helpers import Action
 
 class SignalHandler():
+    """Handle UNIX signals"""
     def __init__(self, window):
+        """Initialize SignalHandler."""
         self.window = window
 
     def handle(self, signum, frame):
-        # Signal received
+        """When an UNIX signal gets received, show the window."""
         self.window.show()
 
 
 class ViewModel():
+    """Manage the communication between user interface and module."""
     def __init__(self, settings):
+        """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
         self.filteredList = []
@@ -57,12 +61,16 @@ class ViewModel():
         self.settings = settings
 
     def bindContext(self, context, window, searchInputModel, resultListModel):
+        """Bind the QML context so we can communicate with the QML front-end."""
         self.context = context
         self.window = window
         self.searchInputModel = searchInputModel
         self.resultListModel = resultListModel
 
     def bindModule(self, module):
+        """Bind the module so we can communicate with it and retrieve the
+        commands and entries from it.
+        """
         self.module = module
 
         self.commandList = self.module.getCommands()
@@ -71,9 +79,31 @@ class ViewModel():
         self.search()
 
     def getElementsFromList(self, pythonList, element):
+        """Return the chosen element for each entry in the list.
+
+        Keyword arguments:
+        pythonList -- the list of entries, with each entry being a list
+        element -- the requested element number
+
+        For example, if element is 1, and pythonList is [["a", "b"]], this
+        function returns ["b"].
+        """
         return [entry[element] for entry in pythonList]
 
     def getLongestCommonString(self, entries, start=""):
+        """Return the longest common string for each entry in the list,
+        starting at the start.
+
+        Keyword arguments:
+        entries -- the list of entries
+        start -- the string to start with (default "")
+
+        All entries not starting with start are discarded before additional
+        matches are looked for.
+
+        Returns the longest common string, or None if not a single value
+        matches start.
+        """
         # Filter out all entries that don't match at the start
         entryList = []
         for entry in entries:
@@ -100,10 +130,12 @@ class ViewModel():
             return ''.join(commonChars)
 
     def copyToClipboard(self, data):
+        """Copy the given data to the user-chosen clipboard."""
         proc = Popen(["xclip", "-selection", self.settings["clipboard"]], stdin=PIPE)
         proc.communicate(data.encode('utf-8'))
 
     def addError(self, message):
+        """Add an error message to the window and show the message list."""
         for line in message.splitlines():
             if not (not line or line.isspace()):
                 self.messageList.append(["<font color='red'>{}</color>".format(line), time.time()])
@@ -111,6 +143,7 @@ class ViewModel():
         self.showMessages()
 
     def addMessage(self, message):
+        """Add a message to the window and show the message list."""
         for line in message.splitlines():
             if not (not line or line.isspace()):
                 self.messageList.append([line, time.time()])
@@ -118,20 +151,28 @@ class ViewModel():
         self.showMessages()
 
     def showMessages(self):
+        """Show the list of messages in the window."""
         messageListForModel = [message[0] for message in self.messageList]
         self.messageListModelList = QStringListModel(messageListForModel)
         self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
     def clearOldMessages(self):
+        """Remove all messages older than 3 seconds and show the list of
+        messages in the window.
+        """
         if len(self.messageList) == 0:
             return
 
-        # Remove every error message older than 3 seconds and redraw the error list
         currentTime = time.time()
         self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
         self.showMessages()
 
     def goUp(self):
+        """Go one level up. This means that, if we're currently in the entry
+        content list, we go back to the entry list. If we're currently in the
+        entry list, we clear the search bar. If we're currently in the entry
+        list and the search bar is empty, we hide the window.
+        """
         if QQmlProperty.read(self.searchInputModel, "text") != "":
             QQmlProperty.write(self.searchInputModel, "text", "")
             return
@@ -144,6 +185,9 @@ class ViewModel():
         self.search()
 
     def tabComplete(self):
+        """Tab-complete the command, entry or combination currently in the
+        search bar to the longest possible common completion.
+        """
         currentInput = QQmlProperty.read(self.searchInputModel, "text")
 
         start = currentInput
@@ -171,6 +215,10 @@ class ViewModel():
         self.search()
 
     def search(self):
+        """Filter the list of entries in the screen, setting the filtered list
+        to the entries containing one or more words of the string currently
+        visible in the search bar.
+        """
         if self.chosenEntry is not None:
             self.searchChosenEntry()
             return
@@ -223,6 +271,7 @@ class ViewModel():
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def searchChosenEntry(self):
+        """Search the content within a single entry."""
         # Ensure this entry still exists
         if self.chosenEntry not in self.entryList:
             self.addError(self.chosenEntry + " is no longer available")
@@ -256,6 +305,11 @@ class ViewModel():
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def select(self):
+        """Select an entry or an entry in the content of an entry. If we're
+        already in an entry, get the content list. If the content list is zero
+        or one entries, copy the entry or single line of content to the
+        clipboard.
+        """
         if self.chosenEntry is not None:
             self.selectField()
             return
@@ -299,6 +353,7 @@ class ViewModel():
         QQmlProperty.write(self.searchInputModel, "text", "")
 
     def selectField(self):
+        """Select a field in the entry content and copy it to the clipboard."""
         if len(self.filteredList) == 0:
             return
 
@@ -310,7 +365,9 @@ class ViewModel():
 
 
 class InputDialog(QDialog):
+    """A simple dialog requesting user input."""
     def __init__(self, question, text, parent=None):
+        """Initialize the dialog."""
         super().__init__(parent)
 
         self.setWindowTitle("Pext")
@@ -326,12 +383,15 @@ class InputDialog(QDialog):
         layout.addWidget(button)
 
     def show(self):
+        """Show the dialog."""
         result = self.exec_()
         return (self.textEdit.toPlainText(), result == QDialog.Accepted)
 
 
 class Window(QDialog):
+    """The main Pext window."""
     def __init__(self, vm, settings, parent=None):
+        """Initialize the window."""
         super().__init__(parent)
 
         self.engine = QQmlApplicationEngine(self)
@@ -365,10 +425,14 @@ class Window(QDialog):
         clearOldMessagesTimer.triggered.connect(self.vm.clearOldMessages)
 
     def show(self):
+        """Show the window."""
         self.window.show()
         self.activateWindow()
 
     def close(self):
+        """Close the window. If the user wants us to completely close when
+        done, also exit the application.
+        """
         if not settings['closeWhenDone']:
             self.window.hide()
             QQmlProperty.write(self.vm.searchInputModel, "text", "")
@@ -379,6 +443,7 @@ class Window(QDialog):
 
 
 def loadSettings(argv):
+    """Load the settings from the command line and set defaults."""
     # Default options
     settings = {'binary': None,
                 'clipboard': 'clipboard',
@@ -427,6 +492,7 @@ def loadSettings(argv):
 
 
 def usage():
+    """Print usage information."""
     print('''Options:
 
 --binary           : choose the name of the binary to use. Defaults to 'pass' for
@@ -456,6 +522,10 @@ def usage():
 
 
 def initPersist(module):
+    """Check if Pext is already running and if so, send it SIGUSR1 to bring it
+    to the foreground. If Pext is not already running, save a PIDfile so that
+    another Pext instance can find us.
+    """
     # Ensure only one Pext instance is running. If one already exists,
     # signal it to open the password selection window.
     # This way, we can keep the password list in memory and start up extra
@@ -480,6 +550,7 @@ def initPersist(module):
 
 
 def mainLoop(app, q, vm, window):
+    """Process actions modules put in the queue and keep the window working."""
     while True:
         try:
             action = q.get_nowait()

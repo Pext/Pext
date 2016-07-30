@@ -19,6 +19,71 @@ from enum import Enum
 
 
 class Action(Enum):
+    """A list of actions that the module can request of the core by putting it
+    in the queue. All of this actions need to be accompanied by a list of
+    arguments.
+
+    Example:
+        self.q.put(Action.addMessage, ["message to show"])
+
+    addMessage:
+        Show a message on the screen.
+
+        message -- message to show
+
+    addError:
+        Show an error message on the screen.
+
+        message -- error message to show
+
+    prependEntry:
+        Prepend an entry to the entry list.
+
+        identifier -- the identifier of the entry
+        searchable name -- the searchable name of the entry
+
+    removeEntry:
+        Remove an entry from the entry list.
+
+        identifier -- the identifier of the entry
+        searchable name -- the searchable name of the entry
+
+    replaceEntryList:
+        Replace the list of entries with the given list.
+
+        list -- the new list of entries
+
+    setFilter:
+        Replace the text currently in the search bar.
+
+        filter -- the new text to put in the search bar
+
+    askQuestionDefaultYes:
+        Ask a yes/no question, with the default value being yes.
+
+        question -- the question to ask
+
+    askQuestionDefaultNo:
+        Ask a yes/no question, with the default value being no.
+
+        question -- the question to ask
+
+    askInput:
+        Ask the user to input a single line of text.
+
+        text -- the text to show the user, such as "Please enter code"
+
+    askInputPassword:
+        Ask the user to input a single line of text into a password field.
+
+        text -- the text to show the user, such as "Please enter code"
+
+    askInputMultiLine:
+        Ask the user to input one or more lines of text.
+
+        text -- the text to show the user, such as "Please enter code"
+        prefill -- the text to already put into the input field
+    """
     addMessage = 1
     addError = 2
     prependEntry = 3
