@@ -618,7 +618,10 @@ if __name__ == "__main__":
     # First, we uninstall, update and install modules as desired
     for module in settings['uninstallModules']:
         print('Removing {}'.format(module))
-        rmtree(os.path.expanduser('~/.config/pext/modules/pext_module_{}'.format(module)))
+        try:
+            rmtree(os.path.expanduser('~/.config/pext/modules/pext_module_{}'.format(module)))
+        except FileNotFoundError:
+            print('Cannot remove {}, it is not installed'.format(module))
 
     if settings['updateModules']:
         for directory in os.listdir(os.path.expanduser('~/.config/pext/modules/')):
