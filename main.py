@@ -617,18 +617,21 @@ if __name__ == "__main__":
 
     # First, we uninstall, update and install modules as desired
     for module in settings['uninstallModules']:
+        print('Removing {}'.format(module))
         rmtree(os.path.expanduser('~/.config/pext/modules/pext_module_{}'.format(module)))
 
     if settings['updateModules']:
         for directory in os.listdir(os.path.expanduser('~/.config/pext/modules/')):
+            print('Updating {}'.format(directory))
             call(['git', 'pull'], cwd=os.path.expanduser('~/.config/pext/modules/{}'.format(directory)))
 
     for module in settings['installModules']:
-        storename = module.split("/")[-1].replace('.', '_')
+        storename = module.split("/")[-1]
+        print('Installing {}'.format(storename))
         if not storename.startswith('pext_module_'):
             storename = 'pext_module_' + storename
 
-        call(['git', 'clone', module, storename], cwd=os.path.expanduser('~/.config/pext/modules/'))
+        call(['git', 'clone', module, storename.replace('.', '_')], cwd=os.path.expanduser('~/.config/pext/modules/'))
 
     if settings['listModules']:
         print('Installed modules:')
