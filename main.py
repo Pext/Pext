@@ -624,7 +624,7 @@ if __name__ == "__main__":
             call(['git', 'pull'], cwd=os.path.expanduser('~/.config/pext/modules/{}'.format(directory)))
 
     for module in settings['installModules']:
-        storename = module.split("/")[-1]
+        storename = module.split("/")[-1].replace('.', '_')
         if not storename.startswith('pext_module_'):
             storename = 'pext_module_' + storename
 
@@ -640,7 +640,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     sys.path.append(os.path.expanduser('~/.config/pext/modules'))
-    moduleImport = __import__(settings['module'], fromlist=['Module'])
+    moduleImport = __import__(settings['module'].replace('.', '_'), fromlist=['Module'])
 
     Module = getattr(moduleImport, 'Module')
 
