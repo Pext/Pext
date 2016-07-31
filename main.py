@@ -15,12 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import configparser
 import getopt
 import os
 import signal
 import sys
 import re
+import threading
 import time
 from shutil import rmtree
 from subprocess import call, Popen, PIPE
@@ -50,6 +50,8 @@ class ViewModel():
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
+        self.commandList = []
+        self.entryList = []
         self.filteredList = []
         self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
@@ -72,9 +74,6 @@ class ViewModel():
         commands and entries from it.
         """
         self.module = module
-
-        self.commandList = self.module.getCommands()
-        self.entryList = self.module.getEntries()
 
         self.search()
 
@@ -558,12 +557,22 @@ def mainLoop(app, q, vm, window):
                 vm.addMessage(action[1])
             elif action[0] == Action.addError:
                 vm.addError(action[1])
+            elif action[0] == Action.addEntry:
+                vm.entryList = vm.entryList + [action[1]]
             elif action[0] == Action.prependEntry:
                 vm.entryList = [action[1]] + vm.entryList
             elif action[0] == Action.removeEntry:
                 vm.entryList.remove(action[1])
             elif action[0] == Action.replaceEntryList:
                 vm.entryList = action[1]
+            elif action[0] == Action.addCommand:
+                vm.commandList = vm.commandList + [action[1]]
+            elif action[0] == Action.prependCommand:
+                vm.commandList = [action[1]] + vm.commandList
+            elif action[0] == Action.removeCommand:
+                vm.commandList.remove(action[1])
+            elif action[0] == Action.replaceCommandList:
+                vm.commandList = action[1]
             elif action[0] == Action.setFilter:
                 QQmlProperty.write(vm.searchInputModel, "text", action[1])
             elif action[0] == Action.askQuestionDefaultYes:
@@ -652,17 +661,24 @@ if __name__ == "__main__":
 
     # This will (correctly) fail if the module doesn't implement all necessary
     # functionality
-    module = Module(settings['binary'], q)
-
+    module = Module()
     viewModel.bindModule(module)
 
     # Handle signal
     signalHandler = SignalHandler(window)
     signal.signal(signal.SIGUSR1, signalHandler.handle)
 
-    # Run until the app quits, then clean up
+    # Show the window
     window.show()
+
+    # Start the module in the background
+    moduleThread = threading.Thread(target=module.init, args=(settings['binary'], q))
+    moduleThread.start()
+
+    # Start processing data
     mainLoop(app, q, viewModel, window)
+
+    # Run until we close, then clean up
     sys.exit(app.exec_())
     module.stop()
 

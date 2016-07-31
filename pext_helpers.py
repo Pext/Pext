@@ -36,6 +36,12 @@ class Action(Enum):
 
         message -- error message to show
 
+    addEntry:
+        Add an entry to the entry list.
+
+        identifier -- the identifier of the entry
+        searchable name -- the searchable name of the entry
+
     prependEntry:
         Prepend an entry to the entry list.
 
@@ -50,6 +56,29 @@ class Action(Enum):
 
     replaceEntryList:
         Replace the list of entries with the given list.
+
+        list -- the new list of entries
+
+    addCommand:
+        Add an entry to the command list.
+
+        identifier -- the identifier of the entry
+        searchable name -- the searchable name of the entry
+
+    prependCommand:
+        Prepend an entry to the command list.
+
+        identifier -- the identifier of the entry
+        searchable name -- the searchable name of the entry
+
+    removeCommand:
+        Remove a command from the entry list.
+
+        identifier -- the identifier of the entry
+        searchable name -- the searchable name of the entry
+
+    replaceCommandList:
+        Replace the list of commands with the given list.
 
         list -- the new list of entries
 
@@ -86,12 +115,17 @@ class Action(Enum):
     """
     addMessage = 1
     addError = 2
-    prependEntry = 3
-    removeEntry = 4
-    replaceEntryList = 5
-    setFilter = 6
-    askQuestionDefaultYes = 7
-    askQuestionDefaultNo = 8
-    askInput = 9
-    askInputPassword = 10
-    askInputMultiLine = 11
+    addEntry = 3
+    prependEntry = 4
+    removeEntry = 5
+    replaceEntryList = 6
+    addCommand = 7
+    prependCommand = 8
+    removeCommand = 9
+    replaceCommandList = 10
+    setFilter = 11
+    askQuestionDefaultYes = 12
+    askQuestionDefaultNo = 13
+    askInput = 14
+    askInputPassword = 15
+    askInputMultiLine = 16

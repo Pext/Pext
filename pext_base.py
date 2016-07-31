@@ -4,19 +4,22 @@ from abc import ABC, abstractmethod
 class ModuleBase(ABC):
     """The base all Pext modules must implement."""
     @abstractmethod
-    def __init__(self, binary, window, q):
-        """Called when the module is first loaded."""
-        pass
+    def init(self, binary, window, q):
+        """Called when the module is first loaded.
 
-    @abstractmethod
-    def stop(self):
-        """Called when Pext is about to shut down, intended for cleaning up if
-        required."""
-        pass
+        In this function, the application should initialize all its data and
+        use the Action.addEntry and Action.addCommand to asynchronously
+        populate the main list.
 
-    @abstractmethod
-    def getCommands(self):
-        """Return a list of commands.
+        If the list can be generated very quickly, the module may opt for using
+        Action.replaceEntryList and Action.replaceCommandList instead, although
+        it is recommended to queue the data per entry so that the user can
+        start interacting with at least some of the data as quickly as
+        possible.
+
+        Each entry in the entry list must be a list containing the entry
+        identifier and the searchable and displayed value. An example of a
+        valid entry is ["supersecretpassword", "********"].
 
         Each entry in the command list must be a list containing the command
         identifier and the searchable and displayed value. An example of a
@@ -25,17 +28,9 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def getEntries(self):
-        """Return a list of entries.
-
-        Each entry in the entry list must be a list containing the entry
-        identifier and the searchable and displayed value. An example of a
-        valid entry is ["supersecretpassword", "********"].
-
-        If an entry returns an empty array when getAllEntryFields is requested,
-        the identifier (in the example case "supersecretpassword") is copied to
-        the clipboard.
-        """
+    def stop(self):
+        """Called when Pext is about to shut down, intended for cleaning up if
+        required."""
         pass
 
     @abstractmethod
