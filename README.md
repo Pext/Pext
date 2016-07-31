@@ -1,14 +1,18 @@
 # Pext
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is build using
-Python 3 and QML and intended to have its behaviour decided by modules. Its user
-interface is heavily inspired by [GoPass](https://github.com/cortex/gopass).
+Python 3 and QML and intended to have its behaviour decided by modules.
 
-![Screencast](screencast.gif)  
-*The above screencast shows Pext being used as a password manager. It is
-is not necessarily a good indication up-to-date with the latest development
-version.  
-The background image is the default KDE Plasma 5.4 wallpaper and not
-part of Pext.*
+Pext provides a simple window with a search bar, allowing modules to define
+what data is shown. A module effectively defines the purpose of Pext, as shown
+below.
+
+![Pext with the pass module](screencast_pass.gif)  
+*Pext running as a password manager using the
+[pass](https://github.com/Pext/pext_module_pass) module*
+
+![Pext with the emoji module](screencast_emoji.gif)
+*Pext running as an emoji selector using the
+[emoji](https://github.com/Pext/pext_module_emoji) module*
 
 # Usage
 First, you will want to install one or more modules you want to use. You do
