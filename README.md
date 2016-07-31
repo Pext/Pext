@@ -10,7 +10,7 @@ below.
 *Pext running as a password manager using the
 [pass](https://github.com/Pext/pext_module_pass) module*
 
-![Pext with the emoji module](screencast_emoji.gif)
+![Pext with the emoji module](screencast_emoji.gif)  
 *Pext running as an emoji selector using the
 [emoji](https://github.com/Pext/pext_module_emoji) module*
 
