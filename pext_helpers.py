@@ -113,6 +113,7 @@ class Action(Enum):
         text -- the text to show the user, such as "Please enter code"
         prefill -- the text to already put into the input field
     """
+    criticalError = 0
     addMessage = 1
     addError = 2
     addEntry = 3

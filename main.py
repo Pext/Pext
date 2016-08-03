@@ -34,7 +34,7 @@ from pext_base import ModuleBase
 from pext_helpers import Action
 
 class SignalHandler():
-    """Handle UNIX signals"""
+    """Handle UNIX signals."""
     def __init__(self, window):
         """Initialize SignalHandler."""
         self.window = window
@@ -43,6 +43,17 @@ class SignalHandler():
         """When an UNIX signal gets received, show the window."""
         self.window.show()
 
+class ModuleInitializer(threading.Thread):
+    """Initialize a module."""
+    def __init__(self, q, target=None, args=()):
+        self.q = q
+        threading.Thread.__init__(self, target=target, args=args)
+
+    def run(self):
+        try:
+            threading.Thread.run(self)
+        except Exception as e:
+            self.q.put([Action.criticalError, "Could not load module: {}".format(e)])
 
 class ViewModel():
     """Manage the communication between user interface and module."""
@@ -473,7 +484,7 @@ def loadSettings(argv):
     for opt, args in opts:
         if opt in ("-h", "--help"):
             usage()
-            sys.exit()
+            sys.exit(0)
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
         elif opt in ("-b", "--binary"):
@@ -546,7 +557,7 @@ def initPersist(module):
         # Notify the main process
         try:
             os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
-            sys.exit()
+            sys.exit(0)
         except ProcessLookupError:
             # Pext closed, but did not clean up its pidfile
             pass
@@ -564,6 +575,9 @@ def mainLoop(app, q, vm, window):
     while True:
         try:
             action = q.get_nowait()
+            if action[0] == Action.criticalError:
+                QMessageBox.critical(window, "Pext", action[1])
+                sys.exit(4)
             if action[0] == Action.addMessage:
                 vm.addMessage(action[1])
             elif action[0] == Action.addError:
@@ -689,7 +703,7 @@ if __name__ == "__main__":
     window.show()
 
     # Start the module in the background
-    moduleThread = threading.Thread(target=module.init, args=(settings['binary'], q))
+    moduleThread = ModuleInitializer(q, target=module.init, args=(settings['binary'], q))
     moduleThread.start()
 
     # Start processing data
