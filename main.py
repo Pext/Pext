@@ -331,9 +331,20 @@ class ViewModel():
             return
 
         self.chosenEntry = self.filteredList[currentIndex]
-        entryContent = self.module.getAllEntryFields(self.chosenEntry[0])
+        try:
+            entryContent = self.module.getAllEntryFields(self.chosenEntry[0])
+        except:
+            self.addError('A module error occured while retrieving the entry list')
+            self.chosenEntry = None
+            return
 
-        if len(entryContent) == 1:
+        if len(entryContent) == 0:
+            # If there is no content, copy the entry itself
+            self.copyToClipboard(self.chosenEntry[1])
+            self.window.close()
+            return
+        elif len(entryContent) == 1:
+            # If there is only one entry, copy that entry
             self.copyToClipboard(entryContent[0][0])
             self.window.close()
             return
