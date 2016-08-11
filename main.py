@@ -329,7 +329,7 @@ class ViewModel():
 
         if len(entryContent) == 0:
             # If there is no content, copy the entry itself
-            self.copyToClipboard(self.chosenEntry[1])
+            self.copyToClipboard(self.chosenEntry[0])
             self.window.close()
             return
         elif len(entryContent) == 1:
