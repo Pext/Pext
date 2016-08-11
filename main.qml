@@ -26,18 +26,21 @@ ApplicationWindow {
     property int margin: 10
     width: Screen.width
     height: 0.3 * Screen.height
-    maximumHeight: 0.3 * Screen.height
 
     flags: Qt.FramelessWindowHint | Qt.Window
 
-    function moveUp() {
-        if (resultList.currentIndex > 0)
-            resultList.currentIndex -= 1
+    function nextTab() {
+        if (tabs.currentIndex < tabs.count - 1)
+                tabs.currentIndex += 1
+        else
+                tabs.currentIndex = 0
     }
 
-    function moveDown() {
-        if (resultList.currentIndex < resultList.maximumIndex)
-            resultList.currentIndex += 1
+    function prevTab() {
+        if (tabs.currentIndex > 0)
+                tabs.currentIndex -= 1
+        else
+                tabs.currentIndex = tabs.count - 1
     }
 
     Shortcut {
@@ -51,23 +54,33 @@ ApplicationWindow {
     }
 
     Shortcut {
+        objectName: "upShortcut"
         sequence: "Up"
-        onActivated: moveUp()
     }
 
     Shortcut {
+        objectName: "upShortcutAlt"
         sequence: "Ctrl+K"
-        onActivated: moveUp()
     }
 
     Shortcut {
+        objectName: "downShortcut"
         sequence: "Down"
-        onActivated: moveDown()
     }
 
     Shortcut {
+        objectName: "downShortcutAlt"
         sequence: "Ctrl+J"
-        onActivated: moveDown()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Tab"
+        onActivated: nextTab()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Shift+Tab"
+        onActivated: prevTab()
     }
 
     ColumnLayout {
@@ -86,77 +99,32 @@ ApplicationWindow {
 
             Layout.fillWidth: true
         }
-        ScrollView {
-            Layout.fillHeight: true
+        TabView {
+            id: tabs
+            objectName: "tabs"
+
             Layout.fillWidth: true
-
-            ListView {
-                id: resultList
-                objectName: "resultListModel"
-
-                property int maximumIndex: resultListModelMaxIndex
-                property bool commandMode: resultListModelCommandMode
-
-                model: resultListModel
-
-                delegate: Component {
-                    Item {
-                        property variant itemData: model.modelData
-                        width: parent.width
-                        height: 23
-                        Column {
-                             Text {
-                                text: display
-                                textFormat: Text.PlainText
-                                font.pixelSize: 18
-                                font.italic:
-                                    if (!resultListModelCommandMode) {
-                                        index > resultListModelMaxIndex
-                                    } else {
-                                        index == 0
-                                    }
-                                color: resultList.currentIndex === index ? "red" : "steelblue"
-                                Behavior on color { PropertyAnimation {} }
-                            }
-                        }
-                        MouseArea {
-                            objectName: "resultListMouseModel"
-                            anchors.fill: parent
-
-                            hoverEnabled: true
-
-                            onPositionChanged: {
-                                if (index <= resultListModelMaxIndex)
-                                    resultList.currentIndex = index
-                            }
-                            onClicked: {
-                                if (index <= resultListModelMaxIndex)
-                                    searchInput.accepted()
-                            }
-                        }
-                    }
-                }
-            }
         }
         ListView {
-            id: messageListModel
-            model: messageListModelList
+             id: messageListModel
+             model: messageListModelList
 
-            delegate: Text {
-                text: display
-                textFormat: Text.StyledText
-            }
+             delegate: Text {
+                 text: display
+                 textFormat: Text.StyledText
+             }
 
-            Timer {
-                objectName: "clearOldMessagesTimer"
+             Layout.fillHeight: true
+             Layout.fillWidth: true
+             Layout.minimumHeight: contentHeight
+         }
+    }
 
-                interval: 1000
-                running: true
-                repeat: true
-            }
+    Timer {
+        objectName: "clearOldMessagesTimer"
 
-            Layout.fillWidth: true
-            Layout.minimumHeight: contentHeight
-        }
+        interval: 1000
+        running: true
+        repeat: true
     }
 }

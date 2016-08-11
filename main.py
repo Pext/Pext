@@ -28,7 +28,7 @@ from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QLabel, QLineEdit, QMessageBox, QTextEdit, QVBoxLayout, QDialogButtonBox
-from PyQt5.Qt import QQmlApplicationEngine, QObject, QQmlProperty, QUrl
+from PyQt5.Qt import QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
 from pext_base import ModuleBase
 from pext_helpers import Action
@@ -45,15 +45,16 @@ class SignalHandler():
 
 class ModuleInitializer(threading.Thread):
     """Initialize a module."""
-    def __init__(self, q, target=None, args=()):
-        self.q = q
+    def __init__(self, moduleName, q, target=None, args=()):
+        self.moduleName = moduleName
+        self.queue = q
         threading.Thread.__init__(self, target=target, args=args)
 
     def run(self):
         try:
             threading.Thread.run(self)
         except Exception as e:
-            self.q.put([Action.criticalError, "Could not load module: {}".format(e)])
+            self.queue.put([Action.criticalError, "Exception thrown: {}".format(e)])
 
 class ViewModel():
     """Manage the communication between user interface and module."""
@@ -66,15 +67,14 @@ class ViewModel():
         self.filteredList = []
         self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
-        self.messageList = []
-        self.messageListModelList = QStringListModel()
         self.chosenEntry = None
         self.chosenEntryList = []
 
         self.settings = settings
 
-    def bindContext(self, context, window, searchInputModel, resultListModel):
+    def bindContext(self, queue, context, window, searchInputModel, resultListModel):
         """Bind the QML context so we can communicate with the QML front-end."""
+        self.queue = queue
         self.context = context
         self.window = window
         self.searchInputModel = searchInputModel
@@ -144,39 +144,6 @@ class ViewModel():
         proc = Popen(["xclip", "-selection", self.settings["clipboard"]], stdin=PIPE)
         proc.communicate(data.encode('utf-8'))
 
-    def addError(self, message):
-        """Add an error message to the window and show the message list."""
-        for line in message.splitlines():
-            if not (not line or line.isspace()):
-                self.messageList.append(["<font color='red'>{}</color>".format(line), time.time()])
-
-        self.showMessages()
-
-    def addMessage(self, message):
-        """Add a message to the window and show the message list."""
-        for line in message.splitlines():
-            if not (not line or line.isspace()):
-                self.messageList.append([line, time.time()])
-
-        self.showMessages()
-
-    def showMessages(self):
-        """Show the list of messages in the window."""
-        messageListForModel = [message[0] for message in self.messageList]
-        self.messageListModelList = QStringListModel(messageListForModel)
-        self.context.setContextProperty("messageListModelList", self.messageListModelList)
-
-    def clearOldMessages(self):
-        """Remove all messages older than 3 seconds and show the list of
-        messages in the window.
-        """
-        if len(self.messageList) == 0:
-            return
-
-        currentTime = time.time()
-        self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
-        self.showMessages()
-
     def goUp(self):
         """Go one level up. This means that, if we're currently in the entry
         content list, we go back to the entry list. If we're currently in the
@@ -216,13 +183,23 @@ class ViewModel():
             entry = self.getLongestCommonString([listEntry[1] for listEntry in self.filteredList if listEntry[1] not in searchableCommands], start=start)
 
             if entry is None or len(entry) <= len(start):
-                self.addError("No tab completion possible")
+                self.queue.put([Action.addError, "No tab completion possible"])
                 return
         else:
             entry = " " # Add an extra space to simplify typing for the user
 
         QQmlProperty.write(self.searchInputModel, "text", command + entry)
         self.search()
+
+    def moveUp(self):
+        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+        if currentIndex > 0:
+            QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex - 1)
+
+    def moveDown(self):
+        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+        if currentIndex < QQmlProperty.read(self.resultListModel, "maximumIndex"):
+            QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex + 1)
 
     def search(self):
         """Filter the list of entries in the screen, setting the filtered list
@@ -284,7 +261,7 @@ class ViewModel():
         """Search the content within a single entry."""
         # Ensure this entry still exists
         if self.chosenEntry not in self.entryList:
-            self.addError(self.chosenEntry + " is no longer available")
+            self.queue.put([Action.addError, self.chosenEntry + " is no longer available"])
             self.chosenEntry = None
             QQmlProperty.write(self.searchInputModel, "text", "")
             self.search()
@@ -345,7 +322,7 @@ class ViewModel():
         try:
             entryContent = self.module.getAllEntryFields(self.chosenEntry[0])
         except:
-            self.addError('A module error occured while retrieving the entry list')
+            self.queue.put([Action.addError, "A module error occured while retrieving the entry list"])
             self.chosenEntry = None
             return
 
@@ -411,39 +388,185 @@ class InputDialog(QDialog):
 
 class Window(QDialog):
     """The main Pext window."""
-    def __init__(self, vm, settings, parent=None):
+    def __init__(self, settings, parent=None):
         """Initialize the window."""
         super().__init__(parent)
 
+        self.messageList = []
+        self.messageListModelList = QStringListModel()
+
         self.engine = QQmlApplicationEngine(self)
 
-        self.vm = vm
+        self.tabBindings = []
 
-        context = self.engine.rootContext()
-        context.setContextProperty("resultListModel", self.vm.resultListModelList)
-        context.setContextProperty("resultListModelMaxIndex", self.vm.resultListModelMaxIndex)
-        context.setContextProperty("resultListModelCommandMode", False)
-        context.setContextProperty("messageListModelList", self.vm.messageListModelList)
+        self.context = self.engine.rootContext()
 
+        # Fill context with temp values so the UI can load
+        # This needs a viewModel to prevent Python from garbage-collecting it
+        vm = ViewModel(settings)
+        self.context.setContextProperty("messageListModelList", self.messageListModelList)
+
+        # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))
 
         self.window = self.engine.rootObjects()[0]
 
+        # Bind global shortcuts
         escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
-        searchInputModel = self.window.findChild(QObject, "searchInputModel")
-        resultListModel = self.window.findChild(QObject, "resultListModel")
+        upShortcut = self.window.findChild(QObject, "upShortcut")
+        upShortcutAlt = self.window.findChild(QObject, "upShortcutAlt")
+        downShortcut = self.window.findChild(QObject, "downShortcut")
+        downShortcutAlt = self.window.findChild(QObject, "downShortcutAlt")
+        self.searchInputModel = self.window.findChild(QObject, "searchInputModel")
         clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
 
-        self.vm.bindContext(context, self, searchInputModel, resultListModel)
+        escapeShortcut.activated.connect(self.goUp)
+        tabShortcut.activated.connect(self.tabComplete)
+        upShortcut.activated.connect(self.moveUp)
+        upShortcutAlt.activated.connect(self.moveUp)
+        downShortcut.activated.connect(self.moveDown)
+        downShortcutAlt.activated.connect(self.moveDown)
+        self.searchInputModel.textChanged.connect(self.search)
+        self.searchInputModel.accepted.connect(self.select)
+        clearOldMessagesTimer.triggered.connect(self.clearOldMessages)
 
-        escapeShortcut.activated.connect(self.vm.goUp)
-        tabShortcut.activated.connect(self.vm.tabComplete)
+        # Get reference to tabs list
+        self.tabs = self.window.findChild(QObject, "tabs")
 
-        searchInputModel.textChanged.connect(self.vm.search)
-        searchInputModel.accepted.connect(self.vm.select)
+        # Bind the context when the tab is loaded
+        self.tabs.currentIndexChanged.connect(self.bindContext)
 
-        clearOldMessagesTimer.triggered.connect(self.vm.clearOldMessages)
+        # Show the window
+        self.show()
+
+        # Prepare loading modules
+        sys.path.append(os.path.expanduser('~/.config/pext/modules'))
+
+        for module in settings['modules']:
+            # Remove pext_module_ from the module name
+            moduleName = module[len('pext_module_'):]
+
+            # Prepare viewModel and context
+            vm = ViewModel(settings)
+            moduleContext = QQmlContext(self.context)
+            moduleContext.setContextProperty("resultListModel", vm.resultListModelList)
+            moduleContext.setContextProperty("resultListModelMaxIndex", vm.resultListModelMaxIndex)
+            moduleContext.setContextProperty("resultListModelCommandMode", False)
+
+            # Add tab
+            tabData = QQmlComponent(self.engine)
+            tabData.loadUrl(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/ModuleData.qml"))
+            self.engine.setContextForObject(tabData, moduleContext)
+            self.tabs.addTab(moduleName, tabData)
+
+            # Prepare module
+            moduleImport = __import__(module.replace('.', '_'), fromlist=['Module'])
+
+            Module = getattr(moduleImport, 'Module')
+
+            # Ensure the module implements the base
+            assert issubclass(Module, ModuleBase)
+
+            # Set up a queue so that the module can communicate with the main thread
+            q = Queue()
+
+            # This will (correctly) fail if the module doesn't implement all necessary
+            # functionality
+            module = Module()
+
+            # Start the module in the background
+            moduleThread = ModuleInitializer(moduleName, q, target=module.init, args=(settings['binary'], q))
+            moduleThread.start()
+
+            # Store tab/viewModel combination
+            self.tabBindings.append({'init': False,
+                                     'queue': q,
+                                     'vm': vm,
+                                     'module': module,
+                                     'moduleContext': moduleContext,
+                                     'moduleName': moduleName})
+
+        # Trigger the first context bind
+        self.bindContext()
+
+        # Start processing data
+        mainLoop(app, self.tabBindings, self)
+
+    def addError(self, moduleName, message):
+        """Add an error message to the window and show the message list."""
+        for line in message.splitlines():
+            if not (not line or line.isspace()):
+                self.messageList.append(["<font color='red'>{}: {}</color>".format(moduleName, line), time.time()])
+
+        self.showMessages()
+
+    def addMessage(self, moduleName, message):
+        """Add a message to the window and show the message list."""
+        for line in message.splitlines():
+            if not (not line or line.isspace()):
+                self.messageList.append(["{}: {}".format(moduleName, line), time.time()])
+
+        self.showMessages()
+
+    def showMessages(self):
+        """Show the list of messages in the window."""
+        messageListForModel = [message[0] for message in self.messageList]
+        self.messageListModelList = QStringListModel(messageListForModel)
+        self.context.setContextProperty("messageListModelList", self.messageListModelList)
+
+    def clearOldMessages(self):
+        """Remove all messages older than 3 seconds and show the list of
+        messages in the window.
+        """
+        if len(self.messageList) == 0:
+            return
+
+        currentTime = time.time()
+        self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
+        self.showMessages()
+
+
+    def getCurrentElement(self):
+        currentTab = QQmlProperty.read(self.tabs, "currentIndex")
+        return self.tabBindings[currentTab]
+
+    def goUp(self):
+        self.getCurrentElement()['vm'].goUp()
+
+    def tabComplete(self):
+        self.getCurrentElement()['vm'].tabComplete()
+
+    def moveUp(self):
+        self.getCurrentElement()['vm'].moveUp()
+
+    def moveDown(self):
+        self.getCurrentElement()['vm'].moveDown()
+
+    def search(self):
+        self.getCurrentElement()['vm'].search()
+
+    def select(self):
+        self.getCurrentElement()['vm'].select()
+
+    def bindContext(self):
+        """Bind the context for the module."""
+        currentTab = QQmlProperty.read(self.tabs, "currentIndex")
+        element = self.tabBindings[currentTab]
+
+        # Only initialize one
+        if element['init']:
+            return;
+
+        # Get the list
+        resultListModel = self.tabs.getTab(currentTab).findChild(QObject, "resultListModel")
+
+        # Bind it to the viewmodel
+        element['vm'].bindContext(element['queue'], element['moduleContext'], self, self.searchInputModel, resultListModel)
+        element['vm'].bindModule(element['module'])
+
+        # Done initializing
+        element['init'] = True
 
     def show(self):
         """Show the window."""
@@ -456,9 +579,14 @@ class Window(QDialog):
         """
         if not settings['closeWhenDone']:
             self.window.hide()
-            QQmlProperty.write(self.vm.searchInputModel, "text", "")
-            self.vm.chosenEntry = None
-            self.vm.search()
+            QQmlProperty.write(self.searchInputModel, "text", "")
+            for tab in self.tabBindings:
+                tab = self.tabBindings[tab]
+                if not tab['init']:
+                    continue
+
+                tab['vm'].chosenEntry = None
+                tab['vm'].search()
         else:
             sys.exit(0)
 
@@ -469,6 +597,7 @@ def loadSettings(argv):
     settings = {'binary': None,
                 'clipboard': 'clipboard',
                 'closeWhenDone': False,
+                'modules': [],
                 'installModules': [],
                 'uninstallModules': [],
                 'listModules': False,
@@ -499,7 +628,7 @@ def loadSettings(argv):
             if not args.startswith('pext_module_'):
                 args = 'pext_module_' + args
 
-            settings['module'] = args
+            settings['modules'].append(args)
         elif opt == "--install-module":
             settings['installModules'].append(args)
         elif opt == "--uninstall-module":
@@ -531,7 +660,8 @@ def usage():
                      staying in memory. This also allows multiple
                      instances to be ran at once.
 
---module           : name the module to use.
+--module           : name the module to use. This option may be given multiple
+                     times to use multiple modules.
 
 --install-module   : download and install a module from the given git URL.
 
@@ -542,16 +672,12 @@ def usage():
 --update-modules   : update all installed modules using git pull.''')
 
 
-def initPersist(module):
+def initPersist(modules):
     """Check if Pext is already running and if so, send it SIGUSR1 to bring it
     to the foreground. If Pext is not already running, save a PIDfile so that
     another Pext instance can find us.
     """
-    # Ensure only one Pext instance is running. If one already exists,
-    # signal it to open the password selection window.
-    # This way, we can keep the password list in memory and start up extra
-    # quickly.
-    pidfile = "/tmp/pext-" + module + ".pid"
+    pidfile = "/tmp/pext-" + "_".join(modules) + ".pid"
 
     if os.path.isfile(pidfile):
         # Notify the main process
@@ -570,64 +696,86 @@ def initPersist(module):
     return pidfile
 
 
-def mainLoop(app, q, vm, window):
+def mainLoop(app, tabs, window):
     """Process actions modules put in the queue and keep the window working."""
     while True:
-        try:
-            action = q.get_nowait()
-            if action[0] == Action.criticalError:
-                QMessageBox.critical(window, "Pext", action[1])
-                sys.exit(4)
-            if action[0] == Action.addMessage:
-                vm.addMessage(action[1])
-            elif action[0] == Action.addError:
-                vm.addError(action[1])
-            elif action[0] == Action.addEntry:
-                vm.entryList = vm.entryList + [action[1]]
-            elif action[0] == Action.prependEntry:
-                vm.entryList = [action[1]] + vm.entryList
-            elif action[0] == Action.removeEntry:
-                vm.entryList.remove(action[1])
-            elif action[0] == Action.replaceEntryList:
-                vm.entryList = action[1]
-            elif action[0] == Action.addCommand:
-                vm.commandList = vm.commandList + [action[1]]
-            elif action[0] == Action.prependCommand:
-                vm.commandList = [action[1]] + vm.commandList
-            elif action[0] == Action.removeCommand:
-                vm.commandList.remove(action[1])
-            elif action[0] == Action.replaceCommandList:
-                vm.commandList = action[1]
-            elif action[0] == Action.setFilter:
-                QQmlProperty.write(vm.searchInputModel, "text", action[1])
-            elif action[0] == Action.askQuestionDefaultYes:
-                answer = QMessageBox.question(window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
-                vm.module.processResponse(True if (answer == QMessageBox.Yes) else False)
-            elif action[0] == Action.askQuestionDefaultNo:
-                answer = QMessageBox.question(window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-                vm.module.processResponse(True if (answer == QMessageBox.Yes) else False)
-            elif action[0] == Action.askInput:
-                answer, ok = QInputDialog.getText(window, "Pext", action[1])
-                vm.module.processResponse(answer if ok else None)
-            elif action[0] == Action.askInputPassword:
-                answer, ok = QInputDialog.getText(window, "Pext", action[1], QLineEdit.Password)
-                vm.module.processResponse(answer if ok else None)
-            elif action[0] == Action.askInputMultiLine:
-                dialog = InputDialog(action[1], action[2] if action[2] else "", window)
-                answer, ok = dialog.show()
-                vm.module.processResponse(answer if ok else None)
-            else:
-                print('WARN: Module requested unknown action {}'.format(action[0]))
+        for tab in tabs:
 
-            vm.search()
-            window.update()
-            q.task_done()
-        except Empty:
-            app.processEvents()
-            time.sleep(0.01)
-            continue
-        except Exception as e:
-            print('WARN: Module caused exception {} with call {}'.format(e, action))
+            try:
+                action = tab['queue'].get_nowait()
+                if action[0] == Action.criticalError:
+                    window.addError(tab['moduleName'], action[1])
+                    tabId = tabs.index(tab)
+                    # FIXME: If the first module in the list crashes and we're
+                    # running 3 or more modules, we still segfault.
+                    if QQmlProperty.read(window.tabs, "currentIndex") == tabId:
+                        tabCount = QQmlProperty.read(window.tabs, "count")
+                        if tabId + 1 < tabCount:
+                            QQmlProperty.write(window.tabs, "currentIndex", tabId + 1)
+                        else:
+                            if tabId > 0:
+                                QQmlProperty.write(window.tabs, "currentIndex", "0")
+                            else:
+                                return
+
+                    del window.tabBindings[tabId]
+                    window.tabs.removeTab(tabId)
+                elif action[0] == Action.addMessage:
+                    window.addMessage(tab['moduleName'], action[1])
+                elif action[0] == Action.addError:
+                    window.addError(tab['moduleName'], action[1])
+                elif action[0] == Action.addEntry:
+                    tab['vm'].entryList = tab['vm'].entryList + [action[1]]
+                elif action[0] == Action.prependEntry:
+                    tab['vm'].entryList = [action[1]] + tab['vm'].entryList
+                elif action[0] == Action.removeEntry:
+                    tab['vm'].entryList.remove(action[1])
+                elif action[0] == Action.replaceEntryList:
+                    tab['vm'].entryList = action[1]
+                elif action[0] == Action.addCommand:
+                    tab['vm'].commandList = tab['vm'].commandList + [action[1]]
+                elif action[0] == Action.prependCommand:
+                    tab['vm'].commandList = [action[1]] + tab['vm'].commandList
+                elif action[0] == Action.removeCommand:
+                    tab['vm'].commandList.remove(action[1])
+                elif action[0] == Action.replaceCommandList:
+                    tab['vm'].commandList = action[1]
+                elif action[0] == Action.setFilter:
+                    QQmlProperty.write(tab['vm'].searchInputModel, "text", action[1])
+                elif action[0] == Action.askQuestionDefaultYes:
+                    answer = QMessageBox.question(window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+                    tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
+                elif action[0] == Action.askQuestionDefaultNo:
+                    answer = QMessageBox.question(window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+                    tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
+                elif action[0] == Action.askInput:
+                    answer, ok = QInputDialog.getText(window, "Pext", action[1])
+                    tab['vm'].module.processResponse(answer if ok else None)
+                elif action[0] == Action.askInputPassword:
+                    answer, ok = QInputDialog.getText(window, "Pext", action[1], QLineEdit.Password)
+                    tab['vm'].module.processResponse(answer if ok else None)
+                elif action[0] == Action.askInputMultiLine:
+                    dialog = InputDialog(action[1], action[2] if action[2] else "", window)
+                    answer, ok = dialog.show()
+                    tab['vm'].module.processResponse(answer if ok else None)
+                else:
+                    print('WARN: Module requested unknown action {}'.format(action[0]))
+
+                tab['vm'].search()
+                window.update()
+                tab['queue'].task_done()
+            except Empty:
+                app.processEvents()
+                time.sleep(0.01)
+                continue
+            except Exception as e:
+                # It's normal for exceptions to be thrown until the module is
+                # initialized.
+                if tab['init']:
+                    print('WARN: Module caused exception {}'.format(e))
+
+                app.processEvents()
+                time.sleep(0.01)
 
 if __name__ == "__main__":
     # Ensure our necessary directories exist
@@ -666,52 +814,27 @@ if __name__ == "__main__":
         for directory in os.listdir(os.path.expanduser('~/.config/pext/modules/')):
             print(directory[len('pext_module_'):])
 
-    if 'module' not in settings:
+    if len(settings['modules']) == 0:
         print('No module given. Not launching.')
         sys.exit(0)
-
-    sys.path.append(os.path.expanduser('~/.config/pext/modules'))
-    moduleImport = __import__(settings['module'].replace('.', '_'), fromlist=['Module'])
-
-    Module = getattr(moduleImport, 'Module')
-
-    # Ensure the module implements the base
-    assert issubclass(Module, ModuleBase)
-
-    if not settings['closeWhenDone']:
-        pidfile = initPersist(settings['module'])
-
-    # Set up a queue so that the module can communicate with the main thread
-    q = Queue()
 
     app = QApplication(sys.argv)
 
     # Set up the window
-    viewModel = ViewModel(settings)
-    window = Window(viewModel, settings)
+    window = Window(settings)
 
-    # This will (correctly) fail if the module doesn't implement all necessary
-    # functionality
-    module = Module()
-    viewModel.bindModule(module)
+    # Set up persistence
+    if not settings['closeWhenDone']:
+        pidfile = initPersist(settings['modules'])
 
     # Handle signal
     signalHandler = SignalHandler(window)
     signal.signal(signal.SIGUSR1, signalHandler.handle)
 
-    # Show the window
-    window.show()
-
-    # Start the module in the background
-    moduleThread = ModuleInitializer(q, target=module.init, args=(settings['binary'], q))
-    moduleThread.start()
-
-    # Start processing data
-    mainLoop(app, q, viewModel, window)
-
     # Run until we close, then clean up
     sys.exit(app.exec_())
-    module.stop()
+    for module in modules:
+        module.stop()
 
     if not settings['closeWhenDone']:
         os.unlink(pidfile)

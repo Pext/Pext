@@ -24,7 +24,13 @@ class Action(Enum):
     arguments.
 
     Example:
-        self.q.put(Action.addMessage, ["message to show"])
+        self.q.put([Action.addMessage, "message to show"])
+
+    criticalError:
+        Show an error message on the screen and unload the module.
+        This function is also called when the module throws an exception.
+
+        message -- error message to show
 
     addMessage:
         Show a message on the screen.

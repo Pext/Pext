@@ -33,6 +33,9 @@ After you have installed a module you want to use, launch Pext with the
 
     python3 main.py --module=pass
 
+You may launch Pext with multiple modules, at which point you can use Ctrl+TAB
+and Ctrl+Shift+Tab to quickly switch between modules.
+
 Once Pext has launched, you can use the search bar on top to search through the
 module, or type a command. Once the selected entry is highlighted or you have
 typed the command you want to run, press enter to select or execute it.
