@@ -561,6 +561,9 @@ class Window(QDialog):
         # Get the list
         resultListModel = self.tabs.getTab(currentTab).findChild(QObject, "resultListModel")
 
+        # Enable mouse selection support
+        resultListModel.entryClicked.connect(element['vm'].select)
+
         # Bind it to the viewmodel
         element['vm'].bindContext(element['queue'], element['moduleContext'], self, self.searchInputModel, resultListModel)
         element['vm'].bindModule(element['module'])

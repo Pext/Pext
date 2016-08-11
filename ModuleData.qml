@@ -28,6 +28,8 @@ ScrollView {
         id: resultList
         objectName: "resultListModel"
 
+        signal entryClicked()
+
         property int maximumIndex: resultListModelMaxIndex
         property bool commandMode: resultListModelCommandMode
 
@@ -58,7 +60,6 @@ ScrollView {
                     }
                 }
                 MouseArea {
-                    objectName: "resultListMouseModel"
                     anchors.fill: parent
 
                     hoverEnabled: true
@@ -69,7 +70,7 @@ ScrollView {
                     }
                     onClicked: {
                         if (index <= resultListModelMaxIndex)
-                            searchInput.accepted()
+                            resultList.entryClicked()
                     }
                 }
             }
