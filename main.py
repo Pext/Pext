@@ -15,6 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import atexit
 import getopt
 import os
 import signal
@@ -388,9 +389,12 @@ class InputDialog(QDialog):
 
 class Window(QDialog):
     """The main Pext window."""
-    def __init__(self, settings, parent=None):
+    def __init__(self, settings, pidfile, parent=None):
         """Initialize the window."""
         super().__init__(parent)
+
+        # Clean up when Pext exits
+        atexit.register(shutDown, pidfile, self)
 
         self.messageList = []
         self.messageListModelList = QStringListModel()
@@ -486,6 +490,10 @@ class Window(QDialog):
                                      'module': module,
                                      'moduleContext': moduleContext,
                                      'moduleName': moduleName})
+
+        # Handle signal
+        signalHandler = SignalHandler(self)
+        signal.signal(signal.SIGUSR1, signalHandler.handle)
 
         # Trigger the first context bind
         self.bindContext()
@@ -697,6 +705,13 @@ def initPersist(modules):
     # Return the filename to delete it later
     return pidfile
 
+def shutDown(pidfile, window):
+    """Clean up."""
+    for module in window.tabBindings:
+        module['module'].stop()
+
+    if not settings['closeWhenDone']:
+        os.unlink(pidfile)
 
 def mainLoop(app, tabs, window):
     """Process actions modules put in the queue and keep the window working."""
@@ -822,21 +837,9 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
 
-    # Set up the window
-    window = Window(settings)
-
     # Set up persistence
     if not settings['closeWhenDone']:
         pidfile = initPersist(settings['modules'])
 
-    # Handle signal
-    signalHandler = SignalHandler(window)
-    signal.signal(signal.SIGUSR1, signalHandler.handle)
-
     # Run until we close, then clean up
-    sys.exit(app.exec_())
-    for module in modules:
-        module.stop()
-
-    if not settings['closeWhenDone']:
-        os.unlink(pidfile)
+    window = Window(settings, pidfile)
