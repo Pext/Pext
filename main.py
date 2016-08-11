@@ -584,7 +584,6 @@ class Window(QDialog):
             self.window.hide()
             QQmlProperty.write(self.searchInputModel, "text", "")
             for tab in self.tabBindings:
-                tab = self.tabBindings[tab]
                 if not tab['init']:
                     continue
 
