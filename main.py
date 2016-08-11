@@ -393,6 +393,9 @@ class Window(QDialog):
         """Initialize the window."""
         super().__init__(parent)
 
+        # Save settings
+        self.settings = settings
+
         # Clean up when Pext exits
         atexit.register(shutDown, pidfile, self)
 
@@ -564,7 +567,7 @@ class Window(QDialog):
 
         # Only initialize one
         if element['init']:
-            return;
+            return
 
         # Get the list
         resultListModel = self.tabs.getTab(currentTab).findChild(QObject, "resultListModel")
@@ -588,7 +591,9 @@ class Window(QDialog):
         """Close the window. If the user wants us to completely close when
         done, also exit the application.
         """
-        if not settings['closeWhenDone']:
+        if self.settings['closeWhenDone']:
+            sys.exit(0)
+        else:
             self.window.hide()
             QQmlProperty.write(self.searchInputModel, "text", "")
             for tab in self.tabBindings:
@@ -597,8 +602,6 @@ class Window(QDialog):
 
                 tab['vm'].chosenEntry = None
                 tab['vm'].search()
-        else:
-            sys.exit(0)
 
 
 def loadSettings(argv):
@@ -838,7 +841,9 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     # Set up persistence
-    if not settings['closeWhenDone']:
+    if settings['closeWhenDone']:
+        pidfile = None
+    else:
         pidfile = initPersist(settings['modules'])
 
     # Run until we close, then clean up
