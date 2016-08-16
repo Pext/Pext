@@ -375,7 +375,7 @@ class ViewModel():
 
     def moveDown(self):
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if currentIndex < QQmlProperty.read(self.resultListModel, "maximumIndex"):
+        if currentIndex < QQmlProperty.read(self.resultListModel, "count") - 1:
             QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex + 1)
 
     def moveUp(self):
@@ -393,7 +393,7 @@ class ViewModel():
             return
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if currentIndex == -1 or len(self.filteredList) < currentIndex + 1:
+        if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
             currentItem = None
         else:
             currentItem = self.filteredList[currentIndex]
@@ -454,7 +454,7 @@ class ViewModel():
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
 
-        if currentIndex == -1:
+        if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
             if commandTyped[0] not in [entry[0] for entry in self.commandList]:
                 return

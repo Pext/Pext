@@ -35,10 +35,6 @@ ScrollView {
 
         model: resultListModel
 
-        preferredHighlightBegin: 0
-        preferredHighlightEnd: 0.5*height
-        highlightRangeMode: ListView.ApplyRange
-
         delegate: Component {
             Item {
                 property variant itemData: model.modelData
@@ -65,8 +61,7 @@ ScrollView {
                     hoverEnabled: true
 
                     onPositionChanged: {
-                        if (index <= resultListModelMaxIndex)
-                            resultList.currentIndex = index
+                        resultList.currentIndex = index
                     }
                     onClicked: {
                         if (index <= resultListModelMaxIndex)
