@@ -17,13 +17,8 @@ class ModuleBase(ABC):
         start interacting with at least some of the data as quickly as
         possible.
 
-        Each entry in the entry list must be a list containing the entry
-        identifier and the searchable and displayed value. An example of a
-        valid entry is ["supersecretpassword", "********"].
-
-        Each entry in the command list must be a list containing the command
-        identifier and the searchable and displayed value. An example of a
-        valid entry is ["generate", "generate pass-name pass-length"].
+        The entry list must be a list containing all possible values as
+        strings.
         """
         pass
 
@@ -34,23 +29,15 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def getAllEntryFields(self, entry):
-        """Return a list of fields for a given entry.
+    def selectionMade(self, selection):
+        """Called when the user makes a selection.
 
-        Each entry in the fields list must be a list containing the entry
-        identifier and the searchable and displayed value. An example of a
-        valid entry is ["supersecretpassword", "********"].
+        The selection variable contains a list of the selection tree.
 
-        If a list with zero values is returned, the identifier of the entry
-        gets copied and the window is closed.
-
-        If a list with a single value is returned, the identifier of that value
-        gets copied and the window is closed.
-
-        If a list with more than one value is returned, the displayed value of
-        all those entries is shown on the screen, the identifier of the value
-        that the user chooses gets copied to the clipboard and the window is
-        closed.
+        For example, if the user chooses "Settings" in the main screen, the
+        value of selection is ["Settings"]. If the user then chooses "Audio",
+        this function is called again, with the value of selection being
+        ["Settings", "Audio"].
         """
         pass
 

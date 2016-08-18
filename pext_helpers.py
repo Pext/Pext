@@ -45,20 +45,17 @@ class Action(Enum):
     addEntry:
         Add an entry to the entry list.
 
-        identifier -- the identifier of the entry
-        searchable name -- the searchable name of the entry
+        entry -- the entry
 
     prependEntry:
         Prepend an entry to the entry list.
 
-        identifier -- the identifier of the entry
-        searchable name -- the searchable name of the entry
+        entry -- the entry
 
     removeEntry:
         Remove an entry from the entry list.
 
-        identifier -- the identifier of the entry
-        searchable name -- the searchable name of the entry
+        entry -- the entry
 
     replaceEntryList:
         Replace the list of entries with the given list.
@@ -68,20 +65,17 @@ class Action(Enum):
     addCommand:
         Add an entry to the command list.
 
-        identifier -- the identifier of the entry
-        searchable name -- the searchable name of the entry
+        entry -- the entry
 
     prependCommand:
         Prepend an entry to the command list.
 
-        identifier -- the identifier of the entry
-        searchable name -- the searchable name of the entry
+        entry -- the entry
 
     removeCommand:
         Remove a command from the entry list.
 
-        identifier -- the identifier of the entry
-        searchable name -- the searchable name of the entry
+        entry -- the entry
 
     replaceCommandList:
         Replace the list of commands with the given list.
@@ -118,6 +112,29 @@ class Action(Enum):
 
         text -- the text to show the user, such as "Please enter code"
         prefill -- the text to already put into the input field
+
+    copyToClipboard:
+        Request the specific data to be copied to the clipboard.
+
+        text -- the text to copy to the clipboard
+
+    setSelection:
+        Change the internal Pext selected entry for this module.
+
+        The internal Pext selected entry contains an array of the path the
+        user has taken in selection and thus looks like follows:
+        ["Settings", "Audio", "Mute"].
+
+        To go a single level up, simply remove the last entry from this list.
+        To reset to the main screen, use an empty list.
+
+        list -- the selection hierarchy.
+
+    close:
+        Close the window.
+
+        Call this when the user is done. For example, when the user made a
+        selection.
     """
     criticalError = 0
     addMessage = 1
@@ -136,3 +153,6 @@ class Action(Enum):
     askInput = 14
     askInputPassword = 15
     askInputMultiLine = 16
+    copyToClipboard = 17
+    setSelection = 18
+    close = 19

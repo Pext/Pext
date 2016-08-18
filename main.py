@@ -61,13 +61,15 @@ class MainLoop():
     """Main process loop, connects the application and UI events together,
     ensures events get managed without locking up the UI.
     """
-    def __init__(self, app, window):
+    def __init__(self, app, window, settings):
         """Initialize the main loop"""
         self.app = app
         self.window = window
+        self.settings = settings
 
     def _processTabActions(self, tab):
         action = tab['queue'].get_nowait()
+        print(action)
 
         if action[0] == Action.criticalError:
             self.window.addError(tab['moduleName'], action[1])
@@ -122,6 +124,14 @@ class MainLoop():
             dialog = InputDialog(action[1], action[2] if action[2] else "", self.window)
             answer, ok = dialog.show()
             tab['vm'].module.processResponse(answer if ok else None)
+        elif action[0] == Action.copyToClipboard:
+            """Copy the given data to the user-chosen clipboard."""
+            proc = Popen(["xclip", "-selection", self.settings["clipboard"]], stdin=PIPE)
+            proc.communicate(action[1].encode('utf-8'))
+        elif action[0] == Action.setSelection:
+            tab['vm'].selection = action[1]
+        elif action[0] == Action.close:
+            self.window.close()
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
@@ -165,7 +175,7 @@ class ModuleBinder():
             moduleName = module[len('pext_module_'):]
 
             # Prepare viewModel and context
-            vm = ViewModel(self.settings)
+            vm = ViewModel()
             moduleContext = QQmlContext(self.context)
             moduleContext.setContextProperty("resultListModel", vm.resultListModelList)
             moduleContext.setContextProperty("resultListModelMaxIndex", vm.resultListModelMaxIndex)
@@ -227,7 +237,7 @@ class ModuleThreadInitializer(threading.Thread):
 
 class ViewModel():
     """Manage the communication between user interface and module."""
-    def __init__(self, settings):
+    def __init__(self):
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
@@ -236,27 +246,7 @@ class ViewModel():
         self.filteredList = []
         self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
-        self.chosenEntry = None
-        self.chosenEntryList = []
-
-        self.settings = settings
-
-    def _copyToClipboard(self, data):
-        """Copy the given data to the user-chosen clipboard."""
-        proc = Popen(["xclip", "-selection", self.settings["clipboard"]], stdin=PIPE)
-        proc.communicate(data.encode('utf-8'))
-
-    def _getElementsFromList(self, pythonList, element):
-        """Return the chosen element for each entry in the list.
-
-        Keyword arguments:
-        pythonList -- the list of entries, with each entry being a list
-        element -- the requested element number
-
-        For example, if element is 1, and pythonList is [["a", "b"]], this
-        function returns ["b"].
-        """
-        return [entry[element] for entry in pythonList]
+        self.selection = []
 
     def _getLongestCommonString(self, entries, start=""):
         """Return the longest common string for each entry in the list,
@@ -297,51 +287,6 @@ class ViewModel():
             # We fully match a string
             return ''.join(commonChars)
 
-    def _searchChosenEntry(self):
-        """Search the content within a single entry."""
-        # Ensure this entry still exists
-        if self.chosenEntry not in self.entryList:
-            self.queue.put([Action.addError, self.chosenEntry + " is no longer available"])
-            self.chosenEntry = None
-            QQmlProperty.write(self.searchInputModel, "text", "")
-            self.search()
-            return
-
-        if len(self.filteredList) == 0:
-            currentItem = None
-        else:
-            currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-            currentItem = self.filteredList[currentIndex]
-
-        searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
-
-        self.filteredList = []
-
-        for entry in self.chosenEntryList:
-            if any(searchString in entry[1].lower() for searchString in searchStrings):
-                self.filteredList.append(entry)
-
-        try:
-            currentIndex = self.filteredList.index(currentItem)
-        except ValueError:
-            currentIndex = 0
-
-        self.resultListModelList = QStringListModel(self._getElementsFromList(self.filteredList, 1))
-        self.context.setContextProperty("resultListModel", self.resultListModelList)
-
-        QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
-
-    def _selectField(self):
-        """Select a field in the entry content and copy it to the clipboard."""
-        if len(self.filteredList) == 0:
-            return
-
-        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-
-        self._copyToClipboard(self.filteredList[currentIndex][0])
-        self.window.close()
-        return
-
     def bindContext(self, queue, context, window, searchInputModel, resultListModel):
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
@@ -349,6 +294,8 @@ class ViewModel():
         self.window = window
         self.searchInputModel = searchInputModel
         self.resultListModel = resultListModel
+
+        self.search()
 
     def bindModule(self, module):
         """Bind the module so we can communicate with it and retrieve the
@@ -366,12 +313,11 @@ class ViewModel():
             QQmlProperty.write(self.searchInputModel, "text", "")
             return
 
-        if self.chosenEntry is None:
+        if len(self.selection) > 0:
+            self.selection.pop()
+            self.module.selectionMade(self.selection)
+        else:
             self.window.close()
-            return
-
-        self.chosenEntry = None
-        self.search()
 
     def moveDown(self):
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
@@ -388,10 +334,6 @@ class ViewModel():
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
-        if self.chosenEntry is not None:
-            self._searchChosenEntry()
-            return
-
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
         if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
             currentItem = None
@@ -403,20 +345,20 @@ class ViewModel():
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
         for entry in self.entryList:
-            if all(searchString in entry[1].lower() for searchString in searchStrings):
+            if all(searchString in entry.lower() for searchString in searchStrings):
                 self.filteredList.append(entry)
 
         self.resultListModelMaxIndex = len(self.filteredList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
 
         for command in self.commandList:
-            if searchStrings[0] in command[1]:
+            if searchStrings[0] in command:
                 commandList.append(command)
 
         if len(self.filteredList) == 0 and len(commandList) > 0:
             self.filteredList = commandList
             for entry in self.entryList:
-                if any(searchString in entry[1].lower() for searchString in searchStrings[1:]):
+                if any(searchString in entry.lower() for searchString in searchStrings[1:]):
                     self.filteredList.append(entry)
 
             self.context.setContextProperty("resultListModelCommandMode", True)
@@ -424,7 +366,7 @@ class ViewModel():
             self.filteredList += commandList
             self.context.setContextProperty("resultListModelCommandMode", False)
 
-        self.resultListModelList = QStringListModel(self._getElementsFromList(self.filteredList, 1))
+        self.resultListModelList = QStringListModel(self.filteredList)
         self.context.setContextProperty("resultListModel", self.resultListModelList)
 
         if self.resultListModelMaxIndex == -1:
@@ -440,15 +382,7 @@ class ViewModel():
         QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
 
     def select(self):
-        """Select an entry or an entry in the content of an entry. If we're
-        already in an entry, get the content list. If the content list is zero
-        or one entries, copy the entry or single line of content to the
-        clipboard.
-        """
-        if self.chosenEntry is not None:
-            self._selectField()
-            return
-
+        """Notify the module of our selection entry."""
         if len(self.filteredList) == 0:
             return
 
@@ -456,8 +390,6 @@ class ViewModel():
 
         if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
-            if commandTyped[0] not in [entry[0] for entry in self.commandList]:
-                return
 
             result = self.module.runCommand(commandTyped, printOnSuccess=True)
 
@@ -466,37 +398,9 @@ class ViewModel():
 
             return
 
-        self.chosenEntry = self.filteredList[currentIndex]
-        try:
-            entryContent = self.module.getAllEntryFields(self.chosenEntry[0])
-        except:
-            self.queue.put([Action.addError, "A module error occured while retrieving the entry list"])
-            self.chosenEntry = None
-            return
-
-        if len(entryContent) == 0:
-            # If there is no content, copy the entry itself
-            self._copyToClipboard(self.chosenEntry[0])
-            self.window.close()
-            return
-        elif len(entryContent) == 1:
-            # If there is only one entry, copy that entry
-            self._copyToClipboard(entryContent[0][0])
-            self.window.close()
-            return
-
-        # If the entry has more than one line, fill the result list with all
-        # lines, so the user can choose the line they want to copy to the
-        # clipboard
-        self.chosenEntryList = entryContent
-        self.filteredList = entryContent
-
-        self.resultListModelList = QStringListModel(self._getElementsFromList(self.filteredList, 1))
-        self.context.setContextProperty("resultListModel", self.resultListModelList)
-        self.resultListModelMaxIndex = len(self.filteredList) - 1
-        self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
-        QQmlProperty.write(self.resultListModel, "currentIndex", 0)
-        QQmlProperty.write(self.searchInputModel, "text", "")
+        entry = self.filteredList[currentIndex]
+        self.selection.append(entry)
+        self.module.selectionMade(self.selection)
 
     def tabComplete(self):
         """Tab-complete the command, entry or combination currently in the
@@ -505,10 +409,9 @@ class ViewModel():
         currentInput = QQmlProperty.read(self.searchInputModel, "text")
 
         start = currentInput
-        searchableCommands = [listEntry[0] for listEntry in self.commandList]
 
         possibles = currentInput.split(" ", 1)
-        command = self._getLongestCommonString(searchableCommands, start=possibles[0])
+        command = self._getLongestCommonString(self.commandList, start=possibles[0])
         # If we didn't complete the command, see if we can complete the text
         if command is None or len(command) == len(possibles[0]):
             if command is None:
@@ -517,7 +420,7 @@ class ViewModel():
                 command += " "
 
             start = possibles[1] if len(possibles) > 1 else ""
-            entry = self._getLongestCommonString([listEntry[1] for listEntry in self.filteredList if listEntry[1] not in searchableCommands], start=start)
+            entry = self._getLongestCommonString([listEntry for listEntry in self.filteredList if listEntry not in self.commandList], start=start)
 
             if entry is None or len(entry) <= len(start):
                 self.queue.put([Action.addError, "No tab completion possible"])
@@ -679,7 +582,7 @@ class Window(QDialog):
                 if not tab['init']:
                     continue
 
-                tab['vm'].chosenEntry = None
+                tab['vm'].selection = []
                 tab['vm'].search()
 
     def show(self):
@@ -871,7 +774,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGUSR1, signalHandler.handle)
 
     # Create a main loop
-    mainLoop = MainLoop(app, window)
+    mainLoop = MainLoop(app, window, settings)
 
     # And run...
     mainLoop.run()
