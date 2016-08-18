@@ -69,7 +69,6 @@ class MainLoop():
 
     def _processTabActions(self, tab):
         action = tab['queue'].get_nowait()
-        print(action)
 
         if action[0] == Action.criticalError:
             self.window.addError(tab['moduleName'], action[1])
