@@ -171,7 +171,7 @@ class ModuleBinder():
 
         for module in self.settings['modules']:
             # Remove pext_module_ from the module name
-            moduleName = module[len('pext_module_'):]
+            moduleName = module['name'][len('pext_module_'):]
 
             # Prepare viewModel and context
             vm = ViewModel()
@@ -187,7 +187,7 @@ class ModuleBinder():
             self.tabs.addTab(moduleName, tabData)
 
             # Prepare module
-            moduleImport = __import__(module.replace('.', '_'), fromlist=['Module'])
+            moduleImport = __import__(module['name'].replace('.', '_'), fromlist=['Module'])
 
             Module = getattr(moduleImport, 'Module')
 
@@ -199,10 +199,10 @@ class ModuleBinder():
 
             # This will (correctly) fail if the module doesn't implement all necessary
             # functionality
-            module = Module()
+            moduleCode = Module()
 
             # Start the module in the background
-            moduleThread = ModuleThreadInitializer(moduleName, q, target=module.init, args=(settings['binary'], q))
+            moduleThread = ModuleThreadInitializer(moduleName, q, target=moduleCode.init, args=(module['settings'], q))
             moduleThread.start()
 
             # Store tab/viewModel combination
@@ -211,7 +211,7 @@ class ModuleBinder():
             bindings.append({'init': False,
                              'queue': q,
                              'vm': vm,
-                             'module': module,
+                             'module': moduleCode,
                              'moduleContext': moduleContext,
                              'moduleName': moduleName,
                              'tabData': tabData})
@@ -606,7 +606,7 @@ def _initPersist(modules):
     to the foreground. If Pext is not already running, save a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = "/tmp/pext-" + "_".join(modules) + ".pid"
+    pidfile = "/tmp/pext-" + "_".join([module['name'] for module in modules]) + ".pid"
 
     if os.path.isfile(pidfile):
         # Notify the main process
@@ -627,8 +627,7 @@ def _initPersist(modules):
 def _loadSettings(argv):
     """Load the settings from the command line and set defaults."""
     # Default options
-    settings = {'binary': None,
-                'clipboard': 'clipboard',
+    settings = {'clipboard': 'clipboard',
                 'closeWhenDone': False,
                 'modules': [],
                 'installModules': [],
@@ -636,8 +635,19 @@ def _loadSettings(argv):
                 'listModules': False,
                 'updateModules': False}
 
+    # getopt requires all possible options to be listed, but we do not know
+    # more about module-specific options in advance than that they start with
+    # module-. Therefore, we go through the argument list and create a new
+    # list filled with every entry that starts with module- so that getopt
+    # doesn't raise getoptError for these entries.
+    moduleOpts = []
+    for arg in argv:
+        arg = arg.split("=")[0]
+        if arg.startswith("--module-"):
+            moduleOpts.append(arg[2:] + "=")
+
     try:
-        opts, args = getopt.getopt(argv, "hb:c:m:", ["help", "binary=", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "list-modules", "update-modules"])
+        opts, args = getopt.getopt(argv, "hc:m:", ["help", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "list-modules", "update-modules"] + moduleOpts)
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -661,7 +671,9 @@ def _loadSettings(argv):
             if not args.startswith('pext_module_'):
                 args = 'pext_module_' + args
 
-            settings['modules'].append(args)
+            settings['modules'].append({'name': args, 'settings': {}})
+        elif opt.startswith("--module-"):
+            settings['modules'][-1]['settings'][opt[9:]] = args
         elif opt == "--install-module":
             settings['installModules'].append(args)
         elif opt == "--uninstall-module":
@@ -684,10 +696,6 @@ def _shutDown(pidfile, window):
 def usage():
     """Print usage information."""
     print('''Options:
-
---binary           : choose the name of the binary to use. Defaults to 'pass' for
-                     the pass module and todo.sh for the todo.sh module. Paths
-                     are allowed.
 
 --clipboard        : choose the clipboard to copy entries to. Acceptable values
                      are "primary", "secondary" or "clipboard". See the xclip
