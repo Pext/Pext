@@ -36,6 +36,17 @@ After you have installed a module you want to use, launch Pext with the
 You may launch Pext with multiple modules, at which point you can use Ctrl+TAB
 and Ctrl+Shift+Tab to quickly switch between modules.
 
+A module may have its own settings. For example, if a module has a setting
+called binary to specify usage of a non-default binary, you can add a
+--module-binary=value flag. The --module-* flags affect the last --module
+before it. So, if you have a module named pass, supporting a binary flag, and
+a module named todo.sh which you want to run with default settings, you can do
+the following:
+
+    python3 main.py --module=pass --module-binary=mybinary --module=todo.sh
+
+Read the module documentation for the supported flags of that specific module.
+
 Once Pext has launched, you can use the search bar on top to search through the
 module, or type a command. Once the selected entry is highlighted or you have
 typed the command you want to run, press enter to select or execute it.
@@ -54,7 +65,8 @@ You can always use the `--help` flag for a list of options.
     sudo apt-get install git python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls xclip
 
 ### Fedora
-    sudo dnf install git python3-qt5 qt5-qtquickcontrols xclip
+
+    sudo dnf install git python3 python3-qt5 qt5-qtquickcontrols xclip
 
 ## License
 GPLv3+.
