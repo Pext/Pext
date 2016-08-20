@@ -22,7 +22,6 @@ import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
-    title: 'Pext'
     property int margin: 10
     width: Screen.width
     height: 0.3 * Screen.height

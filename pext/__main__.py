@@ -762,7 +762,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     # Get an app instance
-    app = QApplication(sys.argv)
+    app = QApplication(["Pext"])
 
     # Set up persistence
     if settings['closeWhenDone']:

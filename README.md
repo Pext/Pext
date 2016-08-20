@@ -15,6 +15,10 @@ below.
 [emoji](https://github.com/Pext/pext_module_emoji) module*
 
 # Usage
+Note: The below commands assume you're in the root directory of this
+repository. If you're not, replace "pext" with the full path of the pext
+directory.
+
 First, you will want to install one or more modules you want to use. You do
 this by using the --install-module command, followed by the URL of a git
 repository.
@@ -23,7 +27,7 @@ For example, to install the official
 [pass module](https://github.com/Pext/pext_module_pass), run the following
 command:
 
-    python3 main.py --install-module=https://github.com/Pext/pext_module_pass
+    python3 pext --install-module=https://github.com/Pext/pext_module_pass
 
 For more modules, check out the
 [Pext organisation on GitHub](https://github.com/Pext).
@@ -31,7 +35,7 @@ For more modules, check out the
 After you have installed a module you want to use, launch Pext with the
 --module parameter. For example, to use the pass module, launch it as such:
 
-    python3 main.py --module=pass
+    python3 pext --module=pass
 
 You may launch Pext with multiple modules, at which point you can use Ctrl+TAB
 and Ctrl+Shift+Tab to quickly switch between modules.
@@ -43,7 +47,7 @@ before it. So, if you have a module named pass, supporting a binary flag, and
 a module named todo.sh which you want to run with default settings, you can do
 the following:
 
-    python3 main.py --module=pass --module-binary=mybinary --module=todo.sh
+    python3 pext --module=pass --module-binary=mybinary --module=todo.sh
 
 Read the module documentation for the supported flags of that specific module.
 
