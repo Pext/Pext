@@ -14,10 +14,17 @@ below.
 *Pext running as an emoji selector using the
 [emoji](https://github.com/Pext/pext_module_emoji) module*
 
+# Installation
+Pext does not need to be installed to run. However, if you prefer to install
+it, you can do so:
+
+    # pip3 install . --upgrade
+
 # Usage
 Note: The below commands assume you're in the root directory of this
 repository. If you're not, replace "pext" with the full path of the pext
-directory.
+directory. If Pext is installed, there is no need to prepend your commands with
+python3.
 
 First, you will want to install one or more modules you want to use. You do
 this by using the --install-module command, followed by the URL of a git

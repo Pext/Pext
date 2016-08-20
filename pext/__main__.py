@@ -30,6 +30,10 @@ from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QLabel, QLineEdit, QMessageBox, QTextEdit, QVBoxLayout, QDialogButtonBox
 from PyQt5.Qt import QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
+# FIXME: See if there is a less ugly hack to ensure pext_base and pext_helpers
+# can always be loaded by us and the modules
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'helpers'))
+
 from pext_base import ModuleBase
 from pext_helpers import Action
 
@@ -647,7 +651,7 @@ def _loadSettings(argv):
             moduleOpts.append(arg[2:] + "=")
 
     try:
-        opts, args = getopt.getopt(argv, "hc:m:", ["help", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "list-modules", "update-modules"] + moduleOpts)
+        opts, args = getopt.getopt(argv, "hc:m:", ["help", "version", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "list-modules", "update-modules"] + moduleOpts)
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -656,6 +660,12 @@ def _loadSettings(argv):
     for opt, args in opts:
         if opt in ("-h", "--help"):
             usage()
+            sys.exit(0)
+        elif opt == "--version":
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'VERSION')) as version_file:
+                version = version_file.read().strip()
+
+            print("Pext {}".format(version))
             sys.exit(0)
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
@@ -685,12 +695,12 @@ def _loadSettings(argv):
 
     return settings
 
-def _shutDown(pidfile, window):
+def _shutDown(pidfile, window, closeWhenDone):
     """Clean up."""
     for module in window.tabBindings:
         module['module'].stop()
 
-    if not settings['closeWhenDone']:
+    if not closeWhenDone:
         os.unlink(pidfile)
 
 def usage():
@@ -719,8 +729,7 @@ def usage():
 
 --update-modules   : update all installed modules using git pull.''')
 
-
-if __name__ == "__main__":
+def main():
     # Ensure our necessary directories exist
     try:
         os.mkdir(os.path.expanduser('~/.config/pext'))
@@ -774,7 +783,7 @@ if __name__ == "__main__":
     window = Window(settings)
 
     # Clean up on exit
-    atexit.register(_shutDown, pidfile, window)
+    atexit.register(_shutDown, pidfile, window, settings['closeWhenDone'])
 
     # Handle SIGUSR1 UNIX signal
     signalHandler = SignalHandler(window)
@@ -785,3 +794,6 @@ if __name__ == "__main__":
 
     # And run...
     mainLoop.run()
+
+if __name__ == "__main__":
+    main()
