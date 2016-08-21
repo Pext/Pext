@@ -23,7 +23,7 @@ import sys
 import threading
 import time
 from shutil import rmtree
-from subprocess import call, Popen, PIPE
+from subprocess import check_call, check_output, Popen, PIPE, CalledProcessError
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
@@ -221,6 +221,108 @@ class ModuleBinder():
                              'tabData': tabData})
 
         return bindings
+
+class ModuleManager():
+    """Install, remove, update and list modules."""
+    def __init__(self):
+        self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
+
+    def _addPrefix(self, moduleName):
+        """Ensure the string starts with pext_module_."""
+        if not moduleName.startswith('pext_module_'):
+            return 'pext_module_{}'.format(moduleName)
+
+        return moduleName
+
+    def _removePrefix(self, moduleName):
+        """Remove pext_module_ from the start of the string."""
+        if moduleName.startswith('pext_module_'):
+            return moduleName[len('pext_module_'):]
+
+        return moduleName
+
+    def listModules(self, humanReadable=False):
+        """Return a list of modules together with their source."""
+        modules = []
+
+        for directory in os.listdir(self.moduleDir):
+            name = self._removePrefix(directory)
+            try:
+                source = check_output(['git', 'config', '--get', 'remote.origin.url'], cwd=os.path.join(self.moduleDir, directory), universal_newlines=True).strip()
+            except (CalledProcessError, FileNotFoundError):
+                source = "Unknown"
+
+            if humanReadable:
+                modules.append('{} ({})'.format(name, source))
+            else:
+                modules.append([name, source])
+
+        return modules
+
+    def installModule(self, url, verbose=False):
+        """Install a module."""
+        moduleName = url.split("/")[-1]
+
+        dirName = self._addPrefix(moduleName).replace('.', '_')
+        moduleName = self._removePrefix(moduleName)
+
+        if verbose:
+            print('Installing {} from {}'.format(moduleName, url))
+
+        try:
+            check_call(['git', 'clone', url, dirName], cwd=self.moduleDir)
+        except Exception as e:
+            if verbose:
+                print('Failed to install {}: {}'.format(moduleName, e))
+
+            return False
+
+        if verbose:
+            print('Installed {}'.format(moduleName))
+
+        return True
+
+    def uninstallModule(self, moduleName, verbose=False):
+        """Uninstall a module."""
+        dirName = self._addPrefix(moduleName)
+        moduleName = self._removePrefix(moduleName)
+
+        if verbose:
+            print('Removing {}'.format(moduleName))
+
+        try:
+            rmtree(os.path.join(self.moduleDir, dirName))
+        except FileNotFoundError:
+            if verbose:
+                print('Cannot remove {}, it is not installed'.format(moduleName))
+
+            return False
+
+        if verbose:
+            print('Uninstalled {}'.format(moduleName))
+
+        return True
+
+    def updateModule(self, moduleName, verbose=False):
+        """Update a module."""
+        dirName = self._addPrefix(moduleName)
+        moduleName = self._removePrefix(moduleName)
+
+        if verbose:
+            print('Updating {}'.format(moduleName))
+
+        try:
+            check_call(['git', 'pull'], cwd=os.path.join(self.moduleDir, dirName))
+        except Exception as e:
+            if verbose:
+                print('Failed to update {}: {}'.format(moduleName, e))
+
+            return False
+
+        if verbose:
+            print('Updated {}'.format(moduleName))
+
+        return True
 
 
 class ModuleThreadInitializer(threading.Thread):
@@ -633,11 +735,7 @@ def _loadSettings(argv):
     # Default options
     settings = {'clipboard': 'clipboard',
                 'closeWhenDone': False,
-                'modules': [],
-                'installModules': [],
-                'uninstallModules': [],
-                'listModules': False,
-                'updateModules': False}
+                'modules': []}
 
     # getopt requires all possible options to be listed, but we do not know
     # more about module-specific options in advance than that they start with
@@ -651,7 +749,7 @@ def _loadSettings(argv):
             moduleOpts.append(arg[2:] + "=")
 
     try:
-        opts, args = getopt.getopt(argv, "hc:m:", ["help", "version", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "list-modules", "update-modules"] + moduleOpts)
+        opts, args = getopt.getopt(argv, "hc:m:", ["help", "version", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "update-module=", "update-modules", "list-modules"] + moduleOpts)
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -685,13 +783,18 @@ def _loadSettings(argv):
         elif opt.startswith("--module-"):
             settings['modules'][-1]['settings'][opt[9:]] = args
         elif opt == "--install-module":
-            settings['installModules'].append(args)
+            ModuleManager().installModule(args, verbose=True)
         elif opt == "--uninstall-module":
-            settings['uninstallModules'].append(args)
-        elif opt == "--list-modules":
-            settings['listModules'] = True
+            ModuleManager().uninstallModule(args, verbose=True)
+        elif opt == "--update-module":
+            ModuleManager().updateModule(args, verbose=True)
         elif opt == "--update-modules":
-            settings['updateModules'] = True
+            moduleManager = ModuleManager()
+            for module in moduleManager.listModules():
+                moduleManager.updateModule(module[0], verbose=True)
+        elif opt == "--list-modules":
+            for module in ModuleManager().listModules(humanReadable=True):
+                print(module)
 
     return settings
 
@@ -725,9 +828,11 @@ def usage():
 
 --uninstall-module : uninstall a module by name.
 
---list-modules     : list all installed modules.
+--update-module    : update a module by name.
 
---update-modules   : update all installed modules using git pull.''')
+--update-modules   : update all installed modules.
+
+--list-modules     : list all installed modules.''')
 
 def main():
     # Ensure our necessary directories exist
@@ -739,32 +844,6 @@ def main():
         pass
 
     settings = _loadSettings(sys.argv[1:])
-
-    # First, we uninstall, update and install modules as desired
-    for module in settings['uninstallModules']:
-        print('Removing {}'.format(module))
-        try:
-            rmtree(os.path.expanduser('~/.config/pext/modules/pext_module_{}'.format(module)))
-        except FileNotFoundError:
-            print('Cannot remove {}, it is not installed'.format(module))
-
-    if settings['updateModules']:
-        for directory in os.listdir(os.path.expanduser('~/.config/pext/modules/')):
-            print('Updating {}'.format(directory))
-            call(['git', 'pull'], cwd=os.path.expanduser('~/.config/pext/modules/{}'.format(directory)))
-
-    for module in settings['installModules']:
-        storename = module.split("/")[-1]
-        print('Installing {}'.format(storename))
-        if not storename.startswith('pext_module_'):
-            storename = 'pext_module_' + storename
-
-        call(['git', 'clone', module, storename.replace('.', '_')], cwd=os.path.expanduser('~/.config/pext/modules/'))
-
-    if settings['listModules']:
-        print('Installed modules:')
-        for directory in os.listdir(os.path.expanduser('~/.config/pext/modules/')):
-            print(directory[len('pext_module_'):])
 
     if len(settings['modules']) == 0:
         print('No module given. Not launching.')
