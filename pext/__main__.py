@@ -414,7 +414,7 @@ class ViewModel():
         start = currentInput
 
         possibles = currentInput.split(" ", 1)
-        command = self._getLongestCommonString(self.commandList, start=possibles[0])
+        command = self._getLongestCommonString([command.split(" ", 1)[0] for command in self.commandList], start=possibles[0])
         # If we didn't complete the command, see if we can complete the text
         if command is None or len(command) == len(possibles[0]):
             if command is None:
