@@ -6,13 +6,9 @@ Pext provides a simple window with a search bar, allowing modules to define
 what data is shown. A module effectively defines the purpose of Pext, as shown
 below.
 
-![Pext with the pass module](screencast_pass.gif)  
-*Pext running as a password manager using the
-[pass](https://github.com/Pext/pext_module_pass) module*
-
-![Pext with the emoji module](screencast_emoji.gif)  
-*Pext running as an emoji selector using the
-[emoji](https://github.com/Pext/pext_module_emoji) module*
+![Pext](screencast.gif)  
+*Pext running the [pass](https://github.com/Pext/pext_module_pass) and
+[emoji](https://github.com/Pext/pext_module_emoji) modules*
 
 # Installation
 Pext does not need to be installed to run. However, if you prefer to install
