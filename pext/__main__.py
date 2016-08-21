@@ -71,7 +71,7 @@ class MainLoop():
         self.window = window
         self.settings = settings
 
-    def _processTabActions(self, tab):
+    def _processTabAction(self, tab):
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.criticalError:
@@ -145,19 +145,19 @@ class MainLoop():
     def run(self):
         """Process actions modules put in the queue and keep the window working."""
         while True:
+            self.app.sendPostedEvents()
+            self.app.processEvents()
             for tab in self.window.tabBindings:
+                if not tab['init']:
+                    continue
+
                 try:
-                    self._processTabActions(tab)
+                    self._processTabAction(tab)
                 except Empty:
-                    self.app.processEvents()
                     time.sleep(0.01)
                 except Exception as e:
-                    # It's normal for exceptions to be thrown until the module is
-                    # initialized.
-                    if tab['init']:
-                        print('WARN: Module caused exception {}'.format(e))
+                    print('WARN: Module caused exception {}'.format(e))
 
-                    self.app.processEvents()
                     time.sleep(0.01)
 
 class ModuleBinder():
