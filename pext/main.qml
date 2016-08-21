@@ -30,16 +30,21 @@ ApplicationWindow {
 
     function nextTab() {
         if (tabs.currentIndex < tabs.count - 1)
-                tabs.currentIndex += 1
+            tabs.currentIndex += 1
         else
-                tabs.currentIndex = 0
+            tabs.currentIndex = 0
     }
 
     function prevTab() {
         if (tabs.currentIndex > 0)
-                tabs.currentIndex -= 1
+            tabs.currentIndex -= 1
         else
-                tabs.currentIndex = tabs.count - 1
+            tabs.currentIndex = tabs.count - 1
+    }
+
+    function switchTab(id) {
+        if (tabs.count - 1 >= id)
+            tabs.currentIndex = id
     }
 
     Shortcut {
@@ -80,6 +85,56 @@ ApplicationWindow {
     Shortcut {
         sequence: "Ctrl+Shift+Tab"
         onActivated: prevTab()
+    }
+
+    Shortcut {
+        sequence: "Alt+1"
+        onActivated: switchTab(0)
+    }
+
+    Shortcut {
+        sequence: "Alt+2"
+        onActivated: switchTab(1)
+    }
+
+    Shortcut {
+        sequence: "Alt+3"
+        onActivated: switchTab(2)
+    }
+
+    Shortcut {
+        sequence: "Alt+4"
+        onActivated: switchTab(3)
+    }
+
+    Shortcut {
+        sequence: "Alt+5"
+        onActivated: switchTab(4)
+    }
+
+    Shortcut {
+        sequence: "Alt+6"
+        onActivated: switchTab(5)
+    }
+
+    Shortcut {
+        sequence: "Alt+7"
+        onActivated: switchTab(6)
+    }
+
+    Shortcut {
+        sequence: "Alt+8"
+        onActivated: switchTab(7)
+    }
+
+    Shortcut {
+        sequence: "Alt+9"
+        onActivated: switchTab(8)
+    }
+
+    Shortcut {
+        sequence: "Alt+0"
+        onActivated: switchTab(9)
     }
 
     ColumnLayout {
