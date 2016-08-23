@@ -647,9 +647,18 @@ class Window(QDialog):
         moduleList = [module[0] for module in ModuleManager().listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to load", moduleList, 0, False)
         if ok:
-            moduleSettings, ok = QInputDialog.getText(self, "Pext", "Enter module settings (leave blank for defaults)")
+            givenSettings, ok = QInputDialog.getText(self, "Pext", "Enter module settings (leave blank for defaults)")
             if ok:
-                module = {'name': moduleName, 'settings': moduleSettings.split(" ")}
+                moduleSettings = {}
+                for setting in givenSettings.split(" "):
+                    try:
+                        key, value = setting.split("=", 2)
+                    except ValueError:
+                        pass
+
+                    moduleSettings[key] = value
+
+                module = {'name': moduleName, 'settings': moduleSettings}
                 self.moduleManager.loadModule(self, module)
                 # First module? Enforce load
                 if len(self.tabBindings) == 1:
