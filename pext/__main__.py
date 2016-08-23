@@ -657,7 +657,7 @@ class Window(QDialog):
         self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menuLoadModule(self):
-        moduleList = [module[0] for module in ModuleManager().listModules()]
+        moduleList = [module[0] for module in self.moduleManager.listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to load", moduleList, 0, False)
         if ok:
             givenSettings, ok = QInputDialog.getText(self, "Pext", "Enter module settings (leave blank for defaults)")
@@ -679,22 +679,22 @@ class Window(QDialog):
 
 
     def _menuListModules(self):
-        moduleList = ['Installed modules:', ''] + ModuleManager().listModules(humanReadable=True)
+        moduleList = ['Installed modules:', ''] + self.moduleManager.listModules(humanReadable=True)
         QMessageBox.information(self, "Pext", '\n'.join(moduleList))
 
     def _menuInstallModule(self):
         moduleURI, ok = QInputDialog.getText(self, "Pext", "Enter the git URL of the module to install")
         if ok:
-            if (ModuleManager().installModule(moduleURI)):
+            if (self.moduleManager.installModule(moduleURI)):
                 QMessageBox.information(self, "Pext", "Install succesful")
             else:
                 QMessageBox.critical(self, "Pext", "Install failed")
 
     def _menuUninstallModule(self):
-        moduleList = [module[0] for module in ModuleManager().listModules()]
+        moduleList = [module[0] for module in self.moduleManager.listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
         if ok:
-            if (ModuleManager().uninstallModule(moduleName)):
+            if (self.moduleManager.uninstallModule(moduleName)):
                 QMessageBox.information(self, "Pext", "Uninstall succesful")
             else:
                 QMessageBox.critical(self, "Pext", "Uninstall failed")
