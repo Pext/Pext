@@ -77,18 +77,7 @@ class MainLoop():
         if action[0] == Action.criticalError:
             self.window.addError(tab['moduleName'], action[1])
             tabId = self.window.tabBindings.index(tab)
-            if QQmlProperty.read(self.window.tabs, "currentIndex") == tabId:
-                tabCount = QQmlProperty.read(self.window.tabs, "count")
-                if tabId + 1 < tabCount:
-                    QQmlProperty.write(self.window.tabs, "currentIndex", tabId + 1)
-                else:
-                    if tabId > 0:
-                        QQmlProperty.write(self.window.tabs, "currentIndex", "0")
-                    else:
-                        return
-
-            del self.window.tabBindings[tabId]
-            self.window.tabs.removeTab(tabId)
+            self.window.moduleManager.unloadModule(self.window, tabId)
         elif action[0] == Action.addMessage:
             self.window.addMessage(tab['moduleName'], action[1])
         elif action[0] == Action.addError:
@@ -233,6 +222,18 @@ class ModuleManager():
                                    'moduleContext': moduleContext,
                                    'moduleName': moduleName,
                                    'tabData': tabData})
+
+    def unloadModule(self, window, tabId):
+        """Unload a module by tab ID."""
+        if QQmlProperty.read(window.tabs, "currentIndex") == tabId:
+            tabCount = QQmlProperty.read(window.tabs, "count")
+            if tabId + 1 < tabCount:
+                QQmlProperty.write(window.tabs, "currentIndex", tabId + 1)
+            else:
+                QQmlProperty.write(window.tabs, "currentIndex", "0")
+
+        del window.tabBindings[tabId]
+        window.tabs.removeTab(tabId)
 
     def listModules(self, humanReadable=False):
         """Return a list of modules together with their source."""
@@ -563,6 +564,7 @@ class Window(QDialog):
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
         upShortcut = self.window.findChild(QObject, "upShortcut")
         upShortcutAlt = self.window.findChild(QObject, "upShortcutAlt")
+        closeTabShortcut = self.window.findChild(QObject, "closeTabShortcut")
 
         self.searchInputModel.textChanged.connect(self._search)
         self.searchInputModel.accepted.connect(self._select)
@@ -573,6 +575,7 @@ class Window(QDialog):
         tabShortcut.activated.connect(self._tabComplete)
         upShortcut.activated.connect(self._moveUp)
         upShortcutAlt.activated.connect(self._moveUp)
+        closeTabShortcut.activated.connect(self._closeTab)
 
         # Bind menu entries
         menuLoadModulesShortcut = self.window.findChild(QObject, "menuLoadModule")
@@ -642,6 +645,10 @@ class Window(QDialog):
 
     def _goUp(self):
         self._getCurrentElement()['vm'].goUp()
+
+    def _closeTab(self):
+        print("CLOSING TAB")
+        self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menuLoadModule(self):
         moduleList = [module[0] for module in ModuleManager().listModules()]
