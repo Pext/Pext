@@ -564,6 +564,7 @@ class Window(QDialog):
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
         upShortcut = self.window.findChild(QObject, "upShortcut")
         upShortcutAlt = self.window.findChild(QObject, "upShortcutAlt")
+        openTabShortcut = self.window.findChild(QObject, "openTabShortcut")
         closeTabShortcut = self.window.findChild(QObject, "closeTabShortcut")
 
         self.searchInputModel.textChanged.connect(self._search)
@@ -575,6 +576,7 @@ class Window(QDialog):
         tabShortcut.activated.connect(self._tabComplete)
         upShortcut.activated.connect(self._moveUp)
         upShortcutAlt.activated.connect(self._moveUp)
+        openTabShortcut.activated.connect(self._openTab)
         closeTabShortcut.activated.connect(self._closeTab)
 
         # Bind menu entries
@@ -582,7 +584,7 @@ class Window(QDialog):
         menuListModulesShortcut = self.window.findChild(QObject, "menuListModules")
         menuInstallModuleShortcut = self.window.findChild(QObject, "menuInstallModule")
         menuUninstallModuleShortcut = self.window.findChild(QObject, "menuUninstallModule")
-        menuLoadModulesShortcut.triggered.connect(self._menuLoadModule)
+        menuLoadModulesShortcut.triggered.connect(self._openTab)
         menuListModulesShortcut.triggered.connect(self._menuListModules)
         menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
@@ -653,10 +655,7 @@ class Window(QDialog):
         except TypeError:
             pass
 
-    def _closeTab(self):
-        self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
-
-    def _menuLoadModule(self):
+    def _openTab(self):
         moduleList = [module[0] for module in self.moduleManager.listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to load", moduleList, 0, False)
         if ok:
@@ -677,6 +676,8 @@ class Window(QDialog):
                 if len(self.tabBindings) == 1:
                     self.tabs.currentIndexChanged.emit()
 
+    def _closeTab(self):
+        self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menuListModules(self):
         moduleList = ['Installed modules:', ''] + self.moduleManager.listModules(humanReadable=True)

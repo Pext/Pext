@@ -89,6 +89,11 @@ ApplicationWindow {
     }
 
     Shortcut {
+        objectName: "openTabShortcut"
+        sequence: "Ctrl+T"
+    }
+
+    Shortcut {
         objectName: "closeTabShortcut"
         sequence: "Ctrl+W"
     }
