@@ -160,34 +160,49 @@ class MainLoop():
 
                     time.sleep(0.01)
 
-class ModuleBinder():
-    def __init__(self, settings, context, engine, tabs):
-        self.settings = settings
-        self.context = context
-        self.engine = engine
-        self.tabs = tabs
 
+class ModuleManager():
+    """Install, remove, update and list modules."""
+    def __init__(self):
+        self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
+
+    def _addPrefix(self, moduleName):
+        """Ensure the string starts with pext_module_."""
+        if not moduleName.startswith('pext_module_'):
+            return 'pext_module_{}'.format(moduleName)
+
+        return moduleName
+
+    def _removePrefix(self, moduleName):
+        """Remove pext_module_ from the start of the string."""
+        if moduleName.startswith('pext_module_'):
+            return moduleName[len('pext_module_'):]
+
+        return moduleName
+
+    def loadModule(self, window, module):
+        """Load a module and attach it to the main window."""
+        # Append modulePath if not yet appendend
         modulePath = os.path.expanduser('~/.config/pext/modules')
         if not modulePath in sys.path:
             sys.path.append(modulePath)
 
-    def bindModule(self, module):
         # Remove pext_module_ from the module name
-        moduleDir = ModuleManager.addPrefix(module['name']).replace('.', '_')
-        moduleName = ModuleManager.removePrefix(module['name'])
+        moduleDir = self._addPrefix(module['name']).replace('.', '_')
+        moduleName = self._removePrefix(module['name'])
 
         # Prepare viewModel and context
         vm = ViewModel()
-        moduleContext = QQmlContext(self.context)
+        moduleContext = QQmlContext(window.context)
         moduleContext.setContextProperty("resultListModel", vm.resultListModelList)
         moduleContext.setContextProperty("resultListModelMaxIndex", vm.resultListModelMaxIndex)
         moduleContext.setContextProperty("resultListModelCommandMode", False)
 
         # Add tab
-        tabData = QQmlComponent(self.engine)
+        tabData = QQmlComponent(window.engine)
         tabData.loadUrl(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/ModuleData.qml"))
-        self.engine.setContextForObject(tabData, moduleContext)
-        self.tabs.addTab(moduleName, tabData)
+        window.engine.setContextForObject(tabData, moduleContext)
+        window.tabs.addTab(moduleName, tabData)
 
         # Prepare module
         moduleImport = __import__(moduleDir, fromlist=['Module'])
@@ -211,42 +226,20 @@ class ModuleBinder():
         # Store tab/viewModel combination
         # tabData is not used but stored to prevent segfaults caused by
         # Python garbage collecting it
-        return {'init': False,
-                'queue': q,
-                'vm': vm,
-                'module': moduleCode,
-                'moduleContext': moduleContext,
-                'moduleName': moduleName,
-                'tabData': tabData}
-
-
-class ModuleManager():
-    """Install, remove, update and list modules."""
-    def __init__(self):
-        self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
-
-    @staticmethod
-    def addPrefix(moduleName):
-        """Ensure the string starts with pext_module_."""
-        if not moduleName.startswith('pext_module_'):
-            return 'pext_module_{}'.format(moduleName)
-
-        return moduleName
-
-    @staticmethod
-    def removePrefix(moduleName):
-        """Remove pext_module_ from the start of the string."""
-        if moduleName.startswith('pext_module_'):
-            return moduleName[len('pext_module_'):]
-
-        return moduleName
+        window.tabBindings.append({'init': False,
+                                   'queue': q,
+                                   'vm': vm,
+                                   'module': moduleCode,
+                                   'moduleContext': moduleContext,
+                                   'moduleName': moduleName,
+                                   'tabData': tabData})
 
     def listModules(self, humanReadable=False):
         """Return a list of modules together with their source."""
         modules = []
 
         for directory in os.listdir(self.moduleDir):
-            name = self.removePrefix(directory)
+            name = self._removePrefix(directory)
             try:
                 source = check_output(['git', 'config', '--get', 'remote.origin.url'], cwd=os.path.join(self.moduleDir, directory), universal_newlines=True).strip()
             except (CalledProcessError, FileNotFoundError):
@@ -263,8 +256,8 @@ class ModuleManager():
         """Install a module."""
         moduleName = url.split("/")[-1]
 
-        dirName = self.addPrefix(moduleName).replace('.', '_')
-        moduleName = self.removePrefix(moduleName)
+        dirName = self._addPrefix(moduleName).replace('.', '_')
+        moduleName = self._removePrefix(moduleName)
 
         if verbose:
             print('Installing {} from {}'.format(moduleName, url))
@@ -284,8 +277,8 @@ class ModuleManager():
 
     def uninstallModule(self, moduleName, verbose=False):
         """Uninstall a module."""
-        dirName = self.addPrefix(moduleName)
-        moduleName = self.removePrefix(moduleName)
+        dirName = self._addPrefix(moduleName)
+        moduleName = self._removePrefix(moduleName)
 
         if verbose:
             print('Removing {}'.format(moduleName))
@@ -305,8 +298,8 @@ class ModuleManager():
 
     def updateModule(self, moduleName, verbose=False):
         """Update a module."""
-        dirName = self.addPrefix(moduleName)
-        moduleName = self.removePrefix(moduleName)
+        dirName = self._addPrefix(moduleName)
+        moduleName = self._removePrefix(moduleName)
 
         if verbose:
             print('Updating {}'.format(moduleName))
@@ -601,10 +594,10 @@ class Window(QDialog):
         self.show()
 
         # Start binding the modules
-        self.moduleBinder = ModuleBinder(settings, self.context, self.engine, self.tabs)
+        self.moduleManager = ModuleManager()
         self.tabBindings = [];
         for module in self.settings['modules']:
-            self.tabBindings.append(self.moduleBinder.bindModule(module))
+            self.moduleManager.loadModule(self, module)
 
         # Emit the currentIndexChanged signal to initialize the first tab
         if len(self.tabBindings) > 0:
@@ -657,7 +650,7 @@ class Window(QDialog):
             moduleSettings, ok = QInputDialog.getText(self, "Pext", "Enter module settings (leave blank for defaults)")
             if ok:
                 module = {'name': moduleName, 'settings': moduleSettings.split(" ")}
-                self.tabBindings.append(self.moduleBinder.bindModule(module))
+                self.moduleManager.loadModule(self, module)
                 # First module? Enforce load
                 if len(self.tabBindings) == 1:
                     self.tabs.currentIndexChanged.emit()
