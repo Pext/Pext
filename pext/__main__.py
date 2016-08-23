@@ -667,7 +667,7 @@ class Window(QDialog):
                     try:
                         key, value = setting.split("=", 2)
                     except ValueError:
-                        pass
+                        continue
 
                     moduleSettings[key] = value
 
