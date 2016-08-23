@@ -140,25 +140,66 @@ ApplicationWindow {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: margin
-        TextField {
-            id: searchInput
-            objectName: "searchInputModel"
+        RowLayout {
+            TextField {
+                id: searchInput
+                objectName: "searchInputModel"
 
-            font.pixelSize: 24
-            focus: true
+                font.pixelSize: 24
+                focus: true
 
-            onFocusChanged: {
-                focus = true
+                onFocusChanged: {
+                    focus = true
+                }
+
+                Layout.fillWidth: true
             }
 
-            Layout.fillWidth: true
+            Button {
+                Layout.preferredWidth: searchInput.height
+                Layout.preferredHeight: searchInput.height
+
+                iconName: "preferences-system"
+                iconSource: "icons/Gnome-preferences-system.svg" // Fallback
+                onClicked: settingsMenu.popup()
+            }
+
+            Menu {
+                id: settingsMenu
+
+                MenuItem {
+                    objectName: "menuLoadModule"
+                    text: "Load module"
+                }
+
+                MenuSeparator {}
+
+                MenuItem {
+                    objectName: "menuListModules"
+                    text: "List installed modules"
+                }
+
+                MenuSeparator {}
+
+                MenuItem {
+                    objectName: "menuInstallModule"
+                    text: "Install module"
+                }
+
+                MenuItem {
+                    objectName: "menuUninstallModule"
+                    text: "Uninstall module"
+                }
+            }
         }
+
         TabView {
             id: tabs
             objectName: "tabs"
 
             Layout.fillWidth: true
         }
+
         ListView {
              id: messageListModel
              model: messageListModelList
