@@ -641,13 +641,19 @@ class Window(QDialog):
 
     def _getCurrentElement(self):
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
-        return self.tabBindings[currentTab]
+        try:
+            return self.tabBindings[currentTab]
+        except IndexError:
+            # No tabs
+            return None
 
     def _goUp(self):
-        self._getCurrentElement()['vm'].goUp()
+        try:
+            self._getCurrentElement()['vm'].goUp()
+        except TypeError:
+            pass
 
     def _closeTab(self):
-        print("CLOSING TAB")
         self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menuLoadModule(self):
@@ -694,16 +700,28 @@ class Window(QDialog):
                 QMessageBox.critical(self, "Pext", "Uninstall failed")
 
     def _moveDown(self):
-        self._getCurrentElement()['vm'].moveDown()
+        try:
+            self._getCurrentElement()['vm'].moveDown()
+        except TypeError:
+            pass
 
     def _moveUp(self):
-        self._getCurrentElement()['vm'].moveUp()
+        try:
+            self._getCurrentElement()['vm'].moveUp()
+        except TypeError:
+            pass
 
     def _search(self):
-        self._getCurrentElement()['vm'].search()
+        try:
+            self._getCurrentElement()['vm'].search()
+        except TypeError:
+            pass
 
     def _select(self):
-        self._getCurrentElement()['vm'].select()
+        try:
+            self._getCurrentElement()['vm'].select()
+        except TypeError:
+            pass
 
     def _showMessages(self):
         """Show the list of messages in the window."""
@@ -712,7 +730,10 @@ class Window(QDialog):
         self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
     def _tabComplete(self):
-        self._getCurrentElement()['vm'].tabComplete()
+        try:
+            self._getCurrentElement()['vm'].tabComplete()
+        except TypeError:
+            pass
 
     def addError(self, moduleName, message):
         """Add an error message to the window and show the message list."""
