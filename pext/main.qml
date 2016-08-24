@@ -29,23 +29,47 @@ ApplicationWindow {
 
     flags: Qt.FramelessWindowHint | Qt.Window
 
+    function pageUp() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        var listView = tab.item.contentItem;
+        listView.currentIndex = listView.currentIndex - (listView.height / 23) + 1;
+
+        if (listView.currentIndex < 0)
+            listView.currentIndex = 0;
+
+        listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
+    }
+
+    function pageDown() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        var listView = tab.item.contentItem;
+        listView.currentIndex = listView.currentIndex + (listView.height / 23);
+        listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
+    }
+
     function nextTab() {
         if (tabs.currentIndex < tabs.count - 1)
-            tabs.currentIndex += 1
+            tabs.currentIndex += 1;
         else
-            tabs.currentIndex = 0
+            tabs.currentIndex = 0;
     }
 
     function prevTab() {
         if (tabs.currentIndex > 0)
-            tabs.currentIndex -= 1
+            tabs.currentIndex -= 1;
         else
-            tabs.currentIndex = tabs.count - 1
+            tabs.currentIndex = tabs.count - 1;
     }
 
     function switchTab(id) {
         if (tabs.count - 1 >= id)
-            tabs.currentIndex = id
+            tabs.currentIndex = id;
     }
 
     Shortcut {
@@ -76,6 +100,26 @@ ApplicationWindow {
     Shortcut {
         sequence: "Ctrl+J"
         onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
+    }
+
+    Shortcut {
+        sequence: "PgUp"
+        onActivated: pageUp()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+B"
+        onActivated: pageUp()
+    }
+
+    Shortcut {
+        sequence: "PgDown"
+        onActivated: pageDown()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+F"
+        onActivated: pageDown()
     }
 
     Shortcut {
