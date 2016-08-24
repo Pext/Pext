@@ -187,19 +187,23 @@ class ModuleManager():
         moduleContext.setContextProperty("resultListModelMaxIndex", vm.resultListModelMaxIndex)
         moduleContext.setContextProperty("resultListModelCommandMode", False)
 
-        # Add tab
-        tabData = QQmlComponent(window.engine)
-        tabData.loadUrl(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/ModuleData.qml"))
-        window.engine.setContextForObject(tabData, moduleContext)
-        window.tabs.addTab(moduleName, tabData)
-
         # Prepare module
-        moduleImport = __import__(moduleDir, fromlist=['Module'])
+        try:
+            moduleImport = __import__(moduleDir, fromlist=['Module'])
+        except ImportError:
+            print("Failed to load module {} from {}".format(moduleName, moduleDir))
+            return False
 
         Module = getattr(moduleImport, 'Module')
 
         # Ensure the module implements the base
         assert issubclass(Module, ModuleBase)
+
+        # Add tab
+        tabData = QQmlComponent(window.engine)
+        tabData.loadUrl(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/ModuleData.qml"))
+        window.engine.setContextForObject(tabData, moduleContext)
+        window.tabs.addTab(moduleName, tabData)
 
         # Set up a queue so that the module can communicate with the main thread
         q = Queue()
