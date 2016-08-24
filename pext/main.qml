@@ -205,9 +205,27 @@ ApplicationWindow {
         }
 
         TabView {
+            visible: tabs.count > 0
             id: tabs
             objectName: "tabs"
 
+            Layout.fillWidth: true
+        }
+
+        TextArea {
+            visible: tabs.count == 0
+            text: "<h1>Welcome to Pext</h1>" +
+                  "<p>To get started, press <kbd>Ctrl+T</kbd> to open a new " +
+                  "tab.</p>" +
+                  "<p>When you are done with a tab, you can always close it " +
+                  "by pressing <kbd>Ctrl+W</kbd>.</p>"
+
+            textFormat: TextEdit.RichText
+            backgroundVisible: false
+            readOnly: true
+            selectByMouse: false
+            menu: null
+            horizontalAlignment: TextEdit.AlignHCenter
             Layout.fillWidth: true
         }
 
