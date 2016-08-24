@@ -181,18 +181,9 @@ ApplicationWindow {
                 id: settingsMenu
 
                 MenuItem {
-                    objectName: "menuLoadModule"
-                    text: "Load module"
-                }
-
-                MenuSeparator {}
-
-                MenuItem {
                     objectName: "menuListModules"
                     text: "List installed modules"
                 }
-
-                MenuSeparator {}
 
                 MenuItem {
                     objectName: "menuInstallModule"

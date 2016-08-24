@@ -588,11 +588,9 @@ class Window(QDialog):
         closeTabShortcut.activated.connect(self._closeTab)
 
         # Bind menu entries
-        menuLoadModulesShortcut = self.window.findChild(QObject, "menuLoadModule")
         menuListModulesShortcut = self.window.findChild(QObject, "menuListModules")
         menuInstallModuleShortcut = self.window.findChild(QObject, "menuInstallModule")
         menuUninstallModuleShortcut = self.window.findChild(QObject, "menuUninstallModule")
-        menuLoadModulesShortcut.triggered.connect(self._openTab)
         menuListModulesShortcut.triggered.connect(self._menuListModules)
         menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
