@@ -899,10 +899,19 @@ def usage():
                      staying in memory. This also allows multiple
                      instances to be ran at once.
 
+--help             : show this screen and exit.
+
+--install-module   : download and install a module from the given git URL.
+
+--list-modules     : list all installed modules.
+
 --module           : name the module to use. This option may be given multiple
                      times to use multiple modules.
 
---install-module   : download and install a module from the given git URL.
+--module-*         : set a module setting for the most recently given module.
+                     For example, to set a module-specific setting called
+                     binary, use --module-binary=value. Check the module
+                     documentation for the supported module-specific settings.
 
 --uninstall-module : uninstall a module by name.
 
@@ -910,7 +919,7 @@ def usage():
 
 --update-modules   : update all installed modules.
 
---list-modules     : list all installed modules.''')
+--version          : show the current version and exit.''')
 
 def main():
     # Ensure our necessary directories exist

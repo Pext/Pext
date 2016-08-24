@@ -17,54 +17,30 @@ it, you can do so:
     # pip3 install . --upgrade
 
 # Usage
-Note: The below commands assume you're in the root directory of this
-repository. If you're not, replace "pext" with the full path of the pext
-directory. If Pext is installed, there is no need to prepend your commands with
-python3.
+Simply start Pext with Python 3. If you have installed Pext using the above
+command, simply start `pext`. Otherwise, go to the root directory and run
+`python3 pext`.
 
-First, you will want to install one or more modules you want to use. You do
-this by using the --install-module command, followed by the URL of a git
-repository.
+To actually use Pext, you will first have to install one or more modules. Check
+out the [Pext organisation on GitHub](https://github.com/Pext) for a list of
+official modules.
 
-For example, to install the official
-[pass module](https://github.com/Pext/pext_module_pass), run the following
-command:
+For command line options, use `--help`.
 
-    python3 pext --install-module=https://github.com/Pext/pext_module_pass
+# Hotkeys
+## Entry management
+- Escape: Go one level up
+- Ctrl+J / Down arrow: Go one entry down
+- Ctrl+H / Up arrow: Go one entry up
+- Tab: Tab-complete the current input
+- Enter: Select entry or run command
 
-For more modules, check out the
-[Pext organisation on GitHub](https://github.com/Pext).
-
-After you have installed a module you want to use, launch Pext with the
---module parameter. For example, to use the pass module, launch it as such:
-
-    python3 pext --module=pass
-
-You may launch Pext with multiple modules, at which point you can use Ctrl+TAB
-and Ctrl+Shift+Tab to quickly switch between modules.
-
-A module may have its own settings. For example, if a module has a setting
-called binary to specify usage of a non-default binary, you can add a
---module-binary=value flag. The --module-* flags affect the last --module
-before it. So, if you have a module named pass, supporting a binary flag, and
-a module named todo.sh which you want to run with default settings, you can do
-the following:
-
-    python3 pext --module=pass --module-binary=mybinary --module=todo.sh
-
-Read the module documentation for the supported flags of that specific module.
-
-Once Pext has launched, you can use the search bar on top to search through the
-module, or type a command. Once the selected entry is highlighted or you have
-typed the command you want to run, press enter to select or execute it.
-
-Aside from switching entries with the up and down arrow keys, vi-style Ctrl+K
-and Ctrl+J bindings, mouse support and basic tab completion are supported.
-
-To get the most out of Pext, set up your system to start it with a global
-hotkey, so you can always quickly access it when you need it.
-
-You can always use the `--help` flag for a list of options.
+## Tab management
+- Ctrl+T: Open new tab
+- Ctrl+W: Close current tab
+- Ctrl+Tab: Switch to next tab
+- Ctrl+Shift+Tab: Switch to previous tab
+- Alt+<number>: Switch to tab <number>
 
 ## Dependencies
 ### Debian (Stretch and later, no Jessie, sorry!)
