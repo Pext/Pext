@@ -555,6 +555,11 @@ class Window(QDialog):
 
         self.window = self.engine.rootObjects()[0]
 
+        # Give intro screen the module count
+        self.introScreen = self.window.findChild(QObject, "introScreen")
+        self.moduleManager = ModuleManager()
+        self._updateModulesInstalledCount()
+
         # Bind global shortcuts
         self.searchInputModel = self.window.findChild(QObject, "searchInputModel")
         clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
@@ -599,7 +604,6 @@ class Window(QDialog):
         self.show()
 
         # Start binding the modules
-        self.moduleManager = ModuleManager()
         self.tabBindings = [];
         for module in self.settings['modules']:
             self.moduleManager.loadModule(self, module)
@@ -687,6 +691,7 @@ class Window(QDialog):
         moduleURI, ok = QInputDialog.getText(self, "Pext", "Enter the git URL of the module to install")
         if ok:
             if (self.moduleManager.installModule(moduleURI)):
+                self._updateModulesInstalledCount()
                 QMessageBox.information(self, "Pext", "Install succesful")
             else:
                 QMessageBox.critical(self, "Pext", "Install failed")
@@ -696,6 +701,7 @@ class Window(QDialog):
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
         if ok:
             if (self.moduleManager.uninstallModule(moduleName)):
+                self._updateModulesInstalledCount()
                 QMessageBox.information(self, "Pext", "Uninstall succesful")
             else:
                 QMessageBox.critical(self, "Pext", "Uninstall failed")
@@ -735,6 +741,9 @@ class Window(QDialog):
             self._getCurrentElement()['vm'].tabComplete()
         except TypeError:
             pass
+
+    def _updateModulesInstalledCount(self):
+        QQmlProperty.write(self.introScreen, "modulesInstalledCount", len(self.moduleManager.listModules()))
 
     def addError(self, moduleName, message):
         """Add an error message to the window and show the message list."""
