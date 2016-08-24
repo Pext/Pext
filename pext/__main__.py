@@ -794,12 +794,12 @@ class SignalHandler():
         self.window.show()
 
 
-def _initPersist(modules):
+def _initPersist():
     """Check if Pext is already running and if so, send it SIGUSR1 to bring it
     to the foreground. If Pext is not already running, save a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = "/tmp/pext-" + "_".join([module['name'] for module in modules]) + ".pid"
+    pidfile = "/tmp/pext.pid"
 
     if os.path.isfile(pidfile):
         # Notify the main process
@@ -948,7 +948,7 @@ def main():
     if settings['closeWhenDone']:
         pidfile = None
     else:
-        pidfile = _initPersist(settings['modules'])
+        pidfile = _initPersist()
 
     # Get a window
     window = Window(settings)
