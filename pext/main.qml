@@ -59,23 +59,23 @@ ApplicationWindow {
     }
 
     Shortcut {
-        objectName: "upShortcut"
         sequence: "Up"
+        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
     }
 
     Shortcut {
-        objectName: "upShortcutAlt"
         sequence: "Ctrl+K"
+        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
     }
 
     Shortcut {
-        objectName: "downShortcut"
         sequence: "Down"
+        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
     }
 
     Shortcut {
-        objectName: "downShortcutAlt"
         sequence: "Ctrl+J"
+        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
     }
 
     Shortcut {

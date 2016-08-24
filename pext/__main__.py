@@ -421,16 +421,6 @@ class ViewModel():
         else:
             self.window.close()
 
-    def moveDown(self):
-        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if currentIndex < QQmlProperty.read(self.resultListModel, "count") - 1:
-            QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex + 1)
-
-    def moveUp(self):
-        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if currentIndex > 0:
-            QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex - 1)
-
     def search(self):
         """Filter the list of entries in the screen, setting the filtered list
         to the entries containing one or more words of the string currently
@@ -566,24 +556,16 @@ class Window(QDialog):
         # Bind global shortcuts
         self.searchInputModel = self.window.findChild(QObject, "searchInputModel")
         clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
-        downShortcut = self.window.findChild(QObject, "downShortcut")
-        downShortcutAlt = self.window.findChild(QObject, "downShortcutAlt")
         escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
-        upShortcut = self.window.findChild(QObject, "upShortcut")
-        upShortcutAlt = self.window.findChild(QObject, "upShortcutAlt")
         openTabShortcut = self.window.findChild(QObject, "openTabShortcut")
         closeTabShortcut = self.window.findChild(QObject, "closeTabShortcut")
 
         self.searchInputModel.textChanged.connect(self._search)
         self.searchInputModel.accepted.connect(self._select)
         clearOldMessagesTimer.triggered.connect(self._clearOldMessages)
-        downShortcut.activated.connect(self._moveDown)
-        downShortcutAlt.activated.connect(self._moveDown)
         escapeShortcut.activated.connect(self._goUp)
         tabShortcut.activated.connect(self._tabComplete)
-        upShortcut.activated.connect(self._moveUp)
-        upShortcutAlt.activated.connect(self._moveUp)
         openTabShortcut.activated.connect(self._openTab)
         closeTabShortcut.activated.connect(self._closeTab)
 
@@ -706,18 +688,6 @@ class Window(QDialog):
                 QMessageBox.information(self, "Pext", "Uninstall succesful")
             else:
                 QMessageBox.critical(self, "Pext", "Uninstall failed")
-
-    def _moveDown(self):
-        try:
-            self._getCurrentElement()['vm'].moveDown()
-        except TypeError:
-            pass
-
-    def _moveUp(self):
-        try:
-            self._getCurrentElement()['vm'].moveUp()
-        except TypeError:
-            pass
 
     def _search(self):
         try:
