@@ -153,6 +153,8 @@ ApplicationWindow {
         anchors.margins: margin
         RowLayout {
             TextField {
+                enabled: tabs.count > 0
+                placeholderText: tabs.count > 0 ? "Type to search" : ""
                 id: searchInput
                 objectName: "searchInputModel"
 
