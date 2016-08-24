@@ -257,7 +257,7 @@ class ModuleManager():
 
         return modules
 
-    def installModule(self, url, verbose=False):
+    def installModule(self, url, verbose=False, interactive=True):
         """Install a module."""
         moduleName = url.split("/")[-1]
 
@@ -267,11 +267,10 @@ class ModuleManager():
         if verbose:
             print('Installing {} from {}'.format(moduleName, url))
 
-        try:
-            check_call(['git', 'clone', url, dirName], cwd=self.moduleDir)
-        except Exception as e:
+        returnCode = Popen(['git', 'clone', url, dirName], cwd=self.moduleDir, env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
+        if returnCode != 0:
             if verbose:
-                print('Failed to install {}: {}'.format(moduleName, e))
+                print('Failed to install {}'.format(moduleName))
 
             return False
 
@@ -694,7 +693,7 @@ class Window(QDialog):
     def _menuInstallModule(self):
         moduleURI, ok = QInputDialog.getText(self, "Pext", "Enter the git URL of the module to install")
         if ok:
-            if (self.moduleManager.installModule(moduleURI)):
+            if (self.moduleManager.installModule(moduleURI, interactive=False)):
                 self._updateModulesInstalledCount()
                 QMessageBox.information(self, "Pext", "Install succesful")
             else:
