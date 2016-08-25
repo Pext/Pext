@@ -219,6 +219,7 @@ class MainLoop():
             currentTab = QQmlProperty.read(self.window.tabs, "currentIndex")
             queueSize = [0, 0]
 
+            allEmpty = True
             for tabId, tab in enumerate(self.window.tabBindings):
                 if not tab['init']:
                     continue
@@ -230,17 +231,19 @@ class MainLoop():
 
                 try:
                     self._processTabAction(tab)
+                    allEmpty = False
                 except Empty:
-                    if self.window.window.isVisible():
-                        time.sleep(0.01)
-                    else:
-                        time.sleep(0.1)
+                    pass
                 except Exception as e:
                     print('WARN: Module caused exception {}'.format(e))
 
-                    time.sleep(0.01)
-
             self.logger.setQueueCount(queueSize)
+
+            if allEmpty:
+                if self.window.window.isVisible():
+                    time.sleep(0.01)
+                else:
+                    time.sleep(0.1)
 
 
 class ModuleManager():
