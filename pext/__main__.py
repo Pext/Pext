@@ -205,7 +205,10 @@ class MainLoop():
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
-        tab['vm'].search()
+        if tab['entriesProcessed'] >= 100:
+            tab['vm'].search()
+            tab['entriesProcessed'] = 0
+
         self.window.update()
         tab['queue'].task_done()
 
@@ -231,8 +234,12 @@ class MainLoop():
 
                 try:
                     self._processTabAction(tab)
+                    tab['entriesProcessed'] += 1
                     allEmpty = False
                 except Empty:
+                    if tab['entriesProcessed']:
+                        tab['vm'].search()
+                        tab['entriesProcessed'] = 0
                     pass
                 except Exception as e:
                     print('WARN: Module caused exception {}'.format(e))
@@ -321,7 +328,8 @@ class ModuleManager():
                                    'module': moduleCode,
                                    'moduleContext': moduleContext,
                                    'moduleName': moduleName,
-                                   'tabData': tabData})
+                                   'tabData': tabData,
+                                   'entriesProcessed': 0})
 
     def unloadModule(self, window, tabId):
         """Unload a module by tab ID."""
@@ -492,8 +500,6 @@ class ViewModel():
         self.window = window
         self.searchInputModel = searchInputModel
         self.resultListModel = resultListModel
-
-        self.search()
 
     def bindModule(self, module):
         """Bind the module so we can communicate with it and retrieve the
@@ -688,7 +694,7 @@ class Window(QMainWindow):
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
         element = self.tabBindings[currentTab]
 
-        # Only initialize one
+        # Only initialize once
         if element['init']:
             return
 
