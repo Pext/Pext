@@ -128,12 +128,10 @@ class Logger():
 
     def setQueueCount(self, count):
         """Show the queue size on screen."""
-        if count == 0:
-            queueString = "Ready"
+        if (count[0] == 0 and count[1] == 0):
+            QQmlProperty.write(self.statusQueue, "text", "Ready")
         else:
-            queueString = "Processing: {}".format(count)
-
-        QQmlProperty.write(self.statusQueue, "text", queueString)
+            QQmlProperty.write(self.statusQueue, "text", "Processing: {} ({})".format(count[0], count[1]))
 
 
 class MainLoop():
@@ -218,13 +216,17 @@ class MainLoop():
             self.app.processEvents()
             self.logger.showNextMessage()
 
-            queueSize = 0
+            currentTab = QQmlProperty.read(self.window.tabs, "currentIndex")
+            queueSize = [0, 0]
 
-            for tab in self.window.tabBindings:
+            for tabId, tab in enumerate(self.window.tabBindings):
                 if not tab['init']:
                     continue
 
-                queueSize += tab['queue'].qsize()
+                if tabId == currentTab:
+                    queueSize[0] = tab['queue'].qsize()
+                else:
+                    queueSize[1] += tab['queue'].qsize()
 
                 try:
                     self._processTabAction(tab)

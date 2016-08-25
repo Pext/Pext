@@ -285,7 +285,5 @@ ApplicationWindow {
                 anchors.right: parent.right
             }
         }
-
-        Layout.fillWidth: true
     }
 }
