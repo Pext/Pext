@@ -72,6 +72,7 @@ class Logger():
 
         self.lastUpdate = None
         self.statusText = self.window.window.findChild(QObject, "statusText")
+        self.statusQueue = self.window.window.findChild(QObject, "statusQueue")
 
     def _queueMessage(self, moduleName, message, typeName):
         """Queue a message for display."""
@@ -124,6 +125,15 @@ class Logger():
     def addMessage(self, moduleName, message):
         """Add a regular message to the queue."""
         self._queueMessage(moduleName, message, 'message')
+
+    def setQueueCount(self, count):
+        """Show the queue size on screen."""
+        if count == 0:
+            queueString = "Ready"
+        else:
+            queueString = "Processing: {}".format(count)
+
+        QQmlProperty.write(self.statusQueue, "text", queueString)
 
 
 class MainLoop():
@@ -208,9 +218,13 @@ class MainLoop():
             self.app.processEvents()
             self.logger.showNextMessage()
 
+            queueSize = 0
+
             for tab in self.window.tabBindings:
                 if not tab['init']:
                     continue
+
+                queueSize += tab['queue'].qsize()
 
                 try:
                     self._processTabAction(tab)
@@ -223,6 +237,8 @@ class MainLoop():
                     print('WARN: Module caused exception {}'.format(e))
 
                     time.sleep(0.01)
+
+            self.logger.setQueueCount(queueSize)
 
 
 class ModuleManager():

@@ -274,8 +274,15 @@ ApplicationWindow {
 
     statusBar: StatusBar {
         RowLayout {
+            width: parent.width
+
             Label {
                 objectName: "statusText"
+                Layout.fillWidth: true
+            }
+            Label {
+                objectName: "statusQueue"
+                anchors.right: parent.right
             }
         }
 
