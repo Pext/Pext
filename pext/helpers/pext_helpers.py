@@ -130,11 +130,22 @@ class Action(Enum):
 
         list -- the selection hierarchy.
 
+    notifyMessage:
+        Notify the user.
+
+        message -- the message to show
+
+    notifyError:
+        Notify the user of an error.
+
+        message -- the error message to show
+
     close:
         Close the window.
 
         Call this when the user is done. For example, when the user made a
         selection.
+
     """
     criticalError = 0
     addMessage = 1
@@ -155,4 +166,6 @@ class Action(Enum):
     askInputMultiLine = 16
     copyToClipboard = 17
     setSelection = 18
-    close = 19
+    notifyMessage = 19
+    notifyError = 20
+    close = 21

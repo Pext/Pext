@@ -61,27 +61,57 @@ class InputDialog(QDialog):
         return (self.textEdit.toPlainText(), result == QDialog.Accepted)
 
 
+class Logger():
+    def __init__(self, window):
+        self.window = window
+
+    def _formatMessageList(self, moduleName, message):
+        messageLines = []
+        for line in message.splitlines():
+            if not (not line or line.isspace()):
+                messageLines.append('{}: {}'.format(moduleName, line))
+
+        return messageLines
+
+    def addError(self, moduleName, message):
+        for message in self._formatMessageList(moduleName, message):
+            if self.window.window.isVisible():
+                self.window.messageList.append(["<font color='red'>{}</color>".format(message), time.time()])
+                self.window.showMessages()
+            else:
+                Popen(['notify-send', 'Pext', 'Error in {}'.format(message)])
+
+    def addMessage(self, moduleName, message):
+        for message in self._formatMessageList(moduleName, message):
+            if self.window.window.isVisible():
+                self.window.messageList.append([message, time.time()])
+                self.window.showMessages()
+            else:
+                Popen(['notify-send', 'Pext', message])
+
+
 class MainLoop():
     """Main process loop, connects the application and UI events together,
     ensures events get managed without locking up the UI.
     """
-    def __init__(self, app, window, settings):
+    def __init__(self, app, window, settings, logger):
         """Initialize the main loop"""
         self.app = app
         self.window = window
         self.settings = settings
+        self.logger = logger
 
     def _processTabAction(self, tab):
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.criticalError:
-            self.window.addError(tab['moduleName'], action[1])
+            self.logger.addError(tab['moduleName'], action[1])
             tabId = self.window.tabBindings.index(tab)
             self.window.moduleManager.unloadModule(self.window, tabId)
         elif action[0] == Action.addMessage:
-            self.window.addMessage(tab['moduleName'], action[1])
+            self.logger.addMessage(tab['moduleName'], action[1])
         elif action[0] == Action.addError:
-            self.window.addError(tab['moduleName'], action[1])
+            self.logger.addError(tab['moduleName'], action[1])
         elif action[0] == Action.addEntry:
             tab['vm'].entryList = tab['vm'].entryList + [action[1]]
         elif action[0] == Action.prependEntry:
@@ -122,6 +152,10 @@ class MainLoop():
             proc.communicate(action[1].encode('utf-8'))
         elif action[0] == Action.setSelection:
             tab['vm'].selection = action[1]
+        elif action[0] == Action.notifyMessage:
+            self.logger.addMessage(tab['moduleName'], action[1])
+        elif action[0] == Action.notifyError:
+            self.logger.addError(tab['moduleName'], action[1])
         elif action[0] == Action.close:
             self.window.close()
         else:
@@ -630,7 +664,7 @@ class Window(QDialog):
 
         currentTime = time.time()
         self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
-        self._showMessages()
+        self.showMessages()
 
     def _getCurrentElement(self):
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -705,12 +739,6 @@ class Window(QDialog):
         except TypeError:
             pass
 
-    def _showMessages(self):
-        """Show the list of messages in the window."""
-        messageListForModel = [message[0] for message in self.messageList]
-        self.messageListModelList = QStringListModel(messageListForModel)
-        self.context.setContextProperty("messageListModelList", self.messageListModelList)
-
     def _tabComplete(self):
         try:
             self._getCurrentElement()['vm'].tabComplete()
@@ -719,22 +747,6 @@ class Window(QDialog):
 
     def _updateModulesInstalledCount(self):
         QQmlProperty.write(self.introScreen, "modulesInstalledCount", len(self.moduleManager.listModules()))
-
-    def addError(self, moduleName, message):
-        """Add an error message to the window and show the message list."""
-        for line in message.splitlines():
-            if not (not line or line.isspace()):
-                self.messageList.append(["<font color='red'>{}: {}</color>".format(moduleName, line), time.time()])
-
-        self._showMessages()
-
-    def addMessage(self, moduleName, message):
-        """Add a message to the window and show the message list."""
-        for line in message.splitlines():
-            if not (not line or line.isspace()):
-                self.messageList.append(["{}: {}".format(moduleName, line), time.time()])
-
-        self._showMessages()
 
     def close(self):
         """Close the window. If the user wants us to completely close when
@@ -756,6 +768,12 @@ class Window(QDialog):
         """Show the window."""
         self.window.show()
         self.activateWindow()
+
+    def showMessages(self):
+        """Show the list of messages in the window."""
+        messageListForModel = [message[0] for message in self.messageList]
+        self.messageListModelList = QStringListModel(messageListForModel)
+        self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
 
 class SignalHandler():
@@ -928,6 +946,9 @@ def main():
     # Get a window
     window = Window(settings)
 
+    # Get a logger
+    logger = Logger(window)
+
     # Clean up on exit
     atexit.register(_shutDown, pidfile, window, settings['closeWhenDone'])
 
@@ -936,7 +957,7 @@ def main():
     signal.signal(signal.SIGUSR1, signalHandler.handle)
 
     # Create a main loop
-    mainLoop = MainLoop(app, window, settings)
+    mainLoop = MainLoop(app, window, settings, logger)
 
     # And run...
     mainLoop.run()

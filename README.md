@@ -47,11 +47,11 @@ For command line options, use `--help`.
 ## Dependencies
 ### Debian (Stretch and later, no Jessie, sorry!)
 
-    sudo apt-get install git python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls xclip
+    sudo apt-get install git libnotify-bin python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls xclip
 
 ### Fedora
 
-    sudo dnf install git python3 python3-qt5 qt5-qtquickcontrols xclip
+    sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols xclip
 
 ## License
 GPLv3+.
