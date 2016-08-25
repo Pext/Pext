@@ -145,7 +145,7 @@ class MainLoop():
         self.settings = settings
         self.logger = logger
 
-    def _processTabAction(self, tab):
+    def _processTabAction(self, tab, activeTab):
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.criticalError:
@@ -205,7 +205,7 @@ class MainLoop():
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
-        if tab['entriesProcessed'] >= 100:
+        if activeTab and tab['entriesProcessed'] >= 100:
             tab['vm'].search()
             tab['entriesProcessed'] = 0
 
@@ -229,18 +229,20 @@ class MainLoop():
 
                 if tabId == currentTab:
                     queueSize[0] = tab['queue'].qsize()
+                    activeTab = True
                 else:
                     queueSize[1] += tab['queue'].qsize()
+                    activeTab = False
 
                 try:
-                    self._processTabAction(tab)
+                    self._processTabAction(tab, activeTab)
                     tab['entriesProcessed'] += 1
                     allEmpty = False
                 except Empty:
-                    if tab['entriesProcessed']:
+                    if activeTab and tab['entriesProcessed']:
                         tab['vm'].search()
-                        tab['entriesProcessed'] = 0
-                    pass
+
+                    tab['entriesProcessed'] = 0
                 except Exception as e:
                     print('WARN: Module caused exception {}'.format(e))
 
@@ -694,8 +696,9 @@ class Window(QMainWindow):
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
         element = self.tabBindings[currentTab]
 
-        # Only initialize once
+        # Only initialize once, ensure filter is applied
         if element['init']:
+            element['vm'].search()
             return
 
         # Get the list
