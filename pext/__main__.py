@@ -334,7 +334,7 @@ class ModuleManager():
                                    'entriesProcessed': 0})
 
         # Open tab to trigger loading
-        QQmlProperty.write(window.tabs, "currentIndex", QQmlProperty.read(window.tabs, "count",) - 1)
+        QQmlProperty.write(window.tabs, "currentIndex", QQmlProperty.read(window.tabs, "count") - 1)
 
     def unloadModule(self, window, tabId):
         """Unload a module by tab ID."""
