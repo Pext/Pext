@@ -333,6 +333,9 @@ class ModuleManager():
                                    'tabData': tabData,
                                    'entriesProcessed': 0})
 
+        # Open tab to trigger loading
+        QQmlProperty.write(window.tabs, "currentIndex", QQmlProperty.read(window.tabs, "count",) - 1)
+
     def unloadModule(self, window, tabId):
         """Unload a module by tab ID."""
         if QQmlProperty.read(window.tabs, "currentIndex") == tabId:
@@ -687,9 +690,9 @@ class Window(QMainWindow):
         for module in self.settings['modules']:
             self.moduleManager.loadModule(self, module)
 
-        # Emit the currentIndexChanged signal to initialize the first tab
+        # Switch to first tab
         if len(self.tabBindings) > 0:
-            self.tabs.currentIndexChanged.emit()
+            QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def _bindContext(self):
         """Bind the context for the module."""
