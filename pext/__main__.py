@@ -27,7 +27,7 @@ from subprocess import check_call, check_output, Popen, PIPE, CalledProcessError
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QLabel, QLineEdit, QMessageBox, QTextEdit, QVBoxLayout, QDialogButtonBox
+from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QLabel, QLineEdit, QMainWindow, QMessageBox, QTextEdit, QVBoxLayout, QDialogButtonBox
 from PyQt5.Qt import QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
 # FIXME: See if there is a less ugly hack to ensure pext_base and pext_helpers
@@ -62,10 +62,25 @@ class InputDialog(QDialog):
 
 
 class Logger():
+    """Shows events in the main window and, if the main window is not visible,
+    as a desktop notification.
+    """
     def __init__(self, window):
+        """Initialize the logger and add a status bar to the main window."""
         self.window = window
+        self.queuedMessages = []
 
-    def _formatMessageList(self, moduleName, message):
+        self.lastUpdate = None
+        self.statusText = self.window.window.findChild(QObject, "statusText")
+
+    def _queueMessage(self, moduleName, message, typeName):
+        """Queue a message for display."""
+        for formattedMessage in self._formatMessage(moduleName, message):
+            self.queuedMessages.append({'message': formattedMessage, 'type': typeName})
+
+    def _formatMessage(self, moduleName, message):
+        """Format message for display, including splitting multiline messages.
+        """
         messageLines = []
         for line in message.splitlines():
             if not (not line or line.isspace()):
@@ -73,21 +88,42 @@ class Logger():
 
         return messageLines
 
-    def addError(self, moduleName, message):
-        for message in self._formatMessageList(moduleName, message):
-            if self.window.window.isVisible():
-                self.window.messageList.append(["<font color='red'>{}</color>".format(message), time.time()])
-                self.window.showMessages()
+    def showNextMessage(self):
+        """If the status bar has not been updated for 5 seconds, display the
+        next message. If no messages are available, clear the status bar
+        message.
+        """
+        currentTime = time.time()
+        if self.lastUpdate and currentTime - 5 < self.lastUpdate:
+            return
+
+        if len(self.queuedMessages) == 0:
+            QQmlProperty.write(self.statusText, "text", "")
+            self.lastUpdate = None
+        else:
+            message = self.queuedMessages.pop()
+
+            if message['type'] == 'error':
+                statusBarMessage = "<font color='red'>{}</color>".format(message['message'])
+                notificationMessage = 'Error in {}'.format(message['message'])
             else:
-                Popen(['notify-send', 'Pext', 'Error in {}'.format(message)])
+                statusBarMessage = message['message']
+                notificationMessage = message['message']
+
+            QQmlProperty.write(self.statusText, "text", statusBarMessage)
+
+            if not self.window.window.isVisible():
+                Popen(['notify-send', 'Pext', notificationMessage])
+
+            self.lastUpdate = currentTime
+
+    def addError(self, moduleName, message):
+        """Add an error message to the queue."""
+        self._queueMessage(moduleName, message, 'error')
 
     def addMessage(self, moduleName, message):
-        for message in self._formatMessageList(moduleName, message):
-            if self.window.window.isVisible():
-                self.window.messageList.append([message, time.time()])
-                self.window.showMessages()
-            else:
-                Popen(['notify-send', 'Pext', message])
+        """Add a regular message to the queue."""
+        self._queueMessage(moduleName, message, 'message')
 
 
 class MainLoop():
@@ -170,6 +206,7 @@ class MainLoop():
         while True:
             self.app.sendPostedEvents()
             self.app.processEvents()
+            self.logger.showNextMessage()
 
             for tab in self.window.tabBindings:
                 if not tab['init']:
@@ -562,7 +599,7 @@ class ViewModel():
         self.search()
 
 
-class Window(QDialog):
+class Window(QMainWindow):
     """The main Pext window."""
     def __init__(self, settings, parent=None):
         """Initialize the window."""
@@ -571,15 +608,9 @@ class Window(QDialog):
         # Save settings
         self.settings = settings
 
-        self.messageList = []
-        self.messageListModelList = QStringListModel()
-
         self.engine = QQmlApplicationEngine(self)
 
         self.context = self.engine.rootContext()
-
-        # Fill context with temp value so the UI can load
-        self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))
@@ -593,7 +624,6 @@ class Window(QDialog):
 
         # Bind global shortcuts
         self.searchInputModel = self.window.findChild(QObject, "searchInputModel")
-        clearOldMessagesTimer = self.window.findChild(QObject, "clearOldMessagesTimer")
         escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
         openTabShortcut = self.window.findChild(QObject, "openTabShortcut")
@@ -601,7 +631,6 @@ class Window(QDialog):
 
         self.searchInputModel.textChanged.connect(self._search)
         self.searchInputModel.accepted.connect(self._select)
-        clearOldMessagesTimer.triggered.connect(self._clearOldMessages)
         escapeShortcut.activated.connect(self._goUp)
         tabShortcut.activated.connect(self._tabComplete)
         openTabShortcut.activated.connect(self._openTab)
@@ -654,17 +683,6 @@ class Window(QDialog):
 
         # Done initializing
         element['init'] = True
-
-    def _clearOldMessages(self):
-        """Remove all messages older than 3 seconds and show the list of
-        messages in the window.
-        """
-        if len(self.messageList) == 0:
-            return
-
-        currentTime = time.time()
-        self.messageList = [message for message in self.messageList if currentTime - message[1] < 3]
-        self.showMessages()
 
     def _getCurrentElement(self):
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -768,12 +786,6 @@ class Window(QDialog):
         """Show the window."""
         self.window.show()
         self.activateWindow()
-
-    def showMessages(self):
-        """Show the list of messages in the window."""
-        messageListForModel = [message[0] for message in self.messageList]
-        self.messageListModelList = QStringListModel(messageListForModel)
-        self.context.setContextProperty("messageListModelList", self.messageListModelList)
 
 
 class SignalHandler():

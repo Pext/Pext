@@ -270,27 +270,15 @@ ApplicationWindow {
             horizontalAlignment: TextEdit.AlignHCenter
             Layout.fillWidth: true
         }
-
-        ListView {
-             id: messageListModel
-             model: messageListModelList
-
-             delegate: Text {
-                 text: display
-                 textFormat: Text.StyledText
-             }
-
-             Layout.fillHeight: true
-             Layout.fillWidth: true
-             Layout.minimumHeight: contentHeight
-         }
     }
 
-    Timer {
-        objectName: "clearOldMessagesTimer"
+    statusBar: StatusBar {
+        RowLayout {
+            Label {
+                objectName: "statusText"
+            }
+        }
 
-        interval: 1000
-        running: true
-        repeat: true
+        Layout.fillWidth: true
     }
 }
