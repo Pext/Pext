@@ -42,7 +42,7 @@ For command line options, use `--help`.
 - Ctrl+W: Close current tab
 - Ctrl+Tab: Switch to next tab
 - Ctrl+Shift+Tab: Switch to previous tab
-- Alt+<number>: Switch to tab <number>
+- Alt+`<number>`: Switch to tab `<number>`
 
 ## Dependencies
 ### Debian (Stretch and later, no Jessie, sorry!)
