@@ -136,6 +136,7 @@ class MainLoop():
         while True:
             self.app.sendPostedEvents()
             self.app.processEvents()
+
             for tab in self.window.tabBindings:
                 if not tab['init']:
                     continue
@@ -143,7 +144,10 @@ class MainLoop():
                 try:
                     self._processTabAction(tab)
                 except Empty:
-                    time.sleep(0.01)
+                    if self.window.window.isVisible():
+                        time.sleep(0.01)
+                    else:
+                        time.sleep(0.1)
                 except Exception as e:
                     print('WARN: Module caused exception {}'.format(e))
 
