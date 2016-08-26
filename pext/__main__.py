@@ -85,7 +85,12 @@ class Logger():
         messageLines = []
         for line in message.splitlines():
             if not (not line or line.isspace()):
-                messageLines.append('{}: {}'.format(moduleName, line))
+                if moduleName:
+                    message = '{}: {}'.format(moduleName, line)
+                else:
+                    message = line
+
+                messageLines.append(message)
 
         return messageLines
 
@@ -259,6 +264,7 @@ class ModuleManager():
     """Install, remove, update and list modules."""
     def __init__(self):
         self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
+        self.logger = None
 
     def _addPrefix(self, moduleName):
         """Ensure the string starts with pext_module_."""
@@ -273,6 +279,21 @@ class ModuleManager():
             return moduleName[len('pext_module_'):]
 
         return moduleName
+
+    def _log(self, message):
+        if self.logger:
+            self.logger.addMessage("", message)
+        else:
+            print(message)
+
+    def _logError(self, message):
+        if self.logger:
+            self.logger.addError("", message)
+        else:
+            print(message)
+
+    def bindLogger(self, logger):
+        self.logger = logger
 
     def loadModule(self, window, module):
         """Load a module and attach it to the main window."""
@@ -296,7 +317,7 @@ class ModuleManager():
         try:
             moduleImport = __import__(moduleDir, fromlist=['Module'])
         except ImportError:
-            print("Failed to load module {} from {}".format(moduleName, moduleDir))
+            self._logError("Failed to load module {} from {}".format(moduleName, moduleDir))
             return False
 
         Module = getattr(moduleImport, 'Module')
@@ -374,17 +395,17 @@ class ModuleManager():
         moduleName = self._removePrefix(moduleName)
 
         if verbose:
-            print('Installing {} from {}'.format(moduleName, url))
+            self._log('Installing {} from {}'.format(moduleName, url))
 
         returnCode = Popen(['git', 'clone', url, dirName], cwd=self.moduleDir, env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
         if returnCode != 0:
             if verbose:
-                print('Failed to install {}'.format(moduleName))
+                self._logError('Failed to install {}'.format(moduleName))
 
             return False
 
         if verbose:
-            print('Installed {}'.format(moduleName))
+            self._log('Installed {}'.format(moduleName))
 
         return True
 
@@ -394,18 +415,18 @@ class ModuleManager():
         moduleName = self._removePrefix(moduleName)
 
         if verbose:
-            print('Removing {}'.format(moduleName))
+            self._log('Removing {}'.format(moduleName))
 
         try:
             rmtree(os.path.join(self.moduleDir, dirName))
         except FileNotFoundError:
             if verbose:
-                print('Cannot remove {}, it is not installed'.format(moduleName))
+                self._logError('Cannot remove {}, it is not installed'.format(moduleName))
 
             return False
 
         if verbose:
-            print('Uninstalled {}'.format(moduleName))
+            self._log('Uninstalled {}'.format(moduleName))
 
         return True
 
@@ -415,18 +436,18 @@ class ModuleManager():
         moduleName = self._removePrefix(moduleName)
 
         if verbose:
-            print('Updating {}'.format(moduleName))
+            self._log('Updating {}'.format(moduleName))
 
         try:
             check_call(['git', 'pull'], cwd=os.path.join(self.moduleDir, dirName))
         except Exception as e:
             if verbose:
-                print('Failed to update {}: {}'.format(moduleName, e))
+                self._logError('Failed to update {}: {}'.format(moduleName, e))
 
             return False
 
         if verbose:
-            print('Updated {}'.format(moduleName))
+            self._log('Updated {}'.format(moduleName))
 
         return True
 
@@ -691,19 +712,6 @@ class Window(QMainWindow):
         # Show the window
         self.show()
 
-        # Start binding the modules
-        self.tabBindings = [];
-        for module in self.settings['modules']:
-            self.moduleManager.loadModule(self, module)
-
-        # If there's only one module passed through the command line, enforce
-        # loading it now. Otherwise, switch back to the first module in the
-        # list
-        if len(self.tabBindings) == 1:
-            self.tabs.currentIndexChanged.emit()
-        elif len(self.tabBindings) > 1:
-            QQmlProperty.write(self.tabs, "currentIndex", "0")
-
     def _bindContext(self):
         """Bind the context for the module."""
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -772,21 +780,15 @@ class Window(QMainWindow):
     def _menuInstallModule(self):
         moduleURI, ok = QInputDialog.getText(self, "Pext", "Enter the git URL of the module to install")
         if ok:
-            if (self.moduleManager.installModule(moduleURI, interactive=False)):
+            if self.moduleManager.installModule(moduleURI, interactive=False, verbose=True):
                 self._updateModulesInstalledCount()
-                QMessageBox.information(self, "Pext", "Install succesful")
-            else:
-                QMessageBox.critical(self, "Pext", "Install failed")
 
     def _menuUninstallModule(self):
         moduleList = [module[0] for module in self.moduleManager.listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
         if ok:
-            if (self.moduleManager.uninstallModule(moduleName)):
+            if self.moduleManager.uninstallModule(moduleName, verbose=True):
                 self._updateModulesInstalledCount()
-                QMessageBox.information(self, "Pext", "Uninstall succesful")
-            else:
-                QMessageBox.critical(self, "Pext", "Uninstall failed")
 
     def _search(self):
         try:
@@ -808,6 +810,24 @@ class Window(QMainWindow):
 
     def _updateModulesInstalledCount(self):
         QQmlProperty.write(self.introScreen, "modulesInstalledCount", len(self.moduleManager.listModules()))
+
+    def bindLogger(self, logger):
+        self.moduleManager.bindLogger(logger)
+
+        # Now that the logger is bound, we can show messages in the window, so
+        # start binding the modules
+        self.tabBindings = [];
+        for module in self.settings['modules']:
+            self.moduleManager.loadModule(self, module)
+
+        # If there's only one module passed through the command line, enforce
+        # loading it now. Otherwise, switch back to the first module in the
+        # list
+        if len(self.tabBindings) == 1:
+            self.tabs.currentIndexChanged.emit()
+        elif len(self.tabBindings) > 1:
+            QQmlProperty.write(self.tabs, "currentIndex", "0")
+
 
     def close(self):
         """Close the window. If the user wants us to completely close when
@@ -1001,6 +1021,9 @@ def main():
 
     # Get a logger
     logger = Logger(window)
+
+    # Give the window a reference to the logger
+    window.bindLogger(logger)
 
     # Clean up on exit
     atexit.register(_shutDown, pidfile, window, settings['closeWhenDone'])
