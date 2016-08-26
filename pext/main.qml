@@ -238,6 +238,16 @@ ApplicationWindow {
                     objectName: "menuUninstallModule"
                     text: "Uninstall module"
                 }
+
+                MenuItem {
+                    objectName: "menuUpdateModule"
+                    text: "Update module"
+                }
+
+                MenuItem {
+                    objectName: "menuUpdateAllModules"
+                    text: "Update all modules"
+                }
             }
         }
 

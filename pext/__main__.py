@@ -708,9 +708,13 @@ class Window(QMainWindow):
         menuListModulesShortcut = self.window.findChild(QObject, "menuListModules")
         menuInstallModuleShortcut = self.window.findChild(QObject, "menuInstallModule")
         menuUninstallModuleShortcut = self.window.findChild(QObject, "menuUninstallModule")
+        menuUpdateModuleShortcut = self.window.findChild(QObject, "menuUpdateModule")
+        menuUpdateAllModulesShortcut = self.window.findChild(QObject, "menuUpdateAllModules")
         menuListModulesShortcut.triggered.connect(self._menuListModules)
         menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
+        menuUpdateModuleShortcut.triggered.connect(self._menuUpdateModule)
+        menuUpdateAllModulesShortcut.triggered.connect(self._menuUpdateAllModules)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -818,6 +822,15 @@ class Window(QMainWindow):
                             }
                         ]
             threading.Thread(target=RunConseq, args=(functions,)).start()
+
+    def _menuUpdateModule(self):
+        moduleList = [module[0] for module in self.moduleManager.listModules()]
+        moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
+        if ok:
+            threading.Thread(target=self.moduleManager.updateModule, args=(moduleName,), kwargs={'verbose': True}).start()
+
+    def _menuUpdateAllModules(self):
+        threading.Thread(target=self.moduleManager.updateAllModules, kwargs={'verbose': True}).start()
 
     def _search(self):
         try:
