@@ -691,8 +691,12 @@ class Window(QMainWindow):
         for module in self.settings['modules']:
             self.moduleManager.loadModule(self, module)
 
-        # Switch to first tab
-        if len(self.tabBindings) > 0:
+        # If there's only one module passed through the command line, enforce
+        # loading it now. Otherwise, switch back to the first module in the
+        # list
+        if len(self.tabBindings) == 1:
+            self.tabs.currentIndexChanged.emit()
+        elif len(self.tabBindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def _bindContext(self):
