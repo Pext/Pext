@@ -104,12 +104,13 @@ class Logger():
         return messageLines
 
     def showNextMessage(self):
-        """If the status bar has not been updated for 5 seconds, display the
-        next message. If no messages are available, clear the status bar
-        message.
+        """If the status bar has not been updated for 1 second, display the
+        next message. If no messages are available, clear the status bar after
+        it has been displayed for 5 seconds.
         """
         currentTime = time.time()
-        if self.lastUpdate and currentTime - 5 < self.lastUpdate:
+        timeDiff = 5 if len(self.queuedMessages) < 1 else 1
+        if self.lastUpdate and currentTime - timeDiff < self.lastUpdate:
             return
 
         if len(self.queuedMessages) == 0:
