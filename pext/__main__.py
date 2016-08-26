@@ -430,6 +430,11 @@ class ModuleManager():
 
         return True
 
+    def updateAllModules(self, verbose=False):
+        """Update all modules."""
+        for module in self.listModules():
+            self.updateModule(module[0], verbose=verbose)
+
 
 class ModuleThreadInitializer(threading.Thread):
     """Initialize a thread for the module."""
@@ -919,9 +924,7 @@ def _loadSettings(argv):
         elif opt == "--update-module":
             ModuleManager().updateModule(args, verbose=True)
         elif opt == "--update-modules":
-            moduleManager = ModuleManager()
-            for module in moduleManager.listModules():
-                moduleManager.updateModule(module[0], verbose=True)
+            ModuleManager().updateAllModules(verbose=True)
         elif opt == "--list-modules":
             for module in ModuleManager().listModules(humanReadable=True):
                 print(module)
