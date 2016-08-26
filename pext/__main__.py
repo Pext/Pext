@@ -107,7 +107,7 @@ class Logger():
             QQmlProperty.write(self.statusText, "text", "")
             self.lastUpdate = None
         else:
-            message = self.queuedMessages.pop()
+            message = self.queuedMessages.pop(0)
 
             if message['type'] == 'error':
                 statusBarMessage = "<font color='red'>{}</color>".format(message['message'])
