@@ -600,6 +600,7 @@ class ViewModel():
         entry = self.filteredList[currentIndex]
         self.selection.append(entry)
         self.module.selectionMade(self.selection)
+        QQmlProperty.write(self.searchInputModel, "text", "")
 
     def tabComplete(self):
         """Tab-complete the command, entry or combination currently in the
