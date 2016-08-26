@@ -121,7 +121,7 @@ class Logger():
 
             if message['type'] == 'error':
                 statusBarMessage = "<font color='red'>{}</color>".format(message['message'])
-                notificationMessage = 'Error in {}'.format(message['message'])
+                notificationMessage = 'error: {}'.format(message['message'])
             else:
                 statusBarMessage = message['message']
                 notificationMessage = message['message']
