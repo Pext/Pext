@@ -37,6 +37,15 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'helper
 from pext_base import ModuleBase
 from pext_helpers import Action
 
+class RunConseq():
+    """A simple helper to run several functions consecutively."""
+    def __init__(self, functions):
+        for function in functions:
+            if len(function['args']) > 0:
+                function['name'](function['args'], **function['kwargs'])
+            else:
+                function['name'](**function['kwargs'])
+
 class InputDialog(QDialog):
     """A simple dialog requesting user input."""
     def __init__(self, question, text, parent=None):
@@ -780,15 +789,35 @@ class Window(QMainWindow):
     def _menuInstallModule(self):
         moduleURI, ok = QInputDialog.getText(self, "Pext", "Enter the git URL of the module to install")
         if ok:
-            if self.moduleManager.installModule(moduleURI, interactive=False, verbose=True):
-                self._updateModulesInstalledCount()
+            functions = [
+                            {
+                                'name': self.moduleManager.installModule,
+                                'args': (moduleURI),
+                                'kwargs': {'interactive': False, 'verbose': True}
+                            }, {
+                                'name': self._updateModulesInstalledCount,
+                                'args': (),
+                                'kwargs': {}
+                            }
+                        ]
+            threading.Thread(target=RunConseq, args=(functions,)).start()
 
     def _menuUninstallModule(self):
         moduleList = [module[0] for module in self.moduleManager.listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
         if ok:
-            if self.moduleManager.uninstallModule(moduleName, verbose=True):
-                self._updateModulesInstalledCount()
+            functions = [
+                            {
+                                'name': self.moduleManager.uninstallModule,
+                                'args': (moduleName),
+                                'kwargs': {'verbose': True}
+                            }, {
+                                'name': self._updateModulesInstalledCount,
+                                'args': (),
+                                'kwargs': {}
+                            }
+                        ]
+            threading.Thread(target=RunConseq, args=(functions,)).start()
 
     def _search(self):
         try:
