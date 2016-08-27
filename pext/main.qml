@@ -85,6 +85,11 @@ ApplicationWindow {
     }
 
     Shortcut {
+        objectName: "reloadModuleShortcut"
+        sequence: "F5"
+    }
+
+    Shortcut {
         sequence: "Up"
         onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
     }

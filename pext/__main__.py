@@ -24,6 +24,7 @@ import signal
 import sys
 import threading
 import time
+from importlib import reload
 from shutil import rmtree
 from subprocess import check_call, check_output, Popen, PIPE, CalledProcessError
 from queue import Queue, Empty
@@ -378,8 +379,10 @@ class ModuleManager():
                                    'vm': vm,
                                    'module': moduleCode,
                                    'moduleContext': moduleContext,
+                                   'moduleImport': moduleImport,
                                    'moduleName': moduleName,
                                    'tabData': tabData,
+                                   'settings': module['settings'],
                                    'entriesProcessed': 0})
 
         # Open tab to trigger loading
@@ -414,6 +417,38 @@ class ModuleManager():
                 modules.append([name, source])
 
         return modules
+
+    def reloadModule(self, window, tabId):
+        """Reload a module by tab ID."""
+        # Get currently active tab
+        currentIndex = QQmlProperty.read(window.tabs, "currentIndex")
+
+        # Get the needed info to load the module
+        moduleData = window.tabBindings[tabId]
+        module = {'name': moduleData['moduleName'], 'settings': moduleData['settings']}
+
+        # Unload the module
+        self.unloadModule(window, tabId)
+
+        # Force a reload to make code changes happen
+        reload(moduleData['moduleImport'])
+
+        # Load it into the UI
+        self.loadModule(window, module)
+
+        # Get new position
+        newTabId = len(window.tabBindings) - 1
+
+        # Move to correct position if there is more than 1 tab
+        if newTabId > 0:
+            window.tabs.moveTab(newTabId, tabId)
+            window.tabBindings.insert(tabId, window.tabBindings.pop(newTabId))
+
+            # Focus on active tab
+            QQmlProperty.write(window.tabs, "currentIndex", str(currentIndex))
+        else:
+            # Ensure the event gets called if there's only one tab
+            window.tabs.currentIndexChanged.emit()
 
     def installModule(self, url, verbose=False, interactive=True):
         """Install a module."""
@@ -715,6 +750,7 @@ class Window(QMainWindow):
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
         openTabShortcut = self.window.findChild(QObject, "openTabShortcut")
         closeTabShortcut = self.window.findChild(QObject, "closeTabShortcut")
+        reloadModuleShortcut = self.window.findChild(QObject, "reloadModuleShortcut")
 
         self.searchInputModel.textChanged.connect(self._search)
         self.searchInputModel.accepted.connect(self._select)
@@ -722,6 +758,7 @@ class Window(QMainWindow):
         tabShortcut.activated.connect(self._tabComplete)
         openTabShortcut.activated.connect(self._openTab)
         closeTabShortcut.activated.connect(self._closeTab)
+        reloadModuleShortcut.activated.connect(self._reloadModule)
 
         # Bind menu entries
         menuListModulesShortcut = self.window.findChild(QObject, "menuListModules")
@@ -806,6 +843,9 @@ class Window(QMainWindow):
 
     def _closeTab(self):
         self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
+
+    def _reloadModule(self):
+        self.moduleManager.reloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menuListModules(self):
         moduleList = ['Installed modules:', ''] + self.moduleManager.listModules(humanReadable=True)

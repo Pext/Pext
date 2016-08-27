@@ -43,6 +43,7 @@ For command line options, use `--help`.
 - Ctrl+Tab: Switch to next tab
 - Ctrl+Shift+Tab: Switch to previous tab
 - Alt+`<number>`: Switch to tab `<number>`
+- F5: Reload tab, including code changes to the module
 
 ## Dependencies
 ### Debian (Stretch and later, no Jessie, sorry!)
