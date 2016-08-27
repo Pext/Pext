@@ -641,8 +641,9 @@ class ViewModel():
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
 
         if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
-            commandTyped = QQmlProperty.read(self.searchInputModel, "text").split(" ")
+            commandTyped = QQmlProperty.read(self.searchInputModel, "text")
 
+            self.selection.append({'type': 'command', 'value': commandTyped})
             result = self.module.runCommand(commandTyped, printOnSuccess=True)
 
             QQmlProperty.write(self.searchInputModel, "text", "")
@@ -650,7 +651,7 @@ class ViewModel():
             return
 
         entry = self.filteredList[currentIndex]
-        self.selection.append(entry)
+        self.selection.append({'type': 'entry', 'value': entry})
         self.module.selectionMade(self.selection)
         QQmlProperty.write(self.searchInputModel, "text", "")
 
