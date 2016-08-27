@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Copyright (c) 2016 Sylvia van Os <iamsylvie@openmailbox.org>
+#
 # This file is part of Pext
 #
 # Pext is free software: you can redistribute it and/or modify
@@ -37,6 +39,20 @@ sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'helper
 from pext_base import ModuleBase
 from pext_helpers import Action
 
+class VersionRetriever():
+    """Retrieve general information."""
+    def __init__(self):
+        self.version = None
+
+    def getVersion(self):
+        """Retrieve the version information and cache it."""
+        if not self.version:
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'VERSION')) as version_file:
+                self.version = version_file.read().strip()
+
+        return self.version
+
+
 class RunConseq():
     """A simple helper to run several functions consecutively."""
     def __init__(self, functions):
@@ -45,6 +61,7 @@ class RunConseq():
                 function['name'](function['args'], **function['kwargs'])
             else:
                 function['name'](**function['kwargs'])
+
 
 class InputDialog(QDialog):
     """A simple dialog requesting user input."""
@@ -711,11 +728,13 @@ class Window(QMainWindow):
         menuUninstallModuleShortcut = self.window.findChild(QObject, "menuUninstallModule")
         menuUpdateModuleShortcut = self.window.findChild(QObject, "menuUpdateModule")
         menuUpdateAllModulesShortcut = self.window.findChild(QObject, "menuUpdateAllModules")
+        menuAboutShortcut = self.window.findChild(QObject, "menuAbout")
         menuListModulesShortcut.triggered.connect(self._menuListModules)
         menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
         menuUpdateModuleShortcut.triggered.connect(self._menuUpdateModule)
         menuUpdateAllModulesShortcut.triggered.connect(self._menuUpdateAllModules)
+        menuAboutShortcut.triggered.connect(self._menuAbout)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -832,6 +851,23 @@ class Window(QMainWindow):
 
     def _menuUpdateAllModules(self):
         threading.Thread(target=self.moduleManager.updateAllModules, kwargs={'verbose': True}).start()
+
+    def _menuAbout(self):
+        aboutText = "Pext {}<br/><br/>" + \
+            "Copyright &copy; 2016 Sylvia van Os<br/><br/>" + \
+            "This program is free software: you can redistribute it and/or modify " + \
+            "it under the terms of the GNU General Public License as published by " + \
+            "the Free Software Foundation, either version 3 of the License, or " + \
+            "(at your option) any later version.<br/><br/>" + \
+            "This program is distributed in the hope that it will be useful, " + \
+            "but WITHOUT ANY WARRANTY; without even the implied warranty of " + \
+            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the " + \
+            "GNU General Public License for more details.<br/><br/>" + \
+            "You should have received a copy of the GNU General Public License " + \
+            "along with this program.  If not, see " + \
+            "<a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
+
+        QMessageBox.information(self, "About", aboutText.format(VersionRetriever().getVersion()))
 
     def _search(self):
         try:
@@ -958,10 +994,7 @@ def _loadSettings(argv):
             usage()
             sys.exit(0)
         elif opt == "--version":
-            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'VERSION')) as version_file:
-                version = version_file.read().strip()
-
-            print("Pext {}".format(version))
+            print("Pext {}".format(VersionRetriever().getVersion))
             sys.exit(0)
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Copyright 2016 (c) Sylvia van Os <iamsylvie@openmailbox.org>
+#
 # This file is part of Pext
 #
 # Pext is free software: you can redistribute it and/or modify
