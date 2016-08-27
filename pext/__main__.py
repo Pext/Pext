@@ -228,6 +228,7 @@ class MainLoop():
             proc.communicate(action[1].encode('utf-8'))
         elif action[0] == Action.setSelection:
             tab['vm'].selection = action[1]
+            tab['vm'].module.selectionMade(tab['vm'].selection)
         elif action[0] == Action.notifyMessage:
             self.logger.addMessage(tab['moduleName'], action[1])
         elif action[0] == Action.notifyError:
@@ -644,7 +645,7 @@ class ViewModel():
             commandTyped = QQmlProperty.read(self.searchInputModel, "text")
 
             self.selection.append({'type': 'command', 'value': commandTyped})
-            result = self.module.runCommand(commandTyped, printOnSuccess=True)
+            result = self.module.selectionMade(self.selection)
 
             QQmlProperty.write(self.searchInputModel, "text", "")
 

@@ -49,18 +49,15 @@ class ModuleBase(ABC):
     def selectionMade(self, selection):
         """Called when the user makes a selection.
 
-        The selection variable contains a list of the selection tree.
+        The selection variable contains a list of the selection tree and the
+        type, which can be either entry or command.
 
-        For example, if the user chooses "Settings" in the main screen, the
-        value of selection is ["Settings"]. If the user then chooses "Audio",
-        this function is called again, with the value of selection being
-        ["Settings", "Audio"].
+        For example, if the user chooses the entry "Audio settings" in the main
+        screen, the value of selection is [{type: "entry", value: "Audio settings"}]. 
+        If the user then runs the command "volume 50", this function is called
+        again, with the value of selection being
+        [{type: "entry", value: "Audio settings"}, {type: "command", value: "volume 50"}].
         """
-        pass
-
-    @abstractmethod
-    def runCommand(self, command, printOnSuccess=False, hideErrors=False):
-        """Run a command."""
         pass
 
     @abstractmethod
