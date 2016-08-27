@@ -37,7 +37,7 @@ from PyQt5.Qt import QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext,
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'helpers'))
 
 from pext_base import ModuleBase
-from pext_helpers import Action
+from pext_helpers import Action, SelectionType
 
 class VersionRetriever():
     """Retrieve general information."""
@@ -644,7 +644,7 @@ class ViewModel():
         if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text")
 
-            self.selection.append({'type': 'command', 'value': commandTyped})
+            self.selection.append({'type': SelectionType.command, 'value': commandTyped})
             result = self.module.selectionMade(self.selection)
 
             QQmlProperty.write(self.searchInputModel, "text", "")
@@ -652,7 +652,7 @@ class ViewModel():
             return
 
         entry = self.filteredList[currentIndex]
-        self.selection.append({'type': 'entry', 'value': entry})
+        self.selection.append({'type': SelectionType.entry, 'value': entry})
         self.module.selectionMade(self.selection)
         QQmlProperty.write(self.searchInputModel, "text", "")
 
