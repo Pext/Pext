@@ -597,7 +597,7 @@ class ViewModel():
 
         searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
         for entry in self.entryList:
-            if all(searchString in entry.lower() for searchString in searchStrings):
+            if all(searchString in str(entry).lower() for searchString in searchStrings):
                 self.filteredList.append(entry)
 
         self.resultListModelMaxIndex = len(self.filteredList) - 1
@@ -610,7 +610,7 @@ class ViewModel():
         if len(self.filteredList) == 0 and len(commandList) > 0:
             self.filteredList = commandList
             for entry in self.entryList:
-                if any(searchString in entry.lower() for searchString in searchStrings[1:]):
+                if any(searchString in str(entry).lower() for searchString in searchStrings[1:]):
                     self.filteredList.append(entry)
 
             self.context.setContextProperty("resultListModelCommandMode", True)
@@ -618,7 +618,7 @@ class ViewModel():
             self.filteredList += commandList
             self.context.setContextProperty("resultListModelCommandMode", False)
 
-        self.resultListModelList = QStringListModel(self.filteredList)
+        self.resultListModelList = QStringListModel([str(entry) for entry in self.filteredList])
         self.context.setContextProperty("resultListModel", self.resultListModelList)
 
         if self.resultListModelMaxIndex == -1:
