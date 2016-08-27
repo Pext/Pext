@@ -645,8 +645,7 @@ class ViewModel():
 
             result = self.module.runCommand(commandTyped, printOnSuccess=True)
 
-            if result is not None:
-                QQmlProperty.write(self.searchInputModel, "text", "")
+            QQmlProperty.write(self.searchInputModel, "text", "")
 
             return
 
