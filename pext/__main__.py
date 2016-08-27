@@ -923,6 +923,7 @@ class Window(QMainWindow):
                     continue
 
                 tab['vm'].selection = []
+                tab['vm'].module.selectionMade(tab['vm'].selection)
                 tab['vm'].search()
 
     def show(self):
