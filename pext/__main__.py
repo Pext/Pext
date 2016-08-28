@@ -886,7 +886,7 @@ class Window(QMainWindow):
 
     def _menuUpdateModule(self):
         moduleList = [module[0] for module in self.moduleManager.listModules()]
-        moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
+        moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to update", moduleList, 0, False)
         if ok:
             threading.Thread(target=self.moduleManager.updateModule, args=(moduleName,), kwargs={'verbose': True}).start()
 
