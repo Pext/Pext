@@ -390,6 +390,8 @@ class ModuleManager():
 
     def unloadModule(self, window, tabId):
         """Unload a module by tab ID."""
+        window.tabBindings[tabId]['module'].stop()
+
         if QQmlProperty.read(window.tabs, "currentIndex") == tabId:
             tabCount = QQmlProperty.read(window.tabs, "count")
             if tabId + 1 < tabCount:
