@@ -769,12 +769,14 @@ class Window(QMainWindow):
         menuUpdateModuleShortcut = self.window.findChild(QObject, "menuUpdateModule")
         menuUpdateAllModulesShortcut = self.window.findChild(QObject, "menuUpdateAllModules")
         menuAboutShortcut = self.window.findChild(QObject, "menuAbout")
+        menuQuitShortcut = self.window.findChild(QObject, "menuQuit")
         menuListModulesShortcut.triggered.connect(self._menuListModules)
         menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
         menuUpdateModuleShortcut.triggered.connect(self._menuUpdateModule)
         menuUpdateAllModulesShortcut.triggered.connect(self._menuUpdateAllModules)
         menuAboutShortcut.triggered.connect(self._menuAbout)
+        menuQuitShortcut.triggered.connect(self._menuQuit)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -911,6 +913,9 @@ class Window(QMainWindow):
             "<a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
 
         QMessageBox.information(self, "About", aboutText.format(VersionRetriever().getVersion()))
+
+    def _menuQuit(self):
+        sys.exit(0)
 
     def _search(self):
         try:

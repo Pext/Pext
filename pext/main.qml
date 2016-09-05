@@ -262,6 +262,13 @@ ApplicationWindow {
                     objectName: "menuAbout"
                     text: "About"
                 }
+
+                MenuSeparator { }
+
+                MenuItem {
+                    objectName: "menuQuit"
+                    text: "Quit"
+                }
             }
         }
 
