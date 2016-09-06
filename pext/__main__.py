@@ -846,10 +846,12 @@ class Window(QMainWindow):
                     self.tabs.currentIndexChanged.emit()
 
     def _closeTab(self):
-        self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
+        if len(self.tabBindings) > 0:
+            self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _reloadModule(self):
-        self.moduleManager.reloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
+        if len(self.tabBindings) > 0:
+            self.moduleManager.reloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menuListModules(self):
         moduleList = ['Installed modules:', ''] + self.moduleManager.listModules(humanReadable=True)
