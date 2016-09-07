@@ -300,6 +300,8 @@ ApplicationWindow {
             selectByMouse: false
             menu: null
             horizontalAlignment: TextEdit.AlignHCenter
+            verticalAlignment: TextEdit.AlignVCenter
+            Layout.fillHeight: true
             Layout.fillWidth: true
         }
     }
