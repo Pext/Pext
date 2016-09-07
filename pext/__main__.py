@@ -673,7 +673,7 @@ class ViewModel():
 
     def select(self):
         """Notify the module of our selection entry."""
-        if len(self.filteredList) == 0:
+        if len(self.filteredList) == 0 or self.queue.qsize() > 0:
             return
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
