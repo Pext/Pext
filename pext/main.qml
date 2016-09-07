@@ -277,6 +277,7 @@ ApplicationWindow {
             id: tabs
             objectName: "tabs"
 
+            Layout.fillHeight: true
             Layout.fillWidth: true
         }
 
