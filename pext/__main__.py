@@ -240,7 +240,7 @@ class MainLoop():
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
         if activeTab and tab['entriesProcessed'] >= 100:
-            tab['vm'].search()
+            tab['vm'].search(newEntries=True)
             tab['entriesProcessed'] = 0
 
         self.window.update()
@@ -274,7 +274,7 @@ class MainLoop():
                     allEmpty = False
                 except Empty:
                     if activeTab and tab['entriesProcessed']:
-                        tab['vm'].search()
+                        tab['vm'].search(newEntries=True)
 
                     tab['entriesProcessed'] = 0
                 except Exception as e:
@@ -545,10 +545,13 @@ class ViewModel():
         # possible and relevant.
         self.commandList = []
         self.entryList = []
-        self.filteredList = []
+        self.filteredEntryList = []
+        self.filteredCommandList = []
         self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
+        self.resultListModelCommandMode = False
         self.selection = []
+        self.lastSearch = ""
 
     def _getLongestCommonString(self, entries, start=""):
         """Return the longest common string for each entry in the list,
@@ -619,66 +622,87 @@ class ViewModel():
         else:
             self.window.close()
 
-    def search(self):
+    def search(self, newEntries=False):
         """Filter the list of entries in the screen, setting the filtered list
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
-        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
-        if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
-            currentItem = None
+        searchString = QQmlProperty.read(self.searchInputModel, "text").lower()
+
+        # Don't search if nothing changed
+        if not newEntries and searchString == self.lastSearch:
+            return
+
+        # If empty, show all
+        if len(searchString) == 0 and not newEntries:
+            self.filteredEntryList = self.entryList
+            combinedList = self.entryList + self.commandList
+            self.resultListModelList = QStringListModel([str(entry) for entry in combinedList])
+            self.resultListModelMaxIndex = len(self.entryList) - 1
+            self.context.setContextProperty("resultListModelCommandMode", False)
+            self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
+            self.context.setContextProperty("resultListModel", self.resultListModelList)
+
+            # Enable checking for changes next time
+            self.lastSearch = searchString
+
+            return
+
+        searchStrings = searchString.split(" ")
+
+        # If longer and no new entries, only filter existing list
+        if len(searchString) > len(self.lastSearch) and not (self.resultListModelCommandMode and len(searchStrings) == 2 and searchStrings[1] == ""):
+            filterEntryList = self.filteredEntryList
+            filterCommandList = self.filteredCommandList
         else:
-            currentItem = self.filteredList[currentIndex]
+            filterEntryList = self.entryList
+            filterCommandList = self.commandList
 
-        self.filteredList = []
-        commandList = []
+        self.filteredEntryList = []
+        self.filteredCommandList = []
 
-        searchStrings = QQmlProperty.read(self.searchInputModel, "text").lower().split(" ")
-        for entry in self.entryList:
-            if all(searchString in str(entry).lower() for searchString in searchStrings):
-                self.filteredList.append(entry)
+        self.resultListModelCommandMode = False
 
-        self.resultListModelMaxIndex = len(self.filteredList) - 1
+        for command in filterCommandList:
+            if searchStrings[0] in command:
+                if searchStrings[0] == command.split(" ", 1)[0]:
+                    self.resultListModelCommandMode = True
+
+                self.filteredCommandList.append(command)
+
+        if self.resultListModelCommandMode:
+            for entry in filterEntryList:
+                if all(searchString in str(entry).lower() for searchString in searchStrings[1:]):
+                    self.filteredEntryList.append(entry)
+
+
+            combinedList = self.filteredCommandList + self.filteredEntryList
+        else:
+            for entry in filterEntryList:
+                if all(searchString in str(entry).lower() for searchString in searchStrings):
+                    self.filteredEntryList.append(entry)
+
+            combinedList = self.filteredEntryList + self.filteredCommandList
+
+        self.context.setContextProperty("resultListModelCommandMode", self.resultListModelCommandMode)
+
+        self.resultListModelMaxIndex = len(self.filteredEntryList) - 1
         self.context.setContextProperty("resultListModelMaxIndex", self.resultListModelMaxIndex)
 
-        for command in self.commandList:
-            if searchStrings[0] in command:
-                commandList.append(command)
-
-        if len(self.filteredList) == 0 and len(commandList) > 0:
-            self.filteredList = commandList
-            for entry in self.entryList:
-                if any(searchString in str(entry).lower() for searchString in searchStrings[1:]):
-                    self.filteredList.append(entry)
-
-            self.context.setContextProperty("resultListModelCommandMode", True)
-        else:
-            self.filteredList += commandList
-            self.context.setContextProperty("resultListModelCommandMode", False)
-
-        self.resultListModelList = QStringListModel([str(entry) for entry in self.filteredList])
+        self.resultListModelList = QStringListModel([str(entry) for entry in combinedList])
         self.context.setContextProperty("resultListModel", self.resultListModelList)
 
-        if self.resultListModelMaxIndex == -1:
-            currentIndex = -1
-        elif currentItem is None:
-            currentIndex = 0
-        else:
-            try:
-                currentIndex = self.filteredList.index(currentItem)
-            except ValueError:
-                currentIndex = 0
-
-        QQmlProperty.write(self.resultListModel, "currentIndex", currentIndex)
+        # Enable checking for changes next time
+        self.lastSearch = searchString
 
     def select(self):
         """Notify the module of our selection entry."""
-        if len(self.filteredList) == 0 or self.queue.qsize() > 0:
+        if len(self.filteredEntryList + self.filteredCommandList) == 0 or self.queue.qsize() > 0:
             return
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
 
-        if currentIndex == -1 or currentIndex > self.resultListModelMaxIndex:
+        if self.resultListModelCommandMode:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text")
 
             self.selection.append({'type': SelectionType.command, 'value': commandTyped})
@@ -688,7 +712,7 @@ class ViewModel():
 
             return
 
-        entry = self.filteredList[currentIndex]
+        entry = self.filteredEntryList[currentIndex]
         self.selection.append({'type': SelectionType.entry, 'value': entry})
         self.module.selectionMade(self.selection)
         QQmlProperty.write(self.searchInputModel, "text", "")
@@ -711,7 +735,7 @@ class ViewModel():
                 command += " "
 
             start = possibles[1] if len(possibles) > 1 else ""
-            entry = self._getLongestCommonString([listEntry for listEntry in self.filteredList if listEntry not in self.commandList], start=start)
+            entry = self._getLongestCommonString([listEntry for listEntry in self.filteredEntryList if listEntry not in self.commandList], start=start)
 
             if entry is None or len(entry) <= len(start):
                 self.queue.put([Action.addError, "No tab completion possible"])
@@ -794,7 +818,7 @@ class Window(QMainWindow):
 
         # Only initialize once, ensure filter is applied
         if element['init']:
-            element['vm'].search()
+            element['vm'].search(newEntries=True)
             return
 
         # Get the list
