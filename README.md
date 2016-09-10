@@ -1,4 +1,4 @@
-![Pext logo](pext/images/logo.svg)
+![Pext logo](logo.png)
 
 *Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
 [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
