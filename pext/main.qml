@@ -224,7 +224,7 @@ ApplicationWindow {
                 Layout.preferredHeight: searchInput.height
 
                 iconName: "preferences-system"
-                iconSource: "icons/Gnome-preferences-system.svg" // Fallback
+                iconSource: "images/Gnome-preferences-system.svg" // Fallback
                 onClicked: settingsMenu.popup()
             }
 
@@ -281,26 +281,44 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
 
-        TextArea {
-            objectName: "introScreen"
-            property var modulesInstalledCount
+        GridLayout {
+            flow: applicationWindow.width > 900 ? GridLayout.LeftToRight : GridLayout.TopToBottom
             visible: tabs.count == 0
-            text: "<h1>Welcome to Pext</h1>" +
-                  "<p>To get started, press <kbd>Ctrl+T</kbd> to open a new " +
-                  "tab.</p>" +
-                  "<p>When you are done with a tab, you can always close it " +
-                  "by pressing <kbd>Ctrl+W</kbd>.</p>" +
-                  "<p>You currently have " + modulesInstalledCount + " module" +
-                  (modulesInstalledCount == 1 ? "" : "s") + " installed. You " +
-                  "can manage modules in the settings menu."
 
-            textFormat: TextEdit.RichText
-            backgroundVisible: false
-            readOnly: true
-            selectByMouse: false
-            menu: null
-            horizontalAlignment: TextEdit.AlignHCenter
-            verticalAlignment: TextEdit.AlignVCenter
+            Image {
+                asynchronous: true
+                source: "images/logo.svg"
+                fillMode: Image.Pad
+                horizontalAlignment: Image.AlignHCenter
+                verticalAlignment: Image.AlignVCenter
+                anchors.margins: margin
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
+
+            TextEdit {
+                objectName: "introScreen"
+                property var modulesInstalledCount
+                text: "<h1>Welcome to Pext</h1>" +
+                      "<p>To get started, press <kbd>Ctrl+T</kbd> to open a new " +
+                      "tab.</p>" +
+                      "<p>When you are done with a tab, you can always close it " +
+                      "by pressing <kbd>Ctrl+W</kbd>.</p>" +
+                      "<p>You currently have " + modulesInstalledCount + " module" +
+                      (modulesInstalledCount == 1 ? "" : "s") + " installed. You " +
+                      "can manage modules in the settings menu."
+
+                textFormat: TextEdit.RichText
+                readOnly: true
+                selectByMouse: false
+                textMargin: 0
+                horizontalAlignment: TextEdit.AlignHCenter
+                verticalAlignment: TextEdit.AlignVCenter
+                anchors.margins: margin
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
+
             Layout.fillHeight: true
             Layout.fillWidth: true
         }

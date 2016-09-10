@@ -1,10 +1,20 @@
-# Pext
-Pext stands for **P**ython-based **ex**tendable **t**ool. It is build using
-Python 3 and QML and intended to have its behaviour decided by modules.
+![Pext logo](pext/images/logo.svg)
 
-Pext provides a simple window with a search bar, allowing modules to define
-what data is shown. A module effectively defines the purpose of Pext, as shown
-below.
+*Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
+[Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
+graciously donated by [Peers](https://peers.community/).*
+
+# Introduction
+Pext stands for **P**ython-based **ex**tendable **t**ool. It is build using
+Python 3 and QML and intended to have its behaviour decided by modules. Pext
+provides a simple window with a search bar, allowing modules to define what
+data is shown and how it is manipulated.
+
+Much like the leoger (a mix between a tiger and a leopard) in the logo, Pext
+modules can turn Pext into a completely different beast. From password
+management to weather information, modules can harness the full power of Python
+to turn the deceitfully simple user interface into an useful and powerful
+application.
 
 ![Pext](screencast.gif)  
 *Pext running the [pass](https://github.com/Pext/pext_module_pass) and
