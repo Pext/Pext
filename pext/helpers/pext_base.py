@@ -15,13 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from abc import ABC, abstractmethod
+from abc import ABC, abstractmethod # type: ignore
+from queue import Queue
+from typing import Dict, List, Union
 
+from pext_helpers import SelectionType
 
 class ModuleBase(ABC):
     """The base all Pext modules must implement."""
     @abstractmethod
-    def init(self, binary, window, q):
+    def init(self, settings: Dict, q: Queue) -> None:
         """Called when the module is first loaded.
 
         In this function, the application should initialize all its data and
@@ -46,7 +49,7 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def selectionMade(self, selection):
+    def selectionMade(self, selection: List[Dict[SelectionType, str]]) -> None:
         """Called when the user makes a selection.
 
         The selection variable contains a list of the selection tree and the
@@ -61,7 +64,7 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def processResponse(self, response):
+    def processResponse(self, response: Union[bool, str]):
         """Process a response given as a result of an Action being put into the
         queue. Not all Actions return a response.
         """
