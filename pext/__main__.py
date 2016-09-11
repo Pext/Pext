@@ -27,7 +27,7 @@ import time
 from importlib import reload # type: ignore
 from shutil import rmtree
 from subprocess import check_call, check_output, Popen, PIPE, CalledProcessError
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
@@ -43,6 +43,7 @@ from pext_helpers import Action, SelectionType
 
 class VersionRetriever():
     """Retrieve general information."""
+
     def __init__(self):
         self.version = None
 
@@ -57,6 +58,7 @@ class VersionRetriever():
 
 class RunConseq():
     """A simple helper to run several functions consecutively."""
+
     def __init__(self, functions: List) -> None:
         for function in functions:
             if len(function['args']) > 0:
@@ -67,6 +69,7 @@ class RunConseq():
 
 class InputDialog(QDialog):
     """A simple dialog requesting user input."""
+
     def __init__(self, question: str, text: str, parent=None) -> None:
         """Initialize the dialog."""
         super().__init__(parent)
@@ -90,9 +93,12 @@ class InputDialog(QDialog):
 
 
 class Logger():
-    """Shows events in the main window and, if the main window is not visible,
+    """Log events to the appropriate location.
+
+    Shows events in the main window and, if the main window is not visible,
     as a desktop notification.
     """
+
     def __init__(self, window: 'Window') -> None:
         """Initialize the logger and add a status bar to the main window."""
         self.window = window
@@ -108,8 +114,7 @@ class Logger():
             self.queuedMessages.append({'message': formattedMessage, 'type': typeName})
 
     def _formatMessage(self, moduleName: str, message: str) -> List[str]:
-        """Format message for display, including splitting multiline messages.
-        """
+        """Format message for display, including splitting multiline messages."""
         messageLines = []
         for line in message.splitlines():
             if not (not line or line.isspace()):
@@ -123,9 +128,11 @@ class Logger():
         return messageLines
 
     def showNextMessage(self) -> None:
-        """If the status bar has not been updated for 1 second, display the
-        next message. If no messages are available, clear the status bar after
-        it has been displayed for 5 seconds.
+        """Show next statusbar message.
+
+        If the status bar has not been updated for 1 second, display the next
+        message. If no messages are available, clear the status bar after it
+        has been displayed for 5 seconds.
         """
         currentTime = time.time()
         timeDiff = 5 if len(self.queuedMessages) < 1 else 1
@@ -169,9 +176,12 @@ class Logger():
 
 
 class MainLoop():
-    """Main process loop, connects the application and UI events together,
-    ensures events get managed without locking up the UI.
+    """Main application loop
+
+    The main application loop connects the application, queue and UI events and
+    ensures these events get managed without locking up the UI.
     """
+
     def __init__(self, app: QApplication, window: 'Window', settings: Dict, logger: Logger) -> None:
         """Initialize the main loop"""
         self.app = app
@@ -292,6 +302,7 @@ class MainLoop():
 
 class ModuleManager():
     """Install, remove, update and list modules."""
+
     def __init__(self) -> None:
         self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
         self.logger = None # type: Optional[Logger]
@@ -531,6 +542,7 @@ class ModuleManager():
 
 class ModuleThreadInitializer(threading.Thread):
     """Initialize a thread for the module."""
+
     def __init__(self, moduleName: str, q: Queue, target=None, args=()) -> None:
         self.moduleName = moduleName
         self.queue = q
@@ -546,6 +558,7 @@ class ModuleThreadInitializer(threading.Thread):
 
 class ViewModel():
     """Manage the communication between user interface and module."""
+
     def __init__(self) -> None:
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
@@ -561,8 +574,10 @@ class ViewModel():
         self.lastSearch = ""
 
     def _getLongestCommonString(self, entries: List[str], start="") -> Optional[str]:
-        """Return the longest common string for each entry in the list,
-        starting at the start.
+        """Return the longest common string.
+
+        Returns the longest common string for each entry in the list, starting
+        at the start.
 
         Keyword arguments:
         entries -- the list of entries
@@ -608,16 +623,19 @@ class ViewModel():
         self.resultListModel = resultListModel
 
     def bindModule(self, module: ModuleBase) -> None:
-        """Bind the module so we can communicate with it and retrieve the
-        commands and entries from it.
+        """Bind the module.
+
+        This ensures we can call functions in it.
         """
         self.module = module
 
     def goUp(self) -> None:
-        """Go one level up. This means that, if we're currently in the entry
-        content list, we go back to the entry list. If we're currently in the
-        entry list, we clear the search bar. If we're currently in the entry
-        list and the search bar is empty, we hide the window.
+        """Go one level up.
+
+        This means that, if we're currently in the entry content list, we go
+        back to the entry list. If we're currently in the entry list, we clear
+        the search bar. If we're currently in the entry list and the search bar
+        is empty, we tell the window to hide/close itself.
         """
         if QQmlProperty.read(self.searchInputModel, "text") != "":
             QQmlProperty.write(self.searchInputModel, "text", "")
@@ -630,7 +648,9 @@ class ViewModel():
             self.window.close()
 
     def search(self, newEntries=False) -> None:
-        """Filter the list of entries in the screen, setting the filtered list
+        """Filter the entry list.
+
+        Filter the list of entries in the screen, setting the filtered list
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
@@ -725,7 +745,9 @@ class ViewModel():
         QQmlProperty.write(self.searchInputModel, "text", "")
 
     def tabComplete(self) -> None:
-        """Tab-complete the command, entry or combination currently in the
+        """Tab-complete based on the current seach input.
+
+        This tab-completes the command, entry or combination currently in the
         search bar to the longest possible common completion.
         """
         currentInput = QQmlProperty.read(self.searchInputModel, "text")
@@ -756,6 +778,7 @@ class ViewModel():
 
 class Window(QMainWindow):
     """The main Pext window."""
+
     def __init__(self, settings: Dict, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
@@ -993,8 +1016,11 @@ class Window(QMainWindow):
 
 
     def close(self) -> None:
-        """Close the window. If the user wants us to completely close when
-        done, also exit the application.
+        """Close the window and exit if requested.
+
+        Normally, this only closes the window. However, if the user wants Pext
+        to complete exit when done (using the --close-when-done flag), we also
+        exit the application.
         """
         if self.settings['closeWhenDone']:
             sys.exit(0)
@@ -1017,6 +1043,7 @@ class Window(QMainWindow):
 
 class SignalHandler():
     """Handle UNIX signals."""
+
     def __init__(self, window: Window) -> None:
         """Initialize SignalHandler."""
         self.window = window
@@ -1027,8 +1054,10 @@ class SignalHandler():
 
 
 def _initPersist() -> str:
-    """Check if Pext is already running and if so, send it SIGUSR1 to bring it
-    to the foreground. If Pext is not already running, save a PIDfile so that
+    """Open Pext if an instance is already running.
+
+    Checks if Pext is already running and if so, send it SIGUSR1 to bring it
+    to the foreground. If Pext is not already running, saves a PIDfile so that
     another Pext instance can find us.
     """
     pidfile = "/tmp/pext.pid"

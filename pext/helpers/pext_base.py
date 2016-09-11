@@ -23,6 +23,7 @@ from pext_helpers import SelectionType
 
 class ModuleBase(ABC):
     """The base all Pext modules must implement."""
+
     @abstractmethod
     def init(self, settings: Dict, q: Queue) -> None:
         """Called when the module is first loaded.
@@ -44,8 +45,10 @@ class ModuleBase(ABC):
 
     @abstractmethod
     def stop(self):
-        """Called when Pext is about to shut down, intended for cleaning up if
-        required."""
+        """Called when the module gets unloaded.
+
+        If necessary, the module should clean itself up nicely.
+        """
         pass
 
     @abstractmethod
@@ -65,7 +68,9 @@ class ModuleBase(ABC):
 
     @abstractmethod
     def processResponse(self, response: Union[bool, str]):
-        """Process a response given as a result of an Action being put into the
-        queue. Not all Actions return a response.
+        """Process a response to a requested action.
+
+        Called when a response is given as a result of an Action being put into
+        the queue. Not all Actions return a response.
         """
         pass

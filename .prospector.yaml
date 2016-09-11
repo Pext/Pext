@@ -1,0 +1,7 @@
+pep257:
+    run: true
+    disable:
+        - D203 # Deprecated by D211
+
+mccabe:
+    run: false # TODO: Re-enable when 

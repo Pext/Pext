@@ -21,9 +21,10 @@ from enum import Enum
 
 
 class Action(Enum):
-    """A list of actions that the module can request of the core by putting it
-    in the queue. All of this actions need to be accompanied by a list of
-    arguments.
+    """The list of actions a module can request.e
+
+    A module can request any of these actions of the core by putting it in the
+    queue. All of these actions need to be accompanied by a list of arguments.
 
     Example:
         self.q.put([Action.addMessage, "message to show"])
@@ -147,8 +148,8 @@ class Action(Enum):
 
         Call this when the user is done. For example, when the user made a
         selection.
-
     """
+
     criticalError = 0
     addMessage = 1
     addError = 2
@@ -174,5 +175,6 @@ class Action(Enum):
 
 class SelectionType(Enum):
     """A list of possible selection types."""
+
     entry = 0
     command = 1
