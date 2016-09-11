@@ -59,10 +59,12 @@ class ModuleBase(ABC):
         type, which can be either entry or command.
 
         For example, if the user chooses the entry "Audio settings" in the main
-        screen, the value of selection is [{type: "entry", value: "Audio settings"}]. 
-        If the user then runs the command "volume 50", this function is called
-        again, with the value of selection being
-        [{type: "entry", value: "Audio settings"}, {type: "command", value: "volume 50"}].
+        screen, the value of selection is
+        [{type: SelectionType.entry, value: "Audio settings"}]. If the user
+        then runs the command "volume 50", this function is called again, with
+        the value of selection being
+        [{type: SelectionType.entry, value: "Audio settings"},
+         {type: SelectionType.command, value: "volume 50"}].
         """
         pass
 
