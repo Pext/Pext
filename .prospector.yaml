@@ -4,4 +4,8 @@ pep257:
         - D203 # Deprecated by D211
 
 mccabe:
-    run: false # TODO: Re-enable when 
+    # mccabe considers the _loadSettings and _processTabActions functions
+    # extremely complex. Until these functions no longer fail mccabe or mccab
+    # can be disabled for these specific functions, mccabe is disabled so
+    # runtests.sh can be used as a git pre-commit hook
+    run: false
