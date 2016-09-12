@@ -26,11 +26,9 @@ setup(
     keywords='extendable pluggable',
     packages=[
         'pext',
-        'pext/helpers',
-        'pext/images'
+        'pext/helpers'
     ],
-    package_data={'pext': ['main.qml', 'ModuleData.qml'],
-                  'pext/images': ['*']},
+    package_data={'pext': ['main.qml', 'ModuleData.qml', 'images/*']},
     include_package_data=True,
     zip_safe=False,
     entry_points={
