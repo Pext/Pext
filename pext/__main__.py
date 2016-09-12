@@ -960,7 +960,7 @@ class Window(QMainWindow):
                                 'kwargs': {}
                             }
                         ]
-            threading.Thread(target=RunConseq, args=(functions,)).start()
+            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menuUninstallModule(self) -> None:
         moduleList = [module[0] for module in self.moduleManager.listModules()]
@@ -977,13 +977,13 @@ class Window(QMainWindow):
                                 'kwargs': {}
                             }
                         ]
-            threading.Thread(target=RunConseq, args=(functions,)).start()
+            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menuUpdateModule(self) -> None:
         moduleList = [module[0] for module in self.moduleManager.listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to update", moduleList, 0, False)
         if ok:
-            threading.Thread(target=self.moduleManager.updateModule,
+            threading.Thread(target=self.moduleManager.updateModule,  # type: ignore
                              args=(moduleName,),
                              kwargs={'verbose': True}).start()
 
