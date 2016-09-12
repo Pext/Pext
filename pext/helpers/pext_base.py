@@ -15,11 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from abc import ABC, abstractmethod # type: ignore
+from abc import ABC, abstractmethod  # type: ignore
 from queue import Queue
 from typing import Dict, List, Union
 
 from pext_helpers import SelectionType
+
 
 class ModuleBase(ABC):
     """The base all Pext modules must implement."""

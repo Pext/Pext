@@ -173,6 +173,7 @@ class Action(Enum):
     notifyError = 20
     close = 21
 
+
 class SelectionType(Enum):
     """A list of possible selection types."""
 

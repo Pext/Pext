@@ -24,22 +24,34 @@ import signal
 import sys
 import threading
 import time
-from importlib import reload # type: ignore
+from importlib import reload  # type: ignore
 from shutil import rmtree
-from subprocess import check_call, check_output, Popen, PIPE, CalledProcessError
+from subprocess import check_call, check_output, CalledProcessError, Popen, PIPE
 from typing import Dict, List, Optional, Tuple
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QDialog, QInputDialog, QLabel, QLineEdit, QMainWindow, QMessageBox, QTextEdit, QVBoxLayout, QDialogButtonBox
+from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
+                             QInputDialog, QLabel, QLineEdit, QMainWindow,
+                             QMessageBox, QTextEdit, QVBoxLayout)
 from PyQt5.Qt import QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
-# FIXME: See if there is a less ugly hack to ensure pext_base and pext_helpers
-# can always be loaded by us and the modules
-sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'helpers'))
 
-from pext_base import ModuleBase
-from pext_helpers import Action, SelectionType
+class AppFile():
+    """Get access to application-specific files."""
+
+    @staticmethod
+    def getPath(name: str) -> str:
+        """Return the absolute path by file or directory name."""
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), name)
+
+
+# Ensure pext_base and pext_helpers can always be loaded by us and the modules
+sys.path.append(AppFile.getPath('helpers'))
+
+from pext_base import ModuleBase  # noqa: E402
+from pext_helpers import Action, SelectionType  # noqa: E402
+
 
 class VersionRetriever():
     """Retrieve general information."""
@@ -50,7 +62,7 @@ class VersionRetriever():
     def getVersion(self) -> str:
         """Retrieve the version information and cache it."""
         if not self.version:
-            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'VERSION')) as version_file:
+            with open(AppFile.getPath('VERSION')) as version_file:
                 self.version = version_file.read().strip()
 
         return self.version
@@ -102,9 +114,9 @@ class Logger():
     def __init__(self, window: 'Window') -> None:
         """Initialize the logger and add a status bar to the main window."""
         self.window = window
-        self.queuedMessages = [] # type: List[Dict[str, str]]
+        self.queuedMessages = []  # type: List[Dict[str, str]]
 
-        self.lastUpdate = None # type: Optional[float]
+        self.lastUpdate = None  # type: Optional[float]
         self.statusText = self.window.window.findChild(QObject, "statusText")
         self.statusQueue = self.window.window.findChild(QObject, "statusQueue")
 
@@ -219,10 +231,14 @@ class MainLoop():
         elif action[0] == Action.setFilter:
             QQmlProperty.write(tab['vm'].searchInputModel, "text", action[1])
         elif action[0] == Action.askQuestionDefaultYes:
-            answer = QMessageBox.question(self.window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes)
+            answer = QMessageBox.question(self.window, "Pext", action[1],
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.Yes)
             tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
         elif action[0] == Action.askQuestionDefaultNo:
-            answer = QMessageBox.question(self.window, "Pext", action[1], QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            answer = QMessageBox.question(self.window, "Pext", action[1],
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.No)
             tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
         elif action[0] == Action.askInput:
             answer, ok = QInputDialog.getText(self.window, "Pext", action[1])
@@ -283,7 +299,7 @@ class MainLoop():
                     self._processTabAction(tab, activeTab)
                     tab['entriesProcessed'] += 1
                     allEmpty = False
-                except Empty: # type: ignore
+                except Empty:  # type: ignore
                     if activeTab and tab['entriesProcessed']:
                         tab['vm'].search(newEntries=True)
 
@@ -305,7 +321,7 @@ class ModuleManager():
 
     def __init__(self) -> None:
         self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
-        self.logger = None # type: Optional[Logger]
+        self.logger = None  # type: Optional[Logger]
 
     def _addPrefix(self, moduleName: str) -> str:
         """Ensure the string starts with pext_module_."""
@@ -340,7 +356,7 @@ class ModuleManager():
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
         modulePath = os.path.expanduser('~/.config/pext/modules')
-        if not modulePath in sys.path:
+        if modulePath not in sys.path:
             sys.path.append(modulePath)
 
         # Remove pext_module_ from the module name
@@ -367,7 +383,7 @@ class ModuleManager():
         assert issubclass(Module, ModuleBase)
 
         # Set up a queue so that the module can communicate with the main thread
-        q = Queue() # type: Queue
+        q = Queue()  # type: Queue
 
         # This will (correctly) fail if the module doesn't implement all necessary
         # functionality
@@ -383,7 +399,7 @@ class ModuleManager():
 
         # Add tab
         tabData = QQmlComponent(window.engine)
-        tabData.loadUrl(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/ModuleData.qml"))
+        tabData.loadUrl(QUrl.fromLocalFile(AppFile.getPath('ModuleData.qml')))
         window.engine.setContextForObject(tabData, moduleContext)
         window.tabs.addTab(moduleName, tabData)
 
@@ -427,7 +443,10 @@ class ModuleManager():
         for directory in os.listdir(self.moduleDir):
             name = self._removePrefix(directory)
             try:
-                source = check_output(['git', 'config', '--get', 'remote.origin.url'], cwd=os.path.join(self.moduleDir, directory), universal_newlines=True).strip()
+                source = check_output(['git', 'config', '--get', 'remote.origin.url'],
+                                      cwd=os.path.join(self.moduleDir, directory),
+                                      universal_newlines=True).strip()
+
             except (CalledProcessError, FileNotFoundError):
                 source = "Unknown"
 
@@ -480,7 +499,10 @@ class ModuleManager():
         if verbose:
             self._log('Installing {} from {}'.format(moduleName, url))
 
-        returnCode = Popen(['git', 'clone', url, dirName], cwd=self.moduleDir, env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
+        returnCode = Popen(['git', 'clone', url, dirName],
+                           cwd=self.moduleDir,
+                           env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
+
         if returnCode != 0:
             if verbose:
                 self._logError('Failed to install {}'.format(moduleName))
@@ -563,14 +585,14 @@ class ViewModel():
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
-        self.commandList = [] # type: List
-        self.entryList = [] # type: List
-        self.filteredEntryList = [] # type: List
-        self.filteredCommandList = [] # type: List
+        self.commandList = []  # type: List
+        self.entryList = []  # type: List
+        self.filteredEntryList = []  # type: List
+        self.filteredCommandList = []  # type: List
         self.resultListModelList = QStringListModel()
         self.resultListModelMaxIndex = -1
         self.resultListModelCommandMode = False
-        self.selection = [] # type: List[Dict[SelectionType, str]]
+        self.selection = []  # type: List[Dict[SelectionType, str]]
         self.lastSearch = ""
 
     def _getLongestCommonString(self, entries: List[str], start="") -> Optional[str]:
@@ -614,7 +636,7 @@ class ViewModel():
             # We fully match a string
             return ''.join(commonChars)
 
-    def bindContext(self, queue: Queue, context: QQmlContext, window: 'Window', searchInputModel: QObject, resultListModel: QObject):
+    def bindContext(self, queue: Queue, context: QQmlContext, window: 'Window', searchInputModel: QObject, resultListModel: QObject) -> None:  # noqa: E646
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
@@ -678,7 +700,9 @@ class ViewModel():
         searchStrings = searchString.split(" ")
 
         # If longer and no new entries, only filter existing list
-        if len(searchString) > len(self.lastSearch) and not (self.resultListModelCommandMode and len(searchStrings) == 2 and searchStrings[1] == ""):
+        if len(searchString) > len(self.lastSearch) and not (self.resultListModelCommandMode and
+                                                             len(searchStrings) == 2 and searchStrings[1] == ""):
+
             filterEntryList = self.filteredEntryList
             filterCommandList = self.filteredCommandList
         else:
@@ -701,7 +725,6 @@ class ViewModel():
             for entry in filterEntryList:
                 if all(searchString in str(entry).lower() for searchString in searchStrings[1:]):
                     self.filteredEntryList.append(entry)
-
 
             combinedList = self.filteredCommandList + self.filteredEntryList
         else:
@@ -755,22 +778,25 @@ class ViewModel():
         start = currentInput
 
         possibles = currentInput.split(" ", 1)
-        command = self._getLongestCommonString([command.split(" ", 1)[0] for command in self.commandList], start=possibles[0])
+        command = self._getLongestCommonString([command.split(" ", 1)[0] for command in self.commandList],
+                                               start=possibles[0])
         # If we didn't complete the command, see if we can complete the text
         if command is None or len(command) == len(possibles[0]):
             if command is None:
-                command = "" # We string concat this later
+                command = ""  # We string concat this later
             else:
                 command += " "
 
             start = possibles[1] if len(possibles) > 1 else ""
-            entry = self._getLongestCommonString([listEntry for listEntry in self.filteredEntryList if listEntry not in self.commandList], start=start)
+            entry = self._getLongestCommonString([listEntry for listEntry in self.filteredEntryList
+                                                  if listEntry not in self.commandList],
+                                                 start=start)
 
             if entry is None or len(entry) <= len(start):
                 self.queue.put([Action.addError, "No tab completion possible"])
                 return
         else:
-            entry = " " # Add an extra space to simplify typing for the user
+            entry = " "  # Add an extra space to simplify typing for the user
 
         QQmlProperty.write(self.searchInputModel, "text", command + entry)
         self.search()
@@ -786,14 +812,14 @@ class Window(QMainWindow):
         # Save settings
         self.settings = settings
 
-        self.tabBindings = [] # type: List[Dict]
+        self.tabBindings = []  # type: List[Dict]
 
         self.engine = QQmlApplicationEngine(self)
 
         self.context = self.engine.rootContext()
 
         # Load the main UI
-        self.engine.load(QUrl.fromLocalFile(os.path.dirname(os.path.realpath(__file__)) + "/main.qml"))
+        self.engine.load(QUrl.fromLocalFile(AppFile.getPath('main.qml')))
 
         self.window = self.engine.rootObjects()[0]
 
@@ -860,7 +886,12 @@ class Window(QMainWindow):
         resultListModel.entryClicked.connect(element['vm'].select)
 
         # Bind it to the viewmodel
-        element['vm'].bindContext(element['queue'], element['moduleContext'], self, self.searchInputModel, resultListModel)
+        element['vm'].bindContext(element['queue'],
+                                  element['moduleContext'],
+                                  self,
+                                  self.searchInputModel,
+                                  resultListModel)
+
         element['vm'].bindModule(element['module'])
 
         # Done initializing
@@ -910,7 +941,7 @@ class Window(QMainWindow):
             self.moduleManager.reloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menuListModules(self) -> None:
-        moduleList = [] # type: List[str]
+        moduleList = []  # type: List[str]
         for module in self.moduleManager.listModules():
             moduleList += '{} ({})'.format(module[0], module[1])
         QMessageBox.information(self, "Pext", '\n'.join(['Installed modules:'] + moduleList))
@@ -952,7 +983,9 @@ class Window(QMainWindow):
         moduleList = [module[0] for module in self.moduleManager.listModules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to update", moduleList, 0, False)
         if ok:
-            threading.Thread(target=self.moduleManager.updateModule, args=(moduleName,), kwargs={'verbose': True}).start()
+            threading.Thread(target=self.moduleManager.updateModule,
+                             args=(moduleName,),
+                             kwargs={'verbose': True}).start()
 
     def _menuUpdateAllModules(self) -> None:
         threading.Thread(target=self.moduleManager.updateAllModules, kwargs={'verbose': True}).start()
@@ -1013,7 +1046,6 @@ class Window(QMainWindow):
             self.tabs.currentIndexChanged.emit()
         elif len(self.tabBindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
-
 
     def close(self) -> None:
         """Close the window and exit if requested.
@@ -1078,8 +1110,10 @@ def _initPersist() -> str:
     # Return the filename to delete it later
     return pidfile
 
+
 def _loadSettings(argv: List[str]) -> Dict:
     """Load the settings from the command line and set defaults."""
+
     # Default options
     settings = {'clipboard': 'clipboard',
                 'closeWhenDone': False,
@@ -1097,7 +1131,17 @@ def _loadSettings(argv: List[str]) -> Dict:
             moduleOpts.append(arg[2:] + "=")
 
     try:
-        opts, args = getopt.getopt(argv, "hc:m:", ["help", "version", "clipboard=", "close-when-done", "module=", "install-module=", "uninstall-module=", "update-module=", "update-modules", "list-modules"] + moduleOpts)
+        opts, args = getopt.getopt(argv, "hc:m:", ["help",
+                                                   "version",
+                                                   "clipboard=",
+                                                   "close-when-done",
+                                                   "module=",
+                                                   "install-module=",
+                                                   "uninstall-module=",
+                                                   "update-module=",
+                                                   "update-modules",
+                                                   "list-modules"] + moduleOpts)
+
     except getopt.GetoptError as err:
         print("{}\n".format(err))
         usage()
@@ -1115,7 +1159,7 @@ def _loadSettings(argv: List[str]) -> Dict:
         elif opt in ("-b", "--binary"):
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
-            if not arg in ["primary", "secondary", "clipboard"]:
+            if arg not in ["primary", "secondary", "clipboard"]:
                 print("Invalid clipboard requested")
                 sys.exit(3)
 
@@ -1124,9 +1168,9 @@ def _loadSettings(argv: List[str]) -> Dict:
             if not arg.startswith('pext_module_'):
                 arg = 'pext_module_' + arg
 
-            settings['modules'].append({'name': arg, 'settings': {}}) # type: ignore
+            settings['modules'].append({'name': arg, 'settings': {}})  # type: ignore
         elif opt.startswith("--module-"):
-            settings['modules'][-1]['settings'][opt[9:]] = arg # type: ignore
+            settings['modules'][-1]['settings'][opt[9:]] = arg  # type: ignore
         elif opt == "--install-module":
             ModuleManager().installModule(arg, verbose=True)
         elif opt == "--uninstall-module":
@@ -1141,6 +1185,7 @@ def _loadSettings(argv: List[str]) -> Dict:
 
     return settings
 
+
 def _shutDown(pidfile: str, window: Window, closeWhenDone: bool) -> None:
     """Clean up."""
     for module in window.tabBindings:
@@ -1148,6 +1193,7 @@ def _shutDown(pidfile: str, window: Window, closeWhenDone: bool) -> None:
 
     if not closeWhenDone:
         os.unlink(pidfile)
+
 
 def usage() -> None:
     """Print usage information."""
@@ -1185,6 +1231,7 @@ def usage() -> None:
 --update-modules   : update all installed modules.
 
 --version          : show the current version and exit.''')
+
 
 def main() -> None:
     # Ensure our necessary directories exist
