@@ -17,6 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""Pext.
+
+This is the main Pext file. It will initialize, run and manage the whole of
+Pext.
+"""
+
 import atexit
 import getopt
 import os
@@ -56,22 +62,18 @@ from pext_helpers import Action, SelectionType  # noqa: E402
 class VersionRetriever():
     """Retrieve general information."""
 
-    def __init__(self):
-        self.version = None
-
-    def getVersion(self) -> str:
-        """Retrieve the version information and cache it."""
-        if not self.version:
-            with open(AppFile.getPath('VERSION')) as version_file:
-                self.version = version_file.read().strip()
-
-        return self.version
+    @staticmethod
+    def getVersion() -> str:
+        """Return the version information and cache it."""
+        with open(AppFile.getPath('VERSION')) as version_file:
+            return version_file.read().strip()
 
 
 class RunConseq():
     """A simple helper to run several functions consecutively."""
 
     def __init__(self, functions: List) -> None:
+        """Run the given function consecutively."""
         for function in functions:
             if len(function['args']) > 0:
                 function['name'](function['args'], **function['kwargs'])
@@ -188,14 +190,14 @@ class Logger():
 
 
 class MainLoop():
-    """Main application loop
+    """Main application loop.
 
     The main application loop connects the application, queue and UI events and
     ensures these events get managed without locking up the UI.
     """
 
     def __init__(self, app: QApplication, window: 'Window', settings: Dict, logger: Logger) -> None:
-        """Initialize the main loop"""
+        """Initialize the main loop."""
         self.app = app
         self.window = window
         self.settings = settings
@@ -320,6 +322,7 @@ class ModuleManager():
     """Install, remove, update and list modules."""
 
     def __init__(self) -> None:
+        """Initialize the module manager."""
         self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
         self.logger = None  # type: Optional[Logger]
 
@@ -350,6 +353,11 @@ class ModuleManager():
             print(message)
 
     def bindLogger(self, logger: Logger) -> str:
+        """Connect a logger to the module manager.
+
+        If a logger is connected, the module manager will log all
+        messages directly to the logger.
+        """
         self.logger = logger
 
     def loadModule(self, window: 'Window', module: Dict) -> bool:
@@ -566,12 +574,18 @@ class ModuleThreadInitializer(threading.Thread):
     """Initialize a thread for the module."""
 
     def __init__(self, moduleName: str, q: Queue, target=None, args=()) -> None:
+        """Initialize the module thread initializer."""
         self.moduleName = moduleName
         self.queue = q
         threading.Thread.__init__(self, target=target, args=args)
 
-    """Start the module's thread."""
     def run(self) -> None:
+        """Start the module's thread.
+
+        The thread will run forever, until an exception is thrown. If an
+        exception is thrown, an Action.criticalError is appended to the
+        queue.
+        """
         try:
             threading.Thread.run(self)
         except Exception as e:
@@ -1005,7 +1019,7 @@ class Window(QMainWindow):
             "along with this program.  If not, see " + \
             "<a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
 
-        QMessageBox.information(self, "About", aboutText.format(VersionRetriever().getVersion()))
+        QMessageBox.information(self, "About", aboutText.format(VersionRetriever.getVersion()))
 
     def _menuQuit(self) -> None:
         sys.exit(0)
@@ -1032,6 +1046,7 @@ class Window(QMainWindow):
         QQmlProperty.write(self.introScreen, "modulesInstalledCount", len(self.moduleManager.listModules()))
 
     def bindLogger(self, logger: 'Logger') -> None:
+        """Bind the logger to the window and further initialize the module."""
         self.moduleManager.bindLogger(logger)
 
         # Now that the logger is bound, we can show messages in the window, so
@@ -1113,7 +1128,6 @@ def _initPersist() -> str:
 
 def _loadSettings(argv: List[str]) -> Dict:
     """Load the settings from the command line and set defaults."""
-
     # Default options
     settings = {'clipboard': 'clipboard',
                 'closeWhenDone': False,
@@ -1152,7 +1166,7 @@ def _loadSettings(argv: List[str]) -> Dict:
             usage()
             sys.exit(0)
         elif opt == "--version":
-            print("Pext {}".format(VersionRetriever().getVersion))
+            print("Pext {}".format(VersionRetriever.getVersion()))
             sys.exit(0)
         elif opt == "--close-when-done":
             settings['closeWhenDone'] = True
@@ -1234,6 +1248,7 @@ def usage() -> None:
 
 
 def main() -> None:
+    """Start the application."""
     # Ensure our necessary directories exist
     try:
         os.mkdir(os.path.expanduser('~/.config/pext'))

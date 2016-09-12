@@ -17,11 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""Pext Helpers.
+
+This file contains various functionality that is relevant to both Pext
+and modules and helps keep the API consistent.
+"""
+
 from enum import Enum
 
 
 class Action(Enum):
-    """The list of actions a module can request.e
+    """The list of actions a module can request.
 
     A module can request any of these actions of the core by putting it in the
     queue. All of these actions need to be accompanied by a list of arguments.

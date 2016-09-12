@@ -15,6 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""Pext Module Base.
+
+This file contains the definition of the Pext module base, which all
+Pext modules must implement. This is basically the API of Pext.
+"""
+
 from abc import ABC, abstractmethod  # type: ignore
 from queue import Queue
 from typing import Dict, List, Union
