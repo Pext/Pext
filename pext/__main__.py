@@ -766,7 +766,7 @@ class ViewModel():
 
         currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
 
-        if self.resultListModelCommandMode:
+        if self.resultListModelCommandMode or len(self.filteredEntryList) == 0:
             commandTyped = QQmlProperty.read(self.searchInputModel, "text")
 
             self.selection.append({'type': SelectionType.command, 'value': commandTyped})
