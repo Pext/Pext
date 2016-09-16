@@ -1194,6 +1194,7 @@ def _loadSettings(argv: List[str]) -> Dict:
     try:
         opts, args = getopt.getopt(argv, "hc:m:p:", ["help",
                                                      "version",
+                                                     "exit",
                                                      "clipboard=",
                                                      "module=",
                                                      "install-module=",
@@ -1214,10 +1215,10 @@ def _loadSettings(argv: List[str]) -> Dict:
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
+        elif opt == "--exit":
             sys.exit(0)
         elif opt == "--version":
             print("Pext {}".format(VersionRetriever.getVersion()))
-            sys.exit(0)
         elif opt in ("-b", "--binary"):
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
@@ -1283,7 +1284,7 @@ def usage() -> None:
                      documentation for more information. Defaults to
                      "clipboard".
 
---help             : show this screen and exit.
+--help             : show this screen.
 
 --install-module   : download and install a module from the given git URL.
 
@@ -1314,7 +1315,10 @@ def usage() -> None:
 
 --list-profiles    : list all profiles.
 
---version          : show the current version and exit.''')
+--version          : show the current version.
+
+--exit             : exit upon reaching this argument, useful to retrieve
+                     information without starting the Pext GUI.''')
 
 
 def main() -> None:
