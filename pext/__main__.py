@@ -1003,7 +1003,7 @@ class Window(QMainWindow):
     def _menuListModules(self) -> None:
         moduleList = []  # type: List[str]
         for module in self.moduleManager.listModules():
-            moduleList += '{} ({})'.format(module[0], module[1])
+            moduleList.append('{} ({})'.format(module[0], module[1]))
         QMessageBox.information(self, "Pext", '\n'.join(['Installed modules:'] + moduleList))
 
     def _menuInstallModule(self) -> None:
