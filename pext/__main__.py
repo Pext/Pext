@@ -318,6 +318,7 @@ class MainLoop():
                 else:
                     time.sleep(0.1)
 
+
 class ProfileManager():
     """Create, remove, list, load and save to a profile."""
 
@@ -326,15 +327,19 @@ class ProfileManager():
         self.profileDir = os.path.expanduser('~/.config/pext/profiles/')
 
     def createProfile(self, profile: str) -> None:
+        """Create a new empty profile."""
         os.mkdir('{}/{}'.format(self.profileDir, profile))
 
     def removeProfile(self, profile: str) -> None:
+        """Remove a profile and all associated data."""
         rmtree('{}/{}'.format(self.profileDir, profile))
 
     def listProfiles(self) -> List:
+        """List the existing profiles."""
         return os.listdir(os.path.expanduser('~/.config/pext/profiles/'))
 
     def saveModules(self, profile: str, modules: List[Dict]) -> None:
+        """Save the list of open modules and their settings to the profile."""
         config = configparser.ConfigParser()
         for number, module in enumerate(modules):
             name = ModuleManager.addPrefix(module['moduleName'])
@@ -344,6 +349,7 @@ class ProfileManager():
             config.write(configfile)
 
     def retrieveModules(self, profile: str) -> List[Dict]:
+        """Retrieve the list of modules and their settings from the profile."""
         config = configparser.ConfigParser()
         modules = []
 
@@ -358,6 +364,7 @@ class ProfileManager():
             modules.append({'name': module.split('_', 1)[1], 'settings': settings})
 
         return modules
+
 
 class ModuleManager():
     """Install, remove, update and list modules."""
@@ -1259,8 +1266,6 @@ def _loadSettings(argv: List[str]) -> Dict:
         elif opt == "--list-profiles":
             for profile in ProfileManager().listProfiles():
                 print(profile)
-
-    currentProfiles = ProfileManager().listProfiles()
 
     return settings
 

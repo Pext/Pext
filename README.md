@@ -56,7 +56,7 @@ For command line options, use `--help`.
 - F5: Reload tab, including code changes to the module
 
 ## Session management
-- Ctrl+Q: Quit and save the currently loaded module and settings to the profile
+- Ctrl+Q: Quit and save the currently loaded modules and settings to the profile
 - Ctrl+Shift+Q: Quit without saving to the profile
 
 ## Dependencies
