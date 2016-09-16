@@ -268,6 +268,13 @@ ApplicationWindow {
                 MenuItem {
                     objectName: "menuQuit"
                     text: "Quit"
+                    shortcut: "Ctrl+Q"
+                }
+
+                MenuItem {
+                    objectName: "menuQuitWithoutSaving"
+                    text: "Quit without saving"
+                    shortcut: "Ctrl+Shift+Q"
                 }
             }
         }

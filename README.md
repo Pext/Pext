@@ -55,6 +55,10 @@ For command line options, use `--help`.
 - Alt+`<number>`: Switch to tab `<number>`
 - F5: Reload tab, including code changes to the module
 
+## Session management
+- Ctrl+Q: Quit and save the currently loaded module and settings to the profile
+- Ctrl+Shift+Q: Quit without saving to the profile
+
 ## Dependencies
 ### Debian (Stretch and later, no Jessie, sorry!)
 

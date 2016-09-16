@@ -24,6 +24,7 @@ Pext.
 """
 
 import atexit
+import configparser
 import getopt
 import os
 import signal
@@ -317,6 +318,46 @@ class MainLoop():
                 else:
                     time.sleep(0.1)
 
+class ProfileManager():
+    """Create, remove, list, load and save to a profile."""
+
+    def __init__(self) -> None:
+        """Initialize the profile manager."""
+        self.profileDir = os.path.expanduser('~/.config/pext/profiles/')
+
+    def createProfile(self, profile: str) -> None:
+        os.mkdir('{}/{}'.format(self.profileDir, profile))
+
+    def removeProfile(self, profile: str) -> None:
+        rmtree('{}/{}'.format(self.profileDir, profile))
+
+    def listProfiles(self) -> List:
+        return os.listdir(os.path.expanduser('~/.config/pext/profiles/'))
+
+    def saveModules(self, profile: str, modules: List[Dict]) -> None:
+        config = configparser.ConfigParser()
+        for number, module in enumerate(modules):
+            name = ModuleManager.addPrefix(module['moduleName'])
+            config['{}_{}'.format(number, name)] = module['settings']
+
+        with open('{}/{}/modules'.format(self.profileDir, profile), 'w') as configfile:
+            config.write(configfile)
+
+    def retrieveModules(self, profile: str) -> List[Dict]:
+        config = configparser.ConfigParser()
+        modules = []
+
+        config.read('{}/{}/modules'.format(self.profileDir, profile))
+
+        for module in config.sections():
+            settings = {}
+
+            for key in config[module]:
+                settings[key] = config[module][key]
+
+            modules.append({'name': module.split('_', 1)[1], 'settings': settings})
+
+        return modules
 
 class ModuleManager():
     """Install, remove, update and list modules."""
@@ -326,14 +367,16 @@ class ModuleManager():
         self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
         self.logger = None  # type: Optional[Logger]
 
-    def _addPrefix(self, moduleName: str) -> str:
+    @staticmethod
+    def addPrefix(moduleName: str) -> str:
         """Ensure the string starts with pext_module_."""
         if not moduleName.startswith('pext_module_'):
             return 'pext_module_{}'.format(moduleName)
 
         return moduleName
 
-    def _removePrefix(self, moduleName: str) -> str:
+    @staticmethod
+    def removePrefix(moduleName: str) -> str:
         """Remove pext_module_ from the start of the string."""
         if moduleName.startswith('pext_module_'):
             return moduleName[len('pext_module_'):]
@@ -368,8 +411,8 @@ class ModuleManager():
             sys.path.append(modulePath)
 
         # Remove pext_module_ from the module name
-        moduleDir = self._addPrefix(module['name']).replace('.', '_')
-        moduleName = self._removePrefix(module['name'])
+        moduleDir = ModuleManager.addPrefix(module['name']).replace('.', '_')
+        moduleName = ModuleManager.removePrefix(module['name'])
 
         # Prepare viewModel and context
         vm = ViewModel()
@@ -449,7 +492,7 @@ class ModuleManager():
         modules = []
 
         for directory in os.listdir(self.moduleDir):
-            name = self._removePrefix(directory)
+            name = ModuleManager.removePrefix(directory)
             try:
                 source = check_output(['git', 'config', '--get', 'remote.origin.url'],
                                       cwd=os.path.join(self.moduleDir, directory),
@@ -501,8 +544,8 @@ class ModuleManager():
         """Install a module."""
         moduleName = url.split("/")[-1]
 
-        dirName = self._addPrefix(moduleName).replace('.', '_')
-        moduleName = self._removePrefix(moduleName)
+        dirName = ModuleManager.addPrefix(moduleName).replace('.', '_')
+        moduleName = ModuleManager.removePrefix(moduleName)
 
         if verbose:
             self._log('Installing {} from {}'.format(moduleName, url))
@@ -524,8 +567,8 @@ class ModuleManager():
 
     def uninstallModule(self, moduleName: str, verbose=False) -> bool:
         """Uninstall a module."""
-        dirName = self._addPrefix(moduleName)
-        moduleName = self._removePrefix(moduleName)
+        dirName = ModuleManager.addPrefix(moduleName)
+        moduleName = ModuleManager.removePrefix(moduleName)
 
         if verbose:
             self._log('Removing {}'.format(moduleName))
@@ -545,8 +588,8 @@ class ModuleManager():
 
     def updateModule(self, moduleName: str, verbose=False) -> bool:
         """Update a module."""
-        dirName = self._addPrefix(moduleName)
-        moduleName = self._removePrefix(moduleName)
+        dirName = ModuleManager.addPrefix(moduleName)
+        moduleName = ModuleManager.removePrefix(moduleName)
 
         if verbose:
             self._log('Updating {}'.format(moduleName))
@@ -866,6 +909,8 @@ class Window(QMainWindow):
         menuUpdateAllModulesShortcut = self.window.findChild(QObject, "menuUpdateAllModules")
         menuAboutShortcut = self.window.findChild(QObject, "menuAbout")
         menuQuitShortcut = self.window.findChild(QObject, "menuQuit")
+        menuQuitWithoutSavingShortcut = self.window.findChild(QObject, "menuQuitWithoutSaving")
+
         menuListModulesShortcut.triggered.connect(self._menuListModules)
         menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
@@ -873,6 +918,7 @@ class Window(QMainWindow):
         menuUpdateAllModulesShortcut.triggered.connect(self._menuUpdateAllModules)
         menuAboutShortcut.triggered.connect(self._menuAbout)
         menuQuitShortcut.triggered.connect(self._menuQuit)
+        menuQuitWithoutSavingShortcut.triggered.connect(self._menuQuitWithoutSaving)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -1024,6 +1070,10 @@ class Window(QMainWindow):
     def _menuQuit(self) -> None:
         sys.exit(0)
 
+    def _menuQuitWithoutSaving(self) -> None:
+        self.settings['saveSettings'] = False
+        self._menuQuit()
+
     def _search(self) -> None:
         try:
             self._getCurrentElement()['vm'].search()
@@ -1051,8 +1101,12 @@ class Window(QMainWindow):
 
         # Now that the logger is bound, we can show messages in the window, so
         # start binding the modules
-        for module in self.settings['modules']:
-            self.moduleManager.loadModule(self, module)
+        if len(self.settings['modules']) > 0:
+            for module in self.settings['modules']:
+                self.moduleManager.loadModule(self, module)
+        else:
+            for module in ProfileManager().retrieveModules(self.settings['profile']):
+                self.moduleManager.loadModule(self, module)
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the
@@ -1063,24 +1117,16 @@ class Window(QMainWindow):
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def close(self) -> None:
-        """Close the window and exit if requested.
+        """Close the window."""
+        self.window.hide()
+        QQmlProperty.write(self.searchInputModel, "text", "")
+        for tab in self.tabBindings:
+            if not tab['init']:
+                continue
 
-        Normally, this only closes the window. However, if the user wants Pext
-        to complete exit when done (using the --close-when-done flag), we also
-        exit the application.
-        """
-        if self.settings['closeWhenDone']:
-            sys.exit(0)
-        else:
-            self.window.hide()
-            QQmlProperty.write(self.searchInputModel, "text", "")
-            for tab in self.tabBindings:
-                if not tab['init']:
-                    continue
-
-                tab['vm'].selection = []
-                tab['vm'].module.selectionMade(tab['vm'].selection)
-                tab['vm'].search()
+            tab['vm'].selection = []
+            tab['vm'].module.selectionMade(tab['vm'].selection)
+            tab['vm'].search()
 
     def show(self) -> None:
         """Show the window."""
@@ -1100,14 +1146,14 @@ class SignalHandler():
         self.window.show()
 
 
-def _initPersist() -> str:
+def _initPersist(profile: str) -> str:
     """Open Pext if an instance is already running.
 
     Checks if Pext is already running and if so, send it SIGUSR1 to bring it
     to the foreground. If Pext is not already running, saves a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = "/tmp/pext.pid"
+    pidfile = '/tmp/pext_{}.pid'.format(profile)
 
     if os.path.isfile(pidfile):
         # Notify the main process
@@ -1130,8 +1176,9 @@ def _loadSettings(argv: List[str]) -> Dict:
     """Load the settings from the command line and set defaults."""
     # Default options
     settings = {'clipboard': 'clipboard',
-                'closeWhenDone': False,
-                'modules': []}
+                'modules': [],
+                'profile': 'default',
+                'saveSettings': True}
 
     # getopt requires all possible options to be listed, but we do not know
     # more about module-specific options in advance than that they start with
@@ -1145,16 +1192,19 @@ def _loadSettings(argv: List[str]) -> Dict:
             moduleOpts.append(arg[2:] + "=")
 
     try:
-        opts, args = getopt.getopt(argv, "hc:m:", ["help",
-                                                   "version",
-                                                   "clipboard=",
-                                                   "close-when-done",
-                                                   "module=",
-                                                   "install-module=",
-                                                   "uninstall-module=",
-                                                   "update-module=",
-                                                   "update-modules",
-                                                   "list-modules"] + moduleOpts)
+        opts, args = getopt.getopt(argv, "hc:m:p:", ["help",
+                                                     "version",
+                                                     "clipboard=",
+                                                     "module=",
+                                                     "install-module=",
+                                                     "uninstall-module=",
+                                                     "update-module=",
+                                                     "update-modules",
+                                                     "list-modules",
+                                                     "profile=",
+                                                     "create-profile=",
+                                                     "remove-profile=",
+                                                     "list-profiles"] + moduleOpts)
 
     except getopt.GetoptError as err:
         print("{}\n".format(err))
@@ -1168,8 +1218,6 @@ def _loadSettings(argv: List[str]) -> Dict:
         elif opt == "--version":
             print("Pext {}".format(VersionRetriever.getVersion()))
             sys.exit(0)
-        elif opt == "--close-when-done":
-            settings['closeWhenDone'] = True
         elif opt in ("-b", "--binary"):
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
@@ -1196,17 +1244,34 @@ def _loadSettings(argv: List[str]) -> Dict:
         elif opt == "--list-modules":
             for module in ModuleManager().listModules():
                 print('{} ({})'.format(module[0], module[1]))
+        elif opt == "--profile":
+            settings['profile'] = arg
+            # Create directory for profile if not existant
+            try:
+                ProfileManager().createProfile(arg)
+            except OSError:
+                pass
+        elif opt == "--create-profile":
+            ProfileManager().createProfile(arg)
+        elif opt == "--remove-profile":
+            ProfileManager().removeProfile(arg)
+        elif opt == "--list-profiles":
+            for profile in ProfileManager().listProfiles():
+                print(profile)
+
+    currentProfiles = ProfileManager().listProfiles()
 
     return settings
 
 
-def _shutDown(pidfile: str, window: Window, closeWhenDone: bool) -> None:
+def _shutDown(pidfile: str, profile: str, window: Window) -> None:
     """Clean up."""
     for module in window.tabBindings:
         module['module'].stop()
 
-    if not closeWhenDone:
-        os.unlink(pidfile)
+    os.unlink(pidfile)
+    if window.settings['saveSettings']:
+        ProfileManager().saveModules(profile, window.tabBindings)
 
 
 def usage() -> None:
@@ -1218,12 +1283,6 @@ def usage() -> None:
                      documentation for more information. Defaults to
                      "clipboard".
 
---close-when-done  : close after completing an action such as copying
-                     a password or closing the application (through
-                     escape or (on most systems) Alt+F4) instead of
-                     staying in memory. This also allows multiple
-                     instances to be ran at once.
-
 --help             : show this screen and exit.
 
 --install-module   : download and install a module from the given git URL.
@@ -1231,7 +1290,8 @@ def usage() -> None:
 --list-modules     : list all installed modules.
 
 --module           : name the module to use. This option may be given multiple
-                     times to use multiple modules.
+                     times to use multiple modules. When this option is given,
+                     the profile module list will be overwritten.
 
 --module-*         : set a module setting for the most recently given module.
                      For example, to set a module-specific setting called
@@ -1244,29 +1304,36 @@ def usage() -> None:
 
 --update-modules   : update all installed modules.
 
+--profile          : use a specific profile, creating it if it doesn't exist
+                     yet. Defaults to "default", use "none" to not save the
+                     application state between runs.
+
+--create-profile   : create a new blank profile for later use.
+
+--remove-profile   : remove a profile.
+
+--list-profiles    : list all profiles.
+
 --version          : show the current version and exit.''')
 
 
 def main() -> None:
     """Start the application."""
     # Ensure our necessary directories exist
-    try:
-        os.mkdir(os.path.expanduser('~/.config/pext'))
-        os.mkdir(os.path.expanduser('~/.config/pext/modules'))
-    except OSError:
-        # Probably already exists, that's okay
-        pass
+    for directory in ['', 'modules', 'profiles', 'profiles/default']:
+        try:
+            os.mkdir(os.path.expanduser('~/.config/pext/{}'.format(directory)))
+        except OSError:
+            # Probably already exists, that's okay
+            pass
 
     settings = _loadSettings(sys.argv[1:])
 
     # Get an app instance
-    app = QApplication(["Pext"])
+    app = QApplication(['Pext ({})'.format(settings['profile'])])
 
     # Set up persistence
-    if settings['closeWhenDone']:
-        pidfile = None
-    else:
-        pidfile = _initPersist()
+    pidfile = _initPersist(settings['profile'])
 
     # Get a window
     window = Window(settings)
@@ -1278,7 +1345,7 @@ def main() -> None:
     window.bindLogger(logger)
 
     # Clean up on exit
-    atexit.register(_shutDown, pidfile, window, settings['closeWhenDone'])
+    atexit.register(_shutDown, pidfile, settings['profile'], window)
 
     # Handle SIGUSR1 UNIX signal
     signalHandler = SignalHandler(window)
