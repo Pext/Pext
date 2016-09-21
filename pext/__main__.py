@@ -906,19 +906,17 @@ class Window(QMainWindow):
         self.searchInputModel = self.window.findChild(QObject, "searchInputModel")
         escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
-        openTabShortcut = self.window.findChild(QObject, "openTabShortcut")
-        closeTabShortcut = self.window.findChild(QObject, "closeTabShortcut")
         reloadModuleShortcut = self.window.findChild(QObject, "reloadModuleShortcut")
 
         self.searchInputModel.textChanged.connect(self._search)
         self.searchInputModel.accepted.connect(self._select)
         escapeShortcut.activated.connect(self._goUp)
         tabShortcut.activated.connect(self._tabComplete)
-        openTabShortcut.activated.connect(self._openTab)
-        closeTabShortcut.activated.connect(self._closeTab)
         reloadModuleShortcut.activated.connect(self._reloadModule)
 
         # Bind menu entries
+        menuLoadModuleShortcut = self.window.findChild(QObject, "menuLoadModule")
+        menuCloseActiveModuleShortcut = self.window.findChild(QObject, "menuCloseActiveModule")
         menuListModulesShortcut = self.window.findChild(QObject, "menuListModules")
         menuInstallModuleShortcut = self.window.findChild(QObject, "menuInstallModule")
         menuUninstallModuleShortcut = self.window.findChild(QObject, "menuUninstallModule")
@@ -928,6 +926,8 @@ class Window(QMainWindow):
         menuQuitShortcut = self.window.findChild(QObject, "menuQuit")
         menuQuitWithoutSavingShortcut = self.window.findChild(QObject, "menuQuitWithoutSaving")
 
+        menuLoadModuleShortcut.triggered.connect(self._openTab)
+        menuCloseActiveModuleShortcut.triggered.connect(self._closeTab)
         menuListModulesShortcut.triggered.connect(self._menuListModules)
         menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)

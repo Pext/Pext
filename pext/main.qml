@@ -140,16 +140,6 @@ ApplicationWindow {
     }
 
     Shortcut {
-        objectName: "openTabShortcut"
-        sequence: "Ctrl+T"
-    }
-
-    Shortcut {
-        objectName: "closeTabShortcut"
-        sequence: "Ctrl+W"
-    }
-
-    Shortcut {
         sequence: "Alt+1"
         onActivated: switchTab(0)
     }
@@ -218,6 +208,18 @@ ApplicationWindow {
 
         Menu {
             title: "&Module"
+
+            MenuItem {
+                objectName: "menuLoadModule"
+                text: "Load module"
+                shortcut: "Ctrl+T"
+            }
+
+            MenuItem {
+                objectName: "menuCloseActiveModule"
+                text: "Close active module"
+                shortcut: "Ctrl+W"
+            }
 
             MenuItem {
                 objectName: "menuListModules"
