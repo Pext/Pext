@@ -91,6 +91,13 @@ class Action(Enum):
 
         list -- the new list of entries
 
+    setHeader:
+        Set or replace the text currently in the header bar.
+
+        If header is not given, the header will be removed.
+
+        header -- the new header text
+
     setFilter:
         Replace the text currently in the search bar.
 
@@ -167,17 +174,18 @@ class Action(Enum):
     prependCommand = 8
     removeCommand = 9
     replaceCommandList = 10
-    setFilter = 11
-    askQuestionDefaultYes = 12
-    askQuestionDefaultNo = 13
-    askInput = 14
-    askInputPassword = 15
-    askInputMultiLine = 16
-    copyToClipboard = 17
-    setSelection = 18
-    notifyMessage = 19
-    notifyError = 20
-    close = 21
+    setHeader = 11
+    setFilter = 12
+    askQuestionDefaultYes = 13
+    askQuestionDefaultNo = 14
+    askInput = 15
+    askInputPassword = 16
+    askInputMultiLine = 17
+    copyToClipboard = 18
+    setSelection = 19
+    notifyMessage = 20
+    notifyError = 21
+    close = 22
 
 
 class SelectionType(Enum):

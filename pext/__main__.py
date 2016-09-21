@@ -231,6 +231,11 @@ class MainLoop():
             tab['vm'].commandList.remove(action[1])
         elif action[0] == Action.replaceCommandList:
             tab['vm'].commandList = action[1]
+        elif action[0] == Action.setHeader:
+            if len(action) > 1:
+                tab['vm'].setHeader(action[1])
+            else:
+                tab['vm'].setHeader("")
         elif action[0] == Action.setFilter:
             QQmlProperty.write(tab['vm'].searchInputModel, "text", action[1])
         elif action[0] == Action.askQuestionDefaultYes:
@@ -700,12 +705,13 @@ class ViewModel():
             # We fully match a string
             return ''.join(commonChars)
 
-    def bindContext(self, queue: Queue, context: QQmlContext, window: 'Window', searchInputModel: QObject, resultListModel: QObject) -> None:  # noqa: E646
+    def bindContext(self, queue: Queue, context: QQmlContext, window: 'Window', searchInputModel: QObject, headerText: QObject, resultListModel: QObject) -> None:  # noqa: E646
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
         self.window = window
         self.searchInputModel = searchInputModel
+        self.headerText = headerText
         self.resultListModel = resultListModel
 
     def bindModule(self, module: ModuleBase) -> None:
@@ -831,6 +837,10 @@ class ViewModel():
         self.module.selectionMade(self.selection)
         QQmlProperty.write(self.searchInputModel, "text", "")
 
+    def setHeader(self, content) -> None:
+        """Set the header text."""
+        QQmlProperty.write(self.headerText, "text", str(content))
+
     def tabComplete(self) -> None:
         """Tab-complete based on the current seach input.
 
@@ -946,6 +956,9 @@ class Window(QMainWindow):
             element['vm'].search(newEntries=True)
             return
 
+        # Get the header
+        headerText = self.tabs.getTab(currentTab).findChild(QObject, "headerText")
+
         # Get the list
         resultListModel = self.tabs.getTab(currentTab).findChild(QObject, "resultListModel")
 
@@ -957,6 +970,7 @@ class Window(QMainWindow):
                                   element['moduleContext'],
                                   self,
                                   self.searchInputModel,
+                                  headerText,
                                   resultListModel)
 
         element['vm'].bindModule(element['module'])

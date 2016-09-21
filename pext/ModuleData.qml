@@ -26,7 +26,21 @@ ScrollView {
     Layout.fillHeight: true
     Layout.fillWidth: true
 
+    Item {
+        width: parent.width
+        height: headerText.text ? 23 : 0
+        Text {
+            id: headerText
+            objectName: "headerText"
+
+            textFormat: Text.PlainText
+            font.pixelSize: 18
+        }
+    }
+
     ListView {
+        anchors.topMargin: headerText.text ? 23 : 0
+        clip: true
         id: resultList
         objectName: "resultListModel"
 
