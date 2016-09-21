@@ -199,84 +199,79 @@ ApplicationWindow {
         onActivated: switchTab(9)
     }
 
+    menuBar: MenuBar {
+        Menu {
+            title: "&Pext"
+
+            MenuItem {
+                objectName: "menuQuit"
+                text: "Quit"
+                shortcut: "Ctrl+Q"
+            }
+
+            MenuItem {
+                objectName: "menuQuitWithoutSaving"
+                text: "Quit without saving"
+                shortcut: "Ctrl+Shift+Q"
+            }
+        }
+
+        Menu {
+            title: "&Module"
+
+            MenuItem {
+                objectName: "menuListModules"
+                text: "List installed modules"
+            }
+
+            MenuItem {
+                objectName: "menuInstallModule"
+                text: "Install module"
+            }
+
+            MenuItem {
+                objectName: "menuUninstallModule"
+                text: "Uninstall module"
+            }
+
+            MenuItem {
+                objectName: "menuUpdateModule"
+                text: "Update module"
+            }
+
+            MenuItem {
+                objectName: "menuUpdateAllModules"
+                text: "Update all modules"
+            }
+        }
+
+        Menu {
+            title: "&Help"
+
+            MenuItem {
+                objectName: "menuAbout"
+                text: "About"
+            }
+        }
+    }
+
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: margin
-        RowLayout {
-            TextField {
-                enabled: tabs.count > 0
-                placeholderText: tabs.count > 0 ? "Type to search" : ""
-                id: searchInput
-                objectName: "searchInputModel"
+        TextField {
+            enabled: tabs.count > 0
+            placeholderText: tabs.count > 0 ? "Type to search" : ""
+            id: searchInput
+            objectName: "searchInputModel"
 
-                font.pixelSize: 24
-                focus: true
+            font.pixelSize: 24
+            focus: true
 
-                onFocusChanged: {
-                    focus = true
-                }
-
-                Layout.fillWidth: true
+            onFocusChanged: {
+                focus = true
             }
 
-            Button {
-                Layout.preferredWidth: searchInput.height
-                Layout.preferredHeight: searchInput.height
-
-                iconName: "preferences-system"
-                iconSource: "images/Gnome-preferences-system.svg" // Fallback
-                onClicked: settingsMenu.popup()
-            }
-
-            Menu {
-                id: settingsMenu
-
-                MenuItem {
-                    objectName: "menuListModules"
-                    text: "List installed modules"
-                }
-
-                MenuItem {
-                    objectName: "menuInstallModule"
-                    text: "Install module"
-                }
-
-                MenuItem {
-                    objectName: "menuUninstallModule"
-                    text: "Uninstall module"
-                }
-
-                MenuItem {
-                    objectName: "menuUpdateModule"
-                    text: "Update module"
-                }
-
-                MenuItem {
-                    objectName: "menuUpdateAllModules"
-                    text: "Update all modules"
-                }
-
-                MenuSeparator { }
-
-                MenuItem {
-                    objectName: "menuAbout"
-                    text: "About"
-                }
-
-                MenuSeparator { }
-
-                MenuItem {
-                    objectName: "menuQuit"
-                    text: "Quit"
-                    shortcut: "Ctrl+Q"
-                }
-
-                MenuItem {
-                    objectName: "menuQuitWithoutSaving"
-                    text: "Quit without saving"
-                    shortcut: "Ctrl+Shift+Q"
-                }
-            }
+            Layout.fillWidth: true
         }
 
         TabView {
