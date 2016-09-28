@@ -33,7 +33,7 @@ import threading
 import time
 from importlib import reload  # type: ignore
 from shutil import rmtree
-from subprocess import check_call, check_output, CalledProcessError, Popen, PIPE
+from subprocess import check_call, check_output, CalledProcessError, Popen
 from typing import Dict, List, Optional, Tuple
 from queue import Queue, Empty
 
