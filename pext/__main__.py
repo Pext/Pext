@@ -41,7 +41,7 @@ from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMessageBox, QTextEdit, QVBoxLayout)
-from PyQt5.Qt import QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
+from PyQt5.Qt import QClipboard, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
 
 class AppFile():
@@ -260,8 +260,12 @@ class MainLoop():
             tab['vm'].module.processResponse(answer if ok else None)
         elif action[0] == Action.copyToClipboard:
             """Copy the given data to the user-chosen clipboard."""
-            proc = Popen(["xclip", "-selection", self.settings["clipboard"]], stdin=PIPE)
-            proc.communicate(action[1].encode('utf-8'))
+            if self.settings['clipboard'] == 'selection':
+                mode = QClipboard.Selection
+            else:
+                mode = QClipboard.Clipboard
+
+            self.app.clipboard().setText(str(action[1]), mode)
         elif action[0] == Action.setSelection:
             tab['vm'].selection = action[1]
             tab['vm'].module.selectionMade(tab['vm'].selection)
@@ -1243,9 +1247,9 @@ def _loadSettings(argv: List[str]) -> Dict:
         elif opt in ("-b", "--binary"):
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
-            if arg not in ["primary", "secondary", "clipboard"]:
+            if arg not in ["clipboard", "selection"]:
                 print("Invalid clipboard requested")
-                sys.exit(3)
+                sys.exit(2)
 
             settings['clipboard'] = arg
         elif opt in ("-m", "--module"):
@@ -1299,9 +1303,8 @@ def usage() -> None:
     print('''Options:
 
 --clipboard        : choose the clipboard to copy entries to. Acceptable values
-                     are "primary", "secondary" or "clipboard". See the xclip
-                     documentation for more information. Defaults to
-                     "clipboard".
+                     are "clipboard" for the global system clipboard and
+                     "selection" for the global mouse selection.
 
 --help             : show this screen.
 
@@ -1354,6 +1357,11 @@ def main() -> None:
 
     # Get an app instance
     app = QApplication(['Pext ({})'.format(settings['profile'])])
+
+    # Check if clipboard is supported
+    if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
+        print("Requested clipboard type is not supported")
+        sys.exit(3)
 
     # Set up persistence
     pidfile = _initPersist(settings['profile'])
