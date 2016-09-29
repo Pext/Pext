@@ -85,11 +85,6 @@ ApplicationWindow {
     }
 
     Shortcut {
-        objectName: "reloadModuleShortcut"
-        sequence: "F5"
-    }
-
-    Shortcut {
         sequence: "Up"
         onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
     }
@@ -210,15 +205,23 @@ ApplicationWindow {
             title: "&Module"
 
             MenuItem {
-                objectName: "menuLoadModule"
-                text: "Load module"
-                shortcut: "Ctrl+T"
+                objectName: "menuReloadActiveModule"
+                text: "Reload active module"
+                shortcut: "F5"
             }
 
             MenuItem {
                 objectName: "menuCloseActiveModule"
                 text: "Close active module"
                 shortcut: "Ctrl+W"
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                objectName: "menuLoadModule"
+                text: "Load module"
+                shortcut: "Ctrl+T"
             }
 
             MenuItem {

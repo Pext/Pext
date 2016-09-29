@@ -910,15 +910,14 @@ class Window(QMainWindow):
         self.searchInputModel = self.window.findChild(QObject, "searchInputModel")
         escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
         tabShortcut = self.window.findChild(QObject, "tabShortcut")
-        reloadModuleShortcut = self.window.findChild(QObject, "reloadModuleShortcut")
 
         self.searchInputModel.textChanged.connect(self._search)
         self.searchInputModel.accepted.connect(self._select)
         escapeShortcut.activated.connect(self._goUp)
         tabShortcut.activated.connect(self._tabComplete)
-        reloadModuleShortcut.activated.connect(self._reloadModule)
 
         # Bind menu entries
+        menuReloadActiveModuleShortcut = self.window.findChild(QObject, "menuReloadActiveModule")
         menuLoadModuleShortcut = self.window.findChild(QObject, "menuLoadModule")
         menuCloseActiveModuleShortcut = self.window.findChild(QObject, "menuCloseActiveModule")
         menuListModulesShortcut = self.window.findChild(QObject, "menuListModules")
@@ -930,6 +929,7 @@ class Window(QMainWindow):
         menuQuitShortcut = self.window.findChild(QObject, "menuQuit")
         menuQuitWithoutSavingShortcut = self.window.findChild(QObject, "menuQuitWithoutSaving")
 
+        menuReloadActiveModuleShortcut.triggered.connect(self._reloadActiveModule)
         menuLoadModuleShortcut.triggered.connect(self._openTab)
         menuCloseActiveModuleShortcut.triggered.connect(self._closeTab)
         menuListModulesShortcut.triggered.connect(self._menuListModules)
@@ -1021,7 +1021,7 @@ class Window(QMainWindow):
         if len(self.tabBindings) > 0:
             self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
-    def _reloadModule(self) -> None:
+    def _reloadActiveModule(self) -> None:
         if len(self.tabBindings) > 0:
             self.moduleManager.reloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
