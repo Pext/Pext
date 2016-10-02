@@ -28,7 +28,7 @@ setup(
         'pext',
         'pext/helpers'
     ],
-    package_data={'pext': ['main.qml', 'ModuleData.qml', 'images/*']},
+    package_data={'pext': ['images/*', 'qml/*']},
     include_package_data=True,
     zip_safe=False,
     entry_points={

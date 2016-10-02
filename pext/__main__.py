@@ -466,7 +466,7 @@ class ModuleManager():
 
         # Add tab
         tabData = QQmlComponent(window.engine)
-        tabData.loadUrl(QUrl.fromLocalFile(AppFile.getPath('ModuleData.qml')))
+        tabData.loadUrl(QUrl.fromLocalFile(AppFile.getPath('qml/ModuleData.qml')))
         window.engine.setContextForObject(tabData, moduleContext)
         window.tabs.addTab(moduleName, tabData)
 
@@ -895,9 +895,10 @@ class Window(QMainWindow):
         self.engine = QQmlApplicationEngine(self)
 
         self.context = self.engine.rootContext()
+        self.context.setContextProperty("applicationVersion", VersionRetriever.getVersion())
 
         # Load the main UI
-        self.engine.load(QUrl.fromLocalFile(AppFile.getPath('main.qml')))
+        self.engine.load(QUrl.fromLocalFile(AppFile.getPath('qml/main.qml')))
 
         self.window = self.engine.rootObjects()[0]
 
@@ -925,7 +926,6 @@ class Window(QMainWindow):
         menuUninstallModuleShortcut = self.window.findChild(QObject, "menuUninstallModule")
         menuUpdateModuleShortcut = self.window.findChild(QObject, "menuUpdateModule")
         menuUpdateAllModulesShortcut = self.window.findChild(QObject, "menuUpdateAllModules")
-        menuAboutShortcut = self.window.findChild(QObject, "menuAbout")
         menuQuitShortcut = self.window.findChild(QObject, "menuQuit")
         menuQuitWithoutSavingShortcut = self.window.findChild(QObject, "menuQuitWithoutSaving")
 
@@ -937,7 +937,6 @@ class Window(QMainWindow):
         menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
         menuUpdateModuleShortcut.triggered.connect(self._menuUpdateModule)
         menuUpdateAllModulesShortcut.triggered.connect(self._menuUpdateAllModules)
-        menuAboutShortcut.triggered.connect(self._menuAbout)
         menuQuitShortcut.triggered.connect(self._menuQuit)
         menuQuitWithoutSavingShortcut.triggered.connect(self._menuQuitWithoutSaving)
 
@@ -1074,23 +1073,6 @@ class Window(QMainWindow):
 
     def _menuUpdateAllModules(self) -> None:
         threading.Thread(target=self.moduleManager.updateAllModules, kwargs={'verbose': True}).start()
-
-    def _menuAbout(self) -> None:
-        aboutText = "Pext {}<br/><br/>" + \
-            "Copyright &copy; 2016 Sylvia van Os<br/><br/>" + \
-            "This program is free software: you can redistribute it and/or modify " + \
-            "it under the terms of the GNU General Public License as published by " + \
-            "the Free Software Foundation, either version 3 of the License, or " + \
-            "(at your option) any later version.<br/><br/>" + \
-            "This program is distributed in the hope that it will be useful, " + \
-            "but WITHOUT ANY WARRANTY; without even the implied warranty of " + \
-            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the " + \
-            "GNU General Public License for more details.<br/><br/>" + \
-            "You should have received a copy of the GNU General Public License " + \
-            "along with this program.  If not, see " + \
-            "<a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
-
-        QMessageBox.information(self, "About", aboutText.format(VersionRetriever.getVersion()))
 
     def _menuQuit(self) -> None:
         sys.exit(0)

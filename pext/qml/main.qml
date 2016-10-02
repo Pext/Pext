@@ -25,6 +25,7 @@ import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
+    property string version: applicationVersion
     property int margin: 10
     width: Screen.width
     height: 0.3 * Screen.height
@@ -256,6 +257,10 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuAbout"
                 text: "About"
+                onTriggered: {
+                    var aboutDialog = Qt.createComponent("AboutDialog.qml");
+                    aboutDialog.createObject(applicationWindow);
+                }
             }
         }
     }
@@ -294,7 +299,7 @@ ApplicationWindow {
 
             Image {
                 asynchronous: true
-                source: "images/logo.svg"
+                source: "../images/logo.svg"
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
