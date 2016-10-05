@@ -871,7 +871,7 @@ class ViewModel():
                                                     start=start)
 
             if entry is None or len(entry) <= len(start):
-                self.queue.put([Action.add_error, "No tab completion possible"])
+                self.queue.put([Action.addError, "No tab completion possible"])
                 return
         else:
             entry = " "  # Add an extra space to simplify typing for the user
