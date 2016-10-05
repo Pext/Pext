@@ -48,13 +48,13 @@ class AppFile():
     """Get access to application-specific files."""
 
     @staticmethod
-    def getPath(name: str) -> str:
+    def get_path(name: str) -> str:
         """Return the absolute path by file or directory name."""
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), name)
 
 
 # Ensure pext_base and pext_helpers can always be loaded by us and the modules
-sys.path.append(AppFile.getPath('helpers'))
+sys.path.append(AppFile.get_path('helpers'))
 
 from pext_base import ModuleBase  # noqa: E402
 from pext_helpers import Action, SelectionType  # noqa: E402
@@ -66,7 +66,7 @@ class VersionRetriever():
     @staticmethod
     def getVersion() -> str:
         """Return the version information and cache it."""
-        with open(AppFile.getPath('VERSION')) as version_file:
+        with open(AppFile.get_path('VERSION')) as version_file:
             return version_file.read().strip()
 
 
@@ -123,12 +123,12 @@ class Logger():
         self.statusText = self.window.window.findChild(QObject, "statusText")
         self.statusQueue = self.window.window.findChild(QObject, "statusQueue")
 
-    def _queueMessage(self, moduleName: str, message: str, typeName: str) -> None:
+    def _queue_message(self, moduleName: str, message: str, typeName: str) -> None:
         """Queue a message for display."""
-        for formattedMessage in self._formatMessage(moduleName, message):
+        for formattedMessage in self._format_message(moduleName, message):
             self.queuedMessages.append({'message': formattedMessage, 'type': typeName})
 
-    def _formatMessage(self, moduleName: str, message: str) -> List[str]:
+    def _format_message(self, moduleName: str, message: str) -> List[str]:
         """Format message for display, including splitting multiline messages."""
         messageLines = []
         for line in message.splitlines():
@@ -142,7 +142,7 @@ class Logger():
 
         return messageLines
 
-    def showNextMessage(self) -> None:
+    def show_next_message(self) -> None:
         """Show next statusbar message.
 
         If the status bar has not been updated for 1 second, display the next
@@ -174,15 +174,15 @@ class Logger():
 
             self.lastUpdate = currentTime
 
-    def addError(self, moduleName: str, message: str) -> None:
+    def add_error(self, moduleName: str, message: str) -> None:
         """Add an error message to the queue."""
-        self._queueMessage(moduleName, message, 'error')
+        self._queue_message(moduleName, message, 'error')
 
-    def addMessage(self, moduleName: str, message: str) -> None:
+    def add_message(self, moduleName: str, message: str) -> None:
         """Add a regular message to the queue."""
-        self._queueMessage(moduleName, message, 'message')
+        self._queue_message(moduleName, message, 'message')
 
-    def setQueueCount(self, count: List[int]) -> None:
+    def set_queue_count(self, count: List[int]) -> None:
         """Show the queue size on screen."""
         if (count[0] == 0 and count[1] == 0):
             QQmlProperty.write(self.statusQueue, "text", "Ready")
@@ -204,17 +204,17 @@ class MainLoop():
         self.settings = settings
         self.logger = logger
 
-    def _processTabAction(self, tab: Dict, activeTab: int) -> None:
+    def _process_tab_action(self, tab: Dict, activeTab: int) -> None:
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.criticalError:
-            self.logger.addError(tab['moduleName'], action[1])
+            self.logger.add_error(tab['moduleName'], action[1])
             tabId = self.window.tabBindings.index(tab)
-            self.window.moduleManager.unloadModule(self.window, tabId)
+            self.window.moduleManager.unload_module(self.window, tabId)
         elif action[0] == Action.addMessage:
-            self.logger.addMessage(tab['moduleName'], action[1])
+            self.logger.add_message(tab['moduleName'], action[1])
         elif action[0] == Action.addError:
-            self.logger.addError(tab['moduleName'], action[1])
+            self.logger.add_error(tab['moduleName'], action[1])
         elif action[0] == Action.addEntry:
             tab['vm'].entryList = tab['vm'].entryList + [action[1]]
         elif action[0] == Action.prependEntry:
@@ -233,9 +233,9 @@ class MainLoop():
             tab['vm'].commandList = action[1]
         elif action[0] == Action.setHeader:
             if len(action) > 1:
-                tab['vm'].setHeader(action[1])
+                tab['vm'].set_header(action[1])
             else:
-                tab['vm'].setHeader("")
+                tab['vm'].set_header("")
         elif action[0] == Action.setFilter:
             QQmlProperty.write(tab['vm'].searchInputModel, "text", action[1])
         elif action[0] == Action.askQuestionDefaultYes:
@@ -270,9 +270,9 @@ class MainLoop():
             tab['vm'].selection = action[1]
             tab['vm'].module.selectionMade(tab['vm'].selection)
         elif action[0] == Action.notifyMessage:
-            self.logger.addMessage(tab['moduleName'], action[1])
+            self.logger.add_message(tab['moduleName'], action[1])
         elif action[0] == Action.notifyError:
-            self.logger.addError(tab['moduleName'], action[1])
+            self.logger.add_error(tab['moduleName'], action[1])
         elif action[0] == Action.close:
             self.window.close()
         else:
@@ -290,7 +290,7 @@ class MainLoop():
         while True:
             self.app.sendPostedEvents()
             self.app.processEvents()
-            self.logger.showNextMessage()
+            self.logger.show_next_message()
 
             currentTab = QQmlProperty.read(self.window.tabs, "currentIndex")
             queueSize = [0, 0]
@@ -308,7 +308,7 @@ class MainLoop():
                     activeTab = False
 
                 try:
-                    self._processTabAction(tab, activeTab)
+                    self._process_tab_action(tab, activeTab)
                     tab['entriesProcessed'] += 1
                     allEmpty = False
                 except Empty:  # type: ignore
@@ -319,7 +319,7 @@ class MainLoop():
                 except Exception as e:
                     print('WARN: Module caused exception {}'.format(e))
 
-            self.logger.setQueueCount(queueSize)
+            self.logger.set_queue_count(queueSize)
 
             if allEmpty:
                 if self.window.window.isVisible():
@@ -335,29 +335,29 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profileDir = os.path.expanduser('~/.config/pext/profiles/')
 
-    def createProfile(self, profile: str) -> None:
+    def create_profile(self, profile: str) -> None:
         """Create a new empty profile."""
         os.mkdir('{}/{}'.format(self.profileDir, profile))
 
-    def removeProfile(self, profile: str) -> None:
+    def remove_profile(self, profile: str) -> None:
         """Remove a profile and all associated data."""
         rmtree('{}/{}'.format(self.profileDir, profile))
 
-    def listProfiles(self) -> List:
+    def list_profiles(self) -> List:
         """List the existing profiles."""
         return os.listdir(os.path.expanduser('~/.config/pext/profiles/'))
 
-    def saveModules(self, profile: str, modules: List[Dict]) -> None:
+    def save_modules(self, profile: str, modules: List[Dict]) -> None:
         """Save the list of open modules and their settings to the profile."""
         config = configparser.ConfigParser()
         for number, module in enumerate(modules):
-            name = ModuleManager.addPrefix(module['moduleName'])
+            name = ModuleManager.add_prefix(module['moduleName'])
             config['{}_{}'.format(number, name)] = module['settings']
 
         with open('{}/{}/modules'.format(self.profileDir, profile), 'w') as configfile:
             config.write(configfile)
 
-    def retrieveModules(self, profile: str) -> List[Dict]:
+    def retrieve_modules(self, profile: str) -> List[Dict]:
         """Retrieve the list of modules and their settings from the profile."""
         config = configparser.ConfigParser()
         modules = []
@@ -384,7 +384,7 @@ class ModuleManager():
         self.logger = None  # type: Optional[Logger]
 
     @staticmethod
-    def addPrefix(moduleName: str) -> str:
+    def add_prefix(moduleName: str) -> str:
         """Ensure the string starts with pext_module_."""
         if not moduleName.startswith('pext_module_'):
             return 'pext_module_{}'.format(moduleName)
@@ -392,7 +392,7 @@ class ModuleManager():
         return moduleName
 
     @staticmethod
-    def removePrefix(moduleName: str) -> str:
+    def remove_prefix(moduleName: str) -> str:
         """Remove pext_module_ from the start of the string."""
         if moduleName.startswith('pext_module_'):
             return moduleName[len('pext_module_'):]
@@ -401,17 +401,17 @@ class ModuleManager():
 
     def _log(self, message: str) -> None:
         if self.logger:
-            self.logger.addMessage("", message)
+            self.logger.add_message("", message)
         else:
             print(message)
 
-    def _logError(self, message: str) -> None:
+    def _log_error(self, message: str) -> None:
         if self.logger:
-            self.logger.addError("", message)
+            self.logger.add_error("", message)
         else:
             print(message)
 
-    def bindLogger(self, logger: Logger) -> str:
+    def bind_logger(self, logger: Logger) -> str:
         """Connect a logger to the module manager.
 
         If a logger is connected, the module manager will log all
@@ -419,7 +419,7 @@ class ModuleManager():
         """
         self.logger = logger
 
-    def loadModule(self, window: 'Window', module: Dict) -> bool:
+    def load_module(self, window: 'Window', module: Dict) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
         modulePath = os.path.expanduser('~/.config/pext/modules')
@@ -427,8 +427,8 @@ class ModuleManager():
             sys.path.append(modulePath)
 
         # Remove pext_module_ from the module name
-        moduleDir = ModuleManager.addPrefix(module['name']).replace('.', '_')
-        moduleName = ModuleManager.removePrefix(module['name'])
+        moduleDir = ModuleManager.add_prefix(module['name']).replace('.', '_')
+        moduleName = ModuleManager.remove_prefix(module['name'])
 
         # Prepare viewModel and context
         vm = ViewModel()
@@ -441,7 +441,7 @@ class ModuleManager():
         try:
             moduleImport = __import__(moduleDir, fromlist=['Module'])
         except ImportError as e1:
-            self._logError("Failed to load module {} from {}: {}".format(moduleName, moduleDir, e1))
+            self._log_error("Failed to load module {} from {}: {}".format(moduleName, moduleDir, e1))
             return False
 
         Module = getattr(moduleImport, 'Module')
@@ -457,7 +457,7 @@ class ModuleManager():
         try:
             moduleCode = Module()
         except TypeError as e2:
-            self._logError("Failed to load module {} from {}: {}".format(moduleName, moduleDir, e2))
+            self._log_error("Failed to load module {} from {}: {}".format(moduleName, moduleDir, e2))
             return False
 
         # Start the module in the background
@@ -466,7 +466,7 @@ class ModuleManager():
 
         # Add tab
         tabData = QQmlComponent(window.engine)
-        tabData.loadUrl(QUrl.fromLocalFile(AppFile.getPath('qml/ModuleData.qml')))
+        tabData.loadUrl(QUrl.fromLocalFile(AppFile.get_path('qml/ModuleData.qml')))
         window.engine.setContextForObject(tabData, moduleContext)
         window.tabs.addTab(moduleName, tabData)
 
@@ -489,7 +489,7 @@ class ModuleManager():
 
         return True
 
-    def unloadModule(self, window: 'Window', tabId: int) -> None:
+    def unload_module(self, window: 'Window', tabId: int) -> None:
         """Unload a module by tab ID."""
         window.tabBindings[tabId]['module'].stop()
 
@@ -503,12 +503,12 @@ class ModuleManager():
         del window.tabBindings[tabId]
         window.tabs.removeTab(tabId)
 
-    def listModules(self) -> List[List[str]]:
+    def list_modules(self) -> List[List[str]]:
         """Return a list of modules together with their source."""
         modules = []
 
         for directory in os.listdir(self.moduleDir):
-            name = ModuleManager.removePrefix(directory)
+            name = ModuleManager.remove_prefix(directory)
             try:
                 source = check_output(['git', 'config', '--get', 'remote.origin.url'],
                                       cwd=os.path.join(self.moduleDir, directory),
@@ -521,7 +521,7 @@ class ModuleManager():
 
         return modules
 
-    def reloadModule(self, window: 'Window', tabId: int) -> bool:
+    def reload_module(self, window: 'Window', tabId: int) -> bool:
         """Reload a module by tab ID."""
         # Get currently active tab
         currentIndex = QQmlProperty.read(window.tabs, "currentIndex")
@@ -531,13 +531,13 @@ class ModuleManager():
         module = {'name': moduleData['moduleName'], 'settings': moduleData['settings']}
 
         # Unload the module
-        self.unloadModule(window, tabId)
+        self.unload_module(window, tabId)
 
         # Force a reload to make code changes happen
         reload(moduleData['moduleImport'])
 
         # Load it into the UI
-        if not self.loadModule(window, module):
+        if not self.load_module(window, module):
             return False
 
         # Get new position
@@ -556,12 +556,12 @@ class ModuleManager():
 
         return True
 
-    def installModule(self, url: str, verbose=False, interactive=True) -> bool:
+    def install_module(self, url: str, verbose=False, interactive=True) -> bool:
         """Install a module."""
         moduleName = url.split("/")[-1]
 
-        dirName = ModuleManager.addPrefix(moduleName).replace('.', '_')
-        moduleName = ModuleManager.removePrefix(moduleName)
+        dirName = ModuleManager.add_prefix(moduleName).replace('.', '_')
+        moduleName = ModuleManager.remove_prefix(moduleName)
 
         if verbose:
             self._log('Installing {} from {}'.format(moduleName, url))
@@ -572,7 +572,7 @@ class ModuleManager():
 
         if returnCode != 0:
             if verbose:
-                self._logError('Failed to install {}'.format(moduleName))
+                self._log_error('Failed to install {}'.format(moduleName))
 
             return False
 
@@ -581,10 +581,10 @@ class ModuleManager():
 
         return True
 
-    def uninstallModule(self, moduleName: str, verbose=False) -> bool:
+    def uninstall_module(self, moduleName: str, verbose=False) -> bool:
         """Uninstall a module."""
-        dirName = ModuleManager.addPrefix(moduleName)
-        moduleName = ModuleManager.removePrefix(moduleName)
+        dirName = ModuleManager.add_prefix(moduleName)
+        moduleName = ModuleManager.remove_prefix(moduleName)
 
         if verbose:
             self._log('Removing {}'.format(moduleName))
@@ -593,7 +593,7 @@ class ModuleManager():
             rmtree(os.path.join(self.moduleDir, dirName))
         except FileNotFoundError:
             if verbose:
-                self._logError('Cannot remove {}, it is not installed'.format(moduleName))
+                self._log_error('Cannot remove {}, it is not installed'.format(moduleName))
 
             return False
 
@@ -602,10 +602,10 @@ class ModuleManager():
 
         return True
 
-    def updateModule(self, moduleName: str, verbose=False) -> bool:
+    def update_module(self, moduleName: str, verbose=False) -> bool:
         """Update a module."""
-        dirName = ModuleManager.addPrefix(moduleName)
-        moduleName = ModuleManager.removePrefix(moduleName)
+        dirName = ModuleManager.add_prefix(moduleName)
+        moduleName = ModuleManager.remove_prefix(moduleName)
 
         if verbose:
             self._log('Updating {}'.format(moduleName))
@@ -614,7 +614,7 @@ class ModuleManager():
             check_call(['git', 'pull'], cwd=os.path.join(self.moduleDir, dirName))
         except Exception as e:
             if verbose:
-                self._logError('Failed to update {}: {}'.format(moduleName, e))
+                self._log_error('Failed to update {}: {}'.format(moduleName, e))
 
             return False
 
@@ -623,10 +623,10 @@ class ModuleManager():
 
         return True
 
-    def updateAllModules(self, verbose=False) -> None:
+    def update_all_modules(self, verbose=False) -> None:
         """Update all modules."""
-        for module in self.listModules():
-            self.updateModule(module[0], verbose=verbose)
+        for module in self.list_modules():
+            self.update_module(module[0], verbose=verbose)
 
 
 class ModuleThreadInitializer(threading.Thread):
@@ -668,7 +668,7 @@ class ViewModel():
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.lastSearch = ""
 
-    def _getLongestCommonString(self, entries: List[str], start="") -> Optional[str]:
+    def _get_longest_common_string(self, entries: List[str], start="") -> Optional[str]:
         """Return the longest common string.
 
         Returns the longest common string for each entry in the list, starting
@@ -709,7 +709,7 @@ class ViewModel():
             # We fully match a string
             return ''.join(commonChars)
 
-    def bindContext(self, queue: Queue, context: QQmlContext, window: 'Window', searchInputModel: QObject, headerText: QObject, resultListModel: QObject) -> None:  # noqa: E646
+    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', searchInputModel: QObject, headerText: QObject, resultListModel: QObject) -> None:  # noqa: E646
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
@@ -718,14 +718,14 @@ class ViewModel():
         self.headerText = headerText
         self.resultListModel = resultListModel
 
-    def bindModule(self, module: ModuleBase) -> None:
+    def bind_module(self, module: ModuleBase) -> None:
         """Bind the module.
 
         This ensures we can call functions in it.
         """
         self.module = module
 
-    def goUp(self) -> None:
+    def go_up(self) -> None:
         """Go one level up.
 
         This means that, if we're currently in the entry content list, we go
@@ -841,11 +841,11 @@ class ViewModel():
         self.module.selectionMade(self.selection)
         QQmlProperty.write(self.searchInputModel, "text", "")
 
-    def setHeader(self, content) -> None:
+    def set_header(self, content) -> None:
         """Set the header text."""
         QQmlProperty.write(self.headerText, "text", str(content))
 
-    def tabComplete(self) -> None:
+    def tab_complete(self) -> None:
         """Tab-complete based on the current seach input.
 
         This tab-completes the command, entry or combination currently in the
@@ -856,8 +856,8 @@ class ViewModel():
         start = currentInput
 
         possibles = currentInput.split(" ", 1)
-        command = self._getLongestCommonString([command.split(" ", 1)[0] for command in self.commandList],
-                                               start=possibles[0])
+        command = self._get_longest_common_string([command.split(" ", 1)[0] for command in self.commandList],
+                                                  start=possibles[0])
         # If we didn't complete the command, see if we can complete the text
         if command is None or len(command) == len(possibles[0]):
             if command is None:
@@ -866,12 +866,12 @@ class ViewModel():
                 command += " "
 
             start = possibles[1] if len(possibles) > 1 else ""
-            entry = self._getLongestCommonString([listEntry for listEntry in self.filteredEntryList
-                                                  if listEntry not in self.commandList],
-                                                 start=start)
+            entry = self._get_longest_common_string([listEntry for listEntry in self.filteredEntryList
+                                                     if listEntry not in self.commandList],
+                                                    start=start)
 
             if entry is None or len(entry) <= len(start):
-                self.queue.put([Action.addError, "No tab completion possible"])
+                self.queue.put([Action.add_error, "No tab completion possible"])
                 return
         else:
             entry = " "  # Add an extra space to simplify typing for the user
@@ -898,14 +898,14 @@ class Window(QMainWindow):
         self.context.setContextProperty("applicationVersion", VersionRetriever.getVersion())
 
         # Load the main UI
-        self.engine.load(QUrl.fromLocalFile(AppFile.getPath('qml/main.qml')))
+        self.engine.load(QUrl.fromLocalFile(AppFile.get_path('qml/main.qml')))
 
         self.window = self.engine.rootObjects()[0]
 
         # Give intro screen the module count
         self.introScreen = self.window.findChild(QObject, "introScreen")
         self.moduleManager = ModuleManager()
-        self._updateModulesInstalledCount()
+        self._update_modules_installed_count()
 
         # Bind global shortcuts
         self.searchInputModel = self.window.findChild(QObject, "searchInputModel")
@@ -914,8 +914,8 @@ class Window(QMainWindow):
 
         self.searchInputModel.textChanged.connect(self._search)
         self.searchInputModel.accepted.connect(self._select)
-        escapeShortcut.activated.connect(self._goUp)
-        tabShortcut.activated.connect(self._tabComplete)
+        escapeShortcut.activated.connect(self._go_up)
+        tabShortcut.activated.connect(self._tab_complete)
 
         # Bind menu entries
         menuReloadActiveModuleShortcut = self.window.findChild(QObject, "menuReloadActiveModule")
@@ -929,27 +929,27 @@ class Window(QMainWindow):
         menuQuitShortcut = self.window.findChild(QObject, "menuQuit")
         menuQuitWithoutSavingShortcut = self.window.findChild(QObject, "menuQuitWithoutSaving")
 
-        menuReloadActiveModuleShortcut.triggered.connect(self._reloadActiveModule)
-        menuLoadModuleShortcut.triggered.connect(self._openTab)
-        menuCloseActiveModuleShortcut.triggered.connect(self._closeTab)
-        menuListModulesShortcut.triggered.connect(self._menuListModules)
-        menuInstallModuleShortcut.triggered.connect(self._menuInstallModule)
-        menuUninstallModuleShortcut.triggered.connect(self._menuUninstallModule)
-        menuUpdateModuleShortcut.triggered.connect(self._menuUpdateModule)
-        menuUpdateAllModulesShortcut.triggered.connect(self._menuUpdateAllModules)
-        menuQuitShortcut.triggered.connect(self._menuQuit)
-        menuQuitWithoutSavingShortcut.triggered.connect(self._menuQuitWithoutSaving)
+        menuReloadActiveModuleShortcut.triggered.connect(self._reload_active_module)
+        menuLoadModuleShortcut.triggered.connect(self._open_tab)
+        menuCloseActiveModuleShortcut.triggered.connect(self._close_tab)
+        menuListModulesShortcut.triggered.connect(self._menu_list_modules)
+        menuInstallModuleShortcut.triggered.connect(self._menu_install_module)
+        menuUninstallModuleShortcut.triggered.connect(self._menu_uninstall_module)
+        menuUpdateModuleShortcut.triggered.connect(self._menu_update_module)
+        menuUpdateAllModulesShortcut.triggered.connect(self._menu_update_all_modules)
+        menuQuitShortcut.triggered.connect(self._menu_quit)
+        menuQuitWithoutSavingShortcut.triggered.connect(self._menu_quit_without_saving)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
 
         # Bind the context when the tab is loaded
-        self.tabs.currentIndexChanged.connect(self._bindContext)
+        self.tabs.currentIndexChanged.connect(self._bind_context)
 
         # Show the window
         self.show()
 
-    def _bindContext(self) -> None:
+    def _bind_context(self) -> None:
         """Bind the context for the module."""
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
         element = self.tabBindings[currentTab]
@@ -969,19 +969,19 @@ class Window(QMainWindow):
         resultListModel.entryClicked.connect(element['vm'].select)
 
         # Bind it to the viewmodel
-        element['vm'].bindContext(element['queue'],
-                                  element['moduleContext'],
-                                  self,
-                                  self.searchInputModel,
-                                  headerText,
-                                  resultListModel)
+        element['vm'].bind_context(element['queue'],
+                                   element['moduleContext'],
+                                   self,
+                                   self.searchInputModel,
+                                   headerText,
+                                   resultListModel)
 
-        element['vm'].bindModule(element['module'])
+        element['vm'].bind_module(element['module'])
 
         # Done initializing
         element['init'] = True
 
-    def _getCurrentElement(self) -> Optional[Dict]:
+    def _get_current_element(self) -> Optional[Dict]:
         currentTab = QQmlProperty.read(self.tabs, "currentIndex")
         try:
             return self.tabBindings[currentTab]
@@ -989,14 +989,14 @@ class Window(QMainWindow):
             # No tabs
             return None
 
-    def _goUp(self) -> None:
+    def _go_up(self) -> None:
         try:
-            self._getCurrentElement()['vm'].goUp()
+            self._get_current_element()['vm'].go_up()
         except TypeError:
             pass
 
-    def _openTab(self) -> None:
-        moduleList = [module[0] for module in self.moduleManager.listModules()]
+    def _open_tab(self) -> None:
+        moduleList = [module[0] for module in self.moduleManager.list_modules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to load", moduleList, 0, False)
         if ok:
             givenSettings, ok = QInputDialog.getText(self, "Pext", "Enter module settings (leave blank for defaults)")
@@ -1011,109 +1011,109 @@ class Window(QMainWindow):
                     moduleSettings[key] = value
 
                 module = {'name': moduleName, 'settings': moduleSettings}
-                self.moduleManager.loadModule(self, module)
+                self.moduleManager.load_module(self, module)
                 # First module? Enforce load
                 if len(self.tabBindings) == 1:
                     self.tabs.currentIndexChanged.emit()
 
-    def _closeTab(self) -> None:
+    def _close_tab(self) -> None:
         if len(self.tabBindings) > 0:
-            self.moduleManager.unloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
+            self.moduleManager.unload_module(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
-    def _reloadActiveModule(self) -> None:
+    def _reload_active_module(self) -> None:
         if len(self.tabBindings) > 0:
-            self.moduleManager.reloadModule(self, QQmlProperty.read(self.tabs, "currentIndex"))
+            self.moduleManager.reload_module(self, QQmlProperty.read(self.tabs, "currentIndex"))
 
-    def _menuListModules(self) -> None:
+    def _menu_list_modules(self) -> None:
         moduleList = []  # type: List[str]
-        for module in self.moduleManager.listModules():
+        for module in self.moduleManager.list_modules():
             moduleList.append('{} ({})'.format(module[0], module[1]))
         QMessageBox.information(self, "Pext", '\n'.join(['Installed modules:'] + moduleList))
 
-    def _menuInstallModule(self) -> None:
+    def _menu_install_module(self) -> None:
         moduleURI, ok = QInputDialog.getText(self, "Pext", "Enter the git URL of the module to install")
         if ok:
             functions = [
                             {
-                                'name': self.moduleManager.installModule,
+                                'name': self.moduleManager.install_module,
                                 'args': (moduleURI),
                                 'kwargs': {'interactive': False, 'verbose': True}
                             }, {
-                                'name': self._updateModulesInstalledCount,
+                                'name': self._update_modules_installed_count,
                                 'args': (),
                                 'kwargs': {}
                             }
                         ]
             threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menuUninstallModule(self) -> None:
-        moduleList = [module[0] for module in self.moduleManager.listModules()]
+    def _menu_uninstall_module(self) -> None:
+        moduleList = [module[0] for module in self.moduleManager.list_modules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
         if ok:
             functions = [
                             {
-                                'name': self.moduleManager.uninstallModule,
+                                'name': self.moduleManager.uninstall_module,
                                 'args': (moduleName),
                                 'kwargs': {'verbose': True}
                             }, {
-                                'name': self._updateModulesInstalledCount,
+                                'name': self._update_modules_installed_count,
                                 'args': (),
                                 'kwargs': {}
                             }
                         ]
             threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menuUpdateModule(self) -> None:
-        moduleList = [module[0] for module in self.moduleManager.listModules()]
+    def _menu_update_module(self) -> None:
+        moduleList = [module[0] for module in self.moduleManager.list_modules()]
         moduleName, ok = QInputDialog.getItem(self, "Pext", "Choose the module to update", moduleList, 0, False)
         if ok:
-            threading.Thread(target=self.moduleManager.updateModule,  # type: ignore
+            threading.Thread(target=self.moduleManager.update_module,  # type: ignore
                              args=(moduleName,),
                              kwargs={'verbose': True}).start()
 
-    def _menuUpdateAllModules(self) -> None:
-        threading.Thread(target=self.moduleManager.updateAllModules, kwargs={'verbose': True}).start()
+    def _menu_update_all_modules(self) -> None:
+        threading.Thread(target=self.moduleManager.update_all_modules, kwargs={'verbose': True}).start()
 
-    def _menuQuit(self) -> None:
+    def _menu_quit(self) -> None:
         sys.exit(0)
 
-    def _menuQuitWithoutSaving(self) -> None:
+    def _menu_quit_without_saving(self) -> None:
         self.settings['saveSettings'] = False
-        self._menuQuit()
+        self._menu_quit()
 
     def _search(self) -> None:
         try:
-            self._getCurrentElement()['vm'].search()
+            self._get_current_element()['vm'].search()
         except TypeError:
             pass
 
     def _select(self) -> None:
         try:
-            self._getCurrentElement()['vm'].select()
+            self._get_current_element()['vm'].select()
         except TypeError:
             pass
 
-    def _tabComplete(self) -> None:
+    def _tab_complete(self) -> None:
         try:
-            self._getCurrentElement()['vm'].tabComplete()
+            self._get_current_element()['vm'].tab_complete()
         except TypeError:
             pass
 
-    def _updateModulesInstalledCount(self) -> None:
-        QQmlProperty.write(self.introScreen, "modulesInstalledCount", len(self.moduleManager.listModules()))
+    def _update_modules_installed_count(self) -> None:
+        QQmlProperty.write(self.introScreen, "modulesInstalledCount", len(self.moduleManager.list_modules()))
 
-    def bindLogger(self, logger: 'Logger') -> None:
+    def bind_logger(self, logger: 'Logger') -> None:
         """Bind the logger to the window and further initialize the module."""
-        self.moduleManager.bindLogger(logger)
+        self.moduleManager.bind_logger(logger)
 
         # Now that the logger is bound, we can show messages in the window, so
         # start binding the modules
         if len(self.settings['modules']) > 0:
             for module in self.settings['modules']:
-                self.moduleManager.loadModule(self, module)
+                self.moduleManager.load_module(self, module)
         else:
-            for module in ProfileManager().retrieveModules(self.settings['profile']):
-                self.moduleManager.loadModule(self, module)
+            for module in ProfileManager().retrieve_modules(self.settings['profile']):
+                self.moduleManager.load_module(self, module)
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the
@@ -1153,7 +1153,7 @@ class SignalHandler():
         self.window.show()
 
 
-def _initPersist(profile: str) -> str:
+def _init_persist(profile: str) -> str:
     """Open Pext if an instance is already running.
 
     Checks if Pext is already running and if so, send it SIGUSR1 to bring it
@@ -1179,7 +1179,7 @@ def _initPersist(profile: str) -> str:
     return pidfile
 
 
-def _loadSettings(argv: List[str]) -> Dict:
+def _load_settings(argv: List[str]) -> Dict:
     """Load the settings from the command line and set defaults."""
     # Default options
     settings = {'clipboard': 'clipboard',
@@ -1242,42 +1242,42 @@ def _loadSettings(argv: List[str]) -> Dict:
         elif opt.startswith("--module-"):
             settings['modules'][-1]['settings'][opt[9:]] = arg  # type: ignore
         elif opt == "--install-module":
-            ModuleManager().installModule(arg, verbose=True)
+            ModuleManager().install_module(arg, verbose=True)
         elif opt == "--uninstall-module":
-            ModuleManager().uninstallModule(arg, verbose=True)
+            ModuleManager().uninstall_module(arg, verbose=True)
         elif opt == "--update-module":
-            ModuleManager().updateModule(arg, verbose=True)
+            ModuleManager().update_module(arg, verbose=True)
         elif opt == "--update-modules":
-            ModuleManager().updateAllModules(verbose=True)
+            ModuleManager().update_all_modules(verbose=True)
         elif opt == "--list-modules":
-            for module in ModuleManager().listModules():
+            for module in ModuleManager().list_modules():
                 print('{} ({})'.format(module[0], module[1]))
         elif opt == "--profile":
             settings['profile'] = arg
             # Create directory for profile if not existant
             try:
-                ProfileManager().createProfile(arg)
+                ProfileManager().create_profile(arg)
             except OSError:
                 pass
         elif opt == "--create-profile":
-            ProfileManager().createProfile(arg)
+            ProfileManager().create_profile(arg)
         elif opt == "--remove-profile":
-            ProfileManager().removeProfile(arg)
+            ProfileManager().remove_profile(arg)
         elif opt == "--list-profiles":
-            for profile in ProfileManager().listProfiles():
+            for profile in ProfileManager().list_profiles():
                 print(profile)
 
     return settings
 
 
-def _shutDown(pidfile: str, profile: str, window: Window) -> None:
+def _shut_down(pidfile: str, profile: str, window: Window) -> None:
     """Clean up."""
     for module in window.tabBindings:
         module['module'].stop()
 
     os.unlink(pidfile)
     if window.settings['saveSettings']:
-        ProfileManager().saveModules(profile, window.tabBindings)
+        ProfileManager().save_modules(profile, window.tabBindings)
 
 
 def usage() -> None:
@@ -1335,7 +1335,7 @@ def main() -> None:
             # Probably already exists, that's okay
             pass
 
-    settings = _loadSettings(sys.argv[1:])
+    settings = _load_settings(sys.argv[1:])
 
     # Get an app instance
     app = QApplication(['Pext ({})'.format(settings['profile'])])
@@ -1346,7 +1346,7 @@ def main() -> None:
         sys.exit(3)
 
     # Set up persistence
-    pidfile = _initPersist(settings['profile'])
+    pidfile = _init_persist(settings['profile'])
 
     # Get a window
     window = Window(settings)
@@ -1355,10 +1355,10 @@ def main() -> None:
     logger = Logger(window)
 
     # Give the window a reference to the logger
-    window.bindLogger(logger)
+    window.bind_logger(logger)
 
     # Clean up on exit
-    atexit.register(_shutDown, pidfile, settings['profile'], window)
+    atexit.register(_shut_down, pidfile, settings['profile'], window)
 
     # Handle SIGUSR1 UNIX signal
     signalHandler = SignalHandler(window)
