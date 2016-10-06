@@ -242,22 +242,22 @@ class MainLoop():
             answer = QMessageBox.question(self.window, "Pext", action[1],
                                           QMessageBox.Yes | QMessageBox.No,
                                           QMessageBox.Yes)
-            tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
+            tab['vm'].module.process_response(True if (answer == QMessageBox.Yes) else False)
         elif action[0] == Action.ask_question_default_no:
             answer = QMessageBox.question(self.window, "Pext", action[1],
                                           QMessageBox.Yes | QMessageBox.No,
                                           QMessageBox.No)
-            tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
+            tab['vm'].module.process_response(True if (answer == QMessageBox.Yes) else False)
         elif action[0] == Action.ask_input:
             answer, ok = QInputDialog.getText(self.window, "Pext", action[1])
-            tab['vm'].module.processResponse(answer if ok else None)
+            tab['vm'].module.process_response(answer if ok else None)
         elif action[0] == Action.ask_input_password:
             answer, ok = QInputDialog.getText(self.window, "Pext", action[1], QLineEdit.Password)
-            tab['vm'].module.processResponse(answer if ok else None)
+            tab['vm'].module.process_response(answer if ok else None)
         elif action[0] == Action.ask_input_multi_line:
             dialog = InputDialog(action[1], action[2] if action[2] else "", self.window)
             answer, ok = dialog.show()
-            tab['vm'].module.processResponse(answer if ok else None)
+            tab['vm'].module.process_response(answer if ok else None)
         elif action[0] == Action.copy_to_clipboard:
             """Copy the given data to the user-chosen clipboard."""
             if self.settings['clipboard'] == 'selection':
@@ -268,7 +268,7 @@ class MainLoop():
             self.app.clipboard().setText(str(action[1]), mode)
         elif action[0] == Action.set_selection:
             tab['vm'].selection = action[1]
-            tab['vm'].module.selectionMade(tab['vm'].selection)
+            tab['vm'].module.selection_made(tab['vm'].selection)
         elif action[0] == Action.notify_message:
             self.logger.add_message(tab['moduleName'], action[1])
         elif action[0] == Action.notify_error:
@@ -739,7 +739,7 @@ class ViewModel():
 
         if len(self.selection) > 0:
             self.selection.pop()
-            self.module.selectionMade(self.selection)
+            self.module.selection_made(self.selection)
         else:
             self.window.close()
 
@@ -830,7 +830,7 @@ class ViewModel():
             commandTyped = QQmlProperty.read(self.searchInputModel, "text")
 
             self.selection.append({'type': SelectionType.command, 'value': commandTyped})
-            self.module.selectionMade(self.selection)
+            self.module.selection_made(self.selection)
 
             QQmlProperty.write(self.searchInputModel, "text", "")
 
@@ -838,7 +838,7 @@ class ViewModel():
 
         entry = self.filteredEntryList[currentIndex]
         self.selection.append({'type': SelectionType.entry, 'value': entry})
-        self.module.selectionMade(self.selection)
+        self.module.selection_made(self.selection)
         QQmlProperty.write(self.searchInputModel, "text", "")
 
     def set_header(self, content) -> None:
@@ -1132,7 +1132,7 @@ class Window(QMainWindow):
                 continue
 
             tab['vm'].selection = []
-            tab['vm'].module.selectionMade(tab['vm'].selection)
+            tab['vm'].module.selection_made(tab['vm'].selection)
             tab['vm'].search()
 
     def show(self) -> None:
