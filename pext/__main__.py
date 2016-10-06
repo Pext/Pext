@@ -64,7 +64,7 @@ class VersionRetriever():
     """Retrieve general information."""
 
     @staticmethod
-    def getVersion() -> str:
+    def get_version() -> str:
         """Return the version information and cache it."""
         with open(AppFile.get_path('VERSION')) as version_file:
             return version_file.read().strip()
@@ -895,7 +895,7 @@ class Window(QMainWindow):
         self.engine = QQmlApplicationEngine(self)
 
         self.context = self.engine.rootContext()
-        self.context.setContextProperty("applicationVersion", VersionRetriever.getVersion())
+        self.context.setContextProperty("applicationVersion", VersionRetriever.get_version())
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(AppFile.get_path('qml/main.qml')))
@@ -1225,7 +1225,7 @@ def _load_settings(argv: List[str]) -> Dict:
         elif opt == "--exit":
             sys.exit(0)
         elif opt == "--version":
-            print("Pext {}".format(VersionRetriever.getVersion()))
+            print("Pext {}".format(VersionRetriever.get_version()))
         elif opt in ("-b", "--binary"):
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
