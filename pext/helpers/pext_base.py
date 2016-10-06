@@ -59,7 +59,7 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def selectionMade(self, selection: List[Dict[SelectionType, str]]) -> None:
+    def selection_made(self, selection: List[Dict[SelectionType, str]]) -> None:
         """Called when the user makes a selection.
 
         The selection variable contains a list of the selection tree and the
@@ -76,7 +76,7 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def processResponse(self, response: Union[bool, str]):
+    def process_response(self, response: Union[bool, str]):
         """Process a response to a requested action.
 
         Called when a response is given as a result of an Action being put into

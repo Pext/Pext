@@ -207,58 +207,58 @@ class MainLoop():
     def _process_tab_action(self, tab: Dict, activeTab: int) -> None:
         action = tab['queue'].get_nowait()
 
-        if action[0] == Action.criticalError:
+        if action[0] == Action.critical_error:
             self.logger.add_error(tab['moduleName'], action[1])
             tabId = self.window.tabBindings.index(tab)
             self.window.moduleManager.unload_module(self.window, tabId)
-        elif action[0] == Action.addMessage:
+        elif action[0] == Action.add_message:
             self.logger.add_message(tab['moduleName'], action[1])
-        elif action[0] == Action.addError:
+        elif action[0] == Action.add_error:
             self.logger.add_error(tab['moduleName'], action[1])
-        elif action[0] == Action.addEntry:
+        elif action[0] == Action.add_entry:
             tab['vm'].entryList = tab['vm'].entryList + [action[1]]
-        elif action[0] == Action.prependEntry:
+        elif action[0] == Action.prepend_entry:
             tab['vm'].entryList = [action[1]] + tab['vm'].entryList
-        elif action[0] == Action.removeEntry:
+        elif action[0] == Action.remove_entry:
             tab['vm'].entryList.remove(action[1])
-        elif action[0] == Action.replaceEntryList:
+        elif action[0] == Action.replace_entry_list:
             tab['vm'].entryList = action[1]
-        elif action[0] == Action.addCommand:
+        elif action[0] == Action.add_command:
             tab['vm'].commandList = tab['vm'].commandList + [action[1]]
-        elif action[0] == Action.prependCommand:
+        elif action[0] == Action.prepend_command:
             tab['vm'].commandList = [action[1]] + tab['vm'].commandList
-        elif action[0] == Action.removeCommand:
+        elif action[0] == Action.remove_command:
             tab['vm'].commandList.remove(action[1])
-        elif action[0] == Action.replaceCommandList:
+        elif action[0] == Action.replace_command_list:
             tab['vm'].commandList = action[1]
-        elif action[0] == Action.setHeader:
+        elif action[0] == Action.set_header:
             if len(action) > 1:
                 tab['vm'].set_header(action[1])
             else:
                 tab['vm'].set_header("")
-        elif action[0] == Action.setFilter:
+        elif action[0] == Action.set_filter:
             QQmlProperty.write(tab['vm'].searchInputModel, "text", action[1])
-        elif action[0] == Action.askQuestionDefaultYes:
+        elif action[0] == Action.ask_question_default_yes:
             answer = QMessageBox.question(self.window, "Pext", action[1],
                                           QMessageBox.Yes | QMessageBox.No,
                                           QMessageBox.Yes)
             tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
-        elif action[0] == Action.askQuestionDefaultNo:
+        elif action[0] == Action.ask_question_default_no:
             answer = QMessageBox.question(self.window, "Pext", action[1],
                                           QMessageBox.Yes | QMessageBox.No,
                                           QMessageBox.No)
             tab['vm'].module.processResponse(True if (answer == QMessageBox.Yes) else False)
-        elif action[0] == Action.askInput:
+        elif action[0] == Action.ask_input:
             answer, ok = QInputDialog.getText(self.window, "Pext", action[1])
             tab['vm'].module.processResponse(answer if ok else None)
-        elif action[0] == Action.askInputPassword:
+        elif action[0] == Action.ask_input_password:
             answer, ok = QInputDialog.getText(self.window, "Pext", action[1], QLineEdit.Password)
             tab['vm'].module.processResponse(answer if ok else None)
-        elif action[0] == Action.askInputMultiLine:
+        elif action[0] == Action.ask_input_multi_line:
             dialog = InputDialog(action[1], action[2] if action[2] else "", self.window)
             answer, ok = dialog.show()
             tab['vm'].module.processResponse(answer if ok else None)
-        elif action[0] == Action.copyToClipboard:
+        elif action[0] == Action.copy_to_clipboard:
             """Copy the given data to the user-chosen clipboard."""
             if self.settings['clipboard'] == 'selection':
                 mode = QClipboard.Selection
@@ -266,12 +266,12 @@ class MainLoop():
                 mode = QClipboard.Clipboard
 
             self.app.clipboard().setText(str(action[1]), mode)
-        elif action[0] == Action.setSelection:
+        elif action[0] == Action.set_selection:
             tab['vm'].selection = action[1]
             tab['vm'].module.selectionMade(tab['vm'].selection)
-        elif action[0] == Action.notifyMessage:
+        elif action[0] == Action.notify_message:
             self.logger.add_message(tab['moduleName'], action[1])
-        elif action[0] == Action.notifyError:
+        elif action[0] == Action.notify_error:
             self.logger.add_error(tab['moduleName'], action[1])
         elif action[0] == Action.close:
             self.window.close()
@@ -642,13 +642,13 @@ class ModuleThreadInitializer(threading.Thread):
         """Start the module's thread.
 
         The thread will run forever, until an exception is thrown. If an
-        exception is thrown, an Action.criticalError is appended to the
+        exception is thrown, an Action.critical_error is appended to the
         queue.
         """
         try:
             threading.Thread.run(self)
         except Exception as e:
-            self.queue.put([Action.criticalError, "Exception thrown: {}".format(e)])
+            self.queue.put([Action.critical_error, "Exception thrown: {}".format(e)])
 
 
 class ViewModel():
@@ -871,7 +871,7 @@ class ViewModel():
                                                     start=start)
 
             if entry is None or len(entry) <= len(start):
-                self.queue.put([Action.addError, "No tab completion possible"])
+                self.queue.put([Action.add_error, "No tab completion possible"])
                 return
         else:
             entry = " "  # Add an extra space to simplify typing for the user
