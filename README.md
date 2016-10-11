@@ -29,6 +29,7 @@ it, you can do so:
 # Usage
 Simply start Pext with Python 3. If you have installed Pext using the above
 command, simply start `pext`. Otherwise, go to the root directory and run
+`pip3 install -r requirements.txt`
 `python3 pext`.
 
 To actually use Pext, you will first have to install one or more modules. Check
