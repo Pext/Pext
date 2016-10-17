@@ -29,6 +29,7 @@ from pext_helpers import SelectionType
 
 
 class ModuleBase(ABC):
+
     """The base all Pext modules must implement."""
 
     @abstractmethod

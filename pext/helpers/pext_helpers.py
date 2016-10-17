@@ -27,6 +27,7 @@ from enum import Enum
 
 
 class Action(Enum):
+
     """The list of actions a module can request.
 
     A module can request any of these actions of the core by putting it in the
@@ -189,6 +190,7 @@ class Action(Enum):
 
 
 class SelectionType(Enum):
+
     """A list of possible selection types."""
 
     entry = 0
