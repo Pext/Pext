@@ -536,9 +536,9 @@ class ModuleManager():
             try:
                 source = check_output(
                     ['git', 'config', '--get', 'remote.origin.url'],
-                                      cwd=os.path.join(
-                                          self.moduleDir, directory),
-                                      universal_newlines=True).strip()
+                    cwd=os.path.join(
+                        self.moduleDir, directory),
+                    universal_newlines=True).strip()
 
             except (CalledProcessError, FileNotFoundError):
                 source = "Unknown"
@@ -900,7 +900,7 @@ class ViewModel():
         possibles = currentInput.split(" ", 1)
         command = self._get_longest_common_string(
             [command.split(" ", 1)[0] for command in self.commandList],
-                                                  start=possibles[0])
+            start=possibles[0])
         # If we didn't complete the command, see if we can complete the text
         if command is None or len(command) == len(possibles[0]):
             if command is None:
@@ -1105,12 +1105,12 @@ class Window(QMainWindow):
             functions = [
                 {
                     'name': self.moduleManager.install_module,
-                                'args': (moduleURI),
-                                'kwargs': {'interactive': False, 'verbose': True}
+                    'args': (moduleURI),
+                    'kwargs': {'interactive': False, 'verbose': True}
                 }, {
                     'name': self._update_modules_installed_count,
-                                'args': (),
-                                'kwargs': {}
+                    'args': (),
+                    'kwargs': {}
                 }
             ]
             threading.Thread(
@@ -1125,12 +1125,12 @@ class Window(QMainWindow):
             functions = [
                 {
                     'name': self.moduleManager.uninstall_module,
-                                'args': (moduleName),
-                                'kwargs': {'verbose': True}
+                    'args': (moduleName),
+                    'kwargs': {'verbose': True}
                 }, {
                     'name': self._update_modules_installed_count,
-                                'args': (),
-                                'kwargs': {}
+                    'args': (),
+                    'kwargs': {}
                 }
             ]
             threading.Thread(
