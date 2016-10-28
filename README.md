@@ -68,5 +68,9 @@ For command line options, use `--help`.
 
     sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols
 
+### Arch Linux
+    
+    sudo pacman -S git python3 python-pip libnotify python-pyqt5 qt5-quickcontrols
+
 ## License
 GPLv3+.
