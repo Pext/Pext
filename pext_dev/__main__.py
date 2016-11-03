@@ -42,17 +42,12 @@ class AppFile():
         """Return the absolute path by file or directory name."""
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), name)
 
+class Module():
+    """Module code."""
 
-def run(argv: List[str]) -> None:
-    if (argv[0] == "init"):
-        if len(argv) >= 2:
-            module_path = os.path.expanduser(argv[1])
-            print('Initializing new module in {}'.format(module_path))
-            os.makedirs(module_path)
-        else:
-            module_path = os.getcwd()
-            print('Initializing new module in current directory')
-
+    def init(self, directory: str) -> None:
+        """Initialize a new module at the given directory."""
+        print('Initializing new module in {}'.format(directory))
         print('Please enter some info about your new module')
         name = input('Module name: ')
         developer = input('Developer name: ')
@@ -65,18 +60,19 @@ def run(argv: List[str]) -> None:
                     'homepage': homepage,
                     'license': 'GPL-3.0+'}
 
-        with open(os.path.join(module_path, 'metadata.json'), 'w') as metadata_file:
+        with open(os.path.join(directory, 'metadata.json'), 'w') as metadata_file:
             metadata_file.write(json.dumps(metadata, sort_keys=True, indent=2))
 
         copy(
-            AppFile().get_path('base.py'),
-            os.path.join(module_path, '__init__.py'))
+            AppFile().get_path(os.path.join('module', '__init__.py')),
+            os.path.join(directory, '__init__.py'))
 
         copy(
             AppFile().get_path('LICENSE'),
-            os.path.join(module_path, 'LICENSE'))
+            os.path.join(directory, 'LICENSE'))
 
-    elif (argv[0] == "run"):
+    def run(self, argv: List[str]) -> None:
+        """Run the module in the current directory in a new Pext instance."""
         # Prepare vars
         tempdir = '.pext_temp'
         module_path = os.path.join(tempdir, 'pext', 'modules', 'pext_module_development')
@@ -146,7 +142,7 @@ def run(argv: List[str]) -> None:
         check_call([
             sys.executable,
             os.path.join(AppFile().get_path('..'), 'pext')] +
-            argv[1:] + [
+            argv + [
             '--module',
             'pext_module_development',
             '--profile',
@@ -155,19 +151,110 @@ def run(argv: List[str]) -> None:
         # Clean up
         rmtree(tempdir)
 
+class Theme():
+    """Theme code."""
+
+    def init(self, directory: str) -> None:
+        """Initialize a new theme at the given directory."""
+        print('Initializing new theme in {}'.format(directory))
+        print('Please enter some info about your new theme')
+        name = input('Theme name: ')
+        developer = input('Developer/Designer name: ')
+        description = input('Description: ')
+        homepage = input('Homepage: ')
+
+        metadata = {'name': name,
+                    'developer': developer,
+                    'description': description,
+                    'homepage': homepage,
+                    'license': 'GPL-3.0+'}
+
+        with open(os.path.join(directory, 'metadata.json'), 'w') as metadata_file:
+            metadata_file.write(json.dumps(metadata, sort_keys=True, indent=2))
+
+        copy(
+            AppFile().get_path(os.path.join('theme', 'theme.conf')),
+            os.path.join(directory, 'theme.conf'))
+
+        copy(
+            AppFile().get_path('LICENSE'),
+            os.path.join(directory, 'LICENSE'))
+
+    def run(self, argv: List[str]) -> None:
+        """Run the theme in the current directory in a new Pext instance."""
+        # Prepare vars
+        tempdir = '.pext_temp'
+        theme_path = os.path.join(tempdir, 'pext', 'themes', 'pext_theme_development')
+
+        # Make sure there are no leftover files
+        try:
+            rmtree(tempdir)
+        except FileNotFoundError:
+            pass
+
+        # Prepare temp directory for module
+        os.environ["XDG_CONFIG_HOME"] = tempdir
+
+        # Copy module to there
+        print('Copying resources...')
+        copytree(
+            os.getcwd(),
+            theme_path)
+
+        # Run Pext
+        print('Launching Pext...')
+        check_call([
+            sys.executable,
+            os.path.join(AppFile().get_path('..'), 'pext')] +
+            argv + [
+            '--theme',
+            'pext_theme_development',
+            '--profile',
+            'none'])
+
+        # Clean up
+        rmtree(tempdir)
+
+
+def run(argv: List[str]) -> None:
+    if (argv[0] == "module"):
+        classInstance = Module()
+    elif (argv[0] == "theme"):
+        classInstance = Theme()
     else:
         usage()
         sys.exit(1)
+
+    if (argv[1] == "init"):
+        if len(argv) >= 3:
+            directory = os.path.expanduser(argv[2])
+            os.makedirs(directory)
+        else:
+            directory = os.getcwd()
+
+        classInstance.init(directory)
+    elif (argv[1] == "run"):
+        classInstance.run(argv[2:])
+    else:
+        usage()
+        sys.exit(2)
 
 
 def usage() -> None:
     """Print usage information."""
     print('''Options:
 
-init             : initialize a new module in the current directory or given path.
+module init[=PATH]
+    Initialize a new module in the current directory or given path.
 
-run              : run the module in the current directory a new Pext instance.
-                     Added options are passed to Pext as-is.''')
+module run
+    Run the module in the current directory a new Pext instance. Added options are passed to Pext as-is.
+
+theme init[=PATH]
+    Initialize a new theme in the current directory or given path.
+
+theme run
+    Run the theme in the current directory a new Pext instance. Added options are passed to Pext as-is.''')
 
 
 def main() -> None:
