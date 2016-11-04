@@ -60,6 +60,10 @@ For command line options, use `--help`.
 - Ctrl+Shift+Q: Quit without saving to the profile
 
 ## Dependencies
+### Arch
+
+    sudo pacman -S git python3 python-pip libnotify python-pyqt5 qt5-quickcontrols
+
 ### Debian (Stretch and later, no Jessie, sorry!)
 
     sudo apt-get install git libnotify-bin python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls
@@ -67,10 +71,6 @@ For command line options, use `--help`.
 ### Fedora
 
     sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols
-
-### Arch Linux
-    
-    sudo pacman -S git python3 python-pip libnotify python-pyqt5 qt5-quickcontrols
 
 ## License
 GPLv3+.
