@@ -98,9 +98,9 @@ class InputDialog(QDialog):
         layout = QVBoxLayout(self)
 
         layout.addWidget(QLabel(question))
-        self.textEdit = QTextEdit(self)
-        self.textEdit.setPlainText(text)
-        layout.addWidget(self.textEdit)
+        self.text_edit = QTextEdit(self)
+        self.text_edit.setPlainText(text)
+        layout.addWidget(self.text_edit)
         button = QDialogButtonBox(QDialogButtonBox.Ok)
         button.accepted.connect(self.accept)
         layout.addWidget(button)
@@ -108,7 +108,7 @@ class InputDialog(QDialog):
     def show(self) -> Tuple[str, bool]:
         """Show the dialog."""
         result = self.exec_()
-        return (self.textEdit.toPlainText(), result == QDialog.Accepted)
+        return (self.text_edit.toPlainText(), result == QDialog.Accepted)
 
 
 class Logger():
@@ -122,31 +122,31 @@ class Logger():
     def __init__(self, window: 'Window') -> None:
         """Initialize the logger and add a status bar to the main window."""
         self.window = window
-        self.queuedMessages = []  # type: List[Dict[str, str]]
+        self.queued_messages = []  # type: List[Dict[str, str]]
 
-        self.lastUpdate = None  # type: Optional[float]
-        self.statusText = self.window.window.findChild(QObject, "statusText")
-        self.statusQueue = self.window.window.findChild(QObject, "statusQueue")
+        self.last_update = None  # type: Optional[float]
+        self.status_text = self.window.window.findChild(QObject, "statusText")
+        self.status_queue = self.window.window.findChild(QObject, "statusQueue")
 
-    def _queue_message(self, moduleName: str, message: str, typeName: str) -> None:
+    def _queue_message(self, module_name: str, message: str, type_name: str) -> None:
         """Queue a message for display."""
-        for formattedMessage in self._format_message(moduleName, message):
-            self.queuedMessages.append(
-                {'message': formattedMessage, 'type': typeName})
+        for formatted_message in self._format_message(module_name, message):
+            self.queued_messages.append(
+                {'message': formatted_message, 'type': type_name})
 
-    def _format_message(self, moduleName: str, message: str) -> List[str]:
+    def _format_message(self, module_name: str, message: str) -> List[str]:
         """Format message for display, including splitting multiline messages."""
-        messageLines = []
+        message_lines = []
         for line in message.splitlines():
             if not (not line or line.isspace()):
-                if moduleName:
-                    message = '{}: {}'.format(moduleName, line)
+                if module_name:
+                    message = '{}: {}'.format(module_name, line)
                 else:
                     message = line
 
-                messageLines.append(message)
+                message_lines.append(message)
 
-        return messageLines
+        return message_lines
 
     def show_next_message(self) -> None:
         """Show next statusbar message.
@@ -155,47 +155,47 @@ class Logger():
         message. If no messages are available, clear the status bar after it
         has been displayed for 5 seconds.
         """
-        currentTime = time.time()
-        timeDiff = 5 if len(self.queuedMessages) < 1 else 1
-        if self.lastUpdate and currentTime - timeDiff < self.lastUpdate:
+        current_time = time.time()
+        time_diff = 5 if len(self.queued_messages) < 1 else 1
+        if self.last_update and current_time - time_diff < self.last_update:
             return
 
-        if len(self.queuedMessages) == 0:
-            QQmlProperty.write(self.statusText, "text", "")
-            self.lastUpdate = None
+        if len(self.queued_messages) == 0:
+            QQmlProperty.write(self.status_text, "text", "")
+            self.last_update = None
         else:
-            message = self.queuedMessages.pop(0)
+            message = self.queued_messages.pop(0)
 
             if message['type'] == 'error':
-                statusBarMessage = "<font color='red'>{}</color>".format(
+                statusbar_message = "<font color='red'>{}</color>".format(
                     message['message'])
-                notificationMessage = 'error: {}'.format(message['message'])
+                notification_message = 'error: {}'.format(message['message'])
             else:
-                statusBarMessage = message['message']
-                notificationMessage = message['message']
+                statusbar_message = message['message']
+                notification_message = message['message']
 
-            QQmlProperty.write(self.statusText, "text", statusBarMessage)
+            QQmlProperty.write(self.status_text, "text", statusbar_message)
 
             if not self.window.window.isVisible():
-                Popen(['notify-send', 'Pext', notificationMessage])
+                Popen(['notify-send', 'Pext', notification_message])
 
-            self.lastUpdate = currentTime
+            self.last_update = current_time
 
-    def add_error(self, moduleName: str, message: str) -> None:
+    def add_error(self, module_name: str, message: str) -> None:
         """Add an error message to the queue."""
-        self._queue_message(moduleName, message, 'error')
+        self._queue_message(module_name, message, 'error')
 
-    def add_message(self, moduleName: str, message: str) -> None:
+    def add_message(self, module_name: str, message: str) -> None:
         """Add a regular message to the queue."""
-        self._queue_message(moduleName, message, 'message')
+        self._queue_message(module_name, message, 'message')
 
     def set_queue_count(self, count: List[int]) -> None:
         """Show the queue size on screen."""
-        if (count[0] == 0 and count[1] == 0):
-            QQmlProperty.write(self.statusQueue, "text", "Ready")
+        if count[0] == 0 and count[1] == 0:
+            QQmlProperty.write(self.status_queue, "text", "Ready")
         else:
             QQmlProperty.write(
-                self.statusQueue, "text", "Processing: {} ({})".format(count[0], count[1]))
+                self.status_queue, "text", "Processing: {} ({})".format(count[0], count[1]))
 
 
 class MainLoop():
@@ -213,40 +213,40 @@ class MainLoop():
         self.settings = settings
         self.logger = logger
 
-    def _process_tab_action(self, tab: Dict, activeTab: int) -> None:
+    def _process_tab_action(self, tab: Dict, active_tab: int) -> None:
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            self.logger.add_error(tab['moduleName'], action[1])
-            tabId = self.window.tabBindings.index(tab)
-            self.window.moduleManager.unload_module(self.window, tabId)
+            self.logger.add_error(tab['module_name'], action[1])
+            tab_id = self.window.tab_bindings.index(tab)
+            self.window.moduleManager.unload_module(self.window, tab_id)
         elif action[0] == Action.add_message:
-            self.logger.add_message(tab['moduleName'], action[1])
+            self.logger.add_message(tab['module_name'], action[1])
         elif action[0] == Action.add_error:
-            self.logger.add_error(tab['moduleName'], action[1])
+            self.logger.add_error(tab['module_name'], action[1])
         elif action[0] == Action.add_entry:
-            tab['vm'].entryList = tab['vm'].entryList + [action[1]]
+            tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
         elif action[0] == Action.prepend_entry:
-            tab['vm'].entryList = [action[1]] + tab['vm'].entryList
+            tab['vm'].entry_list = [action[1]] + tab['vm'].entry_list
         elif action[0] == Action.remove_entry:
-            tab['vm'].entryList.remove(action[1])
+            tab['vm'].entry_list.remove(action[1])
         elif action[0] == Action.replace_entry_list:
-            tab['vm'].entryList = action[1]
+            tab['vm'].entry_list = action[1]
         elif action[0] == Action.add_command:
-            tab['vm'].commandList = tab['vm'].commandList + [action[1]]
+            tab['vm'].command_list = tab['vm'].command_list + [action[1]]
         elif action[0] == Action.prepend_command:
-            tab['vm'].commandList = [action[1]] + tab['vm'].commandList
+            tab['vm'].command_list = [action[1]] + tab['vm'].command_list
         elif action[0] == Action.remove_command:
-            tab['vm'].commandList.remove(action[1])
+            tab['vm'].command_list.remove(action[1])
         elif action[0] == Action.replace_command_list:
-            tab['vm'].commandList = action[1]
+            tab['vm'].command_list = action[1]
         elif action[0] == Action.set_header:
             if len(action) > 1:
                 tab['vm'].set_header(action[1])
             else:
                 tab['vm'].set_header("")
         elif action[0] == Action.set_filter:
-            QQmlProperty.write(tab['vm'].searchInputModel, "text", action[1])
+            QQmlProperty.write(tab['vm'].search_input_model, "text", action[1])
         elif action[0] == Action.ask_question_default_yes:
             answer = QMessageBox.question(self.window, "Pext", action[1],
                                           QMessageBox.Yes | QMessageBox.No,
@@ -272,7 +272,7 @@ class MainLoop():
             answer, ok = dialog.show()
             tab['vm'].module.process_response(answer if ok else None)
         elif action[0] == Action.copy_to_clipboard:
-            """Copy the given data to the user-chosen clipboard."""
+            # Copy the given data to the user-chosen clipboard
             if self.settings['clipboard'] == 'selection':
                 mode = QClipboard.Selection
             else:
@@ -291,9 +291,9 @@ class MainLoop():
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
-        if activeTab and tab['entriesProcessed'] >= 100:
-            tab['vm'].search(newEntries=True)
-            tab['entriesProcessed'] = 0
+        if active_tab and tab['entries_processed'] >= 100:
+            tab['vm'].search(new_entries=True)
+            tab['entries_processed'] = 0
 
         self.window.update()
         tab['queue'].task_done()
@@ -305,36 +305,36 @@ class MainLoop():
             self.app.processEvents()
             self.logger.show_next_message()
 
-            currentTab = QQmlProperty.read(self.window.tabs, "currentIndex")
-            queueSize = [0, 0]
+            current_tab = QQmlProperty.read(self.window.tabs, "currentIndex")
+            queue_size = [0, 0]
 
-            allEmpty = True
-            for tabId, tab in enumerate(self.window.tabBindings):
+            all_empty = True
+            for tab_id, tab in enumerate(self.window.tab_bindings):
                 if not tab['init']:
                     continue
 
-                if tabId == currentTab:
-                    queueSize[0] = tab['queue'].qsize()
-                    activeTab = True
+                if tab_id == current_tab:
+                    queue_size[0] = tab['queue'].qsize()
+                    active_tab = True
                 else:
-                    queueSize[1] += tab['queue'].qsize()
-                    activeTab = False
+                    queue_size[1] += tab['queue'].qsize()
+                    active_tab = False
 
                 try:
-                    self._process_tab_action(tab, activeTab)
-                    tab['entriesProcessed'] += 1
-                    allEmpty = False
+                    self._process_tab_action(tab, active_tab)
+                    tab['entries_processed'] += 1
+                    all_empty = False
                 except Empty:  # type: ignore
-                    if activeTab and tab['entriesProcessed']:
-                        tab['vm'].search(newEntries=True)
+                    if active_tab and tab['entries_processed']:
+                        tab['vm'].search(new_entries=True)
 
-                    tab['entriesProcessed'] = 0
+                    tab['entries_processed'] = 0
                 except Exception as e:
                     print('WARN: Module caused exception {}'.format(e))
 
-            self.logger.set_queue_count(queueSize)
+            self.logger.set_queue_count(queue_size)
 
-            if allEmpty:
+            if all_empty:
                 if self.window.window.isVisible():
                     time.sleep(0.01)
                 else:
@@ -365,7 +365,7 @@ class ProfileManager():
         """Save the list of open modules and their settings to the profile."""
         config = configparser.ConfigParser()
         for number, module in enumerate(modules):
-            name = ModuleManager.add_prefix(module['moduleName'])
+            name = ModuleManager.add_prefix(module['module_name'])
             config['{}_{}'.format(number, name)] = module['settings']
 
         with open('{}/{}/modules'.format(self.profileDir, profile), 'w') as configfile:
@@ -396,24 +396,24 @@ class ModuleManager():
 
     def __init__(self) -> None:
         """Initialize the module manager."""
-        self.moduleDir = os.path.expanduser('~/.config/pext/modules/')
+        self.module_dir = os.path.expanduser('~/.config/pext/modules/')
         self.logger = None  # type: Optional[Logger]
 
     @staticmethod
-    def add_prefix(moduleName: str) -> str:
+    def add_prefix(module_name: str) -> str:
         """Ensure the string starts with pext_module_."""
-        if not moduleName.startswith('pext_module_'):
-            return 'pext_module_{}'.format(moduleName)
+        if not module_name.startswith('pext_module_'):
+            return 'pext_module_{}'.format(module_name)
 
-        return moduleName
+        return module_name
 
     @staticmethod
-    def remove_prefix(moduleName: str) -> str:
+    def remove_prefix(module_name: str) -> str:
         """Remove pext_module_ from the start of the string."""
-        if moduleName.startswith('pext_module_'):
-            return moduleName[len('pext_module_'):]
+        if module_name.startswith('pext_module_'):
+            return module_name[len('pext_module_'):]
 
-        return moduleName
+        return module_name
 
     def _log(self, message: str) -> None:
         if self.logger:
@@ -438,32 +438,32 @@ class ModuleManager():
     def load_module(self, window: 'Window', module: Dict) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
-        modulePath = os.path.expanduser('~/.config/pext/modules')
-        if modulePath not in sys.path:
-            sys.path.append(modulePath)
+        module_path = os.path.expanduser('~/.config/pext/modules')
+        if module_path not in sys.path:
+            sys.path.append(module_path)
 
         # Remove pext_module_ from the module name
-        moduleDir = ModuleManager.add_prefix(module['name']).replace('.', '_')
-        moduleName = ModuleManager.remove_prefix(module['name'])
+        module_dir = ModuleManager.add_prefix(module['name']).replace('.', '_')
+        module_name = ModuleManager.remove_prefix(module['name'])
 
         # Prepare viewModel and context
         vm = ViewModel()
-        moduleContext = QQmlContext(window.context)
-        moduleContext.setContextProperty(
-            "resultListModel", vm.resultListModelList)
-        moduleContext.setContextProperty(
-            "resultListModelMaxIndex", vm.resultListModelMaxIndex)
-        moduleContext.setContextProperty("resultListModelCommandMode", False)
+        module_context = QQmlContext(window.context)
+        module_context.setContextProperty(
+            "resultListModel", vm.result_list_model_list)
+        module_context.setContextProperty(
+            "resultListModelMaxIndex", vm.result_list_model_max_index)
+        module_context.setContextProperty("resultListModelCommandMode", False)
 
         # Prepare module
         try:
-            moduleImport = __import__(moduleDir, fromlist=['Module'])
+            module_import = __import__(module_dir, fromlist=['Module'])
         except ImportError as e1:
             self._log_error(
-                "Failed to load module {} from {}: {}".format(moduleName, moduleDir, e1))
+                "Failed to load module {} from {}: {}".format(module_name, module_dir, e1))
             return False
 
-        Module = getattr(moduleImport, 'Module')
+        Module = getattr(module_import, 'Module')
 
         # Ensure the module implements the base
         assert issubclass(Module, ModuleBase)
@@ -475,37 +475,37 @@ class ModuleManager():
         # This will (correctly) fail if the module doesn't implement all necessary
         # functionality
         try:
-            moduleCode = Module()
+            module_code = Module()
         except TypeError as e2:
             self._log_error(
-                "Failed to load module {} from {}: {}".format(moduleName, moduleDir, e2))
+                "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
             return False
 
         # Start the module in the background
-        moduleThread = ModuleThreadInitializer(
-            moduleName, q, target=moduleCode.init, args=(module['settings'], q))
-        moduleThread.start()
+        module_thread = ModuleThreadInitializer(
+            module_name, q, target=module_code.init, args=(module['settings'], q))
+        module_thread.start()
 
         # Add tab
-        tabData = QQmlComponent(window.engine)
-        tabData.loadUrl(
+        tab_data = QQmlComponent(window.engine)
+        tab_data.loadUrl(
             QUrl.fromLocalFile(AppFile.get_path('qml/ModuleData.qml')))
-        window.engine.setContextForObject(tabData, moduleContext)
-        window.tabs.addTab(moduleName, tabData)
+        window.engine.setContextForObject(tab_data, module_context)
+        window.tabs.addTab(module_name, tab_data)
 
         # Store tab/viewModel combination
         # tabData is not used but stored to prevent segfaults caused by
         # Python garbage collecting it
-        window.tabBindings.append({'init': False,
-                                   'queue': q,
-                                   'vm': vm,
-                                   'module': moduleCode,
-                                   'moduleContext': moduleContext,
-                                   'moduleImport': moduleImport,
-                                   'moduleName': moduleName,
-                                   'tabData': tabData,
-                                   'settings': module['settings'],
-                                   'entriesProcessed': 0})
+        window.tab_bindings.append({'init': False,
+                                    'queue': q,
+                                    'vm': vm,
+                                    'module': module_code,
+                                    'module_context': module_context,
+                                    'module_import': module_import,
+                                    'module_name': module_name,
+                                    'tab_data': tab_data,
+                                    'settings': module['settings'],
+                                    'entries_processed': 0})
 
         # Open tab to trigger loading
         QQmlProperty.write(
@@ -513,31 +513,31 @@ class ModuleManager():
 
         return True
 
-    def unload_module(self, window: 'Window', tabId: int) -> None:
+    def unload_module(self, window: 'Window', tab_id: int) -> None:
         """Unload a module by tab ID."""
-        window.tabBindings[tabId]['module'].stop()
+        window.tab_bindings[tab_id]['module'].stop()
 
-        if QQmlProperty.read(window.tabs, "currentIndex") == tabId:
-            tabCount = QQmlProperty.read(window.tabs, "count")
-            if tabId + 1 < tabCount:
-                QQmlProperty.write(window.tabs, "currentIndex", tabId + 1)
+        if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
+            tab_count = QQmlProperty.read(window.tabs, "count")
+            if tab_id + 1 < tab_count:
+                QQmlProperty.write(window.tabs, "currentIndex", tab_id + 1)
             else:
                 QQmlProperty.write(window.tabs, "currentIndex", "0")
 
-        del window.tabBindings[tabId]
-        window.tabs.removeTab(tabId)
+        del window.tab_bindings[tab_id]
+        window.tabs.removeTab(tab_id)
 
     def list_modules(self) -> List[List[str]]:
         """Return a list of modules together with their source."""
         modules = []
 
-        for directory in os.listdir(self.moduleDir):
+        for directory in os.listdir(self.module_dir):
             name = ModuleManager.remove_prefix(directory)
             try:
                 source = check_output(
                     ['git', 'config', '--get', 'remote.origin.url'],
                     cwd=os.path.join(
-                        self.moduleDir, directory),
+                        self.module_dir, directory),
                     universal_newlines=True).strip()
 
             except (CalledProcessError, FileNotFoundError):
@@ -547,36 +547,36 @@ class ModuleManager():
 
         return modules
 
-    def reload_module(self, window: 'Window', tabId: int) -> bool:
+    def reload_module(self, window: 'Window', tab_id: int) -> bool:
         """Reload a module by tab ID."""
         # Get currently active tab
-        currentIndex = QQmlProperty.read(window.tabs, "currentIndex")
+        current_index = QQmlProperty.read(window.tabs, "currentIndex")
 
         # Get the needed info to load the module
-        moduleData = window.tabBindings[tabId]
+        module_data = window.tab_bindings[tab_id]
         module = {
-            'name': moduleData['moduleName'], 'settings': moduleData['settings']}
+            'name': module_data['module_name'], 'settings': module_data['settings']}
 
         # Unload the module
-        self.unload_module(window, tabId)
+        self.unload_module(window, tab_id)
 
         # Force a reload to make code changes happen
-        reload(moduleData['moduleImport'])
+        reload(module_data['module_import'])
 
         # Load it into the UI
         if not self.load_module(window, module):
             return False
 
         # Get new position
-        newTabId = len(window.tabBindings) - 1
+        new_tab_id = len(window.tab_bindings) - 1
 
         # Move to correct position if there is more than 1 tab
-        if newTabId > 0:
-            window.tabs.moveTab(newTabId, tabId)
-            window.tabBindings.insert(tabId, window.tabBindings.pop(newTabId))
+        if new_tab_id > 0:
+            window.tabs.moveTab(new_tab_id, tab_id)
+            window.tab_bindings.insert(tab_id, window.tab_bindings.pop(new_tab_id))
 
             # Focus on active tab
-            QQmlProperty.write(window.tabs, "currentIndex", str(currentIndex))
+            QQmlProperty.write(window.tabs, "currentIndex", str(current_index))
         else:
             # Ensure the event gets called if there's only one tab
             window.tabs.currentIndexChanged.emit()
@@ -585,71 +585,71 @@ class ModuleManager():
 
     def install_module(self, url: str, verbose=False, interactive=True) -> bool:
         """Install a module."""
-        moduleName = url.split("/")[-1]
+        module_name = url.split("/")[-1]
 
-        dirName = ModuleManager.add_prefix(moduleName).replace('.', '_')
-        moduleName = ModuleManager.remove_prefix(moduleName)
+        dir_name = ModuleManager.add_prefix(module_name).replace('.', '_')
+        module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log('Installing {} from {}'.format(moduleName, url))
+            self._log('Installing {} from {}'.format(module_name, url))
 
-        returnCode = Popen(['git', 'clone', url, dirName],
-                           cwd=self.moduleDir,
-                           env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
+        return_code = Popen(['git', 'clone', url, dir_name],
+                            cwd=self.module_dir,
+                            env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
 
-        if returnCode != 0:
+        if return_code != 0:
             if verbose:
-                self._log_error('Failed to install {}'.format(moduleName))
+                self._log_error('Failed to install {}'.format(module_name))
 
             return False
 
         if verbose:
-            self._log('Installed {}'.format(moduleName))
+            self._log('Installed {}'.format(module_name))
 
         return True
 
-    def uninstall_module(self, moduleName: str, verbose=False) -> bool:
+    def uninstall_module(self, module_name: str, verbose=False) -> bool:
         """Uninstall a module."""
-        dirName = ModuleManager.add_prefix(moduleName)
-        moduleName = ModuleManager.remove_prefix(moduleName)
+        dir_name = ModuleManager.add_prefix(module_name)
+        module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log('Removing {}'.format(moduleName))
+            self._log('Removing {}'.format(module_name))
 
         try:
-            rmtree(os.path.join(self.moduleDir, dirName))
+            rmtree(os.path.join(self.module_dir, dir_name))
         except FileNotFoundError:
             if verbose:
                 self._log_error(
-                    'Cannot remove {}, it is not installed'.format(moduleName))
+                    'Cannot remove {}, it is not installed'.format(module_name))
 
             return False
 
         if verbose:
-            self._log('Uninstalled {}'.format(moduleName))
+            self._log('Uninstalled {}'.format(module_name))
 
         return True
 
-    def update_module(self, moduleName: str, verbose=False) -> bool:
+    def update_module(self, module_name: str, verbose=False) -> bool:
         """Update a module."""
-        dirName = ModuleManager.add_prefix(moduleName)
-        moduleName = ModuleManager.remove_prefix(moduleName)
+        dir_name = ModuleManager.add_prefix(module_name)
+        module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log('Updating {}'.format(moduleName))
+            self._log('Updating {}'.format(module_name))
 
         try:
             check_call(
-                ['git', 'pull'], cwd=os.path.join(self.moduleDir, dirName))
+                ['git', 'pull'], cwd=os.path.join(self.module_dir, dir_name))
         except Exception as e:
             if verbose:
                 self._log_error(
-                    'Failed to update {}: {}'.format(moduleName, e))
+                    'Failed to update {}: {}'.format(module_name, e))
 
             return False
 
         if verbose:
-            self._log('Updated {}'.format(moduleName))
+            self._log('Updated {}'.format(module_name))
 
         return True
 
@@ -663,9 +663,9 @@ class ModuleThreadInitializer(threading.Thread):
 
     """Initialize a thread for the module."""
 
-    def __init__(self, moduleName: str, q: Queue, target=None, args=()) -> None:
+    def __init__(self, module_name: str, q: Queue, target=None, args=()) -> None:
         """Initialize the module thread initializer."""
-        self.moduleName = moduleName
+        self.module_name = module_name
         self.queue = q
         threading.Thread.__init__(self, target=target, args=args)
 
@@ -691,15 +691,15 @@ class ViewModel():
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
-        self.commandList = []  # type: List
-        self.entryList = []  # type: List
-        self.filteredEntryList = []  # type: List
-        self.filteredCommandList = []  # type: List
-        self.resultListModelList = QStringListModel()
-        self.resultListModelMaxIndex = -1
-        self.resultListModelCommandMode = False
+        self.command_list = []  # type: List
+        self.entry_list = []  # type: List
+        self.filtered_entry_list = []  # type: List
+        self.filtered_command_list = []  # type: List
+        self.result_list_model_list = QStringListModel()
+        self.result_list_model_max_index = -1
+        self.result_list_model_command_mode = False
         self.selection = []  # type: List[Dict[SelectionType, str]]
-        self.lastSearch = ""
+        self.last_search = ""
 
     def _get_longest_common_string(self, entries: List[str], start="") -> Optional[str]:
         """Return the longest common string.
@@ -718,38 +718,38 @@ class ViewModel():
         matches start.
         """
         # Filter out all entries that don't match at the start
-        entryList = []
+        entry_list = []
         for entry in entries:
             if entry.startswith(start):
-                entryList.append(entry)
+                entry_list.append(entry)
 
-        commonChars = list(start)
+        common_chars = list(start)
 
         try:
             while True:
-                commonChar = None
-                for entry in entryList:
-                    if commonChar is None:
-                        commonChar = entry[len(commonChars)]
-                    elif commonChar != entry[len(commonChars)]:
-                        return ''.join(commonChars)
+                common_char = None
+                for entry in entry_list:
+                    if common_char is None:
+                        common_char = entry[len(common_chars)]
+                    elif common_char != entry[len(common_chars)]:
+                        return ''.join(common_chars)
 
-                if commonChar is None:
+                if common_char is None:
                     return None
 
-                commonChars.append(commonChar)
+                common_chars.append(common_char)
         except IndexError:
             # We fully match a string
-            return ''.join(commonChars)
+            return ''.join(common_chars)
 
-    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', searchInputModel: QObject, headerText: QObject, resultListModel: QObject) -> None:  # noqa: E646
+    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject, header_text: QObject, result_list_model: QObject) -> None:  # noqa: E646
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
         self.window = window
-        self.searchInputModel = searchInputModel
-        self.headerText = headerText
-        self.resultListModel = resultListModel
+        self.search_input_model = search_input_model
+        self.header_text = header_text
+        self.result_list_model = result_list_model
 
     def bind_module(self, module: ModuleBase) -> None:
         """Bind the module.
@@ -766,8 +766,8 @@ class ViewModel():
         the search bar. If we're currently in the entry list and the search bar
         is empty, we tell the window to hide/close itself.
         """
-        if QQmlProperty.read(self.searchInputModel, "text") != "":
-            QQmlProperty.write(self.searchInputModel, "text", "")
+        if QQmlProperty.read(self.search_input_model, "text") != "":
+            QQmlProperty.write(self.search_input_model, "text", "")
             return
 
         if len(self.selection) > 0:
@@ -776,116 +776,116 @@ class ViewModel():
         else:
             self.window.close()
 
-    def search(self, newEntries=False) -> None:
+    def search(self, new_entries=False) -> None:
         """Filter the entry list.
 
         Filter the list of entries in the screen, setting the filtered list
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
-        searchString = QQmlProperty.read(self.searchInputModel, "text").lower()
+        search_string = QQmlProperty.read(self.search_input_model, "text").lower()
 
         # Don't search if nothing changed
-        if not newEntries and searchString == self.lastSearch:
+        if not new_entries and search_string == self.last_search:
             return
 
         # If empty, show all
-        if len(searchString) == 0 and not newEntries:
-            self.filteredEntryList = self.entryList
-            combinedList = self.entryList + self.commandList
-            self.resultListModelList = QStringListModel(
-                [str(entry) for entry in combinedList])
-            self.resultListModelMaxIndex = len(self.entryList) - 1
+        if len(search_string) == 0 and not new_entries:
+            self.filtered_entry_list = self.entry_list
+            combined_list = self.entry_list + self.command_list
+            self.result_list_model_list = QStringListModel(
+                [str(entry) for entry in combined_list])
+            self.result_list_model_max_index = len(self.entry_list) - 1
             self.context.setContextProperty(
                 "resultListModelCommandMode", False)
             self.context.setContextProperty(
-                "resultListModelMaxIndex", self.resultListModelMaxIndex)
+                "resultListModelMaxIndex", self.result_list_model_max_index)
             self.context.setContextProperty(
-                "resultListModel", self.resultListModelList)
+                "resultListModel", self.result_list_model_list)
 
             # Enable checking for changes next time
-            self.lastSearch = searchString
+            self.last_search = search_string
 
             return
 
-        searchStrings = searchString.split(" ")
+        search_strings = search_string.split(" ")
 
         # If longer and no new entries, only filter existing list
-        if len(searchString) > len(self.lastSearch) and not (self.resultListModelCommandMode and
-                                                             len(searchStrings) == 2 and searchStrings[1] == ""):
+        if len(search_string) > len(self.last_search) and not (self.result_list_model_command_mode and
+                                                               len(search_strings) == 2 and search_strings[1] == ""):
 
-            filterEntryList = self.filteredEntryList
-            filterCommandList = self.filteredCommandList
+            filter_entry_list = self.filtered_entry_list
+            filter_command_list = self.filtered_command_list
         else:
-            filterEntryList = self.entryList
-            filterCommandList = self.commandList
+            filter_entry_list = self.entry_list
+            filter_command_list = self.command_list
 
-        self.filteredEntryList = []
-        self.filteredCommandList = []
+        self.filtered_entry_list = []
+        self.filtered_command_list = []
 
-        self.resultListModelCommandMode = False
+        self.result_list_model_command_mode = False
 
-        for command in filterCommandList:
-            if searchStrings[0] in command:
-                if searchStrings[0] == command.split(" ", 1)[0]:
-                    self.resultListModelCommandMode = True
+        for command in filter_command_list:
+            if search_strings[0] in command:
+                if search_strings[0] == command.split(" ", 1)[0]:
+                    self.result_list_model_command_mode = True
 
-                self.filteredCommandList.append(command)
+                self.filtered_command_list.append(command)
 
-        if self.resultListModelCommandMode:
-            for entry in filterEntryList:
-                if all(searchString in str(entry).lower() for searchString in searchStrings[1:]):
-                    self.filteredEntryList.append(entry)
+        if self.result_list_model_command_mode:
+            for entry in filter_entry_list:
+                if all(search_string in str(entry).lower() for search_string in search_strings[1:]):
+                    self.filtered_entry_list.append(entry)
 
-            combinedList = self.filteredCommandList + self.filteredEntryList
+            combined_list = self.filtered_command_list + self.filtered_entry_list
         else:
-            for entry in filterEntryList:
-                if all(searchString in str(entry).lower() for searchString in searchStrings):
-                    self.filteredEntryList.append(entry)
+            for entry in filter_entry_list:
+                if all(search_string in str(entry).lower() for search_string in search_strings):
+                    self.filtered_entry_list.append(entry)
 
-            combinedList = self.filteredEntryList + self.filteredCommandList
+            combined_list = self.filtered_entry_list + self.filtered_command_list
 
         self.context.setContextProperty(
-            "resultListModelCommandMode", self.resultListModelCommandMode)
+            "resultListModelCommandMode", self.result_list_model_command_mode)
 
-        self.resultListModelMaxIndex = len(self.filteredEntryList) - 1
+        self.result_list_model_max_index = len(self.filtered_entry_list) - 1
         self.context.setContextProperty(
-            "resultListModelMaxIndex", self.resultListModelMaxIndex)
+            "resultListModelMaxIndex", self.result_list_model_max_index)
 
-        self.resultListModelList = QStringListModel(
-            [str(entry) for entry in combinedList])
+        self.result_list_model_list = QStringListModel(
+            [str(entry) for entry in combined_list])
         self.context.setContextProperty(
-            "resultListModel", self.resultListModelList)
+            "resultListModel", self.result_list_model_list)
 
         # Enable checking for changes next time
-        self.lastSearch = searchString
+        self.last_search = search_string
 
     def select(self) -> None:
         """Notify the module of our selection entry."""
-        if len(self.filteredEntryList + self.filteredCommandList) == 0 or self.queue.qsize() > 0:
+        if len(self.filtered_entry_list + self.filtered_command_list) == 0 or self.queue.qsize() > 0:
             return
 
-        currentIndex = QQmlProperty.read(self.resultListModel, "currentIndex")
+        current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
-        if self.resultListModelCommandMode or len(self.filteredEntryList) == 0:
-            commandTyped = QQmlProperty.read(self.searchInputModel, "text")
+        if self.result_list_model_command_mode or len(self.filtered_entry_list) == 0:
+            command_typed = QQmlProperty.read(self.search_input_model, "text")
 
             self.selection.append(
-                {'type': SelectionType.command, 'value': commandTyped})
+                {'type': SelectionType.command, 'value': command_typed})
             self.module.selection_made(self.selection)
 
-            QQmlProperty.write(self.searchInputModel, "text", "")
+            QQmlProperty.write(self.search_input_model, "text", "")
 
             return
 
-        entry = self.filteredEntryList[currentIndex]
+        entry = self.filtered_entry_list[current_index]
         self.selection.append({'type': SelectionType.entry, 'value': entry})
         self.module.selection_made(self.selection)
-        QQmlProperty.write(self.searchInputModel, "text", "")
+        QQmlProperty.write(self.search_input_model, "text", "")
 
     def set_header(self, content) -> None:
         """Set the header text."""
-        QQmlProperty.write(self.headerText, "text", str(content))
+        QQmlProperty.write(self.header_text, "text", str(content))
 
     def tab_complete(self) -> None:
         """Tab-complete based on the current seach input.
@@ -893,13 +893,13 @@ class ViewModel():
         This tab-completes the command, entry or combination currently in the
         search bar to the longest possible common completion.
         """
-        currentInput = QQmlProperty.read(self.searchInputModel, "text")
+        current_input = QQmlProperty.read(self.search_input_model, "text")
 
-        start = currentInput
+        start = current_input
 
-        possibles = currentInput.split(" ", 1)
+        possibles = current_input.split(" ", 1)
         command = self._get_longest_common_string(
-            [command.split(" ", 1)[0] for command in self.commandList],
+            [command.split(" ", 1)[0] for command in self.command_list],
             start=possibles[0])
         # If we didn't complete the command, see if we can complete the text
         if command is None or len(command) == len(possibles[0]):
@@ -909,8 +909,8 @@ class ViewModel():
                 command += " "
 
             start = possibles[1] if len(possibles) > 1 else ""
-            entry = self._get_longest_common_string([listEntry for listEntry in self.filteredEntryList
-                                                     if listEntry not in self.commandList],
+            entry = self._get_longest_common_string([list_entry for list_entry in self.filtered_entry_list
+                                                     if list_entry not in self.command_list],
                                                     start=start)
 
             if entry is None or len(entry) <= len(start):
@@ -920,7 +920,7 @@ class ViewModel():
         else:
             entry = " "  # Add an extra space to simplify typing for the user
 
-        QQmlProperty.write(self.searchInputModel, "text", command + entry)
+        QQmlProperty.write(self.search_input_model, "text", command + entry)
         self.search()
 
 
@@ -935,7 +935,7 @@ class Window(QMainWindow):
         # Save settings
         self.settings = settings
 
-        self.tabBindings = []  # type: List[Dict]
+        self.tab_bindings = []  # type: List[Dict]
 
         self.engine = QQmlApplicationEngine(self)
 
@@ -949,55 +949,55 @@ class Window(QMainWindow):
         self.window = self.engine.rootObjects()[0]
 
         # Give intro screen the module count
-        self.introScreen = self.window.findChild(QObject, "introScreen")
-        self.moduleManager = ModuleManager()
+        self.intro_screen = self.window.findChild(QObject, "introScreen")
+        self.module_manager = ModuleManager()
         self._update_modules_installed_count()
 
         # Bind global shortcuts
-        self.searchInputModel = self.window.findChild(
+        self.search_input_model = self.window.findChild(
             QObject, "searchInputModel")
-        escapeShortcut = self.window.findChild(QObject, "escapeShortcut")
-        tabShortcut = self.window.findChild(QObject, "tabShortcut")
+        escape_shortcut = self.window.findChild(QObject, "escapeShortcut")
+        tab_shortcut = self.window.findChild(QObject, "tabShortcut")
 
-        self.searchInputModel.textChanged.connect(self._search)
-        self.searchInputModel.accepted.connect(self._select)
-        escapeShortcut.activated.connect(self._go_up)
-        tabShortcut.activated.connect(self._tab_complete)
+        self.search_input_model.textChanged.connect(self._search)
+        self.search_input_model.accepted.connect(self._select)
+        escape_shortcut.activated.connect(self._go_up)
+        tab_shortcut.activated.connect(self._tab_complete)
 
         # Bind menu entries
-        menuReloadActiveModuleShortcut = self.window.findChild(
+        menu_reload_active_module_shortcut = self.window.findChild(
             QObject, "menuReloadActiveModule")
-        menuLoadModuleShortcut = self.window.findChild(
+        menu_load_module_shortcut = self.window.findChild(
             QObject, "menuLoadModule")
-        menuCloseActiveModuleShortcut = self.window.findChild(
+        menu_close_active_module_shortcut = self.window.findChild(
             QObject, "menuCloseActiveModule")
-        menuListModulesShortcut = self.window.findChild(
+        menu_list_modules_shortcut = self.window.findChild(
             QObject, "menuListModules")
-        menuInstallModuleShortcut = self.window.findChild(
+        menu_install_module_shortcut = self.window.findChild(
             QObject, "menuInstallModule")
-        menuUninstallModuleShortcut = self.window.findChild(
+        menu_uninstall_module_shortcut = self.window.findChild(
             QObject, "menuUninstallModule")
-        menuUpdateModuleShortcut = self.window.findChild(
+        menu_update_module_shortcut = self.window.findChild(
             QObject, "menuUpdateModule")
-        menuUpdateAllModulesShortcut = self.window.findChild(
+        menu_update_all_modules_shortcut = self.window.findChild(
             QObject, "menuUpdateAllModules")
-        menuQuitShortcut = self.window.findChild(QObject, "menuQuit")
-        menuQuitWithoutSavingShortcut = self.window.findChild(
+        menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
+        menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
 
-        menuReloadActiveModuleShortcut.triggered.connect(
+        menu_reload_active_module_shortcut.triggered.connect(
             self._reload_active_module)
-        menuLoadModuleShortcut.triggered.connect(self._open_tab)
-        menuCloseActiveModuleShortcut.triggered.connect(self._close_tab)
-        menuListModulesShortcut.triggered.connect(self._menu_list_modules)
-        menuInstallModuleShortcut.triggered.connect(self._menu_install_module)
-        menuUninstallModuleShortcut.triggered.connect(
+        menu_load_module_shortcut.triggered.connect(self._open_tab)
+        menu_close_active_module_shortcut.triggered.connect(self._close_tab)
+        menu_list_modules_shortcut.triggered.connect(self._menu_list_modules)
+        menu_install_module_shortcut.triggered.connect(self._menu_install_module)
+        menu_uninstall_module_shortcut.triggered.connect(
             self._menu_uninstall_module)
-        menuUpdateModuleShortcut.triggered.connect(self._menu_update_module)
-        menuUpdateAllModulesShortcut.triggered.connect(
+        menu_update_module_shortcut.triggered.connect(self._menu_update_module)
+        menu_update_all_modules_shortcut.triggered.connect(
             self._menu_update_all_modules)
-        menuQuitShortcut.triggered.connect(self._menu_quit)
-        menuQuitWithoutSavingShortcut.triggered.connect(
+        menu_quit_shortcut.triggered.connect(self._menu_quit)
+        menu_quit_without_saving_shortcut.triggered.connect(
             self._menu_quit_without_saving)
 
         # Get reference to tabs list
@@ -1011,32 +1011,32 @@ class Window(QMainWindow):
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
-        currentTab = QQmlProperty.read(self.tabs, "currentIndex")
-        element = self.tabBindings[currentTab]
+        current_tab = QQmlProperty.read(self.tabs, "currentIndex")
+        element = self.tab_bindings[current_tab]
 
         # Only initialize once, ensure filter is applied
         if element['init']:
-            element['vm'].search(newEntries=True)
+            element['vm'].search(new_entries=True)
             return
 
         # Get the header
-        headerText = self.tabs.getTab(
-            currentTab).findChild(QObject, "headerText")
+        header_text = self.tabs.getTab(
+            current_tab).findChild(QObject, "headerText")
 
         # Get the list
-        resultListModel = self.tabs.getTab(
-            currentTab).findChild(QObject, "resultListModel")
+        result_list_model = self.tabs.getTab(
+            current_tab).findChild(QObject, "resultListModel")
 
         # Enable mouse selection support
-        resultListModel.entryClicked.connect(element['vm'].select)
+        result_list_model.entryClicked.connect(element['vm'].select)
 
         # Bind it to the viewmodel
         element['vm'].bind_context(element['queue'],
-                                   element['moduleContext'],
+                                   element['module_context'],
                                    self,
-                                   self.searchInputModel,
-                                   headerText,
-                                   resultListModel)
+                                   self.search_input_model,
+                                   header_text,
+                                   result_list_model)
 
         element['vm'].bind_module(element['module'])
 
@@ -1044,9 +1044,9 @@ class Window(QMainWindow):
         element['init'] = True
 
     def _get_current_element(self) -> Optional[Dict]:
-        currentTab = QQmlProperty.read(self.tabs, "currentIndex")
+        current_tab = QQmlProperty.read(self.tabs, "currentIndex")
         try:
-            return self.tabBindings[currentTab]
+            return self.tab_bindings[current_tab]
         except IndexError:
             # No tabs
             return None
@@ -1058,54 +1058,54 @@ class Window(QMainWindow):
             pass
 
     def _open_tab(self) -> None:
-        moduleList = [module[0]
-                      for module in self.moduleManager.list_modules()]
-        moduleName, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to load", moduleList, 0, False)
+        module_list = [module[0]
+                       for module in self.module_manager.list_modules()]
+        module_name, ok = QInputDialog.getItem(
+            self, "Pext", "Choose the module to load", module_list, 0, False)
         if ok:
-            givenSettings, ok = QInputDialog.getText(
+            given_settings, ok = QInputDialog.getText(
                 self, "Pext", "Enter module settings (leave blank for defaults)")
             if ok:
-                moduleSettings = {}
-                for setting in givenSettings.split(" "):
+                module_settings = {}
+                for setting in given_settings.split(" "):
                     try:
                         key, value = setting.split("=", 2)
                     except ValueError:
                         continue
 
-                    moduleSettings[key] = value
+                    module_settings[key] = value
 
-                module = {'name': moduleName, 'settings': moduleSettings}
-                self.moduleManager.load_module(self, module)
+                module = {'name': module_name, 'settings': module_settings}
+                self.module_manager.load_module(self, module)
                 # First module? Enforce load
-                if len(self.tabBindings) == 1:
+                if len(self.tab_bindings) == 1:
                     self.tabs.currentIndexChanged.emit()
 
     def _close_tab(self) -> None:
-        if len(self.tabBindings) > 0:
-            self.moduleManager.unload_module(
+        if len(self.tab_bindings) > 0:
+            self.module_manager.unload_module(
                 self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _reload_active_module(self) -> None:
-        if len(self.tabBindings) > 0:
-            self.moduleManager.reload_module(
+        if len(self.tab_bindings) > 0:
+            self.module_manager.reload_module(
                 self, QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menu_list_modules(self) -> None:
-        moduleList = []  # type: List[str]
-        for module in self.moduleManager.list_modules():
-            moduleList.append('{} ({})'.format(module[0], module[1]))
+        module_list = []  # type: List[str]
+        for module in self.module_manager.list_modules():
+            module_list.append('{} ({})'.format(module[0], module[1]))
         QMessageBox.information(
-            self, "Pext", '\n'.join(['Installed modules:'] + moduleList))
+            self, "Pext", '\n'.join(['Installed modules:'] + module_list))
 
     def _menu_install_module(self) -> None:
-        moduleURI, ok = QInputDialog.getText(
+        module_url, ok = QInputDialog.getText(
             self, "Pext", "Enter the git URL of the module to install")
         if ok:
             functions = [
                 {
-                    'name': self.moduleManager.install_module,
-                    'args': (moduleURI),
+                    'name': self.module_manager.install_module,
+                    'args': (module_url),
                     'kwargs': {'interactive': False, 'verbose': True}
                 }, {
                     'name': self._update_modules_installed_count,
@@ -1117,15 +1117,15 @@ class Window(QMainWindow):
                 target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_uninstall_module(self) -> None:
-        moduleList = [module[0]
-                      for module in self.moduleManager.list_modules()]
-        moduleName, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to uninstall", moduleList, 0, False)
+        module_list = [module[0]
+                       for module in self.module_manager.list_modules()]
+        module_name, ok = QInputDialog.getItem(
+            self, "Pext", "Choose the module to uninstall", module_list, 0, False)
         if ok:
             functions = [
                 {
-                    'name': self.moduleManager.uninstall_module,
-                    'args': (moduleName),
+                    'name': self.module_manager.uninstall_module,
+                    'args': (module_name),
                     'kwargs': {'verbose': True}
                 }, {
                     'name': self._update_modules_installed_count,
@@ -1137,24 +1137,24 @@ class Window(QMainWindow):
                 target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_update_module(self) -> None:
-        moduleList = [module[0]
-                      for module in self.moduleManager.list_modules()]
-        moduleName, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to update", moduleList, 0, False)
+        module_list = [module[0]
+                       for module in self.module_manager.list_modules()]
+        module_name, ok = QInputDialog.getItem(
+            self, "Pext", "Choose the module to update", module_list, 0, False)
         if ok:
-            threading.Thread(target=self.moduleManager.update_module,  # type: ignore
-                             args=(moduleName,),
+            threading.Thread(target=self.module_manager.update_module,  # type: ignore
+                             args=(module_name,),
                              kwargs={'verbose': True}).start()
 
     def _menu_update_all_modules(self) -> None:
         threading.Thread(
-            target=self.moduleManager.update_all_modules, kwargs={'verbose': True}).start()
+            target=self.module_manager.update_all_modules, kwargs={'verbose': True}).start()
 
     def _menu_quit(self) -> None:
         sys.exit(0)
 
     def _menu_quit_without_saving(self) -> None:
-        self.settings['saveSettings'] = False
+        self.settings['save_settings'] = False
         self._menu_quit()
 
     def _search(self) -> None:
@@ -1177,34 +1177,34 @@ class Window(QMainWindow):
 
     def _update_modules_installed_count(self) -> None:
         QQmlProperty.write(
-            self.introScreen, "modulesInstalledCount", len(self.moduleManager.list_modules()))
+            self.intro_screen, "modulesInstalledCount", len(self.module_manager.list_modules()))
 
     def bind_logger(self, logger: 'Logger') -> None:
         """Bind the logger to the window and further initialize the module."""
-        self.moduleManager.bind_logger(logger)
+        self.module_manager.bind_logger(logger)
 
         # Now that the logger is bound, we can show messages in the window, so
         # start binding the modules
         if len(self.settings['modules']) > 0:
             for module in self.settings['modules']:
-                self.moduleManager.load_module(self, module)
+                self.module_manager.load_module(self, module)
         else:
             for module in ProfileManager().retrieve_modules(self.settings['profile']):
-                self.moduleManager.load_module(self, module)
+                self.module_manager.load_module(self, module)
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the
         # list
-        if len(self.tabBindings) == 1:
+        if len(self.tab_bindings) == 1:
             self.tabs.currentIndexChanged.emit()
-        elif len(self.tabBindings) > 1:
+        elif len(self.tab_bindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def close(self) -> None:
         """Close the window."""
         self.window.hide()
-        QQmlProperty.write(self.searchInputModel, "text", "")
-        for tab in self.tabBindings:
+        QQmlProperty.write(self.search_input_model, "text", "")
+        for tab in self.tab_bindings:
             if not tab['init']:
                 continue
 
@@ -1263,34 +1263,34 @@ def _load_settings(argv: List[str]) -> Dict:
     settings = {'clipboard': 'clipboard',
                 'modules': [],
                 'profile': 'default',
-                'saveSettings': True}
+                'save_settings': True}
 
     # getopt requires all possible options to be listed, but we do not know
     # more about module-specific options in advance than that they start with
     # module-. Therefore, we go through the argument list and create a new
     # list filled with every entry that starts with module- so that getopt
     # doesn't raise getoptError for these entries.
-    moduleOpts = []
+    module_opts = []
     for arg in argv:
         arg = arg.split("=")[0]
         if arg.startswith("--module-"):
-            moduleOpts.append(arg[2:] + "=")
+            module_opts.append(arg[2:] + "=")
 
     try:
-        opts, args = getopt.getopt(argv, "hc:m:p:", ["help",
-                                                     "version",
-                                                     "exit",
-                                                     "clipboard=",
-                                                     "module=",
-                                                     "install-module=",
-                                                     "uninstall-module=",
-                                                     "update-module=",
-                                                     "update-modules",
-                                                     "list-modules",
-                                                     "profile=",
-                                                     "create-profile=",
-                                                     "remove-profile=",
-                                                     "list-profiles"] + moduleOpts)
+        opts, _ = getopt.getopt(argv, "hc:m:p:", ["help",
+                                                  "version",
+                                                  "exit",
+                                                  "clipboard=",
+                                                  "module=",
+                                                  "install-module=",
+                                                  "uninstall-module=",
+                                                  "update-module=",
+                                                  "update-modules",
+                                                  "list-modules",
+                                                  "profile=",
+                                                  "create-profile=",
+                                                  "remove-profile=",
+                                                  "list-profiles"] + module_opts)
 
     except getopt.GetoptError as err:
         print("{}\n".format(err))
@@ -1351,12 +1351,12 @@ def _load_settings(argv: List[str]) -> Dict:
 
 def _shut_down(pidfile: str, profile: str, window: Window) -> None:
     """Clean up."""
-    for module in window.tabBindings:
+    for module in window.tab_bindings:
         module['module'].stop()
 
     os.unlink(pidfile)
-    if window.settings['saveSettings']:
-        ProfileManager().save_modules(profile, window.tabBindings)
+    if window.settings['save_settings']:
+        ProfileManager().save_modules(profile, window.tab_bindings)
 
 
 def usage() -> None:
@@ -1441,14 +1441,14 @@ def main() -> None:
     atexit.register(_shut_down, pidfile, settings['profile'], window)
 
     # Handle SIGUSR1 UNIX signal
-    signalHandler = SignalHandler(window)
-    signal.signal(signal.SIGUSR1, signalHandler.handle)
+    signal_handler = SignalHandler(window)
+    signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
-    mainLoop = MainLoop(app, window, settings, logger)
+    main_loop = MainLoop(app, window, settings, logger)
 
     # And run...
-    mainLoop.run()
+    main_loop.run()
 
 if __name__ == "__main__":
     main()
