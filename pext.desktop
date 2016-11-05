@@ -2,6 +2,7 @@
 Type=Application
 Name=Pext
 Comment=Python-based extendable tool
+Categories=Utility
 Exec=pext
 Icon=pext
 StartupNotify=false
