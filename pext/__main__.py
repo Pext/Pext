@@ -41,7 +41,7 @@ from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMessageBox, QTextEdit, QVBoxLayout)
-from PyQt5.Qt import QClipboard, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
+from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
 
 class AppFile():
@@ -1418,6 +1418,7 @@ def main() -> None:
 
     # Get an app instance
     app = QApplication(['Pext ({})'.format(settings['profile'])])
+    app.setWindowIcon(QIcon(AppFile.get_path('images/scalable/pext.svg')))
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
