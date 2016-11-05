@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Pext
+Comment=Python-based extendable tool
+Exec=pext
+Icon=pext
+StartupNotify=false
+Terminal=false

@@ -28,9 +28,15 @@ setup(
         'pext',
         'pext/helpers'
     ],
-    package_data={'pext': ['images/*', 'qml/*']},
+    package_data={'pext': ['images/scalable/*', 'qml/*']},
     include_package_data=True,
     zip_safe=False,
+    data_files=[
+        ('share/icons/hicolor/scalable/apps', ['pext/images/scalable/pext.svg']),
+        ('share/icons/hicolor/48x48/apps', ['pext/images/48x48/pext.png']),
+        ('share/icons/hicolor/128x128/apps', ['pext/images/128x128/pext.png']),
+        ('share/applications', ['pext.desktop'])
+    ],
     entry_points={
         'gui_scripts': [
             'pext=pext.__main__:main'

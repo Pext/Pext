@@ -299,7 +299,7 @@ ApplicationWindow {
 
             Image {
                 asynchronous: true
-                source: "../images/logo.svg"
+                source: "../images/scalable/logo.svg"
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
