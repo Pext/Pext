@@ -363,7 +363,7 @@ class ProfileManager():
 
     def save_modules(self, profile: str, modules: List[Dict]) -> None:
         """Save the list of open modules and their settings to the profile."""
-        config = configparser.ConfigParser()
+        config = configparser.SafeConfigParser()
         for number, module in enumerate(modules):
             name = ModuleManager.add_prefix(module['module_name'])
             config['{}_{}'.format(number, name)] = module['settings']
@@ -373,7 +373,7 @@ class ProfileManager():
 
     def retrieve_modules(self, profile: str) -> List[Dict]:
         """Retrieve the list of modules and their settings from the profile."""
-        config = configparser.ConfigParser()
+        config = configparser.SafeConfigParser()
         modules = []
 
         config.read('{}/{}/modules'.format(self.profileDir, profile))
