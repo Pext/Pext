@@ -351,11 +351,11 @@ class ProfileManager():
 
     def create_profile(self, profile: str) -> None:
         """Create a new empty profile."""
-        os.mkdir('{}/{}'.format(self.profileDir, profile))
+        os.mkdir(os.path.join(self.profileDir, profile))
 
     def remove_profile(self, profile: str) -> None:
         """Remove a profile and all associated data."""
-        rmtree('{}/{}'.format(self.profileDir, profile))
+        rmtree(os.path.join(self.profileDir, profile))
 
     def list_profiles(self) -> List:
         """List the existing profiles."""
@@ -368,7 +368,7 @@ class ProfileManager():
             name = ModuleManager.add_prefix(module['module_name'])
             config['{}_{}'.format(number, name)] = module['settings']
 
-        with open('{}/{}/modules'.format(self.profileDir, profile), 'w') as configfile:
+        with open(os.path.join(self.profileDir, profile, 'modules'), 'w') as configfile:
             config.write(configfile)
 
     def retrieve_modules(self, profile: str) -> List[Dict]:
@@ -376,7 +376,7 @@ class ProfileManager():
         config = configparser.SafeConfigParser()
         modules = []
 
-        config.read('{}/{}/modules'.format(self.profileDir, profile))
+        config.read(os.path.join(self.profileDir, profile, 'modules'))
 
         for module in config.sections():
             settings = {}
@@ -489,7 +489,7 @@ class ModuleManager():
         # Add tab
         tab_data = QQmlComponent(window.engine)
         tab_data.loadUrl(
-            QUrl.fromLocalFile(AppFile.get_path('qml/ModuleData.qml')))
+            QUrl.fromLocalFile(AppFile.get_path(os.path.join('qml', 'ModuleData.qml'))))
         window.engine.setContextForObject(tab_data, module_context)
         window.tabs.addTab(module_name, tab_data)
 
@@ -614,14 +614,14 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log('Removing {}'.format(module_name))
+            self._log('Uninstalling {}'.format(module_name))
 
         try:
             rmtree(os.path.join(self.module_dir, dir_name))
         except FileNotFoundError:
             if verbose:
                 self._log_error(
-                    'Cannot remove {}, it is not installed'.format(module_name))
+                    'Cannot uninstall {}, it is not installed'.format(module_name))
 
             return False
 
@@ -944,7 +944,7 @@ class Window(QMainWindow):
             "applicationVersion", VersionRetriever.get_version())
 
         # Load the main UI
-        self.engine.load(QUrl.fromLocalFile(AppFile.get_path('qml/main.qml')))
+        self.engine.load(QUrl.fromLocalFile(AppFile.get_path(os.path.join('qml', 'main.qml'))))
 
         self.window = self.engine.rootObjects()[0]
 
@@ -1418,7 +1418,7 @@ def main() -> None:
 
     # Get an app instance
     app = QApplication(['Pext ({})'.format(settings['profile'])])
-    app.setWindowIcon(QIcon(AppFile.get_path('images/scalable/pext.svg')))
+    app.setWindowIcon(QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg'))))
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
