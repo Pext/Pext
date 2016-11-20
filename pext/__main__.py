@@ -1211,10 +1211,19 @@ class Window(QMainWindow):
         self.window.show()
         self.activateWindow()
 
+    def toggle_visibility(self) -> None:
+        """Toggle window visibility."""
+        if self.window.isVisible():
+            self.close()
+        else:
+            self.show()
+
     def quit(self) -> None:
+        """Quit."""
         sys.exit(0)
 
     def quit_without_saving(self) -> None:
+        """Quit without saving."""
         self.settings['save_settings'] = False
         self.quit()
 
@@ -1243,8 +1252,8 @@ class Tray():
         self.tray = QSystemTrayIcon(app_icon)
         tray_menu = QMenu()
 
-        tray_menu_open = QAction("Show", tray_menu)
-        tray_menu_open.triggered.connect(window.show)
+        tray_menu_open = QAction("Toggle visibility", tray_menu)
+        tray_menu_open.triggered.connect(window.toggle_visibility)
         tray_menu.addAction(tray_menu_open)
 
         tray_menu.addSeparator()
@@ -1265,7 +1274,7 @@ class Tray():
         """React to a click event."""
         # Only show the window on a left click
         if reason == 3:
-            self.window.show()
+            self.window.toggle_visibility()
 
 
 def _init_persist(profile: str) -> str:
