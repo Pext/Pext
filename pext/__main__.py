@@ -38,9 +38,10 @@ from typing import Dict, List, Optional, Tuple
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
+from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
-                             QMessageBox, QTextEdit, QVBoxLayout)
+                             QMenu, QMessageBox, QTextEdit, QVBoxLayout,
+                             QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
 
@@ -996,9 +997,9 @@ class Window(QMainWindow):
         menu_update_module_shortcut.triggered.connect(self._menu_update_module)
         menu_update_all_modules_shortcut.triggered.connect(
             self._menu_update_all_modules)
-        menu_quit_shortcut.triggered.connect(self._menu_quit)
+        menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
-            self._menu_quit_without_saving)
+            self.quit_without_saving)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -1150,13 +1151,6 @@ class Window(QMainWindow):
         threading.Thread(
             target=self.module_manager.update_all_modules, kwargs={'verbose': True}).start()
 
-    def _menu_quit(self) -> None:
-        sys.exit(0)
-
-    def _menu_quit_without_saving(self) -> None:
-        self.settings['save_settings'] = False
-        self._menu_quit()
-
     def _search(self) -> None:
         try:
             self._get_current_element()['vm'].search()
@@ -1217,6 +1211,13 @@ class Window(QMainWindow):
         self.window.show()
         self.activateWindow()
 
+    def quit(self) -> None:
+        sys.exit(0)
+
+    def quit_without_saving(self) -> None:
+        self.settings['save_settings'] = False
+        self.quit()
+
 
 class SignalHandler():
 
@@ -1229,6 +1230,42 @@ class SignalHandler():
     def handle(self, signum: int, frame) -> None:
         """When an UNIX signal gets received, show the window."""
         self.window.show()
+
+
+class Tray():
+
+    """Handle the system tray."""
+
+    def __init__(self, window: Window, app_icon: str, profile: str) -> None:
+        """Initialize the system tray."""
+        self.window = window
+
+        self.tray = QSystemTrayIcon(app_icon)
+        tray_menu = QMenu()
+
+        tray_menu_open = QAction("Show", tray_menu)
+        tray_menu_open.triggered.connect(window.show)
+        tray_menu.addAction(tray_menu_open)
+
+        tray_menu.addSeparator()
+
+        tray_menu_quit = QAction("Quit", tray_menu)
+        tray_menu_quit.triggered.connect(window.quit)
+        tray_menu.addAction(tray_menu_quit)
+        tray_menu_quit_without_saving = QAction("Quit without saving", tray_menu)
+        tray_menu_quit_without_saving.triggered.connect(window.quit_without_saving)
+        tray_menu.addAction(tray_menu_quit_without_saving)
+
+        self.tray.activated.connect(self.icon_clicked)
+        self.tray.setContextMenu(tray_menu)
+        self.tray.setToolTip('Pext ({})'.format(profile))
+        self.tray.show()
+
+    def icon_clicked(self, reason: int) -> None:
+        """React to a click event."""
+        # Only show the window on a left click
+        if reason == 3:
+            self.window.show()
 
 
 def _init_persist(profile: str) -> str:
@@ -1416,9 +1453,12 @@ def main() -> None:
 
     settings = _load_settings(sys.argv[1:])
 
+    # Load the app icon
+    app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
+
     # Get an app instance
     app = QApplication(['Pext ({})'.format(settings['profile'])])
-    app.setWindowIcon(QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg'))))
+    app.setWindowIcon(app_icon)
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
@@ -1446,6 +1486,9 @@ def main() -> None:
 
     # Create a main loop
     main_loop = MainLoop(app, window, settings, logger)
+
+    # Create a tray icon
+    tray = Tray(window, app_icon, settings['profile'])
 
     # And run...
     main_loop.run()
