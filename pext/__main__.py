@@ -454,6 +454,8 @@ class ModuleManager():
             "resultListModel", vm.result_list_model_list)
         module_context.setContextProperty(
             "resultListModelMaxIndex", vm.result_list_model_max_index)
+        module_context.setContextProperty(
+            "resultListModelHasEntries", False)
         module_context.setContextProperty("resultListModelCommandMode", False)
 
         # Prepare module
@@ -784,6 +786,9 @@ class ViewModel():
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
+        self.context.setContextProperty(
+            "resultListModelHasEntries", True if self.entry_list else False)
+
         search_string = QQmlProperty.read(self.search_input_model, "text").lower()
 
         # Don't search if nothing changed

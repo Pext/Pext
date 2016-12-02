@@ -18,7 +18,7 @@
 */
 
 import QtQuick 2.5
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
 
@@ -38,7 +38,13 @@ ScrollView {
         }
     }
 
+    BusyIndicator {
+        visible: resultList.hasEntries == false
+        anchors.centerIn: parent
+    }
+
     ListView {
+        visible: resultList.hasEntries == true
         anchors.topMargin: headerText.text ? 23 : 0
         clip: true
         id: resultList
@@ -48,6 +54,7 @@ ScrollView {
 
         property int maximumIndex: resultListModelMaxIndex
         property bool commandMode: resultListModelCommandMode
+        property bool hasEntries: resultListModelHasEntries
 
         model: resultListModel
 
