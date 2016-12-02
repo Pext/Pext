@@ -787,7 +787,7 @@ class ViewModel():
         visible in the search bar.
         """
         self.context.setContextProperty(
-            "resultListModelHasEntries", True if self.entry_list else False)
+            "resultListModelHasEntries", True if self.entry_list or self.command_list else False)
 
         search_string = QQmlProperty.read(self.search_input_model, "text").lower()
 
