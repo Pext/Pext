@@ -230,9 +230,18 @@ ApplicationWindow {
                 text: "List installed modules"
             }
 
-            MenuItem {
-                objectName: "menuInstallModule"
-                text: "Install module"
+            Menu {
+                title: "Install module"
+
+                MenuItem {
+                    objectName: "menuInstallModuleFromRepository"
+                    text: "From online module list"
+                }
+
+                MenuItem {
+                    objectName: "menuInstallModuleFromURL"
+                    text: "From URL"
+                }
             }
 
             MenuItem {

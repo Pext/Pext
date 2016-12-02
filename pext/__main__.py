@@ -26,15 +26,18 @@ Pext.
 import atexit
 import configparser
 import getopt
+import json
 import os
 import signal
 import sys
 import threading
 import time
+
 from importlib import reload  # type: ignore
 from shutil import rmtree
 from subprocess import check_call, check_output, CalledProcessError, Popen
 from typing import Dict, List, Optional, Tuple
+from urllib.request import urlopen
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel
@@ -979,8 +982,10 @@ class Window(QMainWindow):
             QObject, "menuCloseActiveModule")
         menu_list_modules_shortcut = self.window.findChild(
             QObject, "menuListModules")
-        menu_install_module_shortcut = self.window.findChild(
-            QObject, "menuInstallModule")
+        menu_install_module_from_repository_shortcut = self.window.findChild(
+            QObject, "menuInstallModuleFromRepository")
+        menu_install_module_from_url_shortcut = self.window.findChild(
+            QObject, "menuInstallModuleFromURL")
         menu_uninstall_module_shortcut = self.window.findChild(
             QObject, "menuUninstallModule")
         menu_update_module_shortcut = self.window.findChild(
@@ -996,7 +1001,10 @@ class Window(QMainWindow):
         menu_load_module_shortcut.triggered.connect(self._open_tab)
         menu_close_active_module_shortcut.triggered.connect(self._close_tab)
         menu_list_modules_shortcut.triggered.connect(self._menu_list_modules)
-        menu_install_module_shortcut.triggered.connect(self._menu_install_module)
+        menu_install_module_from_repository_shortcut.triggered.connect(
+            self._menu_install_module_from_repository)
+        menu_install_module_from_url_shortcut.triggered.connect(
+            self._menu_install_module_from_url)
         menu_uninstall_module_shortcut.triggered.connect(
             self._menu_uninstall_module)
         menu_update_module_shortcut.triggered.connect(self._menu_update_module)
@@ -1104,7 +1112,57 @@ class Window(QMainWindow):
         QMessageBox.information(
             self, "Pext", '\n'.join(['Installed modules:'] + module_list))
 
-    def _menu_install_module(self) -> None:
+    def _menu_install_module_from_repository(self) -> None:
+        url = "https://pext.github.io/modules.json"
+        try:
+            response = urlopen(url)
+        except URLError:
+            self.logger.add_error("", "Cannot connect to {}".format(url))
+            return
+
+        response_data = response.read().decode("utf-8")
+
+        try:
+            data = json.loads(response_data)
+        except ValueError:
+            self.logger.add_error("",
+                                  "Could not decode content of {} (ValueError)"
+                                  .format(url))
+            return
+
+        module_list = {}
+
+        try:
+            modules = data['modules']
+            for module in modules:
+                for url in module['urls']:
+                    module_list["{} ({})".format(module['name'], url)] = url
+        except KeyError:
+            self.logger.add_error("",
+                                  "Could not decode content of {} (KeyError)"
+                                  .format(url))
+            return
+
+        module_name, ok = QInputDialog.getItem(
+            self, "Pext", "Choose the module to install",
+            sorted(module_list.keys()), 0, False)
+
+        if ok:
+            functions = [
+                {
+                    'name': self.module_manager.install_module,
+                    'args': (module_list[module_name]),
+                    'kwargs': {'interactive': False, 'verbose': True}
+                }, {
+                    'name': self._update_modules_installed_count,
+                    'args': (),
+                    'kwargs': {}
+                }
+            ]
+            threading.Thread(
+                target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_install_module_from_url(self) -> None:
         module_url, ok = QInputDialog.getText(
             self, "Pext", "Enter the git URL of the module to install")
         if ok:
