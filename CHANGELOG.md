@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Support for getting a list of installable modules from pext.github.io
 - Busy indicator when the list of entries is empty for a more responsive look
 
+### Fixed
+- All commands now correctly show up after emptying the search bar
+
 ## [0.2] - 2016-11-21
 ### Added
 - System tray icon

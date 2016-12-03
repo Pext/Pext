@@ -801,6 +801,7 @@ class ViewModel():
         # If empty, show all
         if len(search_string) == 0 and not new_entries:
             self.filtered_entry_list = self.entry_list
+            self.filtered_command_list = self.command_list
             combined_list = self.entry_list + self.command_list
             self.result_list_model_list = QStringListModel(
                 [str(entry) for entry in combined_list])
