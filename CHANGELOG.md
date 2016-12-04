@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - All commands now correctly show up after emptying the search bar
+- Module lists are now sorted alphabetically
 
 ## [0.2] - 2016-11-21
 ### Added

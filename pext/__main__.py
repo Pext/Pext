@@ -1076,7 +1076,7 @@ class Window(QMainWindow):
         module_list = [module[0]
                        for module in self.module_manager.list_modules()]
         module_name, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to load", module_list, 0, False)
+            self, "Pext", "Choose the module to load", sorted(module_list), 0, False)
         if ok:
             given_settings, ok = QInputDialog.getText(
                 self, "Pext", "Enter module settings (leave blank for defaults)")
@@ -1111,7 +1111,7 @@ class Window(QMainWindow):
         for module in self.module_manager.list_modules():
             module_list.append('{} ({})'.format(module[0], module[1]))
         QMessageBox.information(
-            self, "Pext", '\n'.join(['Installed modules:'] + module_list))
+            self, "Pext", '\n'.join(['Installed modules:'] + sorted(module_list)))
 
     def _menu_install_module_from_repository(self) -> None:
         url = "https://pext.github.io/modules.json"
@@ -1185,7 +1185,7 @@ class Window(QMainWindow):
         module_list = [module[0]
                        for module in self.module_manager.list_modules()]
         module_name, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to uninstall", module_list, 0, False)
+            self, "Pext", "Choose the module to uninstall", sorted(module_list), 0, False)
         if ok:
             functions = [
                 {
@@ -1205,7 +1205,7 @@ class Window(QMainWindow):
         module_list = [module[0]
                        for module in self.module_manager.list_modules()]
         module_name, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to update", module_list, 0, False)
+            self, "Pext", "Choose the module to update", sorted(module_list), 0, False)
         if ok:
             threading.Thread(target=self.module_manager.update_module,  # type: ignore
                              args=(module_name,),
