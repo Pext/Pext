@@ -1265,14 +1265,25 @@ class Window(QMainWindow):
     def close(self) -> None:
         """Close the window."""
         self.window.hide()
-        QQmlProperty.write(self.search_input_model, "text", "")
+
+        need_search = False
+
+        if QQmlProperty.read(self.search_input_model, "text") != "":
+            need_search = True
+            QQmlProperty.write(self.search_input_model, "text", "")
+
         for tab in self.tab_bindings:
             if not tab['init']:
                 continue
 
-            tab['vm'].selection = []
-            tab['vm'].module.selection_made(tab['vm'].selection)
-            tab['vm'].search()
+            tab_needs_search = need_search or len(tab['vm'].selection) > 0
+
+            if len(tab['vm'].selection) > 0:
+                tab['vm'].selection = []
+                tab['vm'].module.selection_made(tab['vm'].selection)
+
+            if tab_needs_search:
+                tab['vm'].search()
 
     def show(self) -> None:
         """Show the window."""
