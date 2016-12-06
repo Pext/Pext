@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
+- The entry and command list will now be emptied each time just before selection_made is called
+
 ### Added
 - Support for getting a list of installable modules from pext.github.io
 - Busy indicator when the list of entries is empty for a more responsive look

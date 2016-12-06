@@ -320,6 +320,8 @@ class MainLoop():
                 if tab_id == current_tab:
                     queue_size[0] = tab['queue'].qsize()
                     active_tab = True
+                    tab['vm'].context.setContextProperty(
+                        "resultListModelHasEntries", True if tab['vm'].entry_list or tab['vm'].command_list else False)
                 else:
                     queue_size[1] += tab['queue'].qsize()
                     active_tab = False
@@ -778,6 +780,8 @@ class ViewModel():
 
         if len(self.selection) > 0:
             self.selection.pop()
+            self.entry_list = []
+            self.command_list = []
             self.module.selection_made(self.selection)
         else:
             self.window.close()
@@ -789,9 +793,6 @@ class ViewModel():
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
-        self.context.setContextProperty(
-            "resultListModelHasEntries", True if self.entry_list or self.command_list else False)
-
         search_string = QQmlProperty.read(self.search_input_model, "text").lower()
 
         # Don't search if nothing changed
@@ -874,6 +875,9 @@ class ViewModel():
         """Notify the module of our selection entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0 or self.queue.qsize() > 0:
             return
+
+        self.entry_list = []
+        self.command_list = []
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
