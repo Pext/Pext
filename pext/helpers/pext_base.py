@@ -37,11 +37,11 @@ class ModuleBase(ABC):
         """Called when the module is first loaded.
 
         In this function, the application should initialize all its data and
-        use the Action.addEntry and Action.addCommand to asynchronously
+        use the Action.add_entry and Action.add_command to asynchronously
         populate the main list.
 
         If the list can be generated very quickly, the module may opt for using
-        Action.replaceEntryList and Action.replaceCommandList instead, although
+        Action.replace_entry_list and Action.replace_command_list instead, although
         it is recommended to queue the data per entry so that the user can
         start interacting with at least some of the data as quickly as
         possible.
