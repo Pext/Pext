@@ -37,6 +37,7 @@ from importlib import reload  # type: ignore
 from shutil import rmtree
 from subprocess import check_call, check_output, CalledProcessError, Popen
 from typing import Dict, List, Optional, Tuple
+from urllib.error import URLError
 from urllib.request import urlopen
 from queue import Queue, Empty
 
@@ -49,7 +50,6 @@ from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComp
 
 
 class AppFile():
-
     """Get access to application-specific files."""
 
     @staticmethod
@@ -66,7 +66,6 @@ from pext_helpers import Action, SelectionType  # noqa: E402
 
 
 class VersionRetriever():
-
     """Retrieve general information."""
 
     @staticmethod
@@ -77,7 +76,6 @@ class VersionRetriever():
 
 
 class RunConseq():
-
     """A simple helper to run several functions consecutively."""
 
     def __init__(self, functions: List) -> None:
@@ -90,7 +88,6 @@ class RunConseq():
 
 
 class InputDialog(QDialog):
-
     """A simple dialog requesting user input."""
 
     def __init__(self, question: str, text: str, parent=None) -> None:
@@ -116,7 +113,6 @@ class InputDialog(QDialog):
 
 
 class Logger():
-
     """Log events to the appropriate location.
 
     Shows events in the main window and, if the main window is not visible,
@@ -203,7 +199,6 @@ class Logger():
 
 
 class MainLoop():
-
     """Main application loop.
 
     The main application loop connects the application, queue and UI events and
@@ -330,7 +325,7 @@ class MainLoop():
                     self._process_tab_action(tab, active_tab)
                     tab['entries_processed'] += 1
                     all_empty = False
-                except Empty:  # type: ignore
+                except Empty:
                     if active_tab and tab['entries_processed']:
                         tab['vm'].search(new_entries=True)
 
@@ -348,7 +343,6 @@ class MainLoop():
 
 
 class ProfileManager():
-
     """Create, remove, list, load and save to a profile."""
 
     def __init__(self) -> None:
@@ -369,7 +363,7 @@ class ProfileManager():
 
     def save_modules(self, profile: str, modules: List[Dict]) -> None:
         """Save the list of open modules and their settings to the profile."""
-        config = configparser.SafeConfigParser()
+        config = configparser.ConfigParser()
         for number, module in enumerate(modules):
             name = ModuleManager.add_prefix(module['module_name'])
             config['{}_{}'.format(number, name)] = module['settings']
@@ -379,7 +373,7 @@ class ProfileManager():
 
     def retrieve_modules(self, profile: str) -> List[Dict]:
         """Retrieve the list of modules and their settings from the profile."""
-        config = configparser.SafeConfigParser()
+        config = configparser.ConfigParser()
         modules = []
 
         config.read(os.path.join(self.profileDir, profile, 'modules'))
@@ -397,7 +391,6 @@ class ProfileManager():
 
 
 class ModuleManager():
-
     """Install, remove, update and list modules."""
 
     def __init__(self) -> None:
@@ -668,7 +661,6 @@ class ModuleManager():
 
 
 class ModuleThreadInitializer(threading.Thread):
-
     """Initialize a thread for the module."""
 
     def __init__(self, module_name: str, q: Queue, target=None, args=()) -> None:
@@ -692,7 +684,6 @@ class ModuleThreadInitializer(threading.Thread):
 
 
 class ViewModel():
-
     """Manage the communication between user interface and module."""
 
     def __init__(self) -> None:
@@ -750,7 +741,8 @@ class ViewModel():
             # We fully match a string
             return ''.join(common_chars)
 
-    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject, header_text: QObject, result_list_model: QObject) -> None:  # noqa: E646
+    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject,
+                     header_text: QObject, result_list_model: QObject) -> None:
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
@@ -939,7 +931,6 @@ class ViewModel():
 
 
 class Window(QMainWindow):
-
     """The main Pext window."""
 
     def __init__(self, settings: Dict, parent=None) -> None:
@@ -1164,8 +1155,7 @@ class Window(QMainWindow):
                     'kwargs': {}
                 }
             ]
-            threading.Thread(
-                target=RunConseq, args=(functions,)).start()  # type: ignore
+            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_install_module_from_url(self) -> None:
         module_url, ok = QInputDialog.getText(
@@ -1182,8 +1172,7 @@ class Window(QMainWindow):
                     'kwargs': {}
                 }
             ]
-            threading.Thread(
-                target=RunConseq, args=(functions,)).start()  # type: ignore
+            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_uninstall_module(self) -> None:
         module_list = [module[0]
@@ -1202,8 +1191,7 @@ class Window(QMainWindow):
                     'kwargs': {}
                 }
             ]
-            threading.Thread(
-                target=RunConseq, args=(functions,)).start()  # type: ignore
+            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_update_module(self) -> None:
         module_list = [module[0]
@@ -1308,7 +1296,6 @@ class Window(QMainWindow):
 
 
 class SignalHandler():
-
     """Handle UNIX signals."""
 
     def __init__(self, window: Window) -> None:
@@ -1321,7 +1308,6 @@ class SignalHandler():
 
 
 class Tray():
-
     """Handle the system tray."""
 
     def __init__(self, window: Window, app_icon: str, profile: str) -> None:
@@ -1441,8 +1427,7 @@ def _load_settings(argv: List[str]) -> Dict:
             if not arg.startswith('pext_module_'):
                 arg = 'pext_module_' + arg
 
-            settings['modules'].append(
-                {'name': arg, 'settings': {}})  # type: ignore
+            settings['modules'].append({'name': arg, 'settings': {}})  # type: ignore
         elif opt.startswith("--module-"):
             settings['modules'][-1]['settings'][opt[9:]] = arg  # type: ignore
         elif opt == "--install-module":
@@ -1576,10 +1561,12 @@ def main() -> None:
     main_loop = MainLoop(app, window, settings, logger)
 
     # Create a tray icon
-    tray = Tray(window, app_icon, settings['profile'])
+    # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
+    tray = Tray(window, app_icon, settings['profile'])  # noqa: F841
 
     # And run...
     main_loop.run()
+
 
 if __name__ == "__main__":
     main()
