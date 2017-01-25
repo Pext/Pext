@@ -1421,9 +1421,11 @@ def _load_settings(argv: List[str]) -> Dict:
             for style in QStyleFactory().keys():
                 print(style)
         elif opt == "--style":
-            settings['style'] = arg
-            # PyQt5 does not have bindings for QQuickStyle yet
-            os.environ["QT_QUICK_CONTROLS_STYLE"] = arg
+            if arg in QStyleFactory().keys():
+                settings['style'] = arg
+            else:
+                # PyQt5 does not have bindings for QQuickStyle yet
+                os.environ["QT_QUICK_CONTROLS_STYLE"] = arg
         elif opt in ("-b", "--binary"):
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
