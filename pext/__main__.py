@@ -1109,7 +1109,7 @@ class Window(QMainWindow):
             self, "Pext", '\n'.join(['Installed modules:'] + sorted(module_list)))
 
     def _menu_install_module_from_repository(self) -> None:
-        url = "https://pext.github.io/modules.json"
+        url = "https://pext.hackerchick.me/modules.json"
         try:
             response = urlopen(url)
         except URLError:
