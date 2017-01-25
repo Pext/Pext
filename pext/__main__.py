@@ -45,7 +45,7 @@ from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMenu, QMessageBox, QTextEdit, QVBoxLayout,
-                             QSystemTrayIcon)
+                             QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 
 
@@ -1391,6 +1391,8 @@ def _load_settings(argv: List[str]) -> Dict:
         opts, _ = getopt.getopt(argv, "hc:m:p:", ["help",
                                                   "version",
                                                   "exit",
+                                                  "list-styles",
+                                                  "style=",
                                                   "clipboard=",
                                                   "module=",
                                                   "install-module=",
@@ -1411,10 +1413,17 @@ def _load_settings(argv: List[str]) -> Dict:
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
-        elif opt == "--exit":
-            sys.exit(0)
         elif opt == "--version":
             print("Pext {}".format(VersionRetriever.get_version()))
+        elif opt == "--exit":
+            sys.exit(0)
+        elif opt == "--list-styles":
+            for style in QStyleFactory().keys():
+                print(style)
+        elif opt == "--style":
+            settings['style'] = arg
+            # PyQt5 does not have bindings for QQuickStyle yet
+            os.environ["QT_QUICK_CONTROLS_STYLE"] = arg
         elif opt in ("-b", "--binary"):
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
@@ -1479,6 +1488,12 @@ def usage() -> None:
 
 --help             : show this screen.
 
+--style            : sets a certain Qt system style for the UI.
+
+--list-styles      : print a list of loadable Qt system styles. Due to PyQt5
+                     limitations, loadable QtQuick styles cannot currently be
+                     listed.
+
 --install-module   : download and install a module from the given git URL.
 
 --list-modules     : list all installed modules.
@@ -1532,6 +1547,8 @@ def main() -> None:
     # Get an app instance
     app = QApplication(['Pext ({})'.format(settings['profile'])])
     app.setWindowIcon(app_icon)
+    if 'style' in settings:
+        app.setStyle(QStyleFactory().create(settings['style']))
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
