@@ -75,6 +75,33 @@ class VersionRetriever():
             return version_file.read().strip()
 
 
+class ConfigRetriever():
+
+    """Retrieve configuration entries."""
+
+    def __init__(self) -> None:
+        """Initialize the configuration."""
+        # Initialze defaults
+        self.config = {'config_path': os.path.expanduser('~/.config/pext/')}
+
+        # Overwrite with user settings if exists
+        config_parser = configparser.SafeConfigParser()
+
+        try:
+            config_parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini'))
+        except configparser.Error:
+            return
+
+        try:
+            self.config.update(config_parser['SETTINGS'])
+        except KeyError:
+            return
+
+    def get_setting(self, variable: str):
+        """Get a specific configuration setting."""
+        return self.config[variable]
+
+
 class RunConseq():
     """A simple helper to run several functions consecutively."""
 
@@ -345,9 +372,10 @@ class MainLoop():
 class ProfileManager():
     """Create, remove, list, load and save to a profile."""
 
-    def __init__(self) -> None:
+    def __init__(self, config_retriever: ConfigRetriever) -> None:
         """Initialize the profile manager."""
-        self.profileDir = os.path.expanduser('~/.config/pext/profiles/')
+        self.profileDir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
+        self.config_retriever = config_retriever
 
     def create_profile(self, profile: str) -> None:
         """Create a new empty profile."""
@@ -359,7 +387,7 @@ class ProfileManager():
 
     def list_profiles(self) -> List:
         """List the existing profiles."""
-        return os.listdir(os.path.expanduser('~/.config/pext/profiles/'))
+        return os.listdir(self.profileDir)
 
     def save_modules(self, profile: str, modules: List[Dict]) -> None:
         """Save the list of open modules and their settings to the profile."""
@@ -393,9 +421,10 @@ class ProfileManager():
 class ModuleManager():
     """Install, remove, update and list modules."""
 
-    def __init__(self) -> None:
+    def __init__(self, config_retriever: ConfigRetriever) -> None:
         """Initialize the module manager."""
-        self.module_dir = os.path.expanduser('~/.config/pext/modules/')
+        self.config_retriever = config_retriever
+        self.module_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
         self.logger = None  # type: Optional[Logger]
 
     @staticmethod
@@ -437,7 +466,7 @@ class ModuleManager():
     def load_module(self, window: 'Window', module: Dict) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
-        module_path = os.path.expanduser('~/.config/pext/modules')
+        module_path = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
         if module_path not in sys.path:
             sys.path.append(module_path)
 
@@ -933,11 +962,12 @@ class ViewModel():
 class Window(QMainWindow):
     """The main Pext window."""
 
-    def __init__(self, settings: Dict, parent=None) -> None:
+    def __init__(self, settings: Dict, config_retriever: ConfigRetriever, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
 
         # Save settings
+        self.config_retriever = config_retriever
         self.settings = settings
 
         self.tab_bindings = []  # type: List[Dict]
@@ -955,7 +985,7 @@ class Window(QMainWindow):
 
         # Give intro screen the module count
         self.intro_screen = self.window.findChild(QObject, "introScreen")
-        self.module_manager = ModuleManager()
+        self.module_manager = ModuleManager(self.config_retriever)
         self._update_modules_installed_count()
 
         # Bind global shortcuts
@@ -1239,7 +1269,7 @@ class Window(QMainWindow):
             for module in self.settings['modules']:
                 self.module_manager.load_module(self, module)
         else:
-            for module in ProfileManager().retrieve_modules(self.settings['profile']):
+            for module in ProfileManager(self.config_retriever).retrieve_modules(self.settings['profile']):
                 self.module_manager.load_module(self, module)
 
         # If there's only one module passed through the command line, enforce
@@ -1368,7 +1398,7 @@ def _init_persist(profile: str) -> str:
     return pidfile
 
 
-def _load_settings(argv: List[str]) -> Dict:
+def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     """Load the settings from the command line and set defaults."""
     # Default options
     settings = {'clipboard': 'clipboard',
@@ -1442,42 +1472,42 @@ def _load_settings(argv: List[str]) -> Dict:
         elif opt.startswith("--module-"):
             settings['modules'][-1]['settings'][opt[9:]] = arg  # type: ignore
         elif opt == "--install-module":
-            ModuleManager().install_module(arg, verbose=True)
+            ModuleManager(config_retriever).install_module(arg, verbose=True)
         elif opt == "--uninstall-module":
-            ModuleManager().uninstall_module(arg, verbose=True)
+            ModuleManager(config_retriever).uninstall_module(arg, verbose=True)
         elif opt == "--update-module":
-            ModuleManager().update_module(arg, verbose=True)
+            ModuleManager(config_retriever).update_module(arg, verbose=True)
         elif opt == "--update-modules":
-            ModuleManager().update_all_modules(verbose=True)
+            ModuleManager(config_retriever).update_all_modules(verbose=True)
         elif opt == "--list-modules":
-            for module in ModuleManager().list_modules():
+            for module in ModuleManager(config_retriever).list_modules():
                 print('{} ({})'.format(module[0], module[1]))
         elif opt == "--profile":
             settings['profile'] = arg
             # Create directory for profile if not existant
             try:
-                ProfileManager().create_profile(arg)
+                ProfileManager(config_retriever).create_profile(arg)
             except OSError:
                 pass
         elif opt == "--create-profile":
-            ProfileManager().create_profile(arg)
+            ProfileManager(config_retriever).create_profile(arg)
         elif opt == "--remove-profile":
-            ProfileManager().remove_profile(arg)
+            ProfileManager(config_retriever).remove_profile(arg)
         elif opt == "--list-profiles":
-            for profile in ProfileManager().list_profiles():
+            for profile in ProfileManager(config_retriever).list_profiles():
                 print(profile)
 
     return settings
 
 
-def _shut_down(pidfile: str, profile: str, window: Window) -> None:
+def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: ConfigRetriever) -> None:
     """Clean up."""
     for module in window.tab_bindings:
         module['module'].stop()
 
     os.unlink(pidfile)
     if window.settings['save_settings']:
-        ProfileManager().save_modules(profile, window.tab_bindings)
+        ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
 
 
 def usage() -> None:
@@ -1533,15 +1563,18 @@ def usage() -> None:
 
 def main() -> None:
     """Start the application."""
+    # Load configuration
+    config_retriever = ConfigRetriever()
+
     # Ensure our necessary directories exist
     for directory in ['', 'modules', 'profiles', 'profiles/default']:
         try:
-            os.mkdir(os.path.expanduser('~/.config/pext/{}'.format(directory)))
+            os.mkdir(os.path.join(config_retriever.get_setting('config_path'), directory))
         except OSError:
             # Probably already exists, that's okay
             pass
 
-    settings = _load_settings(sys.argv[1:])
+    settings = _load_settings(sys.argv[1:], config_retriever)
 
     # Load the app icon
     app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
@@ -1561,7 +1594,7 @@ def main() -> None:
     pidfile = _init_persist(settings['profile'])
 
     # Get a window
-    window = Window(settings)
+    window = Window(settings, config_retriever)
 
     # Get a logger
     logger = Logger(window)
@@ -1570,7 +1603,7 @@ def main() -> None:
     window.bind_logger(logger)
 
     # Clean up on exit
-    atexit.register(_shut_down, pidfile, settings['profile'], window)
+    atexit.register(_shut_down, pidfile, settings['profile'], window, config_retriever)
 
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)

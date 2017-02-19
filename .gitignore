@@ -88,3 +88,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Pext specific
+pext/config.ini
