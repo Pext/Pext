@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.4] - 2017-02-20
 ### Added
 - Basic Qt5 theming support using installed system themes
 - Allow for a pext/config.ini file to overwrite some default configuration

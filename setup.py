@@ -11,7 +11,7 @@ setup(
     long_description='A Python-based application that uses modules for extendability',
     url='https://github.com/Pext/Pext',
     author='Sylvia van Os',
-    author_email='iamsylvie@openmailbox.org',
+    author_email='sylvia@hackerchick.me',
     license='GPLv3+',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
