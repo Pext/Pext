@@ -1404,7 +1404,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     settings = {'clipboard': 'clipboard',
                 'modules': [],
                 'profile': 'default',
-                'save_settings': True}
+                'save_settings': True,
+                'tray': True}
 
     # getopt requires all possible options to be listed, but we do not know
     # more about module-specific options in advance than that they start with
@@ -1433,7 +1434,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                                                   "profile=",
                                                   "create-profile=",
                                                   "remove-profile=",
-                                                  "list-profiles"] + module_opts)
+                                                  "list-profiles",
+                                                  "no-tray"] + module_opts)
 
     except getopt.GetoptError as err:
         print("{}\n".format(err))
@@ -1496,6 +1498,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-profiles":
             for profile in ProfileManager(config_retriever).list_profiles():
                 print(profile)
+        elif opt == "--no-tray":
+            settings['tray'] = False
 
     return settings
 
@@ -1554,6 +1558,8 @@ def usage() -> None:
 --remove-profile   : remove a profile.
 
 --list-profiles    : list all profiles.
+
+--no-tray          : do not create a tray icon.
 
 --version          : show the current version.
 
@@ -1614,7 +1620,8 @@ def main() -> None:
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
-    tray = Tray(window, app_icon, settings['profile'])  # noqa: F841
+    if settings['tray']:
+        tray = Tray(window, app_icon, settings['profile'])  # noqa: F841
 
     # And run...
     main_loop.run()

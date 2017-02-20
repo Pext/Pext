@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Basic Qt5 theming support using installed system themes
 - Allow for a pext/config.ini file to overwrite some default configuration
+- Allow the user to disable tray icon creation
 
 ### Changed
 - Get list of installable modules from pext.hackerchick.me instead of pext.github.io
