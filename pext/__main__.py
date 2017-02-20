@@ -97,6 +97,8 @@ class ConfigRetriever():
         except KeyError:
             return
 
+        self.config['config_path'] = os.path.expanduser(self.config['config_path'])
+
     def get_setting(self, variable: str):
         """Get a specific configuration setting."""
         return self.config[variable]
