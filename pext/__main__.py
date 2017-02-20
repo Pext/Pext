@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2016 Sylvia van Os <iamsylvie@openmailbox.org>
+# Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
 #
 # This file is part of Pext
 #
