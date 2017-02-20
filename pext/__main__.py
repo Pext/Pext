@@ -32,6 +32,7 @@ import signal
 import sys
 import threading
 import time
+import webbrowser
 
 from importlib import reload  # type: ignore
 from shutil import rmtree
@@ -1023,6 +1024,7 @@ class Window(QMainWindow):
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
+        menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
         menu_reload_active_module_shortcut.triggered.connect(
             self._reload_active_module)
@@ -1041,6 +1043,7 @@ class Window(QMainWindow):
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
+        menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -1260,6 +1263,9 @@ class Window(QMainWindow):
     def _update_modules_installed_count(self) -> None:
         QQmlProperty.write(
             self.intro_screen, "modulesInstalledCount", len(self.module_manager.list_modules()))
+
+    def _show_homepage(self) -> None:
+        webbrowser.open('https://pext.hackerchick.me/')
 
     def bind_logger(self, logger: 'Logger') -> None:
         """Bind the logger to the window and further initialize the module."""

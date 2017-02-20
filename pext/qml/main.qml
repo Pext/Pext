@@ -271,6 +271,11 @@ ApplicationWindow {
                     aboutDialog.createObject(applicationWindow);
                 }
             }
+
+            MenuItem {
+                objectName: "menuHomepage"
+                text: "Visit homepage"
+            }
         }
     }
 
