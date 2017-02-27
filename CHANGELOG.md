@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- An error occuring when retrieving the list of downloadable modules no longer causes a crash
+
 ## [0.4] - 2017-02-20
 ### Added
 - Basic Qt5 theming support using installed system themes

@@ -32,6 +32,7 @@ import signal
 import sys
 import threading
 import time
+import traceback
 import webbrowser
 
 from importlib import reload  # type: ignore
@@ -1148,7 +1149,8 @@ class Window(QMainWindow):
         try:
             response = urlopen(url)
         except URLError:
-            self.logger.add_error("", "Cannot connect to {}".format(url))
+            self.module_manager.logger.add_error("", "Cannot connect to {}".format(url))
+            traceback.print_exc()
             return
 
         response_data = response.read().decode("utf-8")
@@ -1156,9 +1158,10 @@ class Window(QMainWindow):
         try:
             data = json.loads(response_data)
         except ValueError:
-            self.logger.add_error("",
-                                  "Could not decode content of {} (ValueError)"
-                                  .format(url))
+            self.module_manager.logger.add_error("",
+                                                 "Could not decode content of {} (ValueError)"
+                                                 .format(url))
+            traceback.print_exc()
             return
 
         module_list = {}
@@ -1169,9 +1172,10 @@ class Window(QMainWindow):
                 for url in module['urls']:
                     module_list["{} ({})".format(module['name'], url)] = url
         except KeyError:
-            self.logger.add_error("",
-                                  "Could not decode content of {} (KeyError)"
-                                  .format(url))
+            self.module_manager.logger.add_error("",
+                                                 "Could not decode content of {} (KeyError)"
+                                                 .format(url))
+            traceback.print_exc()
             return
 
         module_name, ok = QInputDialog.getItem(
