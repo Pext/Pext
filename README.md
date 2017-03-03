@@ -72,5 +72,10 @@ For command line options, use `--help`.
 
     sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols
 
+### macOS (Unsupported, but feel free to report bugs anyway)
+
+    brew install python3 qt5 git libnotify
+    pip3 install pyqt5 urllib3
+
 ## License
 GPLv3+.
