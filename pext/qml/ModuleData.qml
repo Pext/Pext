@@ -87,8 +87,7 @@ ScrollView {
                         resultList.currentIndex = index
                     }
                     onClicked: {
-                        if (index <= resultListModelMaxIndex)
-                            resultList.entryClicked()
+                        resultList.entryClicked()
                     }
                 }
             }
