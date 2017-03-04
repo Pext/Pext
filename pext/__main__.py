@@ -917,7 +917,7 @@ class ViewModel():
 
             return
 
-        if current_index > len(self.filtered_entry_list):
+        if current_index >= len(self.filtered_entry_list):
             entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
             self.selection.append({'type': SelectionType.command, 'value': entry})
         else:
