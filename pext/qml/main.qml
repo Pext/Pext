@@ -30,7 +30,7 @@ ApplicationWindow {
     width: Screen.width
     height: 0.3 * Screen.height
 
-    flags: Qt.FramelessWindowHint | Qt.Window
+    flags: Qt.Window
 
     function pageUp() {
         var tab = tabs.getTab(tabs.currentIndex);

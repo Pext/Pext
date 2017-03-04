@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- The default window is no longer explicitly borderless
+
 ### Fixed
 - An error occuring when retrieving the list of downloadable modules no longer causes a crash
 
