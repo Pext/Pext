@@ -917,8 +917,13 @@ class ViewModel():
 
             return
 
-        entry = self.filtered_entry_list[current_index]
-        self.selection.append({'type': SelectionType.entry, 'value': entry})
+        if current_index > len(self.filtered_entry_list):
+            entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
+            self.selection.append({'type': SelectionType.command, 'value': entry})
+        else:
+            entry = self.filtered_entry_list[current_index]
+            self.selection.append({'type': SelectionType.entry, 'value': entry})
+
         self.module.selection_made(self.selection)
         QQmlProperty.write(self.search_input_model, "text", "")
 

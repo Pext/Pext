@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - An error occuring when retrieving the list of downloadable modules no longer causes a crash
+- Selecting a command entry after the entry list no longer causes a crash
 
 ## [0.4] - 2017-02-20
 ### Added
