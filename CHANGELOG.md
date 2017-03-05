@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - The default window is no longer explicitly borderless
+- The logo now has a white background which improves readability on dark themes
 
 ### Fixed
 - An error occuring when retrieving the list of downloadable modules no longer causes a crash
