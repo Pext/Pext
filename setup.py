@@ -7,6 +7,9 @@ with open(os.path.join('pext', 'VERSION')) as version_file:
 setup(
     name='Pext',
     version=version,
+    install_requires=[
+        'pyqt5'
+    ],
     description='Python-based extendable tool',
     long_description='A Python-based application that uses modules for extendability',
     url='https://github.com/Pext/Pext',
