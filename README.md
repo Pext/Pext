@@ -20,7 +20,25 @@ application.
 *Pext running the [pass](https://github.com/Pext/pext_module_pass) and
 [emoji](https://github.com/Pext/pext_module_emoji) modules*
 
-# Installation
+# Dependencies
+## Arch
+
+    sudo pacman -S git python3 python-pip libnotify python-pyqt5 qt5-quickcontrols
+
+## Debian (Stretch and later, no Jessie, sorry!)
+
+    sudo apt-get install git libnotify-bin python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls
+
+## Fedora
+
+    sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols
+
+## macOS (Unsupported, but feel free to report bugs anyway)
+
+    brew install python3 qt5 git libnotify
+    pip3 install pyqt5 urllib3
+
+# Installation (optional)
 Pext does not need to be installed to run. However, if you prefer to install
 it, you can do so:
 
@@ -59,23 +77,5 @@ For command line options, use `--help`.
 - Ctrl+Q: Quit and save the currently loaded modules and settings to the profile
 - Ctrl+Shift+Q: Quit without saving to the profile
 
-## Dependencies
-### Arch
-
-    sudo pacman -S git python3 python-pip libnotify python-pyqt5 qt5-quickcontrols
-
-### Debian (Stretch and later, no Jessie, sorry!)
-
-    sudo apt-get install git libnotify-bin python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls
-
-### Fedora
-
-    sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols
-
-### macOS (Unsupported, but feel free to report bugs anyway)
-
-    brew install python3 qt5 git libnotify
-    pip3 install pyqt5 urllib3
-
-## License
+# License
 GPLv3+.
