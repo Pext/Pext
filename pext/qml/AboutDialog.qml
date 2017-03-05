@@ -25,7 +25,7 @@ MessageDialog {
 
     text:
         "Pext " + version + "\n" +
-        "Copyright 2016 Sylvia van Os\n\n" +
+        "Copyright 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>\n\n" +
         "This program is free software: you can redistribute it and/or modify " +
         "it under the terms of the GNU General Public License as published by " +
         "the Free Software Foundation, either version 3 of the License, or " +
