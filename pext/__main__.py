@@ -566,6 +566,9 @@ class ModuleManager():
         modules = []
 
         for directory in os.listdir(self.module_dir):
+            if not os.path.isdir(directory):
+                continue
+
             name = ModuleManager.remove_prefix(directory)
             try:
                 source = check_output(
