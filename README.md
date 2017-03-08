@@ -37,6 +37,7 @@ application.
 
     brew install python3 qt5 git libnotify
     pip3 install pyqt5 urllib3
+    /Applications/Python\ 3.6/Install\ Certificates.command
 
 # Installation (optional)
 Pext does not need to be installed to run. However, if you prefer to install
