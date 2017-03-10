@@ -36,7 +36,7 @@ application.
 ## macOS
 
     brew install python3 qt5 git libnotify
-    pip3 install pyqt5 urllib3
+    pip3 install pyqt5 urllib3 certifi
     /Applications/Python\ 3.6/Install\ Certificates.command
 
 # Installation (optional)
