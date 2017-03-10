@@ -13,8 +13,7 @@ data is shown and how it is manipulated.
 Much like the leoger (a mix between a tiger and a leopard) in the logo, Pext
 modules can turn Pext into a completely different beast. From password
 management to weather information, modules can harness the full power of Python
-to turn the deceitfully simple user interface into an useful and powerful
-application.
+to turn the simple user interface into an useful and powerful application.
 
 ![Pext](screencast.gif)  
 *Pext running the [pass](https://github.com/Pext/pext_module_pass) and
