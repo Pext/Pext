@@ -33,6 +33,8 @@ to turn the simple user interface into an useful and powerful application.
     sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols
 
 ## macOS
+Before running the Install Certificates command, which is only necessary to be
+able to retrieve the online module list, please read https://bugs.python.org/msg283984.
 
     brew install python3 qt5 git libnotify
     pip3 install pyqt5 urllib3 certifi
