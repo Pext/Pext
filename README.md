@@ -6,7 +6,7 @@ graciously donated by [Peers](https://peers.community/).*
 
 # Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is build using
-Python 3 and QML and intended to have its behaviour decided by modules. Pext
+Python 3 and Qt5 QML and intended to have its behaviour decided by modules. Pext
 provides a simple window with a search bar, allowing modules to define what
 data is shown and how it is manipulated.
 
@@ -22,15 +22,15 @@ to turn the simple user interface into an useful and powerful application.
 # Dependencies
 ## Arch
 
-    sudo pacman -S git python3 python-pip libnotify python-pyqt5 qt5-quickcontrols
+    sudo pacman -S git python-pip libnotify python-pyqt5 qt5-quickcontrols
 
 ## Debian (Stretch and later, no Jessie, sorry!)
 
-    sudo apt-get install git libnotify-bin python3 python3-pyqt5 python3-pyqt5.qtquick qml-module-qtquick-controls
+    sudo apt-get install git libnotify-bin python3-pyqt5.qtquick qml-module-qtquick-controls
 
 ## Fedora
 
-    sudo dnf install git libnotify python3 python3-qt5 qt5-qtquickcontrols
+    sudo dnf install git libnotify python3-qt5 qt5-qtquickcontrols
 
 ## macOS
 Before running the Install Certificates command, which is only necessary to be
@@ -48,12 +48,14 @@ it, you can do so:
 
 # Usage
 Simply start Pext with Python 3. If you have installed Pext using the above
-command, simply start `pext`. Otherwise, go to the root directory and run
-`python3 pext`.
+command, simply start `pext`. Otherwise, go to the project's root directory and
+run `python3 pext`.
 
 To actually use Pext, you will first have to install one or more modules. Check
-out the [Pext organisation on GitHub](https://github.com/Pext) for a list of
-official modules.
+out the Pext organisation on
+[GitHub](https://github.com/Pext) or [NotABug](https://notabug.org/Pext)
+or use `Module` -> `Install module` -> `From online module list` in the
+application for a list of official modules.
 
 For command line options, use `--help`.
 
