@@ -1177,8 +1177,7 @@ class Window(QMainWindow):
         try:
             modules = data['modules']
             for module in modules:
-                for url in module['urls']:
-                    module_list["{} ({})".format(module['name'], url)] = url
+                module_list["{} ({})".format(module['name'], module['description'])] = module
         except KeyError:
             self.module_manager.logger.add_error("",
                                                  "Could not decode content of {} (KeyError)"
@@ -1186,15 +1185,39 @@ class Window(QMainWindow):
             traceback.print_exc()
             return
 
-        module_name, ok = QInputDialog.getItem(
+        module_info, ok = QInputDialog.getItem(
             self, "Pext", "Choose the module to install",
             sorted(module_list.keys()), 0, False)
 
         if ok:
+            module = module_list[module_info]
+
+            if len(module['urls']) == 1:
+                module_url = module['urls'][0]
+            else:
+                module_url, ok = QInputDialog.getItem(
+                self, "Pext", "Choose the preferred download source for {}".format(module['name']),
+                    sorted(module['urls']), 0, False)
+
+                if not ok:
+                    return
+
+            answer = QMessageBox.question(self, "Pext",
+                                          "You are about to install {} by {} from {}\n\n".format(module['name'], module['developer'], module_url) +
+                                          "The module describes itself as: {}\n\n".format(module['description']) +
+                                          "The module is licensed under {}\n\n".format(module['license']) +
+                                          "As Pext modules are code, please make sure you trust the developer before continuing.\n\n" +
+                                          "Continue?",
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.Yes)
+
+            if answer != QMessageBox.Yes:
+                return
+
             functions = [
                 {
                     'name': self.module_manager.install_module,
-                    'args': (module_list[module_name]),
+                    'args': (module_url),
                     'kwargs': {'interactive': False, 'verbose': True}
                 }, {
                     'name': self._update_modules_installed_count,

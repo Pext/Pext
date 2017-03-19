@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Give more information upon installing modules and warn the user that they are code
+
 ### Fixed
 - Files unexpectedly existing in ~/.config/pext/modules/ no longer causes a crash
 
