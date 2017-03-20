@@ -8,7 +8,18 @@ Welcome to Pext's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: General information:
+
+   ../README.md
+
+.. toctree::
+   :maxdepth: 1
+
+   ../CHANGELOG.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Pext API files:
 
    pext_base.rst
    pext_helpers.rst

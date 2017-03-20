@@ -189,7 +189,15 @@ class Action(Enum):
 
 
 class SelectionType(Enum):
-    """A list of possible selection types."""
+    """A list of possible selection types.
+
+    entry:
+        An entry in the entry list was chosen.
+
+    command:
+        A valid command was typed (valid commands start with an entry in the
+        command list.
+    """
 
     entry = 0
     command = 1

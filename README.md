@@ -1,10 +1,15 @@
-![Pext logo](logo.png)
+# Pext
+
+![Pext logo](/logo.png)
 
 *Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
 [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
 graciously donated by [Peers](https://peers.community/).*
 
-# Introduction
+[![ReadTheDocs latest](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
+<!--- [![ReadTheDocs stable](https://readthedocs.org/projects/pext/badge/?version=stable)](https://pext.readthedocs.io/en/stable/?badge=stable) -->
+
+## Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using
 Python 3 and Qt5 QML and intended to have its behaviour decided by modules. Pext
 provides a simple window with a search bar, allowing modules to define what
@@ -15,24 +20,24 @@ modules can turn Pext into a completely different beast. From password
 management to weather information, modules can harness the full power of Python
 to turn the simple user interface into an useful and powerful application.
 
-![Pext](screencast.gif)  
+![Pext](/screencast.gif)
 *Pext running the [pass](https://github.com/Pext/pext_module_pass) and
 [emoji](https://github.com/Pext/pext_module_emoji) modules*
 
-# Dependencies
-## Arch
+## Dependencies
+### Arch
 
     sudo pacman -S git python-pip libnotify python-pyqt5 qt5-quickcontrols
 
-## Debian (Stretch and later, no Jessie, sorry!)
+### Debian (Stretch and later, no Jessie, sorry!)
 
     sudo apt-get install git libnotify-bin python3-pyqt5.qtquick qml-module-qtquick-controls
 
-## Fedora
+### Fedora
 
     sudo dnf install git libnotify python3-qt5 qt5-qtquickcontrols
 
-## macOS
+### macOS
 Before running the Install Certificates command, which is only necessary to be
 able to retrieve the online module list, please read https://bugs.python.org/msg283984.
 
@@ -40,13 +45,13 @@ able to retrieve the online module list, please read https://bugs.python.org/msg
     pip3 install pyqt5 urllib3 certifi
     /Applications/Python\ 3.6/Install\ Certificates.command
 
-# Installation (optional)
+## Installation (optional)
 Pext does not need to be installed to run. However, if you prefer to install
 it, you can do so:
 
     # pip3 install . --upgrade
 
-# Usage
+## Usage
 Simply start Pext with Python 3. If you have installed Pext using the above
 command, simply start `pext`. Otherwise, go to the project's root directory and
 run `python3 pext`.
@@ -59,8 +64,8 @@ application for a list of official modules.
 
 For command line options, use `--help`.
 
-# Hotkeys
-## Entry management
+## Hotkeys
+### Entry management
 - Escape: Go one level up
 - Ctrl+J / Down arrow: Go one entry down
 - Ctrl+H / Up arrow: Go one entry up
@@ -69,7 +74,7 @@ For command line options, use `--help`.
 - Tab: Tab-complete the current input
 - Enter: Select entry or run command
 
-## Tab management
+### Tab management
 - Ctrl+T: Open new tab
 - Ctrl+W: Close current tab
 - Ctrl+Tab: Switch to next tab
@@ -77,9 +82,9 @@ For command line options, use `--help`.
 - Alt+`<number>`: Switch to tab `<number>`
 - F5: Reload tab, including code changes to the module
 
-## Session management
+### Session management
 - Ctrl+Q: Quit and save the currently loaded modules and settings to the profile
 - Ctrl+Shift+Q: Quit without saving to the profile
 
-# License
+## License
 GPLv3+.
