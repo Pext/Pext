@@ -163,7 +163,9 @@ class Action(Enum):
 
         prefill -- the text to already put into the input field
 
-        Example: self.q.put([Action.ask_input_multi_line, ["List your favourite animals", "Cat\nDog"]])
+        The prefill may contain newline characters.
+
+        Example: self.q.put([Action.ask_input_multi_line, ["List your favourite animals", "Cat and dog"]])
 
     copy_to_clipboard
         Copy data to the clipboard.
@@ -178,8 +180,7 @@ class Action(Enum):
         The internal Pext selection contains a list of all options and commands
         the user chose and typed since the last time the window was closed and
         looks something like this:
-        [{type: SelectionType.entry, value: "Audio settings"},
-         {type: SelectionType.command, value: "volume 50"}].
+        [{type: SelectionType.entry, value: "Audio settings"}, {type: SelectionType.command, value: "volume 50"}].
 
         To go a single level up, simply remove the last entry from this list.
         To reset to the main screen, use an empty list.
@@ -226,12 +227,12 @@ class Action(Enum):
 class SelectionType(Enum):
     """A list of possible selection types.
 
-    entry:
+    entry
         An entry in the entry list was chosen.
 
-    command:
+    command
         A valid command was typed (valid commands start with an entry in the
-        command list.
+        command list).
     """
 
     entry = 0
