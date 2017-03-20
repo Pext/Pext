@@ -312,10 +312,6 @@ class MainLoop():
         elif action[0] == Action.set_selection:
             tab['vm'].selection = action[1]
             tab['vm'].module.selection_made(tab['vm'].selection)
-        elif action[0] == Action.notify_message:
-            self.logger.add_message(tab['moduleName'], action[1])
-        elif action[0] == Action.notify_error:
-            self.logger.add_error(tab['moduleName'], action[1])
         elif action[0] == Action.close:
             self.window.close()
         else:

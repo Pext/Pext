@@ -31,136 +31,173 @@ class Action(Enum):
 
     A module can request any of these actions of the core by putting it in the
     queue. All of these actions need to be accompanied by a list of arguments.
+    In these examples, we assume that you have assigned the queue variable to
+    self.q, a common practice in Pext modules.
 
-    Example:
-        self.q.put([Action.add_message, "message to show"])
-
-    critical_error:
+    critical_error
         Show an error message on the screen and unload the module.
         This function is also called when the module throws an exception.
 
         message -- error message to show
 
-    add_message:
+        Example: self.q.put([Action.critical_error, "Something went wrong!"])
+
+    add_message
         Show a message on the screen.
 
         message -- message to show
 
-    add_error:
+        Example: self.q.put([Action.add_message, "We did a thing"])
+
+    add_error
         Show an error message on the screen.
 
         message -- error message to show
 
-    add_entry:
+        Example: self.q.put([Action.add_error, "We did a thing, but it went wrong"])
+
+    add_entry
         Add an entry to the entry list.
 
         entry -- the entry
 
-    prepend_entry:
+        Example: self.q.put([Action.add_entry, "Audio settings"])
+
+    prepend_entry
         Prepend an entry to the entry list.
 
         entry -- the entry
 
-    remove_entry:
+        Example: self.q.put([Action.prepend_entry, "Audio settings"])
+
+    remove_entry
         Remove an entry from the entry list.
 
         entry -- the entry
 
-    replace_entry_list:
+        Example: self.q.put([Action.remove_entry, "Audio settings"])
+
+    replace_entry_list
         Replace the list of entries with the given list.
 
         list -- the new list of entries
 
-    add_command:
+        Example: self.q.put([Action.replace_entry_list, ["Audio settings", "Video settings"]])
+
+    add_command
         Add an entry to the command list.
 
         entry -- the entry
 
-    prepend_command:
+        Example: self.q.put([Action.add_command, "download"])
+
+    prepend_command
         Prepend an entry to the command list.
 
         entry -- the entry
 
-    remove_command:
+        Example: self.q.put([Action.prepend_command, "download"])
+
+    remove_command
         Remove a command from the entry list.
 
         entry -- the entry
 
-    replace_command_list:
+        Example: self.q.put([Action.remove_command, "download"])
+
+    replace_command_list
         Replace the list of commands with the given list.
 
         list -- the new list of entries
 
-    set_header:
+        Example: self.q.put([Action.replace_command_list, ["download", "upload"]])
+
+    set_header
         Set or replace the text currently in the header bar.
 
         If header is not given, the header will be removed.
 
         header -- the new header text
 
-    set_filter:
+        Example: self.q.put([Action.set_header, "Weather for New York"])
+
+    set_filter
         Replace the text currently in the search bar.
 
         filter -- the new text to put in the search bar
 
-    ask_question_default_yes:
+        Example: self.q.put([Action.set_header, "Weather for New York"])
+
+    ask_question_default_yes
         Ask a yes/no question, with the default value being yes.
 
         question -- the question to ask
 
-    ask_question_default_no:
+        Example: self.q.put([Action.ask_question_default_yes, "Are you sure you want to continue?"])
+
+    ask_question_default_no
         Ask a yes/no question, with the default value being no.
 
         question -- the question to ask
 
-    ask_input:
+        Example: self.q.put([Action.ask_question_default_no, "Are you sure you want to continue?"])
+
+    ask_input
         Ask the user to input a single line of text.
 
-        text -- the text to show the user, such as "Please enter code"
+        text -- the text to show the user
+
+        Example: self.q.put([Action.ask_input, "Please choose a new name for this entry"])
 
     ask_input_password:
         Ask the user to input a single line of text into a password field.
 
-        text -- the text to show the user, such as "Please enter code"
+        text -- the text to show the user
 
-    ask_input_multi_line:
+        Example: self.q.put([Action.ask_input_password, "Please enter your password"])
+
+    ask_input_multi_line
         Ask the user to input one or more lines of text.
 
-        text -- the text to show the user, such as "Please enter code"
+        text -- the text to show the user
+
         prefill -- the text to already put into the input field
 
-    copy_to_clipboard:
-        Request the specific data to be copied to the clipboard.
+        Example: self.q.put([Action.ask_input_multi_line, ["List your favourite animals", "Cat\nDog"]])
+
+    copy_to_clipboard
+        Copy data to the clipboard.
 
         text -- the text to copy to the clipboard
 
-    set_selection:
-        Change the internal Pext selected entry for this module.
+        Example: self.q.put([Action.copy_to_clipboard, "I like Pext"])
 
-        The internal Pext selected entry contains an array of the path the
-        user has taken in selection and thus looks like follows:
-        ["Settings", "Audio", "Mute"].
+    set_selection
+        Change the internal Pext selection for this module.
+
+        The internal Pext selection contains a list of all options and commands
+        the user chose and typed since the last time the window was closed and
+        looks something like this:
+        [{type: SelectionType.entry, value: "Audio settings"},
+         {type: SelectionType.command, value: "volume 50"}].
 
         To go a single level up, simply remove the last entry from this list.
         To reset to the main screen, use an empty list.
 
-        list -- the selection hierarchy.
+        After set_selection is called, selection_made in ModuleBase will be
+        called with the new values.
 
-    notify_message:
-        Notify the user.
+        list -- the selection list
 
-        message -- the message to show
-
-    notify_error:
-        Notify the user of an error.
-
-        message -- the error message to show
+        Example: self.q.put([Action.set_selection, [{type: SelectionType.entry, value: "Audio settings"}])
 
     close:
         Close the window.
 
         Call this when the user is done. For example, when the user made a
         selection.
+
+        Example: self.q.put([Action.close])
     """
 
     critical_error = 0
@@ -183,9 +220,7 @@ class Action(Enum):
     ask_input_multi_line = 17
     copy_to_clipboard = 18
     set_selection = 19
-    notify_message = 20
-    notify_error = 21
-    close = 22
+    close = 20
 
 
 class SelectionType(Enum):

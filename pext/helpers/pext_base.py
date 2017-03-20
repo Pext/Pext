@@ -45,8 +45,14 @@ class ModuleBase(ABC):
         start interacting with at least some of the data as quickly as
         possible.
 
-        The entry list must be a list containing all possible values as
-        strings.
+        The settings variable is a dictionary containing all "module settings".
+        For example, if the user enters "foo=bar foobar=fubar" in the custom
+        module settings dialog, this dictionary will have
+        {"foo": "bar", "foobar": "fubar"} as values.
+
+        The q variable contains the queue that actions can be put it. It is
+        very important to keep a reference to this variable so that you can do
+        anything on the UI at all.
         """
         pass
 

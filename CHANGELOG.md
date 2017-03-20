@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
+- Remove Action.notify_message and Action.notify_error, which are synonyms for add_message and add_error
+
 ### Added
 - Documentation
 
