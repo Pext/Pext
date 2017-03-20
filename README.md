@@ -5,7 +5,7 @@
 graciously donated by [Peers](https://peers.community/).*
 
 # Introduction
-Pext stands for **P**ython-based **ex**tendable **t**ool. It is build using
+Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using
 Python 3 and Qt5 QML and intended to have its behaviour decided by modules. Pext
 provides a simple window with a search bar, allowing modules to define what
 data is shown and how it is manipulated.
