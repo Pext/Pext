@@ -7,7 +7,7 @@
 graciously donated by [Peers](https://peers.community/).*
 
 [![ReadTheDocs latest](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
-<!--- [![ReadTheDocs stable](https://readthedocs.org/projects/pext/badge/?version=stable)](https://pext.readthedocs.io/en/stable/?badge=stable) -->
+[![ReadTheDocs stable](https://readthedocs.org/projects/pext/badge/?version=stable)](https://pext.readthedocs.io/en/stable/?badge=stable)
 
 ## Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using
