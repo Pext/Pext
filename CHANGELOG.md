@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Give more information upon installing modules and warn the user that they are code
+- User commands will now be auto-completed to the selected command
 
 ### Fixed
 - Files unexpectedly existing in ~/.config/pext/modules/ no longer causes a crash
