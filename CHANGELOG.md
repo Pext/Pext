@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Documentation
+- Repository for third-party modules
 
 ### Changed
 - Give more information upon installing modules and warn the user that they are code

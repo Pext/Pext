@@ -24,6 +24,7 @@ Pext.
 """
 
 import atexit
+import collections
 import configparser
 import getopt
 import json
@@ -1157,7 +1158,25 @@ class Window(QMainWindow):
             self, "Pext", '\n'.join(['Installed modules:'] + sorted(module_list)))
 
     def _menu_install_module_from_repository(self) -> None:
-        url = "https://pext.hackerchick.me/modules.json"
+        modules_sources_source = collections.OrderedDict((
+            ("Pext team", "https://pext.hackerchick.me/modules.json"),
+            ("Other developers", "https://pext.hackerchick.me/third_party_modules.json"),
+        ))
+
+        modules_sources = collections.OrderedDict(("{} ({})".format(module[0], module[1]), module[1]) for module in modules_sources_source.items())
+
+        if len(modules_sources) > 1:
+            modules_source, ok = QInputDialog.getItem(
+                self, "Pext", "Where do you want to get modules from?",
+                modules_sources.keys(), 0, False)
+
+            if not ok:
+                return
+        else:
+            modules_source = list(modules_sources)[0]
+
+        url = modules_sources[modules_source]
+
         try:
             response = urlopen(url)
         except URLError:
@@ -1187,6 +1206,10 @@ class Window(QMainWindow):
                                                  "Could not decode content of {} (KeyError)"
                                                  .format(url))
             traceback.print_exc()
+            return
+
+        if len(modules) == 0:
+            QMessageBox.information(self, "Pext", "No modules found from source {}.".format(modules_source))
             return
 
         module_info, ok = QInputDialog.getItem(
