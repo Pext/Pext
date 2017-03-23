@@ -29,6 +29,7 @@ import configparser
 import getopt
 import json
 import os
+import platform
 import signal
 import sys
 import threading
@@ -487,12 +488,25 @@ class ModuleManager():
                         '-r',
                         module_requirements_path]
 
+        returncode = 0
+
+        # Cheap macOS workaround, part 1
+        # See https://github.com/pypa/pip/pull/4111#issuecomment-280616124
+        if platform.system() == "Darwin":
+            with open(os.path.expanduser('~/.pydistutils.cfg'), 'w') as macos_workaround:
+                macos_workaround.write('[install]\nprefix=')
+
+        # Actually run the pip command
         try:
             run(pip_command, check=True)
         except CalledProcessError as e:
-            return e.returncode
+            returncode = e.returncode
 
-        return 0
+        # Cheap macOS workaround, part 2
+        if platform.system() == "Darwin":
+            os.remove(os.path.expanduser('~/.pydistutils.cfg'))
+
+        return returncode
 
     def bind_logger(self, logger: Logger) -> str:
         """Connect a logger to the module manager.
