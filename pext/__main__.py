@@ -471,18 +471,24 @@ class ModuleManager():
             # Probably already exists, that's okay
             pass
 
-        try:
-            run([sys.executable,
-                 '-m',
-                 'pip',
-                 'install',
-                  '--system',
-                  '--upgrade',
-                  '--target',
-                  module_dependencies_path,
-                  '-r',
-                  module_requirements_path], check=True)
+        # Create the pip command
+        pip_command = [sys.executable,
+                       '-m',
+                       'pip',
+                       'install']
 
+        # Cheap hack to work around Debian's faultily-patched pip
+        if os.path.isfile('/usr/bin/apt'):
+            pip_command += ['--system']
+
+        pip_command += ['--upgrade',
+                        '--target',
+                        module_dependencies_path,
+                        '-r',
+                        module_requirements_path]
+
+        try:
+            run(pip_command, check=True)
         except CalledProcessError as e:
             return e.returncode
 
