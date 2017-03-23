@@ -1678,7 +1678,7 @@ def main() -> None:
     config_retriever = ConfigRetriever()
 
     # Ensure our necessary directories exist
-    for directory in ['', 'modules', 'profiles', 'profiles/default']:
+    for directory in ['', 'modules', 'module_dependencies', 'profiles', 'profiles/default']:
         try:
             os.mkdir(os.path.join(config_retriever.get_setting('config_path'), directory))
         except OSError:
