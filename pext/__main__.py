@@ -29,7 +29,6 @@ import configparser
 import getopt
 import json
 import os
-import pip
 import signal
 import sys
 import threading
@@ -39,7 +38,7 @@ import webbrowser
 
 from importlib import reload  # type: ignore
 from shutil import rmtree
-from subprocess import check_call, check_output, CalledProcessError, Popen
+from subprocess import check_call, check_output, CalledProcessError, Popen, run
 from typing import Dict, List, Optional, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
@@ -472,12 +471,16 @@ class ModuleManager():
             # Probably already exists, that's okay
             pass
 
-        return pip.main(['install',
-                         '--upgrade',
-                         '--target',
-                         module_dependencies_path,
-                         '-r',
-                         module_requirements_path])
+        return run([sys.executable,
+                    '-m',
+                    'pip',
+                    'install',
+                     '--system',
+                     '--upgrade',
+                     '--target',
+                     module_dependencies_path,
+                     '-r',
+                     module_requirements_path]).returncode
 
     def bind_logger(self, logger: Logger) -> str:
         """Connect a logger to the module manager.
