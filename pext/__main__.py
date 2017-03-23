@@ -471,16 +471,22 @@ class ModuleManager():
             # Probably already exists, that's okay
             pass
 
-        return run([sys.executable,
-                    '-m',
-                    'pip',
-                    'install',
-                     '--system',
-                     '--upgrade',
-                     '--target',
-                     module_dependencies_path,
-                     '-r',
-                     module_requirements_path]).returncode
+        try:
+            run([sys.executable,
+                 '-m',
+                 'pip',
+                 'install',
+                  '--system',
+                  '--upgrade',
+                  '--target',
+                  module_dependencies_path,
+                  '-r',
+                  module_requirements_path], check=True)
+
+        except CalledProcessError as e:
+            return e.returncode
+
+        return 0
 
     def bind_logger(self, logger: Logger) -> str:
         """Connect a logger to the module manager.
