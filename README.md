@@ -31,11 +31,11 @@ to turn the simple user interface into an useful and powerful application.
 
 ### Debian (Stretch and later, no Jessie, sorry!)
 
-    sudo apt-get install git libnotify-bin python3-pyqt5.qtquick qml-module-qtquick-controls
+    sudo apt-get install git libnotify-bin python3-pip python3-pyqt5.qtquick qml-module-qtquick-controls
 
 ### Fedora
 
-    sudo dnf install git libnotify python3-qt5 qt5-qtquickcontrols
+    sudo dnf install git libnotify python3-pip python3-qt5 qt5-qtquickcontrols
 
 ### macOS
 Before running the Install Certificates command, which is only necessary to be
