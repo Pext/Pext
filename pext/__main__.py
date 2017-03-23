@@ -458,14 +458,26 @@ class ModuleManager():
         else:
             print(message)
 
-    def _pip_install(self, module_dir_name: str) -> None:
+    def _pip_install(self, module_dir_name: str) -> int:
         """Install module dependencies using pip."""
-        pip.main(['install',
-                  '--upgrade',
-                  '--target',
-                  os.path.join(self.module_dependencies_dir, module_dir_name),
-                  '-r',
-                  os.path.join(self.module_dir, module_dir_name, 'requirements.txt')])
+        module_requirements_path = os.path.join(self.module_dir, module_dir_name, 'requirements.txt')
+        module_dependencies_path = os.path.join(self.module_dependencies_dir, module_dir_name)
+
+        if not os.path.isfile(module_requirements_path):
+            return
+
+        try:
+            os.mkdir(module_dependencies_path)
+        except OSError:
+            # Probably already exists, that's okay
+            pass
+
+        return pip.main(['install',
+                         '--upgrade',
+                         '--target',
+                         module_dependencies_path,
+                         '-r',
+                         module_requirements_path])
 
     def bind_logger(self, logger: Logger) -> str:
         """Connect a logger to the module manager.
@@ -655,12 +667,27 @@ class ModuleManager():
             if verbose:
                 self._log_error('Failed to install {}'.format(module_name))
 
+            try:
+                rmtree(os.path.join(self.module_dir, dir_name))
+            except FileNotFoundError:
+                pass
+
             return False
 
         if verbose:
             self._log('Installing dependencies for {}'.format(module_name))
 
-        self._pip_install(dir_name)
+        pip_exit_code = self._pip_install(dir_name)
+        if pip_exit_code != 0:
+            if verbose:
+                self._log_error('Failed to install dependencies for {}, error {}'.format(module_name, pip_exit_code))
+
+            try:
+                rmtree(os.path.join(self.module_dir, dir_name))
+            except FileNotFoundError:
+                pass
+
+            return False
 
         if verbose:
             self._log('Installed {}'.format(module_name))
@@ -715,7 +742,12 @@ class ModuleManager():
         if verbose:
             self._log('Updating dependencies for {}'.format(module_name))
 
-        self._pip_install(dir_name)
+        pip_exit_code = self._pip_install(dir_name)
+        if pip_exit_code != 0:
+            if verbose:
+                self._log_error('Failed to update dependencies for {}, error {}'.format(module_name, pip_exit_code))
+
+            return False
 
         if verbose:
             self._log('Updated {}'.format(module_name))

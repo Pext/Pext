@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Install dependencies automatically if the module provides a requirements.txt file
 
+### Fixed
+- If module installation fails, the module directory is removed, so a subsequent installation doesn't instantly fail
+
 ## [0.5] - 2017-03-22
 ### API changes
 - Remove Action.notify_message and Action.notify_error, which are synonyms for add_message and add_error
