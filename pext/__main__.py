@@ -463,7 +463,7 @@ class ModuleManager():
         module_dependencies_path = os.path.join(self.module_dependencies_dir, module_dir_name)
 
         if not os.path.isfile(module_requirements_path):
-            return
+            return 0
 
         try:
             os.mkdir(module_dependencies_path)
