@@ -478,7 +478,7 @@ class ModuleManager():
                        'install']
 
         # Cheap hack to work around Debian's faultily-patched pip
-        if os.path.isfile('/usr/bin/apt'):
+        if os.path.isfile('/usr/bin/aptitude'):
             pip_command += ['--system']
 
         pip_command += ['--upgrade',
