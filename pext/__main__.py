@@ -29,6 +29,7 @@ import configparser
 import getopt
 import json
 import os
+import pip
 import signal
 import sys
 import threading
@@ -426,6 +427,7 @@ class ModuleManager():
         """Initialize the module manager."""
         self.config_retriever = config_retriever
         self.module_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
+        self.module_dependencies_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'module_dependencies')
         self.logger = None  # type: Optional[Logger]
 
     @staticmethod
@@ -456,6 +458,15 @@ class ModuleManager():
         else:
             print(message)
 
+    def _pip_install(self, module_dir_name: str) -> None:
+        """Install module dependencies using pip."""
+        pip.main(['install',
+                  '--upgrade',
+                  '--target',
+                  os.path.join(self.module_dependencies_dir, module_dir_name),
+                  '-r',
+                  os.path.join(self.module_dir, module_dir_name, 'requirements.txt')])
+
     def bind_logger(self, logger: Logger) -> str:
         """Connect a logger to the module manager.
 
@@ -475,6 +486,11 @@ class ModuleManager():
         module_dir = ModuleManager.add_prefix(module['name']).replace('.', '_')
         module_name = ModuleManager.remove_prefix(module['name'])
 
+        # Append module dependencies path if not yet appended
+        module_dependencies_path = os.path.join(self.config_retriever.get_setting('config_path'), 'module_dependencies', module_dir)
+        if module_dependencies_path not in sys.path:
+            sys.path.append(module_dependencies_path)
+
         # Prepare viewModel and context
         vm = ViewModel()
         module_context = QQmlContext(window.context)
@@ -492,6 +508,10 @@ class ModuleManager():
         except ImportError as e1:
             self._log_error(
                 "Failed to load module {} from {}: {}".format(module_name, module_dir, e1))
+
+            # Remove module dependencies path
+            sys.path.remove(module_dependencies_path)
+
             return False
 
         Module = getattr(module_import, 'Module')
@@ -638,6 +658,11 @@ class ModuleManager():
             return False
 
         if verbose:
+            self._log('Installing dependencies for {}'.format(module_name))
+
+        self._pip_install(dir_name)
+
+        if verbose:
             self._log('Installed {}'.format(module_name))
 
         return True
@@ -658,6 +683,11 @@ class ModuleManager():
                     'Cannot uninstall {}, it is not installed'.format(module_name))
 
             return False
+
+        try:
+            rmtree(os.path.join(self.module_dependencies_dir, dir_name))
+        except FileNotFoundError:
+            pass
 
         if verbose:
             self._log('Uninstalled {}'.format(module_name))
@@ -681,6 +711,11 @@ class ModuleManager():
                     'Failed to update {}: {}'.format(module_name, e))
 
             return False
+
+        if verbose:
+            self._log('Updating dependencies for {}'.format(module_name))
+
+        self._pip_install(dir_name)
 
         if verbose:
             self._log('Updated {}'.format(module_name))

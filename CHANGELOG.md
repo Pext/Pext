@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Added
+- Install dependencies automatically if the module provides a requirements.txt file
+
 ## [0.5] - 2017-03-22
 ### API changes
 - Remove Action.notify_message and Action.notify_error, which are synonyms for add_message and add_error
