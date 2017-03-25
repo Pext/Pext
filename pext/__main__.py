@@ -485,7 +485,7 @@ class ModuleManager():
                        'pip',
                        'install']
 
-        # Cheap hack to work around Debian's faultily-patched pip
+        # FIXME: Cheap hack to work around Debian's faultily-patched pip
         if os.path.isfile('/usr/bin/aptitude'):
             pip_command += ['--system']
 
@@ -497,7 +497,7 @@ class ModuleManager():
 
         returncode = 0
 
-        # Cheap macOS workaround, part 1
+        # FIXME: Cheap macOS workaround, part 1
         # See https://github.com/pypa/pip/pull/4111#issuecomment-280616124
         if platform.system() == "Darwin":
             with open(os.path.expanduser('~/.pydistutils.cfg'), 'w') as macos_workaround:
@@ -509,7 +509,7 @@ class ModuleManager():
         except CalledProcessError as e:
             returncode = e.returncode
 
-        # Cheap macOS workaround, part 2
+        # FIXME: Cheap macOS workaround, part 2
         if platform.system() == "Darwin":
             os.remove(os.path.expanduser('~/.pydistutils.cfg'))
 
