@@ -30,6 +30,9 @@ to turn the simple user interface into an useful and powerful application.
     sudo pacman -S git python-pip libnotify python-pyqt5 qt5-quickcontrols
 
 ### Debian (Stretch and later, no Jessie, sorry!)
+If you use the proprietary NVIDIA driver, you may need to install
+python3-opengl as well due to a bug in that driver. See
+https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826.
 
     sudo apt-get install git libnotify-bin python3-pip python3-pyqt5.qtquick qml-module-qtquick-controls
 

@@ -45,6 +45,13 @@ from urllib.error import URLError
 from urllib.request import urlopen
 from queue import Queue, Empty
 
+# FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
+if platform.system() == "Linux":
+    try:
+        from OpenGL import GL
+    except ImportError:
+        print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
+
 from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
