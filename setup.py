@@ -14,7 +14,7 @@ setup(
     author_email='sylvia@hackerchick.me',
     license='GPLv3+',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Environment :: X11 Applications :: Qt',
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
