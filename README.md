@@ -34,6 +34,9 @@ If you use the proprietary NVIDIA driver, you may need to install
 python3-opengl as well due to a bug in that driver. See
 https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826.
 
+If you're on Ubuntu, you may also need to run ``pip install --upgrade pip``
+after installing the dependencies.
+
     sudo apt-get install git libnotify-bin python3-pip python3-pyqt5.qtquick qml-module-qtquick-controls
 
 ### Fedora
