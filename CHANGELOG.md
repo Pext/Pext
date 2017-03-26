@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - If module installation fails, the module directory is removed, so a subsequent installation doesn't instantly fail
 - Modules are now correctly unloaded when they raise a critical error
+- Installing a module that's already installed no longer uninstalls it (regression introduced in 0.5)
 
 ## [0.5] - 2017-03-22
 ### API changes

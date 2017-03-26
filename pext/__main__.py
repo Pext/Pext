@@ -692,6 +692,12 @@ class ModuleManager():
         dir_name = ModuleManager.add_prefix(module_name).replace('.', '_')
         module_name = ModuleManager.remove_prefix(module_name)
 
+        if os.path.exists(os.path.join(self.module_dir, dir_name)):
+            if verbose:
+                self._log_error('{} is already installed'.format(module_name))
+
+            return False
+
         if verbose:
             self._log('Installing {} from {}'.format(module_name, url))
 
@@ -720,6 +726,11 @@ class ModuleManager():
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
+            except FileNotFoundError:
+                pass
+
+            try:
+                rmtree(os.path.join(self.module_dependencies_dir, dir_name))
             except FileNotFoundError:
                 pass
 
