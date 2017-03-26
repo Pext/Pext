@@ -1333,9 +1333,9 @@ class Window(QMainWindow):
                     return
 
             answer = QMessageBox.question(self, "Pext",
-                                          "You are about to install {} by {} from {}\n\n".format(module['name'], module['developer'], module_url) +
-                                          "The module describes itself as: {}\n\n".format(module['description']) +
-                                          "The module is licensed under {}\n\n".format(module['license']) +
+                                          "You are about to install {} by {} from {}.\n\n".format(module['name'], module['developer'], module_url) +
+                                          "The module describes itself as: {}.\n\n".format(module['description']) +
+                                          "The module is licensed under {}.\n\n".format(module['license']) +
                                           "As Pext modules are code, please make sure you trust the developer before continuing.\n\n" +
                                           "Continue?",
                                           QMessageBox.Yes | QMessageBox.No,
@@ -1361,6 +1361,16 @@ class Window(QMainWindow):
         module_url, ok = QInputDialog.getText(
             self, "Pext", "Enter the git URL of the module to install")
         if ok:
+            answer = QMessageBox.question(self, "Pext",
+                                          "You are about to install a module manually from {}.\n\n".format(module_url) +
+                                          "As Pext modules are code, please make sure you trust the developer before continuing.\n\n" +
+                                          "Continue?",
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.Yes)
+
+            if answer != QMessageBox.Yes:
+                return
+
             functions = [
                 {
                     'name': self.module_manager.install_module,
