@@ -74,7 +74,7 @@ Your distribution may ship with an outdated version of pip. Run
 The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu.
 You can work around this by running ``sudo apt-get install python3-opengl``.
 
-Pext user report: https://github.com/Pext/Pext/issues/11
+Pext user report: https://github.com/Pext/Pext/issues/11  
 Ubuntu bug: https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 
 ### macOS
