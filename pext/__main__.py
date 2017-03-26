@@ -258,7 +258,7 @@ class MainLoop():
         if action[0] == Action.critical_error:
             self.logger.add_error(tab['module_name'], action[1])
             tab_id = self.window.tab_bindings.index(tab)
-            self.window.moduleManager.unload_module(self.window, tab_id)
+            self.window.module_manager.unload_module(self.window, tab_id)
         elif action[0] == Action.add_message:
             self.logger.add_message(tab['module_name'], action[1])
         elif action[0] == Action.add_error:
