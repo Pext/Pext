@@ -30,12 +30,6 @@ to turn the simple user interface into an useful and powerful application.
     sudo pacman -S git python-pip libnotify python-pyqt5 qt5-quickcontrols
 
 ### Debian (Stretch and later, no Jessie, sorry!)
-If you use the proprietary NVIDIA driver, you may need to install
-python3-opengl as well due to a bug in that driver. See
-https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826.
-
-If you're on Ubuntu, you may also need to run ``pip install --upgrade pip``
-after installing the dependencies.
 
     sudo apt-get install git libnotify-bin python3-pip python3-pyqt5.qtquick qml-module-qtquick-controls
 
@@ -69,6 +63,30 @@ or use `Module` -> `Install module` -> `From online module list` in the
 application for a list of official modules.
 
 For command line options, use `--help`.
+
+## Troubleshooting
+### GNU/Linux
+#### Installing module dependencies fails
+Your distribution may ship with an outdated version of pip. Run
+``pip install --upgrade pip`` (possibly as root) in a terminal.
+
+#### I get weird shader errors and Pext's window is completely white
+The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu.
+You can work around this by running ``sudo apt-get install python3-opengl``.
+
+### macOS
+#### I cannot brew/pip install anymore
+The Homebrew team completely broke pip's --target flag, which Pext depends on.
+To work around this, Pext automatically creates a ``~/.pydistutils.cfg`` file
+which resets the broken Homebrew pip defaults and deletes this file after its
+done after installing module dependencies.
+
+As a side effect, this means that using brew install or pip install while Pext
+is installing module dependencies may fail. If you cannot use brew install or
+pip install at all anymore after Pext crashed, please delete
+``~/.pydistutils.cfg`` if it exists.
+
+The Homebrew team refuses to fix this issue: https://github.com/Homebrew/brew/issues/837
 
 ## Hotkeys
 ### Entry management
