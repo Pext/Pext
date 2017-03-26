@@ -70,12 +70,12 @@ For command line options, use `--help`.
 Your distribution may ship with an outdated version of pip. Run
 ``pip install --upgrade pip`` (possibly as root) in a terminal.
 
-#### I get weird shader errors and Pext's window is completely white
+#### Pext's window is completely white
 The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu.
 You can work around this by running ``sudo apt-get install python3-opengl``.
 
-https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826 is the Ubuntu
-bug for this issue.
+Pext user report: https://github.com/Pext/Pext/issues/11
+Ubuntu bug: https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 
 ### macOS
 #### I cannot brew/pip install anymore
