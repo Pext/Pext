@@ -79,7 +79,7 @@ You can work around this by running ``sudo apt-get install python3-opengl``.
 The Homebrew team completely broke pip's --target flag, which Pext depends on.
 To work around this, Pext automatically creates a ``~/.pydistutils.cfg`` file
 which resets the broken Homebrew pip defaults and deletes this file after its
-done after installing module dependencies.
+done installing module dependencies.
 
 As a side effect, this means that using brew install or pip install while Pext
 is installing module dependencies may fail. If you cannot use brew install or
