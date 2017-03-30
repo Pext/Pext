@@ -1562,8 +1562,9 @@ class Tray():
     def icon_clicked(self, reason: int) -> None:
         """React to a click event."""
         # Only show the window on a left click
-        if reason == 3:
-            self.window.toggle_visibility()
+        if platform.system() != "Darwin":
+            if reason == 3:
+                self.window.toggle_visibility()
 
 
 def _init_persist(profile: str) -> str:
