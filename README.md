@@ -21,9 +21,7 @@ management to weather information, modules can harness the full power of Python
 to turn the simple user interface into an useful and powerful application.
 
 ![Pext](/screenshot.jpg)  
-*Pext running the [emoji](https://github.com/Pext/pext_module_emoji),
-[radiobrowser](https://github.com/Pext/pext_module_radiobrowser) and
-[openweathermap](https://github.com/Pext/pext_module_openweathermap) modules*
+![Pext](/screenshot2.jpg)  
 
 ## Dependencies
 ### Arch
