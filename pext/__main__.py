@@ -702,9 +702,11 @@ class ModuleManager():
             self._log('Installing {} from {}'.format(module_name, url))
 
         try:
+            git_env = os.environ.copy()
+            git_env['GIT_ASKPASS'] = 'true'
             return_code = Popen(['git', 'clone', url, dir_name],
                                 cwd=self.module_dir,
-                                env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
+                                env=git_env if not interactive else None).wait()
         except FileNotFoundError:
             self._log_error('Failed to launch git')
             return_code = 1
