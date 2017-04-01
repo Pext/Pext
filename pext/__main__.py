@@ -1789,6 +1789,9 @@ def main() -> None:
 
     settings = _load_settings(sys.argv[1:], config_retriever)
 
+    # Set up persistence
+    pidfile = _init_persist(settings['profile'])
+
     # Load the app icon
     app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
 
@@ -1802,9 +1805,6 @@ def main() -> None:
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
         print("Requested clipboard type is not supported")
         sys.exit(3)
-
-    # Set up persistence
-    pidfile = _init_persist(settings['profile'])
 
     # Get a window
     window = Window(settings, config_retriever)
