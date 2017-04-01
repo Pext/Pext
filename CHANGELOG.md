@@ -5,13 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.6.1] - 2017-04-01
 ### Fixed
 - Clicking the tray icon no longer toggles visibility on macOS
 - XDG_CONFIG_HOME is now correctly used when available
 - The environment is no longer cleared when doing the initial git clone (security: the old behaviour would cause a proxy defined in the environment to be ignored)
 
-## [0.6] - 2017-02-27
+## [0.6] - 2017-03-27
 ### Added
 - Install dependencies automatically if the module provides a requirements.txt file
 
