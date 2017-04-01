@@ -701,9 +701,13 @@ class ModuleManager():
         if verbose:
             self._log('Installing {} from {}'.format(module_name, url))
 
-        return_code = Popen(['git', 'clone', url, dir_name],
-                            cwd=self.module_dir,
-                            env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
+        try:
+            return_code = Popen(['git', 'clone', url, dir_name],
+                                cwd=self.module_dir,
+                                env={'GIT_ASKPASS': 'true'} if not interactive else None).wait()
+        except FileNotFoundError:
+            self._log_error('Failed to launch git')
+            return_code = 1
 
         if return_code != 0:
             if verbose:
