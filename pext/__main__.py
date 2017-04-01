@@ -97,6 +97,7 @@ class ConfigRetriever():
             config_home = os.environ['XDG_CONFIG_HOME']
         except:
             config_home = os.path.expanduser('~/.config/')
+
         self.config = {'config_path': os.path.join(config_home, 'pext/')}
 
         # Overwrite with user settings if exists
@@ -711,9 +712,10 @@ class ModuleManager():
             return_code = Popen(['git', 'clone', url, dir_name],
                                 cwd=self.module_dir,
                                 env=git_env if not interactive else None).wait()
-        except FileNotFoundError:
-            self._log_error('Failed to launch git')
-            return_code = 1
+        except Exception as e:
+            self._log_error('Failed to download {}: {}'.format(module_name, e))
+
+            return False
 
         if return_code != 0:
             if verbose:

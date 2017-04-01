@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Fixed
 - Clicking the tray icon no longer toggles visibility on macOS
+- XDG_CONFIG_HOME is now correctly used when available
+- The environment is no longer cleared when doing the initial git clone (security: the old behaviour would cause a proxy defined in the environment to be ignored)
 
 ## [0.6] - 2017-02-27
 ### Added
