@@ -44,6 +44,10 @@ able to retrieve the online module list, please read https://bugs.python.org/msg
     pip3 install pyqt5 urllib3 certifi
     /Applications/Python\ 3.6/Install\ Certificates.command
 
+### Nix (any system, not just NixOS)
+
+    nix-shell -p git libnotify python3Packages.pip python3Packages.pyqt5 qt5.qtquickcontrols
+
 ## Installation (optional)
 Pext does not need to be installed to run. However, if you prefer to install
 it, you can do so:
