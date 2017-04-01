@@ -93,7 +93,11 @@ class ConfigRetriever():
     def __init__(self) -> None:
         """Initialize the configuration."""
         # Initialze defaults
-        self.config = {'config_path': os.path.expanduser('~/.config/pext/')}
+        try:
+            config_home = os.environ['XDG_CONFIG_HOME']
+        except:
+            config_home = os.path.expanduser('~/.config/')
+        self.config = {'config_path': os.path.join(config_home, 'pext/')}
 
         # Overwrite with user settings if exists
         config_parser = configparser.SafeConfigParser()
