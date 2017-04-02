@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Added
+- i18n support
+
 ## [0.6.1] - 2017-04-01
 ### Fixed
 - Clicking the tray icon no longer toggles visibility on macOS

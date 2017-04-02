@@ -191,29 +191,29 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuQuit"
-                text: "Quit"
+                text: qsTr("Quit")
                 shortcut: "Ctrl+Q"
             }
 
             MenuItem {
                 objectName: "menuQuitWithoutSaving"
-                text: "Quit without saving"
+                text: qsTr("Quit without saving")
                 shortcut: "Ctrl+Shift+Q"
             }
         }
 
         Menu {
-            title: "&Module"
+            title: qsTr("&Module")
 
             MenuItem {
                 objectName: "menuReloadActiveModule"
-                text: "Reload active module"
+                text: qsTr("Reload active module")
                 shortcut: "F5"
             }
 
             MenuItem {
                 objectName: "menuCloseActiveModule"
-                text: "Close active module"
+                text: qsTr("Close active module")
                 shortcut: "Ctrl+W"
             }
 
@@ -221,51 +221,51 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuLoadModule"
-                text: "Load module"
+                text: qsTr("Load module")
                 shortcut: "Ctrl+T"
             }
 
             MenuItem {
                 objectName: "menuListModules"
-                text: "List installed modules"
+                text: qsTr("List installed modules")
             }
 
             Menu {
-                title: "Install module"
+                title: qsTr("Install module")
 
                 MenuItem {
                     objectName: "menuInstallModuleFromRepository"
-                    text: "From online module list"
+                    text: qsTr("From online module list")
                 }
 
                 MenuItem {
                     objectName: "menuInstallModuleFromURL"
-                    text: "From URL"
+                    text: qsTr("From URL")
                 }
             }
 
             MenuItem {
                 objectName: "menuUninstallModule"
-                text: "Uninstall module"
+                text: qsTr("Uninstall module")
             }
 
             MenuItem {
                 objectName: "menuUpdateModule"
-                text: "Update module"
+                text: qsTr("Update module")
             }
 
             MenuItem {
                 objectName: "menuUpdateAllModules"
-                text: "Update all modules"
+                text: qsTr("Update all modules")
             }
         }
 
         Menu {
-            title: "&Help"
+            title: qsTr("&Help")
 
             MenuItem {
                 objectName: "menuAbout"
-                text: "About"
+                text: qsTr("About")
                 onTriggered: {
                     var aboutDialog = Qt.createComponent("AboutDialog.qml");
                     aboutDialog.createObject(applicationWindow);
@@ -274,7 +274,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuHomepage"
-                text: "Visit homepage"
+                text: qsTr("Visit homepage")
             }
         }
     }
@@ -284,7 +284,7 @@ ApplicationWindow {
         anchors.margins: margin
         TextField {
             enabled: tabs.count > 0
-            placeholderText: tabs.count > 0 ? "Type to search" : ""
+            placeholderText: tabs.count > 0 ? qsTr("Type to search") : ""
             id: searchInput
             objectName: "searchInputModel"
 
@@ -325,14 +325,10 @@ ApplicationWindow {
             TextEdit {
                 objectName: "introScreen"
                 property var modulesInstalledCount
-                text: "<h1>Welcome to Pext</h1>" +
-                      "<p>To get started, press <kbd>Ctrl+T</kbd> to open a new " +
-                      "tab.</p>" +
-                      "<p>When you are done with a tab, you can always close it " +
-                      "by pressing <kbd>Ctrl+W</kbd>.</p>" +
-                      "<p>You currently have " + modulesInstalledCount + " module" +
-                      (modulesInstalledCount == 1 ? "" : "s") + " installed. You " +
-                      "can manage modules in the settings menu."
+                text: "<h1>" + qsTr("Welcome to Pext") + "</h1>" +
+                      "<p>" + qsTr("To get started, press <kbd>Ctrl+T</kbd> to open a new tab.") + "</p>" +
+                      "<p>" + qsTr("When you are done with a tab, you can always close it by pressing <kbd>Ctrl+W</kbd>.") + "</p>" +
+                      "<p>" + qsTr("You currently have %1 module installed. You can manage modules in the settings menu", "You currently have %1 modules installed. You can manage modules in the settings menu", parseInt(modulesInstalledCount)).arg(modulesInstalledCount) + "</p>"
 
                 textFormat: TextEdit.RichText
                 readOnly: true
