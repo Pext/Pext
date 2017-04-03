@@ -491,7 +491,7 @@ class ModuleManager():
                        'install']
 
         # FIXME: Cheap hack to work around Debian's faultily-patched pip
-        if os.path.isfile('/usr/bin/aptitude'):
+        if os.path.isfile('/etc/debian_version'):
             pip_command += ['--system']
 
         pip_command += ['--upgrade',
