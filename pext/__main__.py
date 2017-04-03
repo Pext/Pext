@@ -40,7 +40,10 @@ import webbrowser
 from importlib import reload  # type: ignore
 from shutil import rmtree
 from subprocess import check_call, check_output, CalledProcessError, Popen
-from typing import Dict, List, Optional, Tuple
+try:
+    from typing import Dict, List, Optional, Tuple
+except ImportError:
+    from backports.typing import Dict, List, Optional, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
 from queue import Queue, Empty
