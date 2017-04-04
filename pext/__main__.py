@@ -1245,8 +1245,14 @@ class Window(QMainWindow):
     def _open_tab(self) -> None:
         module_list = [module[0]
                        for module in self.module_manager.list_modules()]
+
+        if len(module_list) == 0:
+            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
+            return
+
         module_name, ok = QInputDialog.getItem(
             self, "Pext", "Choose the module to load", sorted(module_list), 0, False)
+
         if ok:
             given_settings, ok = QInputDialog.getText(
                 self, "Pext", "Enter module settings (leave blank for defaults)")
@@ -1410,8 +1416,14 @@ class Window(QMainWindow):
     def _menu_uninstall_module(self) -> None:
         module_list = [module[0]
                        for module in self.module_manager.list_modules()]
+
+        if len(module_list) == 0:
+            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
+            return
+
         module_name, ok = QInputDialog.getItem(
             self, "Pext", "Choose the module to uninstall", sorted(module_list), 0, False)
+
         if ok:
             functions = [
                 {
@@ -1429,8 +1441,14 @@ class Window(QMainWindow):
     def _menu_update_module(self) -> None:
         module_list = [module[0]
                        for module in self.module_manager.list_modules()]
+
+        if len(module_list) == 0:
+            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
+            return
+
         module_name, ok = QInputDialog.getItem(
             self, "Pext", "Choose the module to update", sorted(module_list), 0, False)
+
         if ok:
             threading.Thread(target=self.module_manager.update_module,  # type: ignore
                              args=(module_name,),
