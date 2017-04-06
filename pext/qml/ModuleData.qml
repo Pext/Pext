@@ -55,6 +55,7 @@ ScrollView {
         property int maximumIndex: resultListModelMaxIndex
         property bool commandMode: resultListModelCommandMode
         property bool hasEntries: resultListModelHasEntries
+        property int depth: resultListModelDepth
 
         model: resultListModel
 

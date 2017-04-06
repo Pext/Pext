@@ -325,6 +325,10 @@ class MainLoop():
             self.app.clipboard().setText(str(action[1]), mode)
         elif action[0] == Action.set_selection:
             tab['vm'].selection = action[1]
+
+            tab['vm'].context.setContextProperty(
+                "resultListModelDepth", len(tab['vm'].selection))
+
             tab['vm'].module.selection_made(tab['vm'].selection)
         elif action[0] == Action.close:
             self.window.close()
@@ -553,7 +557,10 @@ class ModuleManager():
             "resultListModelMaxIndex", vm.result_list_model_max_index)
         module_context.setContextProperty(
             "resultListModelHasEntries", False)
-        module_context.setContextProperty("resultListModelCommandMode", False)
+        module_context.setContextProperty(
+            "resultListModelCommandMode", False)
+        module_context.setContextProperty(
+            "resultListModelDepth", 0)
 
         # Prepare module
         try:
@@ -933,6 +940,10 @@ class ViewModel():
             self.selection.pop()
             self.entry_list = []
             self.command_list = []
+
+            self.context.setContextProperty(
+                "resultListModelDepth", len(self.selection))
+
             self.module.selection_made(self.selection)
         else:
             self.window.close()
@@ -1045,6 +1056,10 @@ class ViewModel():
 
             self.selection.append(
                 {'type': SelectionType.command, 'value': command_typed})
+
+            self.context.setContextProperty(
+                "resultListModelDepth", len(self.selection))
+
             self.module.selection_made(self.selection)
 
             QQmlProperty.write(self.search_input_model, "text", "")
@@ -1058,7 +1073,11 @@ class ViewModel():
             entry = self.filtered_entry_list[current_index]
             self.selection.append({'type': SelectionType.entry, 'value': entry})
 
+        self.context.setContextProperty(
+            "resultListModelDepth", len(self.selection))
+
         self.module.selection_made(self.selection)
+
         QQmlProperty.write(self.search_input_model, "text", "")
 
     def set_header(self, content) -> None:
@@ -1135,11 +1154,13 @@ class Window(QMainWindow):
         self.search_input_model = self.window.findChild(
             QObject, "searchInputModel")
         escape_shortcut = self.window.findChild(QObject, "escapeShortcut")
+        back_button = self.window.findChild(QObject, "backButton")
         tab_shortcut = self.window.findChild(QObject, "tabShortcut")
 
         self.search_input_model.textChanged.connect(self._search)
         self.search_input_model.accepted.connect(self._select)
         escape_shortcut.activated.connect(self._go_up)
+        back_button.clicked.connect(self._go_up)
         tab_shortcut.activated.connect(self._tab_complete)
 
         # Bind menu entries
@@ -1522,6 +1543,10 @@ class Window(QMainWindow):
 
             if len(tab['vm'].selection) > 0:
                 tab['vm'].selection = []
+
+                tab['vm'].context.setContextProperty(
+                    "resultListModelDepth", len(tab['vm'].selection))
+
                 tab['vm'].module.selection_made(tab['vm'].selection)
 
             if tab_needs_search:

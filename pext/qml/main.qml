@@ -18,7 +18,7 @@
 */
 
 import QtQuick 2.5
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
@@ -28,7 +28,7 @@ ApplicationWindow {
     property string version: applicationVersion
     property int margin: 10
     width: Screen.width
-    height: 0.3 * Screen.height
+    height: 300
 
     flags: Qt.Window
 
@@ -282,20 +282,39 @@ ApplicationWindow {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: margin
-        TextField {
-            enabled: tabs.count > 0
-            placeholderText: tabs.count > 0 ? "Type to search" : ""
-            id: searchInput
-            objectName: "searchInputModel"
 
-            font.pixelSize: 24
-            focus: true
+        GridLayout {
+            Layout.minimumHeight: 30
+            Layout.fillHeight: true
 
-            onFocusChanged: {
-                focus = true
+            Button {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.contentItem.depth > 0)
+
+                width: 60
+                text: searchInput.length > 0 ? "Clear" : "Back"
+                objectName: "backButton"
             }
 
-            Layout.fillWidth: true
+            TextField {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                enabled: tabs.count > 0
+                placeholderText: tabs.count > 0 ? "Type to search" : ""
+                id: searchInput
+                objectName: "searchInputModel"
+
+                focus: true
+
+                onFocusChanged: {
+                    focus = true
+                }
+
+                Layout.fillWidth: true
+            }
         }
 
         TabView {

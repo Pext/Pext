@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Clear/back button in the UI
+
 ### Fixed
 - Fix Debian detection (no longer incorrectly detects openSUSE as Debian)
 - Nonsense load/update/uninstall dialogs if no modules are installed
