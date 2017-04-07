@@ -36,14 +36,11 @@ class ModuleBase(ABC):
         """Called when the module is first loaded.
 
         In this function, the application should initialize all its data and
-        use the Action.add_entry and Action.add_command to asynchronously
-        populate the main list.
-
-        If the list can be generated very quickly, the module may opt for using
-        Action.replace_entry_list and Action.replace_command_list instead, although
-        it is recommended to queue the data per entry so that the user can
-        start interacting with at least some of the data as quickly as
-        possible.
+        use Action.replace_entry_list and Action.replace_command_list to
+        populate the main list. Please avoid using Action.add_entry and
+        Action.add_command, especially at initialization time, unless it would
+        take unreasonably long for the module to load otherwise, as these
+        methods are significantly slower if there are a lot of entries to add.
 
         The settings variable is a dictionary containing all "module settings".
         For example, if the user enters "foo=bar foobar=fubar" in the custom
