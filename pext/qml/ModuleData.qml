@@ -28,13 +28,13 @@ ScrollView {
 
     Item {
         width: parent.width
-        height: headerText.text ? 23 : 0
+        visible: headerText.text
         Text {
             id: headerText
             objectName: "headerText"
+            font.pointSize: 12
 
             textFormat: Text.PlainText
-            font.pixelSize: 18
         }
     }
 
@@ -45,7 +45,7 @@ ScrollView {
 
     ListView {
         visible: resultList.hasEntries == true
-        anchors.topMargin: headerText.text ? 23 : 0
+        anchors.topMargin: headerText.text ? headerText.height : 0
         clip: true
         id: resultList
         objectName: "resultListModel"
@@ -63,12 +63,13 @@ ScrollView {
             Item {
                 property variant itemData: model.modelData
                 width: parent.width
-                height: 23
+                height: text.height
                 Column {
                      Text {
+                        id: text
                         text: display
                         textFormat: Text.PlainText
-                        font.pixelSize: 18
+                        font.pointSize: 12
                         font.italic:
                             if (!resultListModelCommandMode) {
                                 index > resultListModelMaxIndex

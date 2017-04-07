@@ -38,7 +38,7 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex - (listView.height / 23) + 1;
+        listView.currentIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
 
         if (listView.currentIndex < 0)
             listView.currentIndex = 0;
@@ -52,7 +52,7 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex + (listView.height / 23);
+        listView.currentIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
         listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
     }
 
