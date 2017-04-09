@@ -86,7 +86,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Up"
+        sequence: StandardKey.MoveToPreviousLine
         onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
     }
 
@@ -96,7 +96,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Down"
+        sequence: StandardKey.MoveToNextLine
         onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
     }
 
@@ -106,7 +106,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "PgUp"
+        sequence: StandardKey.MoveToPreviousPage
         onActivated: pageUp()
     }
 
@@ -116,7 +116,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "PgDown"
+        sequence: StandardKey.MoveToNextPage
         onActivated: pageDown()
     }
 
@@ -131,7 +131,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Ctrl+Shift+Tab"
+        sequence: "Ctrl+Shift+Tab" // StandardKey.PreviousChild does not work on my machine
         onActivated: prevTab()
     }
 
@@ -192,13 +192,12 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuQuit"
                 text: "Quit"
-                shortcut: "Ctrl+Q"
+                shortcut: StandardKey.Quit
             }
 
             MenuItem {
                 objectName: "menuQuitWithoutSaving"
                 text: "Quit without saving"
-                shortcut: "Ctrl+Shift+Q"
             }
         }
 
@@ -208,21 +207,23 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuReloadActiveModule"
                 text: "Reload active module"
-                shortcut: "F5"
+                shortcut: StandardKey.Refresh
             }
 
             MenuItem {
+                id: menuCloseActiveModule
                 objectName: "menuCloseActiveModule"
                 text: "Close active module"
-                shortcut: "Ctrl+W"
+                shortcut: StandardKey.Close
             }
 
             MenuSeparator { }
 
             MenuItem {
+                id: menuLoadModule
                 objectName: "menuLoadModule"
                 text: "Load module"
-                shortcut: "Ctrl+T"
+                shortcut: StandardKey.AddTab
             }
 
             MenuItem {
@@ -345,13 +346,9 @@ ApplicationWindow {
                 objectName: "introScreen"
                 property var modulesInstalledCount
                 text: "<h1>Welcome to Pext</h1>" +
-                      "<p>To get started, press <kbd>Ctrl+T</kbd> to open a new " +
-                      "tab.</p>" +
-                      "<p>When you are done with a tab, you can always close it " +
-                      "by pressing <kbd>Ctrl+W</kbd>.</p>" +
-                      "<p>You currently have " + modulesInstalledCount + " module" +
-                      (modulesInstalledCount == 1 ? "" : "s") + " installed. You " +
-                      "can manage modules in the settings menu."
+                      "<p>To get started, press <kbd>" + menuLoadModule.shortcut + "</kbd> to open a new tab.</p>" +
+                      "<p>When you are done with a tab, you can always close it by pressing <kbd>" + menuCloseActiveModule.shortcut + "</kbd>.</p>" +
+                      "<p>You currently have " + modulesInstalledCount + " module" + (modulesInstalledCount == 1 ? "" : "s") + " installed. You can manage modules in the settings menu.</p>"
 
                 textFormat: TextEdit.RichText
                 readOnly: true

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Minor UI font size changes
+- Pext's QML now uses StandardKeys in most places
 
 ### Fixed
 - Fix Debian detection (no longer incorrectly detects openSUSE as Debian)
