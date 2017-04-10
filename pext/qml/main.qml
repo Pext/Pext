@@ -18,7 +18,7 @@
 */
 
 import QtQuick 2.5
-import QtQuick.Controls 1.0
+import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
@@ -28,7 +28,7 @@ ApplicationWindow {
     property string version: applicationVersion
     property int margin: 10
     width: Screen.width
-    height: 0.3 * Screen.height
+    height: 300
 
     flags: Qt.Window
 
@@ -38,7 +38,7 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex - (listView.height / 23) + 1;
+        listView.currentIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
 
         if (listView.currentIndex < 0)
             listView.currentIndex = 0;
@@ -52,7 +52,7 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex + (listView.height / 23);
+        listView.currentIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
         listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
     }
 
@@ -86,7 +86,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Up"
+        sequence: StandardKey.MoveToPreviousLine
         onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
     }
 
@@ -96,7 +96,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Down"
+        sequence: StandardKey.MoveToNextLine
         onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
     }
 
@@ -106,7 +106,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "PgUp"
+        sequence: StandardKey.MoveToPreviousPage
         onActivated: pageUp()
     }
 
@@ -116,7 +116,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "PgDown"
+        sequence: StandardKey.MoveToNextPage
         onActivated: pageDown()
     }
 
@@ -131,7 +131,7 @@ ApplicationWindow {
     }
 
     Shortcut {
-        sequence: "Ctrl+Shift+Tab"
+        sequence: "Ctrl+Shift+Tab" // StandardKey.PreviousChild does not work on my machine
         onActivated: prevTab()
     }
 
@@ -192,13 +192,12 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuQuit"
                 text: qsTr("Quit")
-                shortcut: "Ctrl+Q"
+                shortcut: StandardKey.Quit
             }
 
             MenuItem {
                 objectName: "menuQuitWithoutSaving"
                 text: qsTr("Quit without saving")
-                shortcut: "Ctrl+Shift+Q"
             }
         }
 
@@ -208,21 +207,23 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuReloadActiveModule"
                 text: qsTr("Reload active module")
-                shortcut: "F5"
+                shortcut: StandardKey.Refresh
             }
 
             MenuItem {
+                id: menuCloseActiveModule
                 objectName: "menuCloseActiveModule"
                 text: qsTr("Close active module")
-                shortcut: "Ctrl+W"
+                shortcut: StandardKey.Close
             }
 
             MenuSeparator { }
 
             MenuItem {
+                id: menuLoadModule
                 objectName: "menuLoadModule"
                 text: qsTr("Load module")
-                shortcut: "Ctrl+T"
+                shortcut: StandardKey.AddTab
             }
 
             MenuItem {
@@ -282,20 +283,39 @@ ApplicationWindow {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: margin
-        TextField {
-            enabled: tabs.count > 0
-            placeholderText: tabs.count > 0 ? qsTr("Type to search") : ""
-            id: searchInput
-            objectName: "searchInputModel"
 
-            font.pixelSize: 24
-            focus: true
+        GridLayout {
+            Layout.minimumHeight: 30
+            Layout.fillHeight: true
 
-            onFocusChanged: {
-                focus = true
+            Button {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.contentItem.depth > 0)
+
+                width: 60
+                text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
+                objectName: "backButton"
             }
 
-            Layout.fillWidth: true
+            TextField {
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                enabled: tabs.count > 0
+                placeholderText: tabs.count > 0 ? qsTr("Type to search") : ""
+                id: searchInput
+                objectName: "searchInputModel"
+
+                focus: true
+
+                onFocusChanged: {
+                    focus = true
+                }
+
+                Layout.fillWidth: true
+            }
         }
 
         TabView {
@@ -326,8 +346,8 @@ ApplicationWindow {
                 objectName: "introScreen"
                 property var modulesInstalledCount
                 text: "<h1>" + qsTr("Welcome to Pext") + "</h1>" +
-                      "<p>" + qsTr("To get started, press <kbd>Ctrl+T</kbd> to open a new tab.") + "</p>" +
-                      "<p>" + qsTr("When you are done with a tab, you can always close it by pressing <kbd>Ctrl+W</kbd>.") + "</p>" +
+                      "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab.").arg(menuLoadModule.shortcut) + "</p>" +
+                      "<p>" + qsTr("When you are done with a tab, you can always close it by pressing <kbd>%1</kbd>.").arg(menuCloseActiveModule.shortcut) + "</p>" +
                       "<p>" + qsTr("You currently have %1 module installed. You can manage modules in the settings menu", "You currently have %1 modules installed. You can manage modules in the settings menu", parseInt(modulesInstalledCount)).arg(modulesInstalledCount) + "</p>"
 
                 textFormat: TextEdit.RichText

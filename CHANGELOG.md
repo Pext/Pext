@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - i18n support
+- Clear/back button in the UI
+
+### Changed
+- Minor UI font size changes
+- Pext's QML now uses StandardKeys in most places
+
+### Fixed
+- Fix Debian detection (no longer incorrectly detects openSUSE as Debian)
+- Nonsense load/update/uninstall dialogs if no modules are installed
 
 ## [0.6.1] - 2017-04-01
 ### Fixed
