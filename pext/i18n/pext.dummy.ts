@@ -4,7 +4,7 @@
 <context>
     <name></name>
     <message>
-        <location filename="../__main__.py" line="1782"/>
+        <location filename="../__main__.py" line="1834"/>
         <source>Invalid clipboard requested</source>
         <translation type="unfinished"></translation>
     </message>
@@ -30,82 +30,82 @@
 <context>
     <name>ModuleManager</name>
     <message>
-        <location filename="../__main__.py" line="586"/>
+        <location filename="../__main__.py" line="593"/>
         <source>Failed to load module {} from {}: {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="706"/>
+        <location filename="../__main__.py" line="713"/>
         <source>{} is already installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="714"/>
+        <location filename="../__main__.py" line="721"/>
         <source>Installing {} from {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="726"/>
+        <location filename="../__main__.py" line="733"/>
         <source>Failed to download {}: {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="735"/>
+        <location filename="../__main__.py" line="742"/>
         <source>Failed to install {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="748"/>
+        <location filename="../__main__.py" line="755"/>
         <source>Installing dependencies for {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="756"/>
+        <location filename="../__main__.py" line="763"/>
         <source>Failed to install dependencies for {}, error {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="774"/>
+        <location filename="../__main__.py" line="781"/>
         <source>Installed {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="787"/>
+        <location filename="../__main__.py" line="794"/>
         <source>Uninstalling {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="796"/>
+        <location filename="../__main__.py" line="803"/>
         <source>Cannot uninstall {}, it is not installed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="809"/>
+        <location filename="../__main__.py" line="816"/>
         <source>Uninstalled {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="822"/>
+        <location filename="../__main__.py" line="829"/>
         <source>Updating {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="832"/>
+        <location filename="../__main__.py" line="839"/>
         <source>Failed to update {}: {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="840"/>
+        <location filename="../__main__.py" line="847"/>
         <source>Updating dependencies for {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="848"/>
+        <location filename="../__main__.py" line="855"/>
         <source>Failed to update dependencies for {}, error {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="856"/>
+        <location filename="../__main__.py" line="863"/>
         <source>Updated {}</source>
         <translation type="unfinished"></translation>
     </message>
@@ -113,7 +113,7 @@
 <context>
     <name>ModuleThreadInitializer</name>
     <message>
-        <location filename="../__main__.py" line="888"/>
+        <location filename="../__main__.py" line="895"/>
         <source>Exception thrown: {}</source>
         <translation type="unfinished"></translation>
     </message>
@@ -121,17 +121,17 @@
 <context>
     <name>Tray</name>
     <message>
-        <location filename="../__main__.py" line="1656"/>
+        <location filename="../__main__.py" line="1708"/>
         <source>Toggle visibility</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1664"/>
+        <location filename="../__main__.py" line="1716"/>
         <source>Quit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1669"/>
+        <location filename="../__main__.py" line="1721"/>
         <source>Quit without saving</source>
         <translation type="unfinished"></translation>
     </message>
@@ -139,7 +139,7 @@
 <context>
     <name>ViewModel</name>
     <message>
-        <location filename="../__main__.py" line="1144"/>
+        <location filename="../__main__.py" line="1163"/>
         <source>No tab completion possible</source>
         <translation type="unfinished"></translation>
     </message>
@@ -147,117 +147,122 @@
 <context>
     <name>Window</name>
     <message>
-        <location filename="../__main__.py" line="1297"/>
+        <location filename="../__main__.py" line="1567"/>
+        <source>No modules installed, please install one first.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../__main__.py" line="1327"/>
         <source>Choose the module to load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1306"/>
+        <location filename="../__main__.py" line="1336"/>
         <source>Enter module settings (leave blank for defaults)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1341"/>
+        <location filename="../__main__.py" line="1371"/>
         <source>Installed modules:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1347"/>
+        <location filename="../__main__.py" line="1377"/>
         <source>Pext team</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1347"/>
+        <location filename="../__main__.py" line="1377"/>
         <source>Other developers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1355"/>
+        <location filename="../__main__.py" line="1385"/>
         <source>Where do you want to get modules from?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1373"/>
+        <location filename="../__main__.py" line="1403"/>
         <source>Cannot connect to {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1385"/>
+        <location filename="../__main__.py" line="1415"/>
         <source>Could not decode content of {} (ValueError)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1399"/>
+        <location filename="../__main__.py" line="1429"/>
         <source>Could not decode content of {} (KeyError)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1407"/>
+        <location filename="../__main__.py" line="1437"/>
         <source>No modules found from source {}.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1414"/>
+        <location filename="../__main__.py" line="1444"/>
         <source>Choose the module to install</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1428"/>
+        <location filename="../__main__.py" line="1458"/>
         <source>Choose the preferred download source for {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1439"/>
+        <location filename="../__main__.py" line="1469"/>
         <source>You are about to install {} by {} from {}.
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1439"/>
+        <location filename="../__main__.py" line="1469"/>
         <source>The module describes itself as: {}.
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1439"/>
+        <location filename="../__main__.py" line="1469"/>
         <source>The module is licensed under {}.
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1473"/>
+        <location filename="../__main__.py" line="1503"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1473"/>
+        <location filename="../__main__.py" line="1503"/>
         <source>Continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1467"/>
+        <location filename="../__main__.py" line="1497"/>
         <source>Enter the git URL of the module to install</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1473"/>
+        <location filename="../__main__.py" line="1503"/>
         <source>You are about to install a module manually from {}.
 
 </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1501"/>
+        <location filename="../__main__.py" line="1540"/>
         <source>Choose the module to uninstall</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../__main__.py" line="1526"/>
+        <location filename="../__main__.py" line="1574"/>
         <source>Choose the module to update</source>
         <translation type="unfinished"></translation>
     </message>
@@ -308,12 +313,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="206"/>
+        <location filename="../qml/main.qml" line="205"/>
         <source>&amp;Module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="210"/>
+        <location filename="../qml/main.qml" line="209"/>
         <source>Reload active module</source>
         <translation type="unfinished"></translation>
     </message>
@@ -323,82 +328,92 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="224"/>
+        <location filename="../qml/main.qml" line="225"/>
         <source>Load module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="230"/>
+        <location filename="../qml/main.qml" line="231"/>
         <source>List installed modules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="234"/>
+        <location filename="../qml/main.qml" line="235"/>
         <source>Install module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="238"/>
+        <location filename="../qml/main.qml" line="239"/>
         <source>From online module list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="243"/>
+        <location filename="../qml/main.qml" line="244"/>
         <source>From URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="249"/>
+        <location filename="../qml/main.qml" line="250"/>
         <source>Uninstall module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="254"/>
+        <location filename="../qml/main.qml" line="255"/>
         <source>Update module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="259"/>
+        <location filename="../qml/main.qml" line="260"/>
         <source>Update all modules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="264"/>
+        <location filename="../qml/main.qml" line="265"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="268"/>
+        <location filename="../qml/main.qml" line="269"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="277"/>
+        <location filename="../qml/main.qml" line="278"/>
         <source>Visit homepage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="287"/>
+        <location filename="../qml/main.qml" line="298"/>
+        <source>Clear</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="298"/>
+        <source>Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="307"/>
         <source>Type to search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="328"/>
+        <location filename="../qml/main.qml" line="348"/>
         <source>Welcome to Pext</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="329"/>
-        <source>To get started, press &lt;kbd&gt;Ctrl+T&lt;/kbd&gt; to open a new tab.</source>
+        <location filename="../qml/main.qml" line="349"/>
+        <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="330"/>
-        <source>When you are done with a tab, you can always close it by pressing &lt;kbd&gt;Ctrl+W&lt;/kbd&gt;.</source>
+        <location filename="../qml/main.qml" line="350"/>
+        <source>When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%1&lt;/kbd&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="331"/>
+        <location filename="../qml/main.qml" line="351"/>
         <source>You currently have %1 module installed. You can manage modules in the settings menu</source>
         <comment>You currently have %1 modules installed. You can manage modules in the settings menu</comment>
         <translation type="unfinished">
