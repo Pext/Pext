@@ -52,7 +52,7 @@ if platform.system() == "Linux":
     except ImportError:
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
 
-from PyQt5.QtCore import QCoreApplication, QLocale, QStringListModel, QTranslator
+from PyQt5.QtCore import QStringListModel
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMenu, QMessageBox, QTextEdit, QVBoxLayout,
@@ -214,7 +214,7 @@ class Logger():
             if message['type'] == 'error':
                 statusbar_message = "<font color='red'>{}</color>".format(
                     message['message'])
-                notification_message = QCoreApplication.translate('Logger', 'error: {}').format(message['message'])
+                notification_message = 'error: {}'.format(message['message'])
             else:
                 statusbar_message = message['message']
                 notification_message = message['message']
@@ -237,10 +237,10 @@ class Logger():
     def set_queue_count(self, count: List[int]) -> None:
         """Show the queue size on screen."""
         if count[0] == 0 and count[1] == 0:
-            QQmlProperty.write(self.status_queue, "text", QCoreApplication.translate('Logger', 'Ready'))
+            QQmlProperty.write(self.status_queue, "text", "Ready")
         else:
             QQmlProperty.write(
-                self.status_queue, "text", QCoreApplication.translate('Logger', 'Processing: {} ({})').format(count[0], count[1]))
+                self.status_queue, "text", "Processing: {} ({})".format(count[0], count[1]))
 
 
 class MainLoop():
@@ -567,9 +567,7 @@ class ModuleManager():
             module_import = __import__(module_dir, fromlist=['Module'])
         except ImportError as e1:
             self._log_error(
-                QCoreApplication.translate('ModuleManager',
-                                           'Failed to load module {} from {}: {}')
-                                           .format(module_name, module_dir, e1))
+                "Failed to load module {} from {}: {}".format(module_name, module_dir, e1))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -591,9 +589,7 @@ class ModuleManager():
             module_code = Module()
         except TypeError as e2:
             self._log_error(
-                QCoreApplication.translate('ModuleManager',
-                                           'Failed to load module {} from {}: {}')
-                                           .format(module_name, module_dir, e2))
+                "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
             return False
 
         # Start the module in the background
@@ -710,18 +706,12 @@ class ModuleManager():
 
         if os.path.exists(os.path.join(self.module_dir, dir_name)):
             if verbose:
-                self._log_error(
-                    QCoreApplication.translate('ModuleManager',
-                                               '{} is already installed')
-                                               .format(module_name))
+                self._log_error('{} is already installed'.format(module_name))
 
             return False
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Installing {} from {}')
-                                           .format(module_name, url))
+            self._log('Installing {} from {}'.format(module_name, url))
 
         try:
             git_env = os.environ.copy()
@@ -730,19 +720,13 @@ class ModuleManager():
                                 cwd=self.module_dir,
                                 env=git_env if not interactive else None).wait()
         except Exception as e:
-            self._log_error(
-                QCoreApplication.translate('ModuleManager',
-                                           'Failed to download {}: {}')
-                                           .format(module_name, e))
+            self._log_error('Failed to download {}: {}'.format(module_name, e))
 
             return False
 
         if return_code != 0:
             if verbose:
-                self._log_error(
-                    QCoreApplication.translate('ModuleManager',
-                                               'Failed to install {}')
-                                               .format(module_name))
+                self._log_error('Failed to install {}'.format(module_name))
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -752,18 +736,12 @@ class ModuleManager():
             return False
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Installing dependencies for {}')
-                                           .format(module_name))
+            self._log('Installing dependencies for {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                self._log_error(
-                    QCoreApplication.translate('ModuleManager',
-                                               'Failed to install dependencies for {}, error {}')
-                                               .format(module_name, pip_exit_code))
+                self._log_error('Failed to install dependencies for {}, error {}'.format(module_name, pip_exit_code))
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -778,10 +756,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Installed {}')
-                                           .format(module_name))
+            self._log('Installed {}'.format(module_name))
 
         return True
 
@@ -791,19 +766,14 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Uninstalling {}')
-                                           .format(module_name))
+            self._log('Uninstalling {}'.format(module_name))
 
         try:
             rmtree(os.path.join(self.module_dir, dir_name))
         except FileNotFoundError:
             if verbose:
                 self._log_error(
-                    QCoreApplication.translate('ModuleManager',
-                                               'Cannot uninstall {}, it is not installed')
-                                               .format(module_name))
+                    'Cannot uninstall {}, it is not installed'.format(module_name))
 
             return False
 
@@ -813,10 +783,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Uninstalled {}')
-                                           .format(module_name))
+            self._log('Uninstalled {}'.format(module_name))
 
         return True
 
@@ -826,10 +793,7 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Updating {}')
-                                           .format(module_name))
+            self._log('Updating {}'.format(module_name))
 
         try:
             check_call(
@@ -837,33 +801,22 @@ class ModuleManager():
         except Exception as e:
             if verbose:
                 self._log_error(
-                    QCoreApplication.translate('ModuleManager',
-                                               'Failed to update {}: {}')
-                                               .format(module_name, e))
+                    'Failed to update {}: {}'.format(module_name, e))
 
             return False
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Updating dependencies for {}')
-                                           .format(module_name))
+            self._log('Updating dependencies for {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                self._log_error(
-                    QCoreApplication.translate('ModuleManager',
-                                               'Failed to update dependencies for {}, error {}')
-                                               .format(module_name, pip_exit_code))
+                self._log_error('Failed to update dependencies for {}, error {}'.format(module_name, pip_exit_code))
 
             return False
 
         if verbose:
-            self._log(
-                QCoreApplication.translate('ModuleManager',
-                                           'Updated {}')
-                                           .format(module_name))
+            self._log('Updated {}'.format(module_name))
 
         return True
 
@@ -893,7 +846,7 @@ class ModuleThreadInitializer(threading.Thread):
             threading.Thread.run(self)
         except Exception as e:
             self.queue.put(
-                [Action.critical_error, QCoreApplication.translate('ModuleThreadInitializer', 'Exception thrown: {}').format(e)])
+                [Action.critical_error, "Exception thrown: {}".format(e)])
 
 
 class ViewModel():
@@ -1159,7 +1112,7 @@ class ViewModel():
 
             if entry is None or len(entry) <= len(start):
                 self.queue.put(
-                    [Action.add_error, QCoreApplication.translate('ViewModel', 'No tab completion possible')])
+                    [Action.add_error, "No tab completion possible"])
                 return
         else:
             entry = " "  # Add an extra space to simplify typing for the user
@@ -1315,27 +1268,15 @@ class Window(QMainWindow):
                        for module in self.module_manager.list_modules()]
 
         if len(module_list) == 0:
-            QMessageBox.information(
-                self,
-                "Pext",
-                QCoreApplication.translate('Window', 'No modules installed, please install one first.'))
-
+            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
             return
 
         module_name, ok = QInputDialog.getItem(
-            self,
-            "Pext",
-            QCoreApplication.translate('Window', 'Choose the module to load'),
-            sorted(module_list),
-            0,
-            False)
+            self, "Pext", "Choose the module to load", sorted(module_list), 0, False)
 
         if ok:
             given_settings, ok = QInputDialog.getText(
-                self,
-                "Pext",
-                QCoreApplication.translate('Window', 'Enter module settings (leave blank for defaults)'))
-
+                self, "Pext", "Enter module settings (leave blank for defaults)")
             if ok:
                 module_settings = {}
                 for setting in given_settings.split(" "):
@@ -1367,26 +1308,20 @@ class Window(QMainWindow):
         for module in self.module_manager.list_modules():
             module_list.append('{} ({})'.format(module[0], module[1]))
         QMessageBox.information(
-            self,
-            "Pext",
-            '\n'.join([QCoreApplication.translate('Window', 'Installed modules:')] + sorted(module_list)))
+            self, "Pext", '\n'.join(['Installed modules:'] + sorted(module_list)))
 
     def _menu_install_module_from_repository(self) -> None:
         modules_sources_source = collections.OrderedDict((
-            (QCoreApplication.translate('Window', 'Pext team'), "https://pext.hackerchick.me/modules.json"),
-            (QCoreApplication.translate('Window', 'Other developers'), "https://pext.hackerchick.me/third_party_modules.json"),
+            ("Pext team", "https://pext.hackerchick.me/modules.json"),
+            ("Other developers", "https://pext.hackerchick.me/third_party_modules.json"),
         ))
 
         modules_sources = collections.OrderedDict(("{} ({})".format(module[0], module[1]), module[1]) for module in modules_sources_source.items())
 
         if len(modules_sources) > 1:
             modules_source, ok = QInputDialog.getItem(
-                self,
-                "Pext",
-                QCoreApplication.translate('Window', 'Where do you want to get modules from?'),
-                modules_sources.keys(),
-                0,
-                False)
+                self, "Pext", "Where do you want to get modules from?",
+                modules_sources.keys(), 0, False)
 
             if not ok:
                 return
@@ -1398,10 +1333,7 @@ class Window(QMainWindow):
         try:
             response = urlopen(url)
         except URLError:
-            self.module_manager.logger.add_error(
-                "",
-                QCoreApplication.translate('Window', 'Cannot connect to {}').format(url))
-
+            self.module_manager.logger.add_error("", "Cannot connect to {}".format(url))
             traceback.print_exc()
             return
 
@@ -1410,10 +1342,9 @@ class Window(QMainWindow):
         try:
             data = json.loads(response_data)
         except ValueError:
-            self.module_manager.logger.add_error(
-                "",
-                QCoreApplication.translate('Window', 'Could not decode content of {} (ValueError)').format(url))
-
+            self.module_manager.logger.add_error("",
+                                                 "Could not decode content of {} (ValueError)"
+                                                 .format(url))
             traceback.print_exc()
             return
 
@@ -1424,28 +1355,19 @@ class Window(QMainWindow):
             for module in modules:
                 module_list["{} ({})".format(module['name'], module['description'])] = module
         except KeyError:
-            self.module_manager.logger.add_error(
-                "",
-                QCoreApplication.translate('Window', 'Could not decode content of {} (KeyError)').format(url))
-
+            self.module_manager.logger.add_error("",
+                                                 "Could not decode content of {} (KeyError)"
+                                                 .format(url))
             traceback.print_exc()
             return
 
         if len(modules) == 0:
-            QMessageBox.information(
-                self,
-                "Pext",
-                QCoreApplication.translate('Window', 'No modules found from source {}.').format(modules_source))
-
+            QMessageBox.information(self, "Pext", "No modules found from source {}.".format(modules_source))
             return
 
         module_info, ok = QInputDialog.getItem(
-            self,
-            "Pext",
-            QCoreApplication.translate('Window', 'Choose the module to install'),
-            sorted(module_list.keys()),
-            0,
-            False)
+            self, "Pext", "Choose the module to install",
+            sorted(module_list.keys()), 0, False)
 
         if ok:
             module = module_list[module_info]
@@ -1454,26 +1376,20 @@ class Window(QMainWindow):
                 module_url = module['urls'][0]
             else:
                 module_url, ok = QInputDialog.getItem(
-                    self,
-                    "Pext",
-                    QCoreApplication.translate('Window', 'Choose the preferred download source for {}').format(module['name']),
-                    sorted(module['urls']),
-                    0,
-                    False)
+                self, "Pext", "Choose the preferred download source for {}".format(module['name']),
+                    sorted(module['urls']), 0, False)
 
                 if not ok:
                     return
 
-            answer = QMessageBox.question(
-                self,
-                "Pext",
-                QCoreApplication.translate('Window', 'You are about to install {} by {} from {}.\n\n').format(module['name'], module['developer'], module_url) +
-                QCoreApplication.translate('Window', 'The module describes itself as: {}.\n\n').format(module['description']) +
-                QCoreApplication.translate('Window', 'The module is licensed under {}.\n\n').format(module['license']) +
-                QCoreApplication.translate('Window', 'As Pext modules are code, please make sure you trust the developer before continuing.\n\n') +
-                QCoreApplication.translate('Window', 'Continue?'),
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes)
+            answer = QMessageBox.question(self, "Pext",
+                                          "You are about to install {} by {} from {}.\n\n".format(module['name'], module['developer'], module_url) +
+                                          "The module describes itself as: {}.\n\n".format(module['description']) +
+                                          "The module is licensed under {}.\n\n".format(module['license']) +
+                                          "As Pext modules are code, please make sure you trust the developer before continuing.\n\n" +
+                                          "Continue?",
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.Yes)
 
             if answer != QMessageBox.Yes:
                 return
@@ -1493,19 +1409,14 @@ class Window(QMainWindow):
 
     def _menu_install_module_from_url(self) -> None:
         module_url, ok = QInputDialog.getText(
-            self,
-            "Pext",
-            QCoreApplication.translate('Window', 'Enter the git URL of the module to install'))
-
+            self, "Pext", "Enter the git URL of the module to install")
         if ok:
-            answer = QMessageBox.question(
-                self,
-                "Pext",
-                QCoreApplication.translate('Window', 'You are about to install a module manually from {}.\n\n').format(module_url) +
-                QCoreApplication.translate('Window', 'As Pext modules are code, please make sure you trust the developer before continuing.\n\n') +
-                QCoreApplication.translate('Window', 'Continue?'),
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes)
+            answer = QMessageBox.question(self, "Pext",
+                                          "You are about to install a module manually from {}.\n\n".format(module_url) +
+                                          "As Pext modules are code, please make sure you trust the developer before continuing.\n\n" +
+                                          "Continue?",
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.Yes)
 
             if answer != QMessageBox.Yes:
                 return
@@ -1528,20 +1439,11 @@ class Window(QMainWindow):
                        for module in self.module_manager.list_modules()]
 
         if len(module_list) == 0:
-            QMessageBox.information(
-                self,
-                'Pext',
-                QCoreApplication.translate('Window', 'No modules installed, please install one first.'))
-
+            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
             return
 
         module_name, ok = QInputDialog.getItem(
-            self,
-            'Pext',
-            QCoreApplication.translate('Window', 'Choose the module to uninstall'),
-            sorted(module_list),
-            0,
-            False)
+            self, "Pext", "Choose the module to uninstall", sorted(module_list), 0, False)
 
         if ok:
             functions = [
@@ -1562,20 +1464,11 @@ class Window(QMainWindow):
                        for module in self.module_manager.list_modules()]
 
         if len(module_list) == 0:
-            QMessageBox.information(
-                self,
-                'Pext',
-                QCoreApplication.translate('Window', 'No modules installed, please install one first.'))
-
+            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
             return
 
         module_name, ok = QInputDialog.getItem(
-            self,
-            'Pext',
-            QCoreApplication.translate('Window', 'Choose the module to update'),
-            sorted(module_list),
-            0,
-            False)
+            self, "Pext", "Choose the module to update", sorted(module_list), 0, False)
 
         if ok:
             threading.Thread(target=self.module_manager.update_module,  # type: ignore
@@ -1703,22 +1596,16 @@ class Tray():
         self.tray = QSystemTrayIcon(app_icon)
         tray_menu = QMenu()
 
-        tray_menu_open = QAction(
-            QCoreApplication.translate('Tray', 'Toggle visibility'),
-            tray_menu)
+        tray_menu_open = QAction("Toggle visibility", tray_menu)
         tray_menu_open.triggered.connect(window.toggle_visibility)
         tray_menu.addAction(tray_menu_open)
 
         tray_menu.addSeparator()
 
-        tray_menu_quit = QAction(
-            QCoreApplication.translate('Tray', 'Quit'),
-            tray_menu)
+        tray_menu_quit = QAction("Quit", tray_menu)
         tray_menu_quit.triggered.connect(window.quit)
         tray_menu.addAction(tray_menu_quit)
-        tray_menu_quit_without_saving = QAction(
-            QCoreApplication.translate('Tray', 'Quit without saving'),
-            tray_menu)
+        tray_menu_quit_without_saving = QAction("Quit without saving", tray_menu)
         tray_menu_quit_without_saving.triggered.connect(window.quit_without_saving)
         tray_menu.addAction(tray_menu_quit_without_saving)
 
@@ -1765,7 +1652,6 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     """Load the settings from the command line and set defaults."""
     # Default options
     settings = {'clipboard': 'clipboard',
-                'locale': QLocale.system().name(),
                 'modules': [],
                 'profile': 'default',
                 'save_settings': True,
@@ -1786,7 +1672,6 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         opts, _ = getopt.getopt(argv, "hc:m:p:", ["help",
                                                   "version",
                                                   "exit",
-                                                  'locale=',
                                                   "list-styles",
                                                   "style=",
                                                   "clipboard=",
@@ -1814,8 +1699,6 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             print("Pext {}".format(VersionRetriever.get_version()))
         elif opt == "--exit":
             sys.exit(0)
-        elif opt == "--locale":
-            settings['locale'] = arg
         elif opt == "--list-styles":
             for style in QStyleFactory().keys():
                 print(style)
@@ -1829,7 +1712,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             settings['binary'] = arg
         elif opt in ("-c", "--clipboard"):
             if arg not in ["clipboard", "selection"]:
-                print(QCoreApplication.translate('', 'Invalid clipboard requested'))
+                print("Invalid clipboard requested")
                 sys.exit(2)
 
             settings['clipboard'] = arg
@@ -1890,8 +1773,6 @@ def usage() -> None:
                      "selection" for the global mouse selection.
 
 --help             : show this screen.
-
---locale           : load pext with the given locale.
 
 --style            : sets a certain Qt system style for the UI.
 
@@ -1957,22 +1838,15 @@ def main() -> None:
     # Load the app icon
     app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
 
-    # Set up the app 
+    # Get an app instance
     app = QApplication(['Pext ({})'.format(settings['profile'])])
-
-    translator = QTranslator()
-    print('Using locale: {}'.format(settings['locale']))
-    print('Localization loaded: ',
-        translator.load('pext.' + settings['locale'] + '.qm', os.path.join(AppFile.get_path('i18n'))))
-
-    app.installTranslator(translator)
     app.setWindowIcon(app_icon)
     if 'style' in settings:
         app.setStyle(QStyleFactory().create(settings['style']))
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
-        print('Requested clipboard type is not supported')
+        print("Requested clipboard type is not supported")
         sys.exit(3)
 
     # Get a window
