@@ -222,42 +222,122 @@ ApplicationWindow {
             MenuItem {
                 id: menuLoadModule
                 objectName: "menuLoadModule"
+
+                signal loadRequest(string name, string settings)
+
                 text: "Load module"
+
                 shortcut: StandardKey.AddTab
+
+                onTriggered: {
+                    if (Object.keys(modules).length == 0) {
+                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
+                        noModulesInstalledDialog.createObject(applicationWindow);
+                    } else {
+                        var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
+                        loadModuleDialog.createObject(applicationWindow,
+                            {"modules": Object.keys(modules).sort(),
+                             "loadRequest": loadRequest});
+                    }
+                }
             }
 
             MenuItem {
-                objectName: "menuListModules"
                 text: "List installed modules"
+
+                onTriggered: {
+                    var listModulesDialog = Qt.createComponent("ListModulesDialog.qml");
+                    listModulesDialog.createObject(applicationWindow,
+                        {"modules": modules});
+                }
             }
 
             Menu {
+                id: menuInstallModule
+                objectName: "menuInstallModule"
                 title: "Install module"
 
+                signal installRequest(string url)
+
                 MenuItem {
-                    objectName: "menuInstallModuleFromRepository"
                     text: "From online module list"
+
+                    property var repositories:
+                        [{
+                          "name": "Pext team",
+                          "url": "https://pext.hackerchick.me/modules.json"
+                        }, {
+                          "name": "Other developers",
+                          "url": "https://pext.hackerchick.me/third_party_modules.json"
+                        }]
+
+                    onTriggered: {
+                        var installModuleFromRepositoryDialog = Qt.createComponent("InstallModuleFromRepositoryDialog.qml");
+                        installModuleFromRepositoryDialog.createObject(applicationWindow,
+                            {"applicationWindow": applicationWindow,
+                             "installRequest": menuInstallModule.installRequest,
+                             "repositories": repositories})
+                    }
                 }
 
                 MenuItem {
-                    objectName: "menuInstallModuleFromURL"
                     text: "From URL"
+
+                    onTriggered: {
+                        var installModuleFromURLDialog = Qt.createComponent("InstallModuleFromURLDialog.qml");
+                        installModuleFromURLDialog.createObject(applicationWindow,
+                            {"installRequest": menuInstallModule.installRequest});
+                    }
                 }
             }
 
             MenuItem {
                 objectName: "menuUninstallModule"
                 text: "Uninstall module"
+
+                signal uninstallRequest(string name)
+
+                onTriggered: {
+                    if (Object.keys(modules).length == 0) {
+                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
+                        noModulesInstalledDialog.createObject(applicationWindow);
+                    } else {
+                        var uninstallModuleDialog = Qt.createComponent("UninstallModuleDialog.qml");
+                        uninstallModuleDialog.createObject(applicationWindow,
+                            {"modules": Object.keys(modules).sort(),
+                             "uninstallRequest": uninstallRequest});
+                    }
+                }
             }
 
             MenuItem {
                 objectName: "menuUpdateModule"
                 text: "Update module"
+
+                signal updateRequest(string name)
+
+                onTriggered: {
+                    if (Object.keys(modules).length == 0) {
+                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
+                        noModulesInstalledDialog.createObject(applicationWindow);
+                    } else {
+                        var updateModuleDialog = Qt.createComponent("UpdateModuleDialog.qml");
+                        var updateModuleDialogObject = updateModuleDialog.createObject(applicationWindow,
+                            {"modules": Object.keys(modules).sort(),
+                             "updateRequest": updateRequest});
+                    }
+                }
             }
 
             MenuItem {
                 objectName: "menuUpdateAllModules"
                 text: "Update all modules"
+
+                signal updateAllRequest()
+
+                onTriggered: {
+                    updateAllRequest()
+                }
             }
         }
 
@@ -344,7 +424,9 @@ ApplicationWindow {
 
             TextEdit {
                 objectName: "introScreen"
+
                 property var modulesInstalledCount
+
                 text: "<h1>Welcome to Pext</h1>" +
                       "<p>To get started, press <kbd>" + menuLoadModule.shortcut + "</kbd> to open a new tab.</p>" +
                       "<p>When you are done with a tab, you can always close it by pressing <kbd>" + menuCloseActiveModule.shortcut + "</kbd>.</p>" +

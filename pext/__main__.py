@@ -638,9 +638,9 @@ class ModuleManager():
         del window.tab_bindings[tab_id]
         window.tabs.removeTab(tab_id)
 
-    def list_modules(self) -> List[List[str]]:
+    def list_modules(self) -> Dict[str, str]:
         """Return a list of modules together with their source."""
-        modules = []
+        modules = {}
 
         for directory in os.listdir(self.module_dir):
             if not os.path.isdir(os.path.join(self.module_dir, directory)):
@@ -657,7 +657,7 @@ class ModuleManager():
             except (CalledProcessError, FileNotFoundError):
                 source = "Unknown"
 
-            modules.append([name, source])
+            modules[name] = source
 
         return modules
 
@@ -822,8 +822,8 @@ class ModuleManager():
 
     def update_all_modules(self, verbose=False) -> None:
         """Update all modules."""
-        for module in self.list_modules():
-            self.update_module(module[0], verbose=verbose)
+        for module in self.list_modules().keys():
+            self.update_module(module, verbose=verbose)
 
 
 class ModuleThreadInitializer(threading.Thread):
@@ -1145,10 +1145,10 @@ class Window(QMainWindow):
 
         self.window = self.engine.rootObjects()[0]
 
-        # Give intro screen the module count
+        # Give QML the module info
         self.intro_screen = self.window.findChild(QObject, "introScreen")
         self.module_manager = ModuleManager(self.config_retriever)
-        self._update_modules_installed_count()
+        self._update_modules_info_qml()
 
         # Bind global shortcuts
         self.search_input_model = self.window.findChild(
@@ -1170,12 +1170,8 @@ class Window(QMainWindow):
             QObject, "menuLoadModule")
         menu_close_active_module_shortcut = self.window.findChild(
             QObject, "menuCloseActiveModule")
-        menu_list_modules_shortcut = self.window.findChild(
-            QObject, "menuListModules")
-        menu_install_module_from_repository_shortcut = self.window.findChild(
-            QObject, "menuInstallModuleFromRepository")
-        menu_install_module_from_url_shortcut = self.window.findChild(
-            QObject, "menuInstallModuleFromURL")
+        menu_install_module_shortcut = self.window.findChild(
+            QObject, "menuInstallModule")
         menu_uninstall_module_shortcut = self.window.findChild(
             QObject, "menuUninstallModule")
         menu_update_module_shortcut = self.window.findChild(
@@ -1189,17 +1185,14 @@ class Window(QMainWindow):
 
         menu_reload_active_module_shortcut.triggered.connect(
             self._reload_active_module)
-        menu_load_module_shortcut.triggered.connect(self._open_tab)
+        menu_load_module_shortcut.loadRequest.connect(self._open_tab)
         menu_close_active_module_shortcut.triggered.connect(self._close_tab)
-        menu_list_modules_shortcut.triggered.connect(self._menu_list_modules)
-        menu_install_module_from_repository_shortcut.triggered.connect(
-            self._menu_install_module_from_repository)
-        menu_install_module_from_url_shortcut.triggered.connect(
-            self._menu_install_module_from_url)
-        menu_uninstall_module_shortcut.triggered.connect(
+        menu_install_module_shortcut.installRequest.connect(
+            self._menu_install_module)
+        menu_uninstall_module_shortcut.uninstallRequest.connect(
             self._menu_uninstall_module)
-        menu_update_module_shortcut.triggered.connect(self._menu_update_module)
-        menu_update_all_modules_shortcut.triggered.connect(
+        menu_update_module_shortcut.updateRequest.connect(self._menu_update_module)
+        menu_update_all_modules_shortcut.updateAllRequest.connect(
             self._menu_update_all_modules)
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
@@ -1263,35 +1256,21 @@ class Window(QMainWindow):
         except TypeError:
             pass
 
-    def _open_tab(self) -> None:
-        module_list = [module[0]
-                       for module in self.module_manager.list_modules()]
+    def _open_tab(self, name: str, settings: str) -> None:
+        module_settings = {}
+        for setting in settings.split(" "):
+            try:
+                key, value = setting.split("=", 2)
+            except ValueError:
+                continue
 
-        if len(module_list) == 0:
-            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
-            return
+            module_settings[key] = value
 
-        module_name, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to load", sorted(module_list), 0, False)
-
-        if ok:
-            given_settings, ok = QInputDialog.getText(
-                self, "Pext", "Enter module settings (leave blank for defaults)")
-            if ok:
-                module_settings = {}
-                for setting in given_settings.split(" "):
-                    try:
-                        key, value = setting.split("=", 2)
-                    except ValueError:
-                        continue
-
-                    module_settings[key] = value
-
-                module = {'name': module_name, 'settings': module_settings}
-                self.module_manager.load_module(self, module)
-                # First module? Enforce load
-                if len(self.tab_bindings) == 1:
-                    self.tabs.currentIndexChanged.emit()
+        module = {'name': name, 'settings': module_settings}
+        self.module_manager.load_module(self, module)
+        # First module? Enforce load
+        if len(self.tab_bindings) == 1:
+            self.tabs.currentIndexChanged.emit()
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
@@ -1303,177 +1282,38 @@ class Window(QMainWindow):
             self.module_manager.reload_module(
                 self, QQmlProperty.read(self.tabs, "currentIndex"))
 
-    def _menu_list_modules(self) -> None:
-        module_list = []  # type: List[str]
-        for module in self.module_manager.list_modules():
-            module_list.append('{} ({})'.format(module[0], module[1]))
-        QMessageBox.information(
-            self, "Pext", '\n'.join(['Installed modules:'] + sorted(module_list)))
-
-    def _menu_install_module_from_repository(self) -> None:
-        modules_sources_source = collections.OrderedDict((
-            ("Pext team", "https://pext.hackerchick.me/modules.json"),
-            ("Other developers", "https://pext.hackerchick.me/third_party_modules.json"),
-        ))
-
-        modules_sources = collections.OrderedDict(("{} ({})".format(module[0], module[1]), module[1]) for module in modules_sources_source.items())
-
-        if len(modules_sources) > 1:
-            modules_source, ok = QInputDialog.getItem(
-                self, "Pext", "Where do you want to get modules from?",
-                modules_sources.keys(), 0, False)
-
-            if not ok:
-                return
-        else:
-            modules_source = list(modules_sources)[0]
-
-        url = modules_sources[modules_source]
-
-        try:
-            response = urlopen(url)
-        except URLError:
-            self.module_manager.logger.add_error("", "Cannot connect to {}".format(url))
-            traceback.print_exc()
-            return
-
-        response_data = response.read().decode("utf-8")
-
-        try:
-            data = json.loads(response_data)
-        except ValueError:
-            self.module_manager.logger.add_error("",
-                                                 "Could not decode content of {} (ValueError)"
-                                                 .format(url))
-            traceback.print_exc()
-            return
-
-        module_list = {}
-
-        try:
-            modules = data['modules']
-            for module in modules:
-                module_list["{} ({})".format(module['name'], module['description'])] = module
-        except KeyError:
-            self.module_manager.logger.add_error("",
-                                                 "Could not decode content of {} (KeyError)"
-                                                 .format(url))
-            traceback.print_exc()
-            return
-
-        if len(modules) == 0:
-            QMessageBox.information(self, "Pext", "No modules found from source {}.".format(modules_source))
-            return
-
-        module_info, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to install",
-            sorted(module_list.keys()), 0, False)
-
-        if ok:
-            module = module_list[module_info]
-
-            if len(module['urls']) == 1:
-                module_url = module['urls'][0]
-            else:
-                module_url, ok = QInputDialog.getItem(
-                self, "Pext", "Choose the preferred download source for {}".format(module['name']),
-                    sorted(module['urls']), 0, False)
-
-                if not ok:
-                    return
-
-            answer = QMessageBox.question(self, "Pext",
-                                          "You are about to install {} by {} from {}.\n\n".format(module['name'], module['developer'], module_url) +
-                                          "The module describes itself as: {}.\n\n".format(module['description']) +
-                                          "The module is licensed under {}.\n\n".format(module['license']) +
-                                          "As Pext modules are code, please make sure you trust the developer before continuing.\n\n" +
-                                          "Continue?",
-                                          QMessageBox.Yes | QMessageBox.No,
-                                          QMessageBox.Yes)
-
-            if answer != QMessageBox.Yes:
-                return
-
+    def _menu_install_module(self, module_url: str) -> None:
             functions = [
                 {
                     'name': self.module_manager.install_module,
                     'args': (module_url),
                     'kwargs': {'interactive': False, 'verbose': True}
                 }, {
-                    'name': self._update_modules_installed_count,
+                    'name': self._update_modules_info_qml,
                     'args': (),
                     'kwargs': {}
                 }
             ]
             threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_install_module_from_url(self) -> None:
-        module_url, ok = QInputDialog.getText(
-            self, "Pext", "Enter the git URL of the module to install")
-        if ok:
-            answer = QMessageBox.question(self, "Pext",
-                                          "You are about to install a module manually from {}.\n\n".format(module_url) +
-                                          "As Pext modules are code, please make sure you trust the developer before continuing.\n\n" +
-                                          "Continue?",
-                                          QMessageBox.Yes | QMessageBox.No,
-                                          QMessageBox.Yes)
+    def _menu_uninstall_module(self, module_name: str) -> None:
+        functions = [
+            {
+                'name': self.module_manager.uninstall_module,
+                'args': (module_name),
+                'kwargs': {'verbose': True}
+            }, {
+                'name': self._update_modules_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-            if answer != QMessageBox.Yes:
-                return
-
-            functions = [
-                {
-                    'name': self.module_manager.install_module,
-                    'args': (module_url),
-                    'kwargs': {'interactive': False, 'verbose': True}
-                }, {
-                    'name': self._update_modules_installed_count,
-                    'args': (),
-                    'kwargs': {}
-                }
-            ]
-            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
-
-    def _menu_uninstall_module(self) -> None:
-        module_list = [module[0]
-                       for module in self.module_manager.list_modules()]
-
-        if len(module_list) == 0:
-            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
-            return
-
-        module_name, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to uninstall", sorted(module_list), 0, False)
-
-        if ok:
-            functions = [
-                {
-                    'name': self.module_manager.uninstall_module,
-                    'args': (module_name),
-                    'kwargs': {'verbose': True}
-                }, {
-                    'name': self._update_modules_installed_count,
-                    'args': (),
-                    'kwargs': {}
-                }
-            ]
-            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
-
-    def _menu_update_module(self) -> None:
-        module_list = [module[0]
-                       for module in self.module_manager.list_modules()]
-
-        if len(module_list) == 0:
-            QMessageBox.information(self, "Pext", "No modules installed, please install one first.")
-            return
-
-        module_name, ok = QInputDialog.getItem(
-            self, "Pext", "Choose the module to update", sorted(module_list), 0, False)
-
-        if ok:
-            threading.Thread(target=self.module_manager.update_module,  # type: ignore
-                             args=(module_name,),
-                             kwargs={'verbose': True}).start()
+    def _menu_update_module(self, module_name: str) -> None:
+        threading.Thread(target=self.module_manager.update_module,  # type: ignore
+                         args=(module_name,),
+                         kwargs={'verbose': True}).start()
 
     def _menu_update_all_modules(self) -> None:
         threading.Thread(
@@ -1497,9 +1337,11 @@ class Window(QMainWindow):
         except TypeError:
             pass
 
-    def _update_modules_installed_count(self) -> None:
+    def _update_modules_info_qml(self) -> None:
+        self.context.setContextProperty(
+            "modules", self.module_manager.list_modules())
         QQmlProperty.write(
-            self.intro_screen, "modulesInstalledCount", len(self.module_manager.list_modules()))
+            self.intro_screen, "modulesInstalledCount", len(self.module_manager.list_modules().keys()))
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -1732,8 +1574,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--update-modules":
             ModuleManager(config_retriever).update_all_modules(verbose=True)
         elif opt == "--list-modules":
-            for module in ModuleManager(config_retriever).list_modules():
-                print('{} ({})'.format(module[0], module[1]))
+            for module_name, module_source in ModuleManager(config_retriever).list_modules().items():
+                print('{} ({})'.format(module_name, module_source))
         elif opt == "--profile":
             settings['profile'] = arg
             # Create directory for profile if not existant

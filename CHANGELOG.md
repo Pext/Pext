@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Changed
+- Move all UI code to QML
+- Improved installation dialogs
+- Improve load module dialog
+
 ## [0.7] - 2017-04-10
 ### Added
 - Clear/back button in the UI
