@@ -24,7 +24,7 @@ MessageDialog {
     title: "Pext"
     icon: StandardIcon.Information
 
-    text: "No modules installed, please install one first."
+    text: qsTr("No modules installed, please install one first.")
 
     Component.onCompleted: visible = true;
 }

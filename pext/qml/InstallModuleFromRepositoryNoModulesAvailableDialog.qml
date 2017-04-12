@@ -24,7 +24,7 @@ MessageDialog {
     title: "Pext"
     icon: StandardIcon.Information
 
-    text: "No modules found in this repository."
+    text: qsTr("No modules found in this repository.")
 
     Component.onCompleted: visible = true;
 }

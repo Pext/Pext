@@ -31,7 +31,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: "Choose the module to install"
+            text: qsTr("Choose the module to install:")
         }
 
         ComboBox {
@@ -41,7 +41,7 @@ Dialog {
         }
 
         Label {
-            text: "Choose the preferred download source"
+            text: qsTr("Choose the preferred download source:")
         }
 
         ComboBox {
@@ -51,23 +51,23 @@ Dialog {
         }
 
         Label {
-            text: "Module information:"
+            text: qsTr("Module information:")
         }
 
         Label {
-            text: "Developer: " + modules[combobox.currentIndex].developer
+            text: qsTr("Developer: ") + modules[combobox.currentIndex].developer
         }
 
         Label {
-            text: "Description: " + modules[combobox.currentIndex].description
+            text: qsTr("Description: ") + modules[combobox.currentIndex].description
         }
 
         Label {
-            text: "License: " + modules[combobox.currentIndex].license
+            text: qsTr("License: ") + modules[combobox.currentIndex].license
         }
 
         Label {
-            text: "As Pext modules are code, please make sure you trust the developer before continuing."
+            text: qsTr("As Pext modules are code, please make sure you trust the developer before continuing.")
             font.bold: true
         }
     }

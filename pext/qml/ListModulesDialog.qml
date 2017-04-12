@@ -30,7 +30,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: "Installed modules:"
+            text: qsTr("Installed modules:")
         }
 
         Repeater {

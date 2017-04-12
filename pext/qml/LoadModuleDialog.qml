@@ -31,7 +31,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: "Choose the module to load"
+            text: qsTr("Choose the module to load:")
         }
 
         ComboBox {
@@ -41,7 +41,7 @@ Dialog {
         }
 
         Label {
-            text: "Enter module settings (leave blank for defaults)"
+            text: qsTr("Enter module settings (leave blank for defaults):")
         }
 
         TextField {

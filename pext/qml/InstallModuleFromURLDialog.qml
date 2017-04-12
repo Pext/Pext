@@ -30,7 +30,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: "Enter the git URL of the module to install"
+            text: qsTr("Enter the git URL of the module to install:")
         }
 
         TextField {
@@ -39,7 +39,7 @@ Dialog {
         }
 
         Label {
-            text: "As Pext modules are code, please make sure you trust the developer before continuing."
+            text: qsTr("As Pext modules are code, please make sure you trust the developer before continuing.")
             font.bold: true
         }
     }

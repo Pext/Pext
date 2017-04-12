@@ -21,7 +21,7 @@ import QtQuick 2.3
 import QtQuick.Dialogs 1.2
 
 MessageDialog {
-    title: "About Pext"
+    title: qsTr("About Pext")
 
     text:
         "Pext " + version + "\n" +

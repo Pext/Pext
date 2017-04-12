@@ -55,7 +55,7 @@ if platform.system() == "Linux":
     except ImportError:
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
 
-from PyQt5.QtCore import QStringListModel
+from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMenu, QMessageBox, QTextEdit, QVBoxLayout,
@@ -1497,6 +1497,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     """Load the settings from the command line and set defaults."""
     # Default options
     settings = {'clipboard': 'clipboard',
+                'locale': QLocale.system().name(),
                 'modules': [],
                 'profile': 'default',
                 'save_settings': True,
@@ -1517,6 +1518,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         opts, _ = getopt.getopt(argv, "hc:m:p:", ["help",
                                                   "version",
                                                   "exit",
+                                                  "locale=",
                                                   "list-styles",
                                                   "style=",
                                                   "clipboard=",
@@ -1544,6 +1546,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             print("Pext {}".format(VersionRetriever.get_version()))
         elif opt == "--exit":
             sys.exit(0)
+        elif opt == "--locale":
+            settings['locale'] = arg
         elif opt == "--list-styles":
             for style in QStyleFactory().keys():
                 print(style)
@@ -1619,6 +1623,8 @@ def usage() -> None:
 
 --help             : show this screen.
 
+--locale           : load Pext with the given locale.
+
 --style            : sets a certain Qt system style for the UI.
 
 --list-styles      : print a list of loadable Qt system styles. Due to PyQt5
@@ -1683,8 +1689,16 @@ def main() -> None:
     # Load the app icon
     app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
 
-    # Get an app instance
+    # Set up the app
     app = QApplication(['Pext ({})'.format(settings['profile'])])
+
+    translator = QTranslator()
+    print('Using locale: {}'.format(settings['locale']))
+    print('Localization loaded: ',
+        translator.load('pext_' + settings['locale'] + '.qm', os.path.join(AppFile.get_path('i18n'))))
+
+    app.installTranslator(translator)
+
     app.setWindowIcon(app_icon)
     if 'style' in settings:
         app.setStyle(QStyleFactory().create(settings['style']))

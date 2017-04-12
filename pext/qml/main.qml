@@ -191,13 +191,13 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuQuit"
-                text: "Quit"
+                text: qsTr("Quit")
                 shortcut: StandardKey.Quit
             }
 
             MenuItem {
                 objectName: "menuQuitWithoutSaving"
-                text: "Quit without saving"
+                text: qsTr("Quit without saving")
             }
         }
 
@@ -206,14 +206,14 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuReloadActiveModule"
-                text: "Reload active module"
+                text: qsTr("Reload active module")
                 shortcut: StandardKey.Refresh
             }
 
             MenuItem {
                 id: menuCloseActiveModule
                 objectName: "menuCloseActiveModule"
-                text: "Close active module"
+                text: qsTr("Close active module")
                 shortcut: StandardKey.Close
             }
 
@@ -225,7 +225,7 @@ ApplicationWindow {
 
                 signal loadRequest(string name, string settings)
 
-                text: "Load module"
+                text: qsTr("Load module")
 
                 shortcut: StandardKey.AddTab
 
@@ -243,7 +243,7 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: "List installed modules"
+                text: qsTr("List installed modules")
 
                 onTriggered: {
                     var listModulesDialog = Qt.createComponent("ListModulesDialog.qml");
@@ -255,12 +255,12 @@ ApplicationWindow {
             Menu {
                 id: menuInstallModule
                 objectName: "menuInstallModule"
-                title: "Install module"
+                title: qsTr("Install module")
 
                 signal installRequest(string url)
 
                 MenuItem {
-                    text: "From online module list"
+                    text: qsTr("From online module list")
 
                     property var repositories:
                         [{
@@ -281,7 +281,7 @@ ApplicationWindow {
                 }
 
                 MenuItem {
-                    text: "From URL"
+                    text: qsTr("From URL")
 
                     onTriggered: {
                         var installModuleFromURLDialog = Qt.createComponent("InstallModuleFromURLDialog.qml");
@@ -293,7 +293,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuUninstallModule"
-                text: "Uninstall module"
+                text: qsTr("Uninstall module")
 
                 signal uninstallRequest(string name)
 
@@ -312,7 +312,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuUpdateModule"
-                text: "Update module"
+                text: qsTr("Update module")
 
                 signal updateRequest(string name)
 
@@ -331,7 +331,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuUpdateAllModules"
-                text: "Update all modules"
+                text: qsTr("Update all modules")
 
                 signal updateAllRequest()
 
@@ -346,7 +346,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuAbout"
-                text: "About"
+                text: qsTr("About")
                 onTriggered: {
                     var aboutDialog = Qt.createComponent("AboutDialog.qml");
                     aboutDialog.createObject(applicationWindow);
@@ -355,7 +355,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuHomepage"
-                text: "Visit homepage"
+                text: qsTr("Visit homepage")
             }
         }
     }
@@ -375,7 +375,7 @@ ApplicationWindow {
                 enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.contentItem.depth > 0)
 
                 width: 60
-                text: searchInput.length > 0 ? "Clear" : "Back"
+                text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
                 objectName: "backButton"
             }
 
@@ -384,7 +384,7 @@ ApplicationWindow {
                 anchors.bottom: parent.bottom
 
                 enabled: tabs.count > 0
-                placeholderText: tabs.count > 0 ? "Type to search" : ""
+                placeholderText: tabs.count > 0 ? qsTr("Type to search") : ""
                 id: searchInput
                 objectName: "searchInputModel"
 
@@ -427,10 +427,10 @@ ApplicationWindow {
 
                 property var modulesInstalledCount
 
-                text: "<h1>Welcome to Pext</h1>" +
-                      "<p>To get started, press <kbd>" + menuLoadModule.shortcut + "</kbd> to open a new tab.</p>" +
-                      "<p>When you are done with a tab, you can always close it by pressing <kbd>" + menuCloseActiveModule.shortcut + "</kbd>.</p>" +
-                      "<p>You currently have " + modulesInstalledCount + " module" + (modulesInstalledCount == 1 ? "" : "s") + " installed. You can manage modules in the settings menu.</p>"
+                text: "<h1>" + qsTr("Welcome to Pext") + "</h1>" +
+                      "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab.").arg(menuLoadModule.shortcut) + "</p>" +
+                      "<p>" + qsTr("When you are done with a tab, you can always close it by pressing <kbd>%1</kbd>.").arg(menuCloseActiveModule.shortcut) + "</p>" + 
+                      "<p>" + qsTr("You currently have %n module(s) installed. You can manage modules in the settings menu.", "", modulesInstalledCount) + "</p>"
 
                 textFormat: TextEdit.RichText
                 readOnly: true
@@ -456,6 +456,7 @@ ApplicationWindow {
                 objectName: "statusText"
                 Layout.fillWidth: true
             }
+
             Label {
                 objectName: "statusQueue"
                 anchors.right: parent.right

@@ -32,7 +32,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: "Where do you want to get modules from?"
+            text: qsTr("Where do you want to get modules from?")
         }
 
         ComboBox {

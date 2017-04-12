@@ -31,7 +31,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: "Choose the module to update"
+            text: qsTr("Choose the module to update:")
         }
 
         ComboBox {
