@@ -39,8 +39,11 @@ import webbrowser
 
 from importlib import reload  # type: ignore
 from shutil import rmtree
-from subprocess import check_call, check_output, CalledProcessError, Popen, run
-from typing import Dict, List, Optional, Tuple
+from subprocess import check_call, check_output, CalledProcessError, Popen
+try:
+    from typing import Dict, List, Optional, Tuple
+except ImportError:
+    from backports.typing import Dict, List, Optional, Tuple
 from urllib.error import URLError
 from urllib.request import urlopen
 from queue import Queue, Empty
@@ -514,7 +517,7 @@ class ModuleManager():
 
         # Actually run the pip command
         try:
-            run(pip_command, check=True)
+            check_call(pip_command)
         except CalledProcessError as e:
             returncode = e.returncode
 
