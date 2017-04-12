@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- i18n support
+- Dutch translation
+
 ### Changed
 - Move all UI code to QML
 - Improved installation dialogs
