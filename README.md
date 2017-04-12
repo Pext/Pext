@@ -24,17 +24,26 @@ to turn the simple user interface into an useful and powerful application.
 ![Pext](/screenshot2.jpg)  
 
 ## Dependencies
-### Arch
+### GNU/Linux
+#### Arch
 
     sudo pacman -S git python-pip libnotify python-pyqt5 qt5-quickcontrols
 
-### Debian (Stretch and later, no Jessie, sorry!)
+#### Debian (Stretch and later, no Jessie, sorry!)
 
     sudo apt-get install git libnotify-bin python3-pip python3-pyqt5.qtquick qml-module-qtquick-controls
 
-### Fedora
+#### Fedora
 
     sudo dnf install git libnotify python3-pip python3-qt5 qt5-qtquickcontrols
+
+#### Nix (any system, not just NixOS)
+
+    nix-shell -p git libnotify python3Packages.pip python3Packages.pyqt5 qt5.qtquickcontrols
+
+#### openSUSE
+
+    sudo zypper install git libnotify-tools python3-pip python3-qt5
 
 ### macOS
 Before running the Install Certificates command, which is only necessary to be
@@ -43,10 +52,6 @@ able to retrieve the online module list, please read https://bugs.python.org/msg
     brew install python3 qt5 git libnotify
     pip3 install pyqt5 urllib3 certifi
     /Applications/Python\ 3.6/Install\ Certificates.command
-
-### Nix (any system, not just NixOS)
-
-    nix-shell -p git libnotify python3Packages.pip python3Packages.pyqt5 qt5.qtquickcontrols
 
 ## Installation (optional)
 Pext does not need to be installed to run. However, if you prefer to install
