@@ -532,7 +532,7 @@ class ModuleManager():
         """
         self.logger = logger
 
-    def load_module(self, window: 'Window', module: Dict) -> bool:
+    def load_module(self, window: 'Window', module: Dict, locale: str) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
         module_path = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
@@ -592,9 +592,15 @@ class ModuleManager():
                 "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
             return False
 
+        module['settings']['_api_version'] = [0, 1, 0]
+        module['settings']['_locale'] = locale
+
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
-            module_name, q, target=module_code.init, args=(module['settings'], q))
+            module_name,
+            q,
+            target=module_code.init,
+            args=(module['settings'], q))
         module_thread.start()
 
         # Add tab
@@ -669,7 +675,9 @@ class ModuleManager():
         # Get the needed info to load the module
         module_data = window.tab_bindings[tab_id]
         module = {
-            'name': module_data['module_name'], 'settings': module_data['settings']}
+            'name': module_data['module_name'],
+            'settings': module_data['settings']
+        }
 
         # Unload the module
         self.unload_module(window, tab_id)
@@ -678,7 +686,7 @@ class ModuleManager():
         reload(module_data['module_import'])
 
         # Load it into the UI
-        if not self.load_module(window, module):
+        if not self.load_module(window, module, module_data['settings']['_locale']):
             return False
 
         # Get new position
@@ -1267,7 +1275,7 @@ class Window(QMainWindow):
             module_settings[key] = value
 
         module = {'name': name, 'settings': module_settings}
-        self.module_manager.load_module(self, module)
+        self.module_manager.load_module(self, module, self.settings['locale'])
         # First module? Enforce load
         if len(self.tab_bindings) == 1:
             self.tabs.currentIndexChanged.emit()
@@ -1275,12 +1283,15 @@ class Window(QMainWindow):
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
             self.module_manager.unload_module(
-                self, QQmlProperty.read(self.tabs, "currentIndex"))
+                self,
+                QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _reload_active_module(self) -> None:
         if len(self.tab_bindings) > 0:
             self.module_manager.reload_module(
-                self, QQmlProperty.read(self.tabs, "currentIndex"))
+                self,
+                QQmlProperty.read(self.tabs, "currentIndex"),
+                self.settings['locale'])
 
     def _menu_install_module(self, module_url: str) -> None:
             functions = [
@@ -1354,10 +1365,10 @@ class Window(QMainWindow):
         # start binding the modules
         if len(self.settings['modules']) > 0:
             for module in self.settings['modules']:
-                self.module_manager.load_module(self, module)
+                self.module_manager.load_module(self, module, self.settings['locale'])
         else:
             for module in ProfileManager(self.config_retriever).retrieve_modules(self.settings['profile']):
-                self.module_manager.load_module(self, module)
+                self.module_manager.load_module(self, module, self.settings['locale'])
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the

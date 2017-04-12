@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
+- The settings variable now contains _api_version ([major, minor, patch]) and _locale by default
+
 ### Added
 - i18n support
 - Dutch translation

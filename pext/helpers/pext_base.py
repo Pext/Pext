@@ -47,6 +47,11 @@ class ModuleBase(ABC):
         module settings dialog, this dictionary will have
         {"foo": "bar", "foobar": "fubar"} as values.
 
+        The settings variable also contains special Pext settings, starting
+        with a single underscore:
+        - _api_version: The API version as [major, minor, patch]
+        - _locale: The current Pext locale
+
         The q variable contains the queue that actions can be put it. It is
         very important to keep a reference to this variable so that you can do
         anything on the UI at all.
