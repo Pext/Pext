@@ -217,7 +217,7 @@ class Logger():
             if message['type'] == 'error':
                 statusbar_message = "<font color='red'>{}</color>".format(
                     message['message'])
-                notification_message = 'error: {}'.format(message['message'])
+                notification_message = 'E: {}'.format(message['message'])
             else:
                 statusbar_message = message['message']
                 notification_message = message['message']
@@ -239,11 +239,8 @@ class Logger():
 
     def set_queue_count(self, count: List[int]) -> None:
         """Show the queue size on screen."""
-        if count[0] == 0 and count[1] == 0:
-            QQmlProperty.write(self.status_queue, "text", "Ready")
-        else:
-            QQmlProperty.write(
-                self.status_queue, "text", "Processing: {} ({})".format(count[0], count[1]))
+        QQmlProperty.write(self.status_queue, "entriesLeftForeground", count[0])
+        QQmlProperty.write(self.status_queue, "entriesLeftBackground", count[1])
 
 
 class MainLoop():

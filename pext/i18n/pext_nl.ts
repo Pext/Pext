@@ -231,5 +231,15 @@
             <numerusform>Je hebt op dit moment %n modules geïnstalleerd. Je kan modules beheren in het instellingenmenu.</numerusform>
         </translation>
     </message>
+    <message>
+        <location filename="../qml/main.qml" line="468"/>
+        <source>Processing: %1 (%2)</source>
+        <translation>Verwerken: %1 (%2)</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="468"/>
+        <source>Ready</source>
+        <translation>Klaar</translation>
+    </message>
 </context>
 </TS>

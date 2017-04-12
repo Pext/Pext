@@ -459,7 +459,13 @@ ApplicationWindow {
 
             Label {
                 objectName: "statusQueue"
+
+                property var entriesLeftForeground
+                property var entriesLeftBackground
+
                 anchors.right: parent.right
+
+                text: entriesLeftForeground || entriesLeftBackground ? qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) : qsTr("Ready")
             }
         }
     }

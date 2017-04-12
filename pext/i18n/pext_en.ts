@@ -231,5 +231,15 @@
             <numerusform>You currently have %n modules installed. You can manage modules in the settings menu.</numerusform>
         </translation>
     </message>
+    <message>
+        <location filename="../qml/main.qml" line="468"/>
+        <source>Processing: %1 (%2)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="468"/>
+        <source>Ready</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>
