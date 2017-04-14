@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Improved installation dialogs
 - Improve load module dialog
 
+### Removed
+- config.ini for editing Pext config directory (use $XDG_CONFIG_HOME or $HOME instead)
+
 ## [0.7] - 2017-04-10
 ### Added
 - Clear/back button in the UI

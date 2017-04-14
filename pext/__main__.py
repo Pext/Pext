@@ -103,21 +103,6 @@ class ConfigRetriever():
 
         self.config = {'config_path': os.path.join(config_home, 'pext/')}
 
-        # Overwrite with user settings if exists
-        config_parser = configparser.SafeConfigParser()
-
-        try:
-            config_parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.ini'))
-        except configparser.Error:
-            return
-
-        try:
-            self.config.update(config_parser['SETTINGS'])
-        except KeyError:
-            return
-
-        self.config['config_path'] = os.path.expanduser(self.config['config_path'])
-
     def get_setting(self, variable: str):
         """Get a specific configuration setting."""
         return self.config[variable]
