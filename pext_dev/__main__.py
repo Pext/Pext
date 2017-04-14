@@ -44,11 +44,20 @@ class AppFile():
 
 def run(argv: List[str]) -> None:
     if (argv[0] == "init"):
-        check_call(['git', 'init'])
+        if len(argv) >= 2:
+            module_path = os.path.expanduser(argv[1])
+            print('Initializing new module in {}'.format(module_path))
+            os.makedirs(module_path)
+        else:
+            module_path = os.getcwd()
+            print('Initializing new module in current directory')
+
+        check_call(['git', 'init'],
+            cwd=module_path)
 
         copy(
             AppFile().get_path('base.py'),
-            '__init__.py')
+            os.path.join(module_path, '__init__.py'))
 
     elif (argv[0] == "run"):
         # Prepare vars
@@ -138,7 +147,7 @@ def usage() -> None:
     """Print usage information."""
     print('''Options:
 
-init             : initialize a new module in the current directory.
+init             : initialize a new module in the current directory or given path.
 
 run              : run the module in the current directory a new Pext instance.
                      Added options are passed to Pext as-is.''')
