@@ -59,6 +59,8 @@ it, you can do so:
 
     # pip3 install . --upgrade
 
+This also installs pext_dev, to aid module development.
+
 ## Usage
 Simply start Pext with Python 3. If you have installed Pext using the above
 command, simply start `pext`. Otherwise, go to the project's root directory and

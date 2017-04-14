@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The settings variable now contains _api_version ([major, minor, patch]) and _locale by default
 
 ### Added
+- Simple pext_dev command to help module development
 - i18n support
 - Dutch translation
 

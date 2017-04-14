@@ -29,7 +29,8 @@ setup(
     keywords='extendable pluggable',
     packages=[
         'pext',
-        'pext/helpers'
+        'pext/helpers',
+        'pext_dev'
     ],
     package_data={'pext': ['images/scalable/*', 'qml/*']},
     include_package_data=True,
@@ -43,6 +44,9 @@ setup(
     entry_points={
         'gui_scripts': [
             'pext=pext.__main__:main'
+        ],
+        'console_scripts': [
+            'pext_dev=pext_dev.__main__:main'
         ]
     }
 )
