@@ -52,9 +52,6 @@ def run(argv: List[str]) -> None:
             module_path = os.getcwd()
             print('Initializing new module in current directory')
 
-        check_call(['git', 'init'],
-            cwd=module_path)
-
         copy(
             AppFile().get_path('base.py'),
             os.path.join(module_path, '__init__.py'))
