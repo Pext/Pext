@@ -32,7 +32,7 @@ Python itself. In this case, you may place a file named `requirements.txt` in
 your module's directory, listing one Python module you want per line. Python
 modules can be found on `PyPI <https://pypi.python.org/pypi>`_. Make sure you
 check the license of modules you want to use for compatibility with your
-module's license (pext_dev init defaults to GPLv3+).
+module's license (``pext_dev init`` defaults to GPLv3+).
 
 More advanced information on using a `requirements.txt` file can be found on
 `<https://pip.readthedocs.io/en/latest/reference/pip_install/#requirements-file-format>`_.
