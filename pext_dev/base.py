@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from pext_base import ModuleBase
-from pext_helpers import Action
+from pext_helpers import Action, SelectionType
 
 
 class Module(ModuleBase):
