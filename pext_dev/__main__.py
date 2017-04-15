@@ -56,6 +56,10 @@ def run(argv: List[str]) -> None:
             AppFile().get_path('base.py'),
             os.path.join(module_path, '__init__.py'))
 
+        copy(
+            AppFile().get_path('LICENSE'),
+            os.path.join(module_path, 'LICENSE'))
+
     elif (argv[0] == "run"):
         # Prepare vars
         tempdir = '.pext_temp'

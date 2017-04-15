@@ -32,7 +32,8 @@ setup(
         'pext/helpers',
         'pext_dev'
     ],
-    package_data={'pext': ['images/scalable/*', 'qml/*']},
+    package_data={'pext': ['images/scalable/*', 'qml/*'],
+                  'pext_dev': ['LICENSE']},
     include_package_data=True,
     zip_safe=False,
     data_files=[
