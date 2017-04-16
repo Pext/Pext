@@ -22,6 +22,7 @@
 This file aids in module development.
 """
 
+import json
 import os
 import platform
 import sys
@@ -51,6 +52,21 @@ def run(argv: List[str]) -> None:
         else:
             module_path = os.getcwd()
             print('Initializing new module in current directory')
+
+        print('Please enter some info about your new module')
+        name = input('Module name: ')
+        developer = input('Developer name: ')
+        description = input('Description: ')
+        homepage = input('Homepage: ')
+
+        metadata = {'name': name,
+                    'developer': developer,
+                    'description': description,
+                    'homepage': homepage,
+                    'license': 'GPL-3.0+'}
+
+        with open(os.path.join(module_path, 'metadata.json'), 'w') as metadata_file:
+            metadata_file.write(json.dumps(metadata, sort_keys=True, indent=2))
 
         copy(
             AppFile().get_path('base.py'),
