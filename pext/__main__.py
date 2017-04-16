@@ -629,7 +629,7 @@ class ModuleManager():
         del window.tab_bindings[tab_id]
         window.tabs.removeTab(tab_id)
 
-    def list_modules(self) -> Dict[str, str]:
+    def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
         modules = {}
 
@@ -648,7 +648,22 @@ class ModuleManager():
             except (CalledProcessError, FileNotFoundError):
                 source = "Unknown"
 
-            modules[name] = source
+            metadata = {'name': 'Unknown',
+                        'developer': 'Unknown',
+                        'description': 'Unknown',
+                        'homepage': 'Unknown',
+                        'license': 'Unknown'}
+
+            try:
+                with open(os.path.join(self.module_dir, directory, "metadata.json"), 'r') as metadata_json:
+                    metadata = json.load(metadata_json)
+            except (FileNotFoundError, json.decoder.JSONDecodeError):
+                print("Module {} lacks a metadata.json file".format(name))
+
+            if not all(key in metadata for key in ['name', 'developer', 'description', 'homepage', 'license']):
+                print("Module {} does override all default keys".format(name))
+
+            modules[name] = {"source": source, "metadata": metadata}
 
         return modules
 
@@ -1165,10 +1180,8 @@ class Window(QMainWindow):
             QObject, "menuCloseActiveModule")
         menu_install_module_shortcut = self.window.findChild(
             QObject, "menuInstallModule")
-        menu_uninstall_module_shortcut = self.window.findChild(
-            QObject, "menuUninstallModule")
-        menu_update_module_shortcut = self.window.findChild(
-            QObject, "menuUpdateModule")
+        menu_manage_modules_shortcut = self.window.findChild(
+            QObject, "menuManageModules")
         menu_update_all_modules_shortcut = self.window.findChild(
             QObject, "menuUpdateAllModules")
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
@@ -1182,9 +1195,9 @@ class Window(QMainWindow):
         menu_close_active_module_shortcut.triggered.connect(self._close_tab)
         menu_install_module_shortcut.installRequest.connect(
             self._menu_install_module)
-        menu_uninstall_module_shortcut.uninstallRequest.connect(
+        menu_manage_modules_shortcut.uninstallRequest.connect(
             self._menu_uninstall_module)
-        menu_update_module_shortcut.updateRequest.connect(self._menu_update_module)
+        menu_manage_modules_shortcut.updateRequest.connect(self._menu_update_module)
         menu_update_all_modules_shortcut.updateAllRequest.connect(
             self._menu_update_all_modules)
         menu_quit_shortcut.triggered.connect(self.quit)
@@ -1279,18 +1292,18 @@ class Window(QMainWindow):
                 self.settings['locale'])
 
     def _menu_install_module(self, module_url: str) -> None:
-            functions = [
-                {
-                    'name': self.module_manager.install_module,
-                    'args': (module_url),
-                    'kwargs': {'interactive': False, 'verbose': True}
-                }, {
-                    'name': self._update_modules_info_qml,
-                    'args': (),
-                    'kwargs': {}
-                }
-            ]
-            threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+        functions = [
+            {
+                'name': self.module_manager.install_module,
+                'args': (module_url),
+                'kwargs': {'interactive': False, 'verbose': True}
+            }, {
+                'name': self._update_modules_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_uninstall_module(self, module_name: str) -> None:
         functions = [
@@ -1307,13 +1320,32 @@ class Window(QMainWindow):
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_update_module(self, module_name: str) -> None:
-        threading.Thread(target=self.module_manager.update_module,  # type: ignore
-                         args=(module_name,),
-                         kwargs={'verbose': True}).start()
+        functions = [
+            {
+                'name': self.module_manager.update_module,
+                'args': (module_name),
+                'kwargs': {'verbose': True}
+            }, {
+                'name': self._update_modules_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_update_all_modules(self) -> None:
-        threading.Thread(
-            target=self.module_manager.update_all_modules, kwargs={'verbose': True}).start()
+        functions = [
+            {
+                'name': self.module_manager.update_all_modules,
+                'args': (),
+                'kwargs': {'verbose': True}
+            }, {
+                'name': self._update_modules_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _search(self) -> None:
         try:
@@ -1334,10 +1366,11 @@ class Window(QMainWindow):
             pass
 
     def _update_modules_info_qml(self) -> None:
+        modules = self.module_manager.list_modules()
         self.context.setContextProperty(
-            "modules", self.module_manager.list_modules())
+            "modules", modules)
         QQmlProperty.write(
-            self.intro_screen, "modulesInstalledCount", len(self.module_manager.list_modules().keys()))
+            self.intro_screen, "modulesInstalledCount", len(modules.keys()))
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -1574,8 +1607,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--update-modules":
             ModuleManager(config_retriever).update_all_modules(verbose=True)
         elif opt == "--list-modules":
-            for module_name, module_source in ModuleManager(config_retriever).list_modules().items():
-                print('{} ({})'.format(module_name, module_source))
+            for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
+                print('{} ({})'.format(module_name, module_data['source']))
         elif opt == "--profile":
             settings['profile'] = arg
             # Create directory for profile if not existant

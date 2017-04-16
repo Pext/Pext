@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Simple pext_dev command to help module development
+- Support metadata.json for showing info on installed modules
 - i18n support
 - Dutch translation
 
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Move all UI code to QML
 - Improved installation dialogs
 - Improve load module dialog
+- Get rid of update and uninstall dialogs in favor for a central module management dialog
 
 ### Removed
 - config.ini for editing Pext config directory (use $XDG_CONFIG_HOME or $HOME instead)
