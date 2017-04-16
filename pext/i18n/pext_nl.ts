@@ -79,9 +79,8 @@
 <context>
     <name>ListModulesDialog</name>
     <message>
-        <location filename="../qml/ListModulesDialog.qml" line="33"/>
         <source>Installed modules:</source>
-        <translation>Geïnstalleerde modules:</translation>
+        <translation type="obsolete">Geïnstalleerde modules:</translation>
     </message>
 </context>
 <context>
@@ -98,6 +97,44 @@
     </message>
 </context>
 <context>
+    <name>ManageModulesDialog</name>
+    <message>
+        <location filename="../qml/ManageModulesDialog.qml" line="61"/>
+        <source>Developer: %1</source>
+        <translation>Ontwikkelaar: %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageModulesDialog.qml" line="67"/>
+        <source>Description: %1</source>
+        <translation>Beschrijving: %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageModulesDialog.qml" line="73"/>
+        <source>License: %1</source>
+        <translation>Licentie: %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageModulesDialog.qml" line="79"/>
+        <source>Homepage: %1</source>
+        <translation>Homepage: %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageModulesDialog.qml" line="94"/>
+        <source>Download source: %1</source>
+        <translation>Downloadbron: %1</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageModulesDialog.qml" line="110"/>
+        <source>Update</source>
+        <translation>Update</translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageModulesDialog.qml" line="118"/>
+        <source>Uninstall</source>
+        <translation>Verwijder</translation>
+    </message>
+</context>
+<context>
     <name>NoModulesInstalledDialog</name>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
@@ -108,17 +145,15 @@
 <context>
     <name>UninstallModuleDialog</name>
     <message>
-        <location filename="../qml/UninstallModuleDialog.qml" line="34"/>
         <source>Choose the module to uninstall:</source>
-        <translation>Kies de module om te verwijderen:</translation>
+        <translation type="obsolete">Kies de module om te verwijderen:</translation>
     </message>
 </context>
 <context>
     <name>UpdateModuleDialog</name>
     <message>
-        <location filename="../qml/UpdateModuleDialog.qml" line="34"/>
         <source>Choose the module to update:</source>
-        <translation>Kies de module om te updaten:</translation>
+        <translation type="obsolete">Kies de module om te updaten:</translation>
     </message>
 </context>
 <context>
@@ -149,82 +184,84 @@
         <translation>Laad module</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="246"/>
         <source>List installed modules</source>
-        <translation>Toon geïnstalleerde modules</translation>
+        <translation type="obsolete">Toon geïnstalleerde modules</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="258"/>
+        <location filename="../qml/main.qml" line="270"/>
         <source>Install module</source>
         <translation>Installeer module</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="263"/>
+        <location filename="../qml/main.qml" line="275"/>
         <source>From online module list</source>
         <translation>Van online modulelijst</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="284"/>
+        <location filename="../qml/main.qml" line="296"/>
         <source>From URL</source>
         <translation>Van webadres</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="296"/>
         <source>Uninstall module</source>
-        <translation>Verwijder module</translation>
+        <translation type="obsolete">Verwijder module</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="315"/>
         <source>Update module</source>
-        <translation>Update module</translation>
+        <translation type="obsolete">Update module</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="334"/>
+        <location filename="../qml/main.qml" line="248"/>
+        <source>Manage modules</source>
+        <translation>Beheer modules</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="308"/>
         <source>Update all modules</source>
         <translation>Update alle modules</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="349"/>
+        <location filename="../qml/main.qml" line="323"/>
         <source>About</source>
         <translation>Over</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="358"/>
+        <location filename="../qml/main.qml" line="332"/>
         <source>Visit homepage</source>
         <translation>Bezoek website</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="378"/>
+        <location filename="../qml/main.qml" line="352"/>
         <source>Clear</source>
         <translation>Leeg</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="378"/>
+        <location filename="../qml/main.qml" line="352"/>
         <source>Back</source>
         <translation>Terug</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="387"/>
+        <location filename="../qml/main.qml" line="361"/>
         <source>Type to search</source>
         <translation>Typ om te zoeken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="430"/>
+        <location filename="../qml/main.qml" line="404"/>
         <source>Welcome to Pext</source>
         <translation>Welkom bij Pext</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="431"/>
+        <location filename="../qml/main.qml" line="405"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab.</source>
         <translation>Om te beginnen, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="432"/>
+        <location filename="../qml/main.qml" line="406"/>
         <source>When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%1&lt;/kbd&gt;.</source>
         <translation>Als je klaar bent met een tabblad, kun je deze altijd sluiten door op &lt;kbd&gt;%1&lt;/kbd&gt; te drukken.</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="433"/>
+        <location filename="../qml/main.qml" line="407"/>
         <source>You currently have %n module(s) installed. You can manage modules in the settings menu.</source>
         <translation>
             <numerusform>Je hebt op dit moment %n module geïnstalleerd. Je kan modules beheren in het instellingenmenu.</numerusform>
@@ -232,12 +269,12 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="468"/>
+        <location filename="../qml/main.qml" line="442"/>
         <source>Processing: %1 (%2)</source>
         <translation>Verwerken: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="468"/>
+        <location filename="../qml/main.qml" line="442"/>
         <source>Ready</source>
         <translation>Klaar</translation>
     </message>
