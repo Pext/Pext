@@ -425,7 +425,7 @@ ApplicationWindow {
             TextEdit {
                 objectName: "introScreen"
 
-                property var modulesInstalledCount
+                property int modulesInstalledCount
 
                 text: "<h1>" + qsTr("Welcome to Pext") + "</h1>" +
                       "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab.").arg(menuLoadModule.shortcut) + "</p>" +
