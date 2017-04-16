@@ -243,12 +243,24 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: qsTr("List installed modules")
+                id: menuManageModules
+                objectName: "menuManageModules"
+                text: qsTr("Manage modules")
+
+                signal updateRequest(string name)
+                signal uninstallRequest(string name)
 
                 onTriggered: {
-                    var listModulesDialog = Qt.createComponent("ListModulesDialog.qml");
-                    listModulesDialog.createObject(applicationWindow,
-                        {"modules": modules});
+                    if (Object.keys(modules).length == 0) {
+                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
+                        noModulesInstalledDialog.createObject(applicationWindow);
+                    } else {
+                        var manageModulesDialog = Qt.createComponent("ManageModulesDialog.qml");
+                        manageModulesDialog.createObject(applicationWindow,
+                            {"modules": modules,
+                             "updateRequest": updateRequest,
+                             "uninstallRequest": uninstallRequest});
+					}
                 }
             }
 
@@ -287,44 +299,6 @@ ApplicationWindow {
                         var installModuleFromURLDialog = Qt.createComponent("InstallModuleFromURLDialog.qml");
                         installModuleFromURLDialog.createObject(applicationWindow,
                             {"installRequest": menuInstallModule.installRequest});
-                    }
-                }
-            }
-
-            MenuItem {
-                objectName: "menuUninstallModule"
-                text: qsTr("Uninstall module")
-
-                signal uninstallRequest(string name)
-
-                onTriggered: {
-                    if (Object.keys(modules).length == 0) {
-                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
-                        noModulesInstalledDialog.createObject(applicationWindow);
-                    } else {
-                        var uninstallModuleDialog = Qt.createComponent("UninstallModuleDialog.qml");
-                        uninstallModuleDialog.createObject(applicationWindow,
-                            {"modules": Object.keys(modules).sort(),
-                             "uninstallRequest": uninstallRequest});
-                    }
-                }
-            }
-
-            MenuItem {
-                objectName: "menuUpdateModule"
-                text: qsTr("Update module")
-
-                signal updateRequest(string name)
-
-                onTriggered: {
-                    if (Object.keys(modules).length == 0) {
-                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
-                        noModulesInstalledDialog.createObject(applicationWindow);
-                    } else {
-                        var updateModuleDialog = Qt.createComponent("UpdateModuleDialog.qml");
-                        var updateModuleDialogObject = updateModuleDialog.createObject(applicationWindow,
-                            {"modules": Object.keys(modules).sort(),
-                             "updateRequest": updateRequest});
                     }
                 }
             }
