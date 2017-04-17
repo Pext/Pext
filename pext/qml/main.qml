@@ -277,10 +277,10 @@ ApplicationWindow {
                     property var repositories:
                         [{
                           "name": "Pext team",
-                          "url": "https://pext.hackerchick.me/modules.json"
+                          "url": "https://pext.hackerchick.me/modules_v2.json"
                         }, {
                           "name": "Other developers",
-                          "url": "https://pext.hackerchick.me/third_party_modules.json"
+                          "url": "https://pext.hackerchick.me/third_party_modules_v2.json"
                         }]
 
                     onTriggered: {

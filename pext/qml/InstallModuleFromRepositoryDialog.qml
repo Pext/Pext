@@ -47,7 +47,7 @@ Dialog {
         combobox.focus = true;
     }
 
-    function getModules(url, callback) {
+    function getData(url, callback) {
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function() {
@@ -61,16 +61,38 @@ Dialog {
     }
 
     onAccepted: {
-        getModules(repositories[combobox.currentIndex].url, function(response) {
-            var modules = JSON.parse(response).modules;
+        getData(repositories[combobox.currentIndex].url, function(response) {
+            var jsonResponse = JSON.parse(response)
+
+            if (jsonResponse.version != 2) {
+                var installModuleFromRepositoryUnsupportedDialog = Qt.createComponent("InstallModuleFromRepositoryUnsupportedDialog.qml");
+                installModuleFromRepositoryUnsupportedDialog.createObject(applicationWindow,
+                    {"expectedVersion": 2,
+                     "version": jsonResponse.version});
+
+                return;
+            }
+
+            var modules = jsonResponse.modules;
+
             if (modules.length == 0) {
                 var installModuleFromRepositoryNoModulesAvailableDialog = Qt.createComponent("InstallModuleFromRepositoryNoModulesAvailableDialog.qml");
                 installModuleFromRepositoryNoModulesAvailableDialog.createObject(applicationWindow);
             } else {
-                var installModuleFromRepositorySelectModuleDialog = Qt.createComponent("InstallModuleFromRepositorySelectModuleDialog.qml");
-                installModuleFromRepositorySelectModuleDialog.createObject(applicationWindow,
-                    {"installRequest": installRequest,
-                     "modules": modules});
+                // Get module data
+                var modulesData = [];
+
+                for (var i = 0; i < modules.length; i++) {
+                    getData(modules[i], function(response) {
+                        modulesData.push(JSON.parse(response));
+                        if (modulesData.length === modules.length) {
+                            var installModuleFromRepositorySelectModuleDialog = Qt.createComponent("InstallModuleFromRepositorySelectModuleDialog.qml");
+                            installModuleFromRepositorySelectModuleDialog.createObject(applicationWindow,
+                                {"installRequest": installRequest,
+                                 "modules": modulesData});
+                        };
+                    });
+                };
             };
         });
     }
