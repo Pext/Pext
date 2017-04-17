@@ -70,7 +70,7 @@ To actually use Pext, you will first have to install one or more modules. Check
 out the Pext organisation on
 [GitHub](https://github.com/Pext) or [NotABug](https://notabug.org/Pext)
 or use `Module` -> `Install module` -> `From online module list` in the
-application for a list of official modules.
+application for a list of modules.
 
 For command line options, use `--help`.
 
