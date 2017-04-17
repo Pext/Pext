@@ -46,7 +46,7 @@ Dialog {
 
         ComboBox {
             id: urlSelectionBox
-            model: modules[combobox.currentIndex].urls
+            model: modules[combobox.currentIndex].git_urls
             Layout.fillWidth: true
         }
 

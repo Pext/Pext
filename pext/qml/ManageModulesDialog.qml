@@ -30,7 +30,6 @@ Dialog {
     property var updateRequest
     property var uninstallRequest
 
-
     height: 250
     width: 400
 
