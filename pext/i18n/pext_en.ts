@@ -64,6 +64,14 @@
     </message>
 </context>
 <context>
+    <name>InstallModuleFromRepositoryUnsupportedDialog</name>
+    <message>
+        <location filename="../qml/InstallModuleFromRepositoryUnsupportedDialog.qml" line="30"/>
+        <source>Repository format not supported (expected version %1, got version %2).</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>InstallModuleFromURLDialog</name>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
@@ -92,37 +100,37 @@
 <context>
     <name>ManageModulesDialog</name>
     <message>
-        <location filename="../qml/ManageModulesDialog.qml" line="61"/>
+        <location filename="../qml/ManageModulesDialog.qml" line="60"/>
         <source>Developer: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/ManageModulesDialog.qml" line="67"/>
+        <location filename="../qml/ManageModulesDialog.qml" line="66"/>
         <source>Description: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/ManageModulesDialog.qml" line="73"/>
+        <location filename="../qml/ManageModulesDialog.qml" line="72"/>
         <source>License: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/ManageModulesDialog.qml" line="79"/>
+        <location filename="../qml/ManageModulesDialog.qml" line="78"/>
         <source>Homepage: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/ManageModulesDialog.qml" line="94"/>
+        <location filename="../qml/ManageModulesDialog.qml" line="93"/>
         <source>Download source: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/ManageModulesDialog.qml" line="110"/>
+        <location filename="../qml/ManageModulesDialog.qml" line="109"/>
         <source>Update</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/ManageModulesDialog.qml" line="118"/>
+        <location filename="../qml/ManageModulesDialog.qml" line="117"/>
         <source>Uninstall</source>
         <translation type="unfinished"></translation>
     </message>
