@@ -249,57 +249,97 @@ class MainLoop():
             self.logger.add_error(tab['module_name'], action[1])
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
+
         elif action[0] == Action.add_message:
             self.logger.add_message(tab['module_name'], action[1])
+
         elif action[0] == Action.add_error:
             self.logger.add_error(tab['module_name'], action[1])
+
         elif action[0] == Action.add_entry:
             tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
+
         elif action[0] == Action.prepend_entry:
             tab['vm'].entry_list = [action[1]] + tab['vm'].entry_list
+
         elif action[0] == Action.remove_entry:
             tab['vm'].entry_list.remove(action[1])
+
         elif action[0] == Action.replace_entry_list:
             tab['vm'].entry_list = action[1]
+
         elif action[0] == Action.add_command:
             tab['vm'].command_list = tab['vm'].command_list + [action[1]]
+
         elif action[0] == Action.prepend_command:
             tab['vm'].command_list = [action[1]] + tab['vm'].command_list
+
         elif action[0] == Action.remove_command:
             tab['vm'].command_list.remove(action[1])
+
         elif action[0] == Action.replace_command_list:
             tab['vm'].command_list = action[1]
+
         elif action[0] == Action.set_header:
             if len(action) > 1:
                 tab['vm'].set_header(action[1])
             else:
                 tab['vm'].set_header("")
+
         elif action[0] == Action.set_filter:
             QQmlProperty.write(tab['vm'].search_input_model, "text", action[1])
+
         elif action[0] == Action.ask_question_default_yes:
-            answer = QMessageBox.question(self.window, "Pext", action[1],
-                                          QMessageBox.Yes | QMessageBox.No,
-                                          QMessageBox.Yes)
+            answer = QMessageBox.question(
+                self.window,
+                "Pext",
+                action[1],
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.Yes)
+
             tab['vm'].module.process_response(
                 True if (answer == QMessageBox.Yes) else False)
+
         elif action[0] == Action.ask_question_default_no:
-            answer = QMessageBox.question(self.window, "Pext", action[1],
-                                          QMessageBox.Yes | QMessageBox.No,
-                                          QMessageBox.No)
+            answer = QMessageBox.question(
+                self.window,
+                "Pext",
+                action[1],
+                QMessageBox.Yes | QMessageBox.No,
+                QMessageBox.No)
+
             tab['vm'].module.process_response(
                 True if (answer == QMessageBox.Yes) else False)
+
         elif action[0] == Action.ask_input:
-            answer, ok = QInputDialog.getText(self.window, "Pext", action[1])
-            tab['vm'].module.process_response(answer if ok else None)
+            answer, ok = QInputDialog.getText(
+                self.window,
+                "Pext",
+                action[1])
+
+            tab['vm'].module.process_response(
+                answer if ok else None)
+
         elif action[0] == Action.ask_input_password:
             answer, ok = QInputDialog.getText(
-                self.window, "Pext", action[1], QLineEdit.Password)
-            tab['vm'].module.process_response(answer if ok else None)
+                self.window,
+                "Pext",
+                action[1],
+                QLineEdit.Password)
+
+            tab['vm'].module.process_response(
+                answer if ok else None)
+
         elif action[0] == Action.ask_input_multi_line:
             dialog = InputDialog(
-                action[1], action[2] if len(action) > 2 else "", self.window)
+                action[1],
+                action[2] if len(action) > 2 else "",
+                self.window)
+
             answer, ok = dialog.show()
-            tab['vm'].module.process_response(answer if ok else None)
+            tab['vm'].module.process_response(
+                answer if ok else None)
+
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
             if self.settings['clipboard'] == 'selection':
@@ -308,6 +348,7 @@ class MainLoop():
                 mode = QClipboard.Clipboard
 
             self.app.clipboard().setText(str(action[1]), mode)
+
         elif action[0] == Action.set_selection:
             tab['vm'].selection = action[1]
 
@@ -315,8 +356,10 @@ class MainLoop():
                 "resultListModelDepth", len(tab['vm'].selection))
 
             tab['vm'].module.selection_made(tab['vm'].selection)
+
         elif action[0] == Action.close:
             self.window.close()
+
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
