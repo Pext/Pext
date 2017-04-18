@@ -165,7 +165,7 @@ class Action(Enum):
 
         The prefill may contain newline characters.
 
-        Example: self.q.put([Action.ask_input_multi_line, ["List your favourite animals", "Cat and dog"]])
+        Example: self.q.put([Action.ask_input_multi_line, "List your favourite animals", "Cat and dog"])
 
     copy_to_clipboard
         Copy data to the clipboard.

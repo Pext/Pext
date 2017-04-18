@@ -297,7 +297,7 @@ class MainLoop():
             tab['vm'].module.process_response(answer if ok else None)
         elif action[0] == Action.ask_input_multi_line:
             dialog = InputDialog(
-                action[1], action[2] if action[2] else "", self.window)
+                action[1], action[2] if len(action) > 2 else "", self.window)
             answer, ok = dialog.show()
             tab['vm'].module.process_response(answer if ok else None)
         elif action[0] == Action.copy_to_clipboard:
