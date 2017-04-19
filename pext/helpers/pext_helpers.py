@@ -132,40 +132,44 @@ class Action(Enum):
         Ask a yes/no question, with the default value being yes.
 
         question -- the question to ask
+        identifier -- an optional identifier which gets passed back to process_response
 
-        Example: self.q.put([Action.ask_question_default_yes, "Are you sure you want to continue?"])
+        Example: self.q.put([Action.ask_question_default_yes, "Are you sure you want to continue?", 0])
 
     ask_question_default_no
         Ask a yes/no question, with the default value being no.
 
         question -- the question to ask
+        identifier -- an optional identifier which gets passed back to process_response
 
-        Example: self.q.put([Action.ask_question_default_no, "Are you sure you want to continue?"])
+        Example: self.q.put([Action.ask_question_default_no, "Are you sure you want to continue?", 0])
 
     ask_input
         Ask the user to input a single line of text.
 
         text -- the text to show the user
+        identifier -- an optional identifier which gets passed back to process_response
 
-        Example: self.q.put([Action.ask_input, "Please choose a new name for this entry"])
+        Example: self.q.put([Action.ask_input, "Please choose a new name for this entry", 0])
 
     ask_input_password:
         Ask the user to input a single line of text into a password field.
 
         text -- the text to show the user
+        identifier -- an optional identifier which gets passed back to process_response
 
-        Example: self.q.put([Action.ask_input_password, "Please enter your password"])
+        Example: self.q.put([Action.ask_input_password, "Please enter your password", 0])
 
     ask_input_multi_line
         Ask the user to input one or more lines of text.
 
         text -- the text to show the user
-
         prefill -- the text to already put into the input field
+        identifier -- an optional identifier which gets passed back to process_response
 
         The prefill may contain newline characters.
 
-        Example: self.q.put([Action.ask_input_multi_line, "List your favourite animals", "Cat and dog"])
+        Example: self.q.put([Action.ask_input_multi_line, "List your favourite animals", "Cat and dog", 0])
 
     copy_to_clipboard
         Copy data to the clipboard.

@@ -23,7 +23,7 @@ Pext modules must implement. This is basically the API of Pext.
 
 from abc import ABC, abstractmethod  # type: ignore
 from queue import Queue
-from typing import Dict, List, Union
+from typing import Any, Dict, List, Union
 
 from pext_helpers import SelectionType
 
@@ -84,10 +84,14 @@ class ModuleBase(ABC):
         pass
 
     @abstractmethod
-    def process_response(self, response: Union[bool, str]):
+    def process_response(self, response: Union[bool, str], identifier: Any):
         """Process a response to a requested action.
 
         Called when a response is given as a result of an Action being put into
         the queue. Not all Actions return a response.
+
+        When no specific identifier was given in a queue request, identifier
+        is called with None. Otherwise, it is called with the identifier
+        previously put in the queue.
         """
         pass

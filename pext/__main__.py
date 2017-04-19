@@ -38,6 +38,7 @@ import traceback
 import webbrowser
 
 from importlib import reload  # type: ignore
+from inspect import signature
 from shutil import rmtree
 from subprocess import check_call, check_output, CalledProcessError, Popen
 try:
@@ -297,8 +298,13 @@ class MainLoop():
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.Yes)
 
-            tab['vm'].module.process_response(
-                True if (answer == QMessageBox.Yes) else False)
+            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+                tab['vm'].module.process_response(
+                    True if (answer == QMessageBox.Yes) else False,
+                    action[2] if len(action) > 2 else None)
+            else:
+                tab['vm'].module.process_response(
+                    True if (answer == QMessageBox.Yes) else False)
 
         elif action[0] == Action.ask_question_default_no:
             answer = QMessageBox.question(
@@ -308,8 +314,13 @@ class MainLoop():
                 QMessageBox.Yes | QMessageBox.No,
                 QMessageBox.No)
 
-            tab['vm'].module.process_response(
-                True if (answer == QMessageBox.Yes) else False)
+            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+                tab['vm'].module.process_response(
+                    True if (answer == QMessageBox.Yes) else False,
+                    action[2] if len(action) > 2 else None)
+            else:
+                tab['vm'].module.process_response(
+                    True if (answer == QMessageBox.Yes) else False)
 
         elif action[0] == Action.ask_input:
             answer, ok = QInputDialog.getText(
@@ -317,8 +328,13 @@ class MainLoop():
                 "Pext",
                 action[1])
 
-            tab['vm'].module.process_response(
-                answer if ok else None)
+            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+                tab['vm'].module.process_response(
+                    answer if ok else None,
+                    action[2] if len(action) > 2 else None)
+            else:
+                tab['vm'].module.process_response(
+                    answer if ok else None)
 
         elif action[0] == Action.ask_input_password:
             answer, ok = QInputDialog.getText(
@@ -327,8 +343,13 @@ class MainLoop():
                 action[1],
                 QLineEdit.Password)
 
-            tab['vm'].module.process_response(
-                answer if ok else None)
+            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+                tab['vm'].module.process_response(
+                    answer if ok else None,
+                    action[2] if len(action) > 2 else None)
+            else:
+                tab['vm'].module.process_response(
+                    answer if ok else None)
 
         elif action[0] == Action.ask_input_multi_line:
             dialog = InputDialog(
@@ -337,8 +358,13 @@ class MainLoop():
                 self.window)
 
             answer, ok = dialog.show()
-            tab['vm'].module.process_response(
-                answer if ok else None)
+            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+                tab['vm'].module.process_response(
+                    answer if ok else None,
+                    action[3] if len(action) > 3 else None)
+            else:
+                tab['vm'].module.process_response(
+                    answer if ok else None)
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
@@ -622,6 +648,9 @@ class ModuleManager():
 
         module['settings']['_api_version'] = [0, 1, 0]
         module['settings']['_locale'] = locale
+
+        if len(signature(module_code.process_response).parameters) == 1:
+            print("WARN: Module {} uses old process_response signature and will not be able to receive an identifier if requested".format(module_name))
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
