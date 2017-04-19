@@ -31,5 +31,5 @@ class Module(ModuleBase):
     def selection_made(self, selection):
         pass
 
-    def process_response(self, response):
+    def process_response(self, response, identifier):
         pass
