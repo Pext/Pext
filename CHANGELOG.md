@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Improved installation dialogs
 - Improve load module dialog
 - Get rid of update and uninstall dialogs in favor for a central module management dialog
+- Check module functions parameter length on module load to prevent some runtime crashes for modules
 
 ### Removed
 - config.ini for editing Pext config directory (use $XDG_CONFIG_HOME or $HOME instead)
