@@ -38,7 +38,7 @@ import traceback
 import webbrowser
 
 from importlib import reload  # type: ignore
-from inspect import signature
+from inspect import getmembers, isfunction, ismethod, signature
 from shutil import rmtree
 from subprocess import check_call, check_output, CalledProcessError, Popen
 try:
@@ -646,11 +646,32 @@ class ModuleManager():
                 "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
             return False
 
+        # Check if the required functions have enough parameters
+        required_param_lengths = {}
+
+        for name, value in getmembers(ModuleBase, isfunction):
+            required_param_lengths[name] = len(signature(value).parameters) - 1 # Python is inconsistent with self
+
+        for name, value in getmembers(module_code, ismethod):
+            try:
+                required_param_length = required_param_lengths[name]
+            except KeyError:
+                continue
+
+            param_length = len(signature(value).parameters)
+
+            if param_length != required_param_length:
+                if name == 'process_response' and param_length == 1:
+                    print("WARN: Module {} uses old process_response signature and will not be able to receive an identifier if requested".format(module_name))
+                else:
+                    self._log_error(
+                        "Failed to load module {} from {}: {} function has {} parameters (excluding self), expected {}"
+                        .format(module_name, module_dir, name, param_length, required_param_length))
+                    return False
+
+        # Prefill API version and locale
         module['settings']['_api_version'] = [0, 1, 0]
         module['settings']['_locale'] = locale
-
-        if len(signature(module_code.process_response).parameters) == 1:
-            print("WARN: Module {} uses old process_response signature and will not be able to receive an identifier if requested".format(module_name))
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
