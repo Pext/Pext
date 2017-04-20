@@ -1381,8 +1381,7 @@ class Window(QMainWindow):
         if len(self.tab_bindings) > 0:
             self.module_manager.reload_module(
                 self,
-                QQmlProperty.read(self.tabs, "currentIndex"),
-                self.settings['locale'])
+                QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menu_install_module(self, module_url: str) -> None:
         functions = [
