@@ -237,7 +237,8 @@ ApplicationWindow {
                         var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
                         loadModuleDialog.createObject(applicationWindow,
                             {"modules": Object.keys(modules).sort(),
-                             "loadRequest": loadRequest});
+                             "loadRequest": loadRequest,
+                             "modulesPath": modulesPath});
                     }
                 }
             }

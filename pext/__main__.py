@@ -1240,6 +1240,8 @@ class Window(QMainWindow):
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
             "applicationVersion", VersionRetriever.get_version())
+        self.context.setContextProperty(
+            "modulesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'modules'))
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(AppFile.get_path(os.path.join('qml', 'main.qml'))))
