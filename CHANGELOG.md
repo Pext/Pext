@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### API changes
 - The settings variable now contains _api_version ([major, minor, patch]) and _locale by default
 - Queue requests that cause process_response to be called can now optionally give an identifier to receive when process_response is called
+- Modules must now declare their settings in metadata.json
 
 ### Added
 - Simple pext_dev command to help module development
@@ -22,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Improve load module dialog
 - Get rid of update and uninstall dialogs in favor for a central module management dialog
 - Check module functions parameter length on module load to prevent some runtime crashes for modules
+- Module settings is no longer a freeform input field
 
 ### Removed
 - config.ini for editing Pext config directory (use $XDG_CONFIG_HOME or $HOME instead)

@@ -29,7 +29,18 @@ Dialog {
     property var modules
     property var loadRequest
 
+    property url modulesPath
+    property var moduleSettings: []
+    property var moduleChosenSettings: {}
+
+    height: 250
+    width: 400
+
     ColumnLayout {
+        width: parent.width
+
+        anchors.fill: parent
+
         Label {
             text: qsTr("Choose the module to load:")
         }
@@ -38,25 +49,83 @@ Dialog {
             id: combobox
             model: modules
             Layout.fillWidth: true
+            onCurrentIndexChanged: getModuleSettings();
         }
 
-        Label {
-            text: qsTr("Enter module settings (leave blank for defaults):")
-        }
+        ScrollView {
+            width: parent.width
 
-        TextField {
-            id: textfield
-            Layout.fillWidth: true
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            ListView {
+                id: settingsList
+
+                width: parent.width
+                model: moduleSettings
+
+                delegate: Column {
+                    id: root
+                    width: parent.width
+
+                    Label {
+                        text: modelData.name
+                        font.bold: true
+                    }
+
+                    Label {
+                        text: modelData.description
+                        width: root.width
+                        wrapMode: Text.Wrap
+                    }
+
+                    TextField {
+                        placeholderText: modelData.default ? modelData.default : ""
+                        width: root.width
+                        onEditingFinished: moduleChosenSettings[modelData.name] = text
+                    }
+                }
+            }
         }
     }
 
     Component.onCompleted: {
+        getModuleSettings();
         visible = true;
         combobox.focus = true;
     }
 
     onAccepted: {
-        loadRequest(combobox.currentText, textfield.text)
+        combobox.focus = true; // Ensure onEditingFinish gets called of the textfield
+        var settingString = "";
+        for (var key in moduleChosenSettings)
+            settingString += key + "=" + moduleChosenSettings[key] + " ";
+
+        loadRequest(combobox.currentText, settingString)
+    }
+
+    function getData(url, callback) {
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+                callback(xmlhttp.response);
+            }
+        }
+
+        xmlhttp.open("GET", url, true);
+        xmlhttp.send();
+    }
+
+    function getModuleSettings() {
+        // Reset
+        moduleSettings = []
+        moduleChosenSettings = {}
+
+        var path = modulesPath + "/pext_module_" + combobox.currentText + "/metadata.json";
+        getData(path, function(response) {
+            moduleSettings = JSON.parse(response)["settings"];
+        });
     }
 }
 
