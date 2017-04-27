@@ -64,14 +64,11 @@ Dialog {
                 width: parent.width
                 model: moduleSettings
 
+                spacing: 5
+
                 delegate: Column {
                     id: root
                     width: parent.width
-
-                    Label {
-                        text: modelData.name
-                        font.bold: true
-                    }
 
                     Label {
                         text: modelData.description
