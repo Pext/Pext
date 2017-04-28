@@ -440,7 +440,10 @@ ApplicationWindow {
 
                 anchors.right: parent.right
 
-                text: entriesLeftForeground || entriesLeftBackground ? qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) : qsTr("Ready")
+                text: entriesLeftForeground || entriesLeftBackground ?
+                      qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
+                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.contentItem.hasEntries ?
+                      qsTr("Waiting") : qsTr("Ready")
             }
         }
     }

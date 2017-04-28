@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Get rid of update and uninstall dialogs in favor for a central module management dialog
 - Check module functions parameter length on module load to prevent some runtime crashes for modules
 - Module settings is no longer a freeform input field
+- Display "Waiting" instead of "Ready" in the statusbar when not processing and the active module has not sent anything yet
 
 ### Removed
 - config.ini for editing Pext config directory (use $XDG_CONFIG_HOME or $HOME instead)
