@@ -87,13 +87,8 @@
 <context>
     <name>LoadModuleDialog</name>
     <message>
-        <location filename="../qml/LoadModuleDialog.qml" line="34"/>
+        <location filename="../qml/LoadModuleDialog.qml" line="45"/>
         <source>Choose the module to load:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/LoadModuleDialog.qml" line="44"/>
-        <source>Enter module settings (leave blank for defaults):</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -171,72 +166,72 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="270"/>
+        <location filename="../qml/main.qml" line="271"/>
         <source>Install module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="275"/>
+        <location filename="../qml/main.qml" line="276"/>
         <source>From online module list</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="296"/>
+        <location filename="../qml/main.qml" line="297"/>
         <source>From URL</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="248"/>
+        <location filename="../qml/main.qml" line="249"/>
         <source>Manage modules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="308"/>
+        <location filename="../qml/main.qml" line="309"/>
         <source>Update all modules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="323"/>
+        <location filename="../qml/main.qml" line="324"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="332"/>
+        <location filename="../qml/main.qml" line="333"/>
         <source>Visit homepage</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="352"/>
+        <location filename="../qml/main.qml" line="353"/>
         <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="352"/>
+        <location filename="../qml/main.qml" line="353"/>
         <source>Back</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="361"/>
+        <location filename="../qml/main.qml" line="362"/>
         <source>Type to search</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="404"/>
+        <location filename="../qml/main.qml" line="405"/>
         <source>Welcome to Pext</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="405"/>
+        <location filename="../qml/main.qml" line="406"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="406"/>
+        <location filename="../qml/main.qml" line="407"/>
         <source>When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%1&lt;/kbd&gt;.</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="407"/>
+        <location filename="../qml/main.qml" line="408"/>
         <source>You currently have %n module(s) installed. You can manage modules in the settings menu.</source>
         <translation type="unfinished">
             <numerusform>You currently have %n module installed. You can manage modules in the settings menu.</numerusform>
@@ -244,13 +239,18 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="442"/>
+        <location filename="../qml/main.qml" line="444"/>
         <source>Processing: %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="442"/>
+        <location filename="../qml/main.qml" line="446"/>
         <source>Ready</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="446"/>
+        <source>Waiting</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
