@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Module settings is no longer a freeform input field
 - Display "Waiting" instead of "Ready" in the statusbar when not processing and the active module has not sent anything yet
 
+### Fixed
+- Crash when picking a command while there are also other entries to display
+
 ### Removed
 - config.ini for editing Pext config directory (use $XDG_CONFIG_HOME or $HOME instead)
 

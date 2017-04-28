@@ -1145,7 +1145,11 @@ class ViewModel():
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
         if self.result_list_model_command_mode or len(self.filtered_entry_list) == 0:
-            selected_command = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
+            if self.result_list_model_command_mode:
+                selected_command = self.filtered_command_list[current_index]
+            else:
+                selected_command = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
+
             selected_command_split = selected_command.split(" ", 1)
             command_typed = QQmlProperty.read(self.search_input_model, "text")
             command_typed_split = command_typed.split(" ", 1)
