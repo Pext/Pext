@@ -29,11 +29,15 @@ from pext_helpers import SelectionType
 
 
 class ModuleBase(ABC):
-    """The base all Pext modules must implement."""
+    """Introduced in API version 0.1.0.
+
+    The base all Pext modules must implement."""
 
     @abstractmethod
     def init(self, settings: Dict, q: Queue) -> None:
-        """Called when the module is first loaded.
+        """Introduced in API version 0.1.0.
+
+        Called when the module is first loaded.
 
         In this function, the application should initialize all its data and
         use Action.replace_entry_list and Action.replace_command_list to
@@ -60,7 +64,9 @@ class ModuleBase(ABC):
 
     @abstractmethod
     def stop(self):
-        """Called when the module gets unloaded.
+        """Introduced in API version 0.1.0.
+
+        Called when the module gets unloaded.
 
         If necessary, the module should clean itself up nicely.
         """
@@ -68,7 +74,9 @@ class ModuleBase(ABC):
 
     @abstractmethod
     def selection_made(self, selection: List[Dict[SelectionType, str]]) -> None:
-        """Called when the user makes a selection.
+        """Introduced in API version 0.1.0.
+
+        Called when the user makes a selection.
 
         The selection variable contains a list of the selection tree and the
         type, which can be either entry or command.
@@ -78,14 +86,15 @@ class ModuleBase(ABC):
         [{type: SelectionType.entry, value: "Audio settings"}]. If the user
         then runs the command "volume 50", this function is called again, with
         the value of selection being
-        [{type: SelectionType.entry, value: "Audio settings"},
-         {type: SelectionType.command, value: "volume 50"}].
+        [{type: SelectionType.entry, value: "Audio settings"}, {type: SelectionType.command, value: "volume 50"}].
         """
         pass
 
     @abstractmethod
     def process_response(self, response: Union[bool, str], identifier: Any):
-        """Process a response to a requested action.
+        """Introduced in API version 0.1.0.
+
+        Process a response to a requested action.
 
         Called when a response is given as a result of an Action being put into
         the queue. Not all Actions return a response.

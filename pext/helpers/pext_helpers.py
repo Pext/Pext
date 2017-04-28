@@ -27,7 +27,9 @@ from enum import Enum
 
 
 class Action(Enum):
-    """The list of actions a module can request.
+    """Introduced in API version 0.1.0.
+
+    The list of actions a module can request.
 
     A module can request any of these actions of the core by putting it in the
     queue. All of these actions need to be accompanied by a list of arguments.
@@ -35,6 +37,8 @@ class Action(Enum):
     self.q, a common practice in Pext modules.
 
     critical_error
+        Introduced in API version 0.1.0.
+
         Show an error message on the screen and unload the module.
         This function is also called when the module throws an exception.
 
@@ -43,6 +47,8 @@ class Action(Enum):
         Example: self.q.put([Action.critical_error, "Something went wrong!"])
 
     add_message
+        Introduced in API version 0.1.0.
+
         Show a message on the screen.
 
         message -- message to show
@@ -50,6 +56,8 @@ class Action(Enum):
         Example: self.q.put([Action.add_message, "We did a thing"])
 
     add_error
+        Introduced in API version 0.1.0.
+
         Show an error message on the screen.
 
         message -- error message to show
@@ -57,6 +65,8 @@ class Action(Enum):
         Example: self.q.put([Action.add_error, "We did a thing, but it went wrong"])
 
     add_entry
+        Introduced in API version 0.1.0.
+
         Add an entry to the entry list.
 
         entry -- the entry
@@ -64,6 +74,8 @@ class Action(Enum):
         Example: self.q.put([Action.add_entry, "Audio settings"])
 
     prepend_entry
+        Introduced in API version 0.1.0.
+
         Prepend an entry to the entry list.
 
         entry -- the entry
@@ -71,6 +83,8 @@ class Action(Enum):
         Example: self.q.put([Action.prepend_entry, "Audio settings"])
 
     remove_entry
+        Introduced in API version 0.1.0.
+
         Remove an entry from the entry list.
 
         entry -- the entry
@@ -78,6 +92,8 @@ class Action(Enum):
         Example: self.q.put([Action.remove_entry, "Audio settings"])
 
     replace_entry_list
+        Introduced in API version 0.1.0.
+
         Replace the list of entries with the given list.
 
         list -- the new list of entries
@@ -85,6 +101,8 @@ class Action(Enum):
         Example: self.q.put([Action.replace_entry_list, ["Audio settings", "Video settings"]])
 
     add_command
+        Introduced in API version 0.1.0.
+
         Add an entry to the command list.
 
         entry -- the entry
@@ -92,6 +110,8 @@ class Action(Enum):
         Example: self.q.put([Action.add_command, "download"])
 
     prepend_command
+        Introduced in API version 0.1.0.
+
         Prepend an entry to the command list.
 
         entry -- the entry
@@ -99,6 +119,8 @@ class Action(Enum):
         Example: self.q.put([Action.prepend_command, "download"])
 
     remove_command
+        Introduced in API version 0.1.0.
+
         Remove a command from the entry list.
 
         entry -- the entry
@@ -106,6 +128,8 @@ class Action(Enum):
         Example: self.q.put([Action.remove_command, "download"])
 
     replace_command_list
+        Introduced in API version 0.1.0.
+
         Replace the list of commands with the given list.
 
         list -- the new list of entries
@@ -113,6 +137,8 @@ class Action(Enum):
         Example: self.q.put([Action.replace_command_list, ["download", "upload"]])
 
     set_header
+        Introduced in API version 0.1.0.
+
         Set or replace the text currently in the header bar.
 
         If header is not given, the header will be removed.
@@ -122,6 +148,8 @@ class Action(Enum):
         Example: self.q.put([Action.set_header, "Weather for New York"])
 
     set_filter
+        Introduced in API version 0.1.0.
+
         Replace the text currently in the search bar.
 
         filter -- the new text to put in the search bar
@@ -129,6 +157,8 @@ class Action(Enum):
         Example: self.q.put([Action.set_header, "Weather for New York"])
 
     ask_question_default_yes
+        Introduced in API version 0.1.0.
+
         Ask a yes/no question, with the default value being yes.
 
         question -- the question to ask
@@ -137,6 +167,8 @@ class Action(Enum):
         Example: self.q.put([Action.ask_question_default_yes, "Are you sure you want to continue?", 0])
 
     ask_question_default_no
+        Introduced in API version 0.1.0.
+
         Ask a yes/no question, with the default value being no.
 
         question -- the question to ask
@@ -145,6 +177,8 @@ class Action(Enum):
         Example: self.q.put([Action.ask_question_default_no, "Are you sure you want to continue?", 0])
 
     ask_input
+        Introduced in API version 0.1.0.
+
         Ask the user to input a single line of text.
 
         text -- the text to show the user
@@ -153,6 +187,8 @@ class Action(Enum):
         Example: self.q.put([Action.ask_input, "Please choose a new name for this entry", 0])
 
     ask_input_password:
+        Introduced in API version 0.1.0.
+
         Ask the user to input a single line of text into a password field.
 
         text -- the text to show the user
@@ -161,6 +197,8 @@ class Action(Enum):
         Example: self.q.put([Action.ask_input_password, "Please enter your password", 0])
 
     ask_input_multi_line
+        Introduced in API version 0.1.0.
+
         Ask the user to input one or more lines of text.
 
         text -- the text to show the user
@@ -172,6 +210,8 @@ class Action(Enum):
         Example: self.q.put([Action.ask_input_multi_line, "List your favourite animals", "Cat and dog", 0])
 
     copy_to_clipboard
+        Introduced in API version 0.1.0.
+
         Copy data to the clipboard.
 
         text -- the text to copy to the clipboard
@@ -179,6 +219,8 @@ class Action(Enum):
         Example: self.q.put([Action.copy_to_clipboard, "I like Pext"])
 
     set_selection
+        Introduced in API version 0.1.0.
+
         Change the internal Pext selection for this module.
 
         The internal Pext selection contains a list of all options and commands
@@ -197,6 +239,8 @@ class Action(Enum):
         Example: self.q.put([Action.set_selection, [{type: SelectionType.entry, value: "Audio settings"}])
 
     close:
+        Introduced in API version 0.1.0.
+
         Close the window.
 
         Call this when the user is done. For example, when the user made a
@@ -229,12 +273,18 @@ class Action(Enum):
 
 
 class SelectionType(Enum):
-    """A list of possible selection types.
+    """Introduced in API version 0.1.0.
+
+    A list of possible selection types.
 
     entry
+        Introduced in API version 0.1.0.
+
         An entry in the entry list was chosen.
 
     command
+        Introduced in API version 0.1.0.
+
         A valid command was typed (valid commands start with an entry in the
         command list).
     """
