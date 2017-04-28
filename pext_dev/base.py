@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2017 Sylvia van Os <sylvia@hackerchick.me>
+# Copyright (c) <year> <Your name> <Your email>
 #
-# This file is part of Pext
-#
-# Pext is free software: you can redistribute it and/or modify
+# This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
