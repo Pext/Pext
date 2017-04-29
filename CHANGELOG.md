@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Changed
+- The design philosophy is now explained in the empty state screen
+
+### Fixed
+- pext_dev's generated base file now leaves the copyright open for the author to fill in
+
 ## [0.8] - 2017-04-28
 ### API changes
 - The settings variable now contains _api_version ([major, minor, patch]) and _locale by default
