@@ -181,6 +181,29 @@
         <translation>Van webadres</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="390"/>
+        <source>Design philosophy</source>
+        <translation>Designfilosofie</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="391"/>
+        <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
+        <translation>Pext is ontwikkeld om uit de weg te blijven. Zodra een module geloofd dat je klaar bent met het gebruiken, verbergt Pext zichzelf naar het systeemvak. Als je Pext weer nodig hebt, kun je het simpelweg opnieuw starten of vanuit het systeemvak openen.</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="427"/>
+        <source>Getting started</source>
+        <translation>Beginnen met Pext</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../qml/main.qml" line="428"/>
+        <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
+        <translation>
+            <numerusform>Om te beginnen met Pext, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n module geïnstalleerd. Je kan modules beheren in het Module menu.</numerusform>
+            <numerusform>Om te beginnen met Pext, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n modules geïnstalleerd. Je kan modules beheren in het Module menu.</numerusform>
+        </translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="249"/>
         <source>Manage modules</source>
         <translation>Beheer modules</translation>
@@ -216,40 +239,17 @@
         <translation>Typ om te zoeken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="405"/>
-        <source>Welcome to Pext</source>
-        <translation>Welkom bij Pext</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="406"/>
-        <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab.</source>
-        <translation>Om te beginnen, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen.</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="407"/>
-        <source>When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%1&lt;/kbd&gt;.</source>
-        <translation>Als je klaar bent met een tabblad, kun je deze altijd sluiten door op &lt;kbd&gt;%1&lt;/kbd&gt; te drukken.</translation>
-    </message>
-    <message numerus="yes">
-        <location filename="../qml/main.qml" line="408"/>
-        <source>You currently have %n module(s) installed. You can manage modules in the settings menu.</source>
-        <translation>
-            <numerusform>Je hebt op dit moment %n module geïnstalleerd. Je kan modules beheren in het instellingenmenu.</numerusform>
-            <numerusform>Je hebt op dit moment %n modules geïnstalleerd. Je kan modules beheren in het instellingenmenu.</numerusform>
-        </translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="444"/>
+        <location filename="../qml/main.qml" line="465"/>
         <source>Processing: %1 (%2)</source>
         <translation>Verwerken: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="446"/>
+        <location filename="../qml/main.qml" line="467"/>
         <source>Ready</source>
         <translation>Klaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="446"/>
+        <location filename="../qml/main.qml" line="467"/>
         <source>Waiting</source>
         <translation>Wachtend</translation>
     </message>

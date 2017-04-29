@@ -383,18 +383,35 @@ ApplicationWindow {
         }
 
         GridLayout {
-            flow: applicationWindow.width > 900 ? GridLayout.LeftToRight : GridLayout.TopToBottom
+            flow: applicationWindow.width > 700 ? GridLayout.LeftToRight : GridLayout.TopToBottom
             visible: tabs.count == 0
 
+            TextEdit {
+                text: "<h2>" + qsTr("Design philosophy") + "</h2>" +
+                      "<p>" + qsTr("Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.") + "</p>"
+
+                textFormat: TextEdit.RichText
+                readOnly: true
+                selectByMouse: false
+                wrapMode: TextEdit.Wrap
+                horizontalAlignment: TextEdit.AlignHCenter
+                verticalAlignment: TextEdit.AlignVCenter
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+            }
+
             Image {
+                visible: applicationWindow.width > 900
                 asynchronous: true
                 source: "../images/scalable/logo.svg"
                 fillMode: Image.Pad
                 horizontalAlignment: Image.AlignHCenter
                 verticalAlignment: Image.AlignVCenter
-                anchors.margins: margin
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                Layout.minimumWidth: sourceSize.width + 50
+                anchors.leftMargin: 30
+                anchors.rightMargin: 30
             }
 
             TextEdit {
@@ -402,24 +419,18 @@ ApplicationWindow {
 
                 property int modulesInstalledCount
 
-                text: "<h1>" + qsTr("Welcome to Pext") + "</h1>" +
-                      "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab.").arg(menuLoadModule.shortcut) + "</p>" +
-                      "<p>" + qsTr("When you are done with a tab, you can always close it by pressing <kbd>%1</kbd>.").arg(menuCloseActiveModule.shortcut) + "</p>" + 
-                      "<p>" + qsTr("You currently have %n module(s) installed. You can manage modules in the settings menu.", "", modulesInstalledCount) + "</p>"
+                text: "<h2>" + qsTr("Getting started") + "</h2>" +
+                      "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab. When you are done with a tab, you can always close it by pressing <kbd>%2</kbd>. You currently have %n module(s) installed. You can manage modules in the Module menu.", "", modulesInstalledCount).arg(menuLoadModule.shortcut).arg(menuCloseActiveModule.shortcut) + "</p>"
 
                 textFormat: TextEdit.RichText
                 readOnly: true
                 selectByMouse: false
-                textMargin: 0
+                wrapMode: TextEdit.Wrap
                 horizontalAlignment: TextEdit.AlignHCenter
                 verticalAlignment: TextEdit.AlignVCenter
-                anchors.margins: margin
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
-
-            Layout.fillHeight: true
-            Layout.fillWidth: true
         }
     }
 
