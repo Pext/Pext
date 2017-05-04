@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - The design philosophy is now explained in the empty state screen
+- pyqt5 is added as install_requires
 
 ### Fixed
 - pext_dev's generated base file now leaves the copyright open for the author to fill in
