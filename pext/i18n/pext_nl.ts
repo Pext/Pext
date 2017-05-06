@@ -45,17 +45,17 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="58"/>
         <source>Developer: </source>
-        <translation>Ontwikkelaar:</translation>
+        <translation>Ontwikkelaar: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="62"/>
         <source>Description: </source>
-        <translation>Beschrijving:</translation>
+        <translation>Beschrijving: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="66"/>
         <source>License: </source>
-        <translation>Licentie:</translation>
+        <translation>Licentie: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="70"/>
