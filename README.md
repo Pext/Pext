@@ -57,7 +57,7 @@ able to retrieve the online module list, please read https://bugs.python.org/msg
 Pext does not need to be installed to run. However, if you prefer to install
 it, you can do so:
 
-    # pip3 install . --upgrade
+    # pip3 install . --upgrade --no-deps
 
 This also installs pext_dev, to aid module development.
 
