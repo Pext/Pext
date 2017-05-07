@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="nl_NL">
+<TS version="2.1" language="nl_NL">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -151,6 +151,11 @@
         <translation>Afsluiten zonder opslaan</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="205"/>
+        <source>&amp;Module</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="209"/>
         <source>Reload active module</source>
         <translation>Herlaad actieve module</translation>
@@ -181,6 +186,11 @@
         <translation>Van webadres</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="320"/>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="390"/>
         <source>Design philosophy</source>
         <translation>Designfilosofie</translation>
@@ -191,12 +201,12 @@
         <translation>Pext is ontwikkeld om uit de weg te blijven. Zodra een module geloofd dat je klaar bent met het gebruiken, verbergt Pext zichzelf naar het systeemvak. Als je Pext weer nodig hebt, kun je het simpelweg opnieuw starten of vanuit het systeemvak openen.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="427"/>
+        <location filename="../qml/main.qml" line="422"/>
         <source>Getting started</source>
         <translation>Beginnen met Pext</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="428"/>
+        <location filename="../qml/main.qml" line="423"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Om te beginnen met Pext, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n module geïnstalleerd. Je kan modules beheren in het Module menu.</numerusform>
@@ -239,17 +249,17 @@
         <translation>Typ om te zoeken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="465"/>
+        <location filename="../qml/main.qml" line="455"/>
         <source>Processing: %1 (%2)</source>
         <translation>Verwerken: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="467"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Ready</source>
         <translation>Klaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="467"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Waiting</source>
         <translation>Wachtend</translation>
     </message>
