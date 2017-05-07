@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="zh_Hant">
+<TS version="2.1" language="zh_Hant">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -151,6 +151,11 @@
         <translation>不儲存就結束</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="205"/>
+        <source>&amp;Module</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="209"/>
         <source>Reload active module</source>
         <translation>重新載入作用中的模組</translation>
@@ -181,6 +186,11 @@
         <translation>從 URL</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="320"/>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="390"/>
         <source>Design philosophy</source>
         <translation>設計哲學</translation>
@@ -191,15 +201,17 @@
         <translation>Pext 旨在讓您方便取得所需的資訊。一旦模組認為您使用結束了，Pext 就會將它自己隱藏至系統匣中。如果您在 Pext 隱藏它自己以後需要再次使用它，請再次啟動它，或是從系統匣開啟它。</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="427"/>
+        <location filename="../qml/main.qml" line="422"/>
         <source>Getting started</source>
         <translation>入門</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="428"/>
+        <location filename="../qml/main.qml" line="423"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation><numerusform>要開始，按下 &lt;kbd&gt;%1&lt;/kbd&gt; 來開啟新分頁。當您結束該分頁的使用時，您可以按下 &lt;kbd&gt;%2&lt;/kbd&gt; 來關閉它。您目前共安裝了 %n 個模組。您可以在模組選單中管理模組。</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>要開始，按下 &lt;kbd&gt;%1&lt;/kbd&gt; 來開啟新分頁。當您結束該分頁的使用時，您可以按下 &lt;kbd&gt;%2&lt;/kbd&gt; 來關閉它。您目前共安裝了 %n 個模組。您可以在模組選單中管理模組。</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/main.qml" line="249"/>
         <source>Manage modules</source>
@@ -236,17 +248,17 @@
         <translation>輸入以搜尋</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="465"/>
+        <location filename="../qml/main.qml" line="455"/>
         <source>Processing: %1 (%2)</source>
         <translation>正在處理：%1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="467"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Ready</source>
         <translation>準備好了</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="467"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Waiting</source>
         <translation>正在等待</translation>
     </message>

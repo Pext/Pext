@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en_US">
+<TS version="2.1" language="en_US">
 <context>
     <name>AboutDialog</name>
     <message>
@@ -151,6 +151,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="205"/>
+        <source>&amp;Module</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="209"/>
         <source>Reload active module</source>
         <translation type="unfinished"></translation>
@@ -181,6 +186,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="320"/>
+        <source>&amp;Help</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="390"/>
         <source>Design philosophy</source>
         <translation type="unfinished"></translation>
@@ -191,12 +201,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="427"/>
+        <location filename="../qml/main.qml" line="422"/>
         <source>Getting started</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="428"/>
+        <location filename="../qml/main.qml" line="423"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module installed. You can manage modules in the Module menu.</numerusform>
@@ -239,17 +249,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="465"/>
+        <location filename="../qml/main.qml" line="455"/>
         <source>Processing: %1 (%2)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="467"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Ready</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="467"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Waiting</source>
         <translation type="unfinished"></translation>
     </message>

@@ -202,7 +202,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: "&Module"
+            title: qsTr("&Module")
 
             MenuItem {
                 objectName: "menuReloadActiveModule"
@@ -317,7 +317,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: "&Help"
+            title: qsTr("&Help")
 
             MenuItem {
                 objectName: "menuAbout"
