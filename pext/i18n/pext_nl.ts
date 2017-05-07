@@ -153,7 +153,7 @@
     <message>
         <location filename="../qml/main.qml" line="205"/>
         <source>&amp;Module</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="209"/>
@@ -188,7 +188,7 @@
     <message>
         <location filename="../qml/main.qml" line="320"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Help</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="390"/>
