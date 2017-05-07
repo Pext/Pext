@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Translation updates
+- Added traditional Chinese (thanks, Jeff Huang!)
+
 ### Changed
 - The design philosophy is now explained in the empty state screen
 - pyqt5 is added as install_requires
