@@ -4,7 +4,7 @@
 
 *Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
 [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
-graciously donated by [Peers](https://peers.community/).*
+graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
 
 [![ReadTheDocs latest](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![ReadTheDocs stable](https://readthedocs.org/projects/pext/badge/?version=stable)](https://pext.readthedocs.io/en/stable/?badge=stable)
