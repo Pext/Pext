@@ -14,7 +14,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get modules from?</source>
-        <translation>Waar wil je modules vandaan halen?</translation>
+        <translation>Waar wilt u modules vandaan halen?</translation>
     </message>
 </context>
 <context>
@@ -22,7 +22,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules found in this repository.</source>
-        <translation>Geen modules beschikbaar van deze bron.</translation>
+        <translation>Geen modules beschikbaar in deze bron.</translation>
     </message>
 </context>
 <context>
@@ -30,7 +30,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
         <source>Choose the module to install:</source>
-        <translation>Kies de module om te installeren:</translation>
+        <translation>Kies de te installeren module:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="44"/>
@@ -40,7 +40,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
         <source>Module information:</source>
-        <translation>Module informatie:</translation>
+        <translation>Module-informatie:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="58"/>
@@ -50,7 +50,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="62"/>
         <source>Description: </source>
-        <translation>Beschrijving: </translation>
+        <translation>Omschrijving: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="66"/>
@@ -60,7 +60,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="70"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Aangezien Pext modules code zijn, zorg ervoor dat je de ontwikkelaar vertrouwd voordat je door gaat.</translation>
+        <translation>Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
     </message>
 </context>
 <context>
@@ -68,7 +68,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryUnsupportedDialog.qml" line="30"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>Bronnenformaat niet ondersteund (verwachtte versie %1, kreeg versie %2).</translation>
+        <translation>Bronformaat wordt niet ondersteund (verwachte versie %1, kreeg versie %2).</translation>
     </message>
 </context>
 <context>
@@ -76,12 +76,12 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the module to install:</source>
-        <translation>Voer het git adres in van de te installeren module:</translation>
+        <translation>Voer de git-URL in van de te installeren module:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Aangezien Pext modules code zijn, zorg ervoor dat je de ontwikkelaar vertrouwd voordat je door gaat.</translation>
+        <translation>Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
     </message>
 </context>
 <context>
@@ -89,7 +89,7 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="45"/>
         <source>Choose the module to load:</source>
-        <translation>Kies de module om te laden:</translation>
+        <translation>Kies de te laden module:</translation>
     </message>
 </context>
 <context>
@@ -102,7 +102,7 @@
     <message>
         <location filename="../qml/ManageModulesDialog.qml" line="66"/>
         <source>Description: %1</source>
-        <translation>Beschrijving: %1</translation>
+        <translation>Omschrijving: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageModulesDialog.qml" line="72"/>
@@ -112,7 +112,7 @@
     <message>
         <location filename="../qml/ManageModulesDialog.qml" line="78"/>
         <source>Homepage: %1</source>
-        <translation>Homepage: %1</translation>
+        <translation>Website: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageModulesDialog.qml" line="93"/>
@@ -122,12 +122,12 @@
     <message>
         <location filename="../qml/ManageModulesDialog.qml" line="109"/>
         <source>Update</source>
-        <translation>Update</translation>
+        <translation>Bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/ManageModulesDialog.qml" line="117"/>
         <source>Uninstall</source>
-        <translation>Verwijder</translation>
+        <translation>Verwijderen</translation>
     </message>
 </context>
 <context>
@@ -158,47 +158,47 @@
     <message>
         <location filename="../qml/main.qml" line="209"/>
         <source>Reload active module</source>
-        <translation>Herlaad actieve module</translation>
+        <translation>Actieve module herladen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="216"/>
         <source>Close active module</source>
-        <translation>Sluit actieve module</translation>
+        <translation>Actieve module sluiten</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="228"/>
         <source>Load module</source>
-        <translation>Laad module</translation>
+        <translation>Module laden</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="271"/>
         <source>Install module</source>
-        <translation>Installeer module</translation>
+        <translation>Module installeren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="276"/>
         <source>From online module list</source>
-        <translation>Van online modulelijst</translation>
+        <translation>Uit online modulelijst</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="297"/>
         <source>From URL</source>
-        <translation>Van webadres</translation>
+        <translation>Van URL</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="320"/>
         <source>&amp;Help</source>
-        <translation>&amp;Help</translation>
+        <translation>&amp;Hulp</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="390"/>
         <source>Design philosophy</source>
-        <translation>Designfilosofie</translation>
+        <translation>Ontwerpfilosofie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="391"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
-        <translation>Pext is ontwikkeld om uit de weg te blijven. Zodra een module geloofd dat je klaar bent met het gebruiken, verbergt Pext zichzelf naar het systeemvak. Als je Pext weer nodig hebt, kun je het simpelweg opnieuw starten of vanuit het systeemvak openen.</translation>
+        <translation>Pext is ontwikkeld om uit de weg te blijven. Zodra een module er van overtuigd is dat u klaar bent met het gebruiken ervan, verbergt Pext zichzelf naar het systeemvak. Als u Pext weer nodig hebt, dan kunt u het simpelweg opnieuw starten of vanuit het systeemvak openen.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="422"/>
@@ -216,12 +216,12 @@
     <message>
         <location filename="../qml/main.qml" line="249"/>
         <source>Manage modules</source>
-        <translation>Beheer modules</translation>
+        <translation>Modules beheren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="309"/>
         <source>Update all modules</source>
-        <translation>Update alle modules</translation>
+        <translation>Alle modules bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="324"/>
@@ -231,12 +231,12 @@
     <message>
         <location filename="../qml/main.qml" line="333"/>
         <source>Visit homepage</source>
-        <translation>Bezoek website</translation>
+        <translation>Website bezoeken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="353"/>
         <source>Clear</source>
-        <translation>Leeg</translation>
+        <translation>Wissen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="353"/>
@@ -251,7 +251,7 @@
     <message>
         <location filename="../qml/main.qml" line="455"/>
         <source>Processing: %1 (%2)</source>
-        <translation>Verwerken: %1 (%2)</translation>
+        <translation>Bezig met verwerken: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="457"/>
@@ -261,7 +261,7 @@
     <message>
         <location filename="../qml/main.qml" line="457"/>
         <source>Waiting</source>
-        <translation>Wachtend</translation>
+        <translation>Bezig met wachten</translation>
     </message>
 </context>
 </TS>
