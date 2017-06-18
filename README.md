@@ -30,7 +30,7 @@ to turn the simple user interface into an useful and powerful application.
 
     sudo pacman -S git python-pip libnotify python-pyqt5 qt5-quickcontrols
 
-#### Debian (Stretch and later, no Jessie, sorry!)
+#### Debian (Stable (9) and later)
 
     sudo apt-get install git libnotify-bin python3-pip python3-pyqt5.qtquick qml-module-qtquick-controls
 
