@@ -56,12 +56,13 @@ if platform.system() == "Linux":
     except ImportError:
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
 
-from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
+from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMenu, QMessageBox, QTextEdit, QVBoxLayout,
                              QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
+from PyQt5.QtGui import QPalette, QColor, QImage, QBrush
 
 
 class AppFile():
@@ -1555,6 +1556,60 @@ class SignalHandler():
         self.window.show()
 
 
+class ThemeManager():
+    """Manages the theme."""
+
+    def __init__(self, config_retriever: ConfigRetriever, app: QApplication) -> None:
+        """Initialize the module manager."""
+        self.config_retriever = config_retriever
+        self.themes_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
+        self.app = app
+
+    @staticmethod
+    def add_prefix(theme_name: str) -> str:
+        """Ensure the string starts with pext_theme_."""
+        if not theme_name.startswith('pext_theme_'):
+            return 'pext_theme_{}'.format(theme_name)
+
+        return theme_name
+
+    @staticmethod
+    def remove_prefix(theme_name: str) -> str:
+        """Remove pext_theme_ from the start of the string."""
+        if theme_name.startswith('pext_theme_'):
+            return theme_name[len('pext_theme_'):]
+
+        return theme_name
+
+    def _get_palette_mappings(self) -> Dict[str, int]:
+        mapping = {}
+        for key in dir(QPalette):
+            value = getattr(QPalette, key)
+            if isinstance(value, QPalette.ColorRole):
+                mapping[key] = value
+                mapping[value] = key
+        return mapping
+
+    def load_and_apply_theme(self, theme_name: str) -> None:
+        theme_name = ThemeManager.add_prefix(theme_name)
+
+        module_path = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
+
+        palette = QPalette()
+        palette_mappings = self._get_palette_mappings()
+
+        with open(os.path.join(self.themes_dir, theme_name, 'theme.conf')) as f:
+            for line in f:
+                line_data = line.split(":", 1)
+                colour_code_list = [int(x) for x in line_data[1].split(",")]
+                try:
+                    palette.setColor(palette_mappings[line_data[0].strip()], QColor(*colour_code_list))
+                except KeyError as e:
+                    print("Theme contained an unknown key, {}, skipping.".format(e))
+
+        self.app.setPalette(palette)
+
+
 class Tray():
     """Handle the system tray."""
 
@@ -1656,7 +1711,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                                                   "create-profile=",
                                                   "remove-profile=",
                                                   "list-profiles",
-                                                  "no-tray"] + module_opts)
+                                                  "no-tray",
+                                                  "theme="] + module_opts)
 
     except getopt.GetoptError as err:
         print("{}\n".format(err))
@@ -1723,6 +1779,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                 print(profile)
         elif opt == "--no-tray":
             settings['tray'] = False
+        elif opt == "--theme":
+            settings['theme'] = arg
 
     return settings
 
@@ -1784,6 +1842,8 @@ def usage() -> None:
 
 --list-profiles    : list all profiles.
 
+--theme            : load a theme.
+
 --no-tray          : do not create a tray icon.
 
 --version          : show the current version.
@@ -1826,6 +1886,9 @@ def main() -> None:
     app.setWindowIcon(app_icon)
     if 'style' in settings:
         app.setStyle(QStyleFactory().create(settings['style']))
+
+    if 'theme' in settings:
+        ThemeManager(config_retriever, app).load_and_apply_theme(settings['theme'])
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
