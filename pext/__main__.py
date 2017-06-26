@@ -56,13 +56,13 @@ if platform.system() == "Linux":
     except ImportError:
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
 
-from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
+from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMenu, QMessageBox, QTextEdit, QVBoxLayout,
                              QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
-from PyQt5.QtGui import QPalette, QColor, QImage, QBrush
+from PyQt5.QtGui import QPalette, QColor
 
 
 class AppFile():
