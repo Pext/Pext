@@ -76,8 +76,7 @@ ScrollView {
                             } else {
                                 index == 0
                             }
-                        color: resultList.currentIndex === index ? "red" : "steelblue"
-                        Behavior on color { PropertyAnimation {} }
+                        style: resultList.currentIndex === index ? Text.Raised : Text.Normal
                     }
                 }
                 MouseArea {
