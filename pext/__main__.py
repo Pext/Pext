@@ -1606,7 +1606,6 @@ class ThemeManager():
 
         for colour_group in config.sections():
             for colour_role in config[colour_group]:
-                print(colour_role)
                 colour_code_list = [int(x) for x in config[colour_group][colour_role].split(",")]
 
                 try:
