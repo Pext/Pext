@@ -1582,28 +1582,35 @@ class ThemeManager():
         return theme_name
 
     def _get_palette_mappings(self) -> Dict[str, int]:
-        mapping = {}
+        mapping = {'colour_roles': {}, 'colour_groups': {}}
         for key in dir(QPalette):
             value = getattr(QPalette, key)
             if isinstance(value, QPalette.ColorRole):
-                mapping[key] = value
-                mapping[value] = key
+                mapping['colour_roles'][key] = value
+                mapping['colour_roles'][value] = key
+            elif isinstance(value, QPalette.ColorGroup):
+                mapping['colour_groups'][key] = value
+                mapping['colour_groups'][value] = key
+
         return mapping
 
     def load_and_apply_theme(self, theme_name: str) -> None:
         theme_name = ThemeManager.add_prefix(theme_name)
 
-        module_path = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
-
         palette = QPalette()
         palette_mappings = self._get_palette_mappings()
 
-        with open(os.path.join(self.themes_dir, theme_name, 'theme.conf')) as f:
-            for line in f:
-                line_data = line.split(":", 1)
-                colour_code_list = [int(x) for x in line_data[1].split(",")]
+        config = configparser.ConfigParser()
+        config.optionxform = lambda option: option  # No lowercase
+        config.read(os.path.join(self.themes_dir, theme_name, 'theme.conf'))
+
+        for colour_group in config.sections():
+            for colour_role in config[colour_group]:
+                print(colour_role)
+                colour_code_list = [int(x) for x in config[colour_group][colour_role].split(",")]
+
                 try:
-                    palette.setColor(palette_mappings[line_data[0].strip()], QColor(*colour_code_list))
+                    palette.setColor(palette_mappings['colour_groups'][colour_group], palette_mappings['colour_roles'][colour_role], QColor(*colour_code_list))
                 except KeyError as e:
                     print("Theme contained an unknown key, {}, skipping.".format(e))
 
