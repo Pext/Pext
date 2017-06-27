@@ -59,6 +59,8 @@ ScrollView {
 
         model: resultListModel
 
+        SystemPalette { id: palette; colorGroup: SystemPalette.Active }
+
         delegate: Component {
             Item {
                 property variant itemData: model.modelData
@@ -76,7 +78,7 @@ ScrollView {
                             } else {
                                 index == 0
                             }
-                        style: resultList.currentIndex === index ? Text.Raised : Text.Normal
+                        color: resultList.currentIndex === index ? palette.highlight : palette.text
                     }
                 }
                 MouseArea {
