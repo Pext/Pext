@@ -26,7 +26,7 @@ Dialog {
     title: "Pext"
     standardButtons: StandardButton.Ok
 
-    property var modules
+    property var manageableObjects
     property var updateRequest
     property var uninstallRequest
 
@@ -40,7 +40,7 @@ Dialog {
 
         ListView {
             anchors.fill: parent
-            model: Object.keys(modules)
+            model: Object.keys(manageableObjects)
 
             width: parent.width
 
@@ -51,31 +51,31 @@ Dialog {
                 width: parent.width
 
     			Label {
-                    text: modules[modelData].metadata.name + "\n"
+                    text: manageableObjects[modelData].metadata.name + "\n"
                     wrapMode: Text.Wrap 
                     font.bold: true
                 }
     
                 Label {
-                    text: qsTr("Developer: %1").arg(modules[modelData].metadata.developer)
+                    text: qsTr("Developer: %1").arg(manageableObjects[modelData].metadata.developer)
                     width: root.width
                     wrapMode: Text.Wrap 
                 }
     
                 Label {
-                    text: qsTr("Description: %1").arg(modules[modelData].metadata.description)
+                    text: qsTr("Description: %1").arg(manageableObjects[modelData].metadata.description)
                     width: root.width
                     wrapMode: Text.Wrap 
                 }
         
                 Label {
-                    text: qsTr("License: %1").arg(modules[modelData].metadata.license)
+                    text: qsTr("License: %1").arg(manageableObjects[modelData].metadata.license)
                     width: root.width
                     wrapMode: Text.Wrap 
                 }
         
                 Label {
-                    text: qsTr("Homepage: %1").arg("<a href='" + modules[modelData].metadata.homepage + "'>" + modules[modelData].metadata.homepage + "</a>")
+                    text: qsTr("Homepage: %1").arg("<a href='" + manageableObjects[modelData].metadata.homepage + "'>" + manageableObjects[modelData].metadata.homepage + "</a>")
                     textFormat: Text.RichText
                     width: root.width
                     wrapMode: Text.Wrap 
@@ -90,7 +90,7 @@ Dialog {
                 }
                 
                 Label {
-                    text: qsTr("Download source: %1").arg("<a href='" + modules[modelData].source + "'>" + modules[modelData].source + "</a>")
+                    text: qsTr("Download source: %1").arg("<a href='" + manageableObjects[modelData].source + "'>" + manageableObjects[modelData].source + "</a>")
                     textFormat: Text.RichText
                     width: root.width
                     wrapMode: Text.Wrap 

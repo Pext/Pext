@@ -32,7 +32,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: qsTr("Where do you want to get modules from?")
+            text: qsTr("Where do you want to get themes from?")
         }
 
         ComboBox {
@@ -73,23 +73,23 @@ Dialog {
                 return;
             }
 
-            var modules = jsonResponse.modules;
+            var themes = jsonResponse.themes;
 
-            if (modules.length == 0) {
-                var installModuleFromRepositoryNoModulesAvailableDialog = Qt.createComponent("InstallModuleFromRepositoryNoModulesAvailableDialog.qml");
-                installModuleFromRepositoryNoModulesAvailableDialog.createObject(applicationWindow);
+            if (themes.length == 0) {
+                var installThemeFromRepositoryNoThemesAvailableDialog = Qt.createComponent("InstallThemeFromRepositoryNoThemesAvailableDialog.qml");
+                installThemeFromRepositoryNoModulesAvailableDialog.createObject(applicationWindow);
             } else {
-                // Get module data
-                var modulesData = [];
+                // Get theme data
+                var themesData = [];
 
-                for (var i = 0; i < modules.length; i++) {
-                    getData(modules[i], function(response) {
-                        modulesData.push(JSON.parse(response));
-                        if (modulesData.length === modules.length) {
-                            var installModuleFromRepositorySelectModuleDialog = Qt.createComponent("InstallModuleFromRepositorySelectModuleDialog.qml");
-                            installModuleFromRepositorySelectModuleDialog.createObject(applicationWindow,
+                for (var i = 0; i < themes.length; i++) {
+                    getData(themes[i], function(response) {
+                        themesData.push(JSON.parse(response));
+                        if (themesData.length === themes.length) {
+                            var installThemeFromRepositorySelectThemeDialog = Qt.createComponent("InstallThemeFromRepositorySelectThemeDialog.qml");
+                            installThemeFromRepositorySelectThemeleDialog.createObject(applicationWindow,
                                 {"installRequest": installRequest,
-                                 "modules": modulesData});
+                                 "themes": themesData});
                         };
                     });
                 };

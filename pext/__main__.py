@@ -490,6 +490,50 @@ class ProfileManager():
 
         return modules
 
+class ObjectManager():
+    """Shared management for modules and themes."""
+
+    @staticmethod
+    def list_objects(core_directory: str) -> Dict[str, Dict[str, Dict[str, str]]]:
+        """Return a list of objects together with their source."""
+        objects = {}
+
+        for directory in os.listdir(core_directory):
+            if not os.path.isdir(os.path.join(core_directory, directory)):
+                continue
+
+            name = ModuleManager.remove_prefix(directory)
+            name = ThemeManager.remove_prefix(directory)
+
+            try:
+                source = check_output(
+                    ['git', 'config', '--get', 'remote.origin.url'],
+                    cwd=os.path.join(
+                        core_directory, directory),
+                    universal_newlines=True).strip()
+
+            except (CalledProcessError, FileNotFoundError):
+                source = "Unknown"
+
+            metadata = {'name': 'Unknown',
+                        'developer': 'Unknown',
+                        'description': 'Unknown',
+                        'homepage': 'Unknown',
+                        'license': 'Unknown'}
+
+            try:
+                with open(os.path.join(core_directory, directory, "metadata.json"), 'r') as metadata_json:
+                    metadata = json.load(metadata_json)
+            except (FileNotFoundError, json.decoder.JSONDecodeError):
+                print("Object {} lacks a metadata.json file".format(name))
+
+            if not all(key in metadata for key in ['name', 'developer', 'description', 'homepage', 'license']):
+                print("Object {} does override all default keys".format(name))
+
+            objects[name] = {"source": source, "metadata": metadata}
+
+        return objects
+
 
 class ModuleManager():
     """Install, remove, update and list modules."""
@@ -725,41 +769,7 @@ class ModuleManager():
 
     def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
-        modules = {}
-
-        for directory in os.listdir(self.module_dir):
-            if not os.path.isdir(os.path.join(self.module_dir, directory)):
-                continue
-
-            name = ModuleManager.remove_prefix(directory)
-            try:
-                source = check_output(
-                    ['git', 'config', '--get', 'remote.origin.url'],
-                    cwd=os.path.join(
-                        self.module_dir, directory),
-                    universal_newlines=True).strip()
-
-            except (CalledProcessError, FileNotFoundError):
-                source = "Unknown"
-
-            metadata = {'name': 'Unknown',
-                        'developer': 'Unknown',
-                        'description': 'Unknown',
-                        'homepage': 'Unknown',
-                        'license': 'Unknown'}
-
-            try:
-                with open(os.path.join(self.module_dir, directory, "metadata.json"), 'r') as metadata_json:
-                    metadata = json.load(metadata_json)
-            except (FileNotFoundError, json.decoder.JSONDecodeError):
-                print("Module {} lacks a metadata.json file".format(name))
-
-            if not all(key in metadata for key in ['name', 'developer', 'description', 'homepage', 'license']):
-                print("Module {} does override all default keys".format(name))
-
-            modules[name] = {"source": source, "metadata": metadata}
-
-        return modules
+        return ObjectManager().list_objects(self.module_dir)
 
     def reload_module(self, window: 'Window', tab_id: int) -> bool:
         """Reload a module by tab ID."""
@@ -1235,8 +1245,8 @@ class Window(QMainWindow):
         super().__init__(parent)
 
         # Save settings
-        self.config_retriever = config_retriever
         self.settings = settings
+        self.config_retriever = config_retriever
 
         self.tab_bindings = []  # type: List[Dict]
 
@@ -1245,8 +1255,11 @@ class Window(QMainWindow):
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
             "applicationVersion", VersionRetriever.get_version())
+
         self.context.setContextProperty(
             "modulesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'modules'))
+        self.context.setContextProperty(
+            "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(AppFile.get_path(os.path.join('qml', 'main.qml'))))
@@ -1257,6 +1270,10 @@ class Window(QMainWindow):
         self.intro_screen = self.window.findChild(QObject, "introScreen")
         self.module_manager = ModuleManager(self.config_retriever)
         self._update_modules_info_qml()
+
+        # Give QML the theme info
+        self.theme_manager = ThemeManager(self.config_retriever)
+        self._update_themes_info_qml()
 
         # Bind global shortcuts
         self.search_input_model = self.window.findChild(
@@ -1271,7 +1288,7 @@ class Window(QMainWindow):
         back_button.clicked.connect(self._go_up)
         tab_shortcut.activated.connect(self._tab_complete)
 
-        # Bind menu entries
+        # Find menu entries
         menu_reload_active_module_shortcut = self.window.findChild(
             QObject, "menuReloadActiveModule")
         menu_load_module_shortcut = self.window.findChild(
@@ -1284,22 +1301,43 @@ class Window(QMainWindow):
             QObject, "menuManageModules")
         menu_update_all_modules_shortcut = self.window.findChild(
             QObject, "menuUpdateAllModules")
+
+        menu_load_theme_shortcut = self.window.findChild(
+            QObject, "menuLoadTheme")
+        menu_install_theme_shortcut = self.window.findChild(
+            QObject, "menuInstallTheme")
+        menu_manage_themes_shortcut = self.window.findChild(
+            QObject, "menuManageThemes")
+        menu_update_all_themes_shortcut = self.window.findChild(
+            QObject, "menuUpdateAllThemes")
+
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
+        # Bind menu entries
         menu_reload_active_module_shortcut.triggered.connect(
             self._reload_active_module)
-        menu_load_module_shortcut.loadRequest.connect(self._open_tab)
+        menu_load_module_shortcut.loadModuleRequest.connect(self._open_tab)
         menu_close_active_module_shortcut.triggered.connect(self._close_tab)
-        menu_install_module_shortcut.installRequest.connect(
+        menu_install_module_shortcut.installModuleRequest.connect(
             self._menu_install_module)
-        menu_manage_modules_shortcut.uninstallRequest.connect(
+        menu_manage_modules_shortcut.uninstallModuleRequest.connect(
             self._menu_uninstall_module)
-        menu_manage_modules_shortcut.updateRequest.connect(self._menu_update_module)
-        menu_update_all_modules_shortcut.updateAllRequest.connect(
+        menu_manage_modules_shortcut.updateModuleRequest.connect(self._menu_update_module)
+        menu_update_all_modules_shortcut.updateAllModulesRequest.connect(
             self._menu_update_all_modules)
+
+        menu_load_theme_shortcut.loadThemeRequest.connect(self._menu_switch_theme)
+        menu_install_theme_shortcut.installThemeRequest.connect(
+            self._menu_install_theme)
+        menu_manage_themes_shortcut.uninstallThemeRequest.connect(
+            self._menu_uninstall_theme)
+        menu_manage_themes_shortcut.updateThemeRequest.connect(self._menu_update_theme)
+        menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
+            self._menu_update_all_themes)
+
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
@@ -1446,6 +1484,65 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
+    def _menu_switch_theme(self, theme_name: str) -> None:
+        self.settings['theme'] = theme_name
+
+    def _menu_install_theme(self, theme_url: str) -> None:
+        functions = [
+            {
+                'name': self.theme_manager.install_theme,
+                'args': (theme_url),
+                'kwargs': {'interactive': False, 'verbose': True}
+            }, {
+                'name': self._update_themes_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_uninstall_theme(self, theme_name: str) -> None:
+        functions = [
+            {
+                'name': self.theme_manager.uninstall_theme,
+                'args': (theme_name),
+                'kwargs': {'verbose': True}
+            }, {
+                'name': self._update_themes_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_update_theme(self, theme_name: str) -> None:
+        functions = [
+            {
+                'name': self.theme_manager.update_theme,
+                'args': (theme_name),
+                'kwargs': {'verbose': True}
+            }, {
+                'name': self._update_themes_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_update_all_themes(self) -> None:
+        functions = [
+            {
+                'name': self.theme_manager.update_all_themes,
+                'args': (),
+                'kwargs': {'verbose': True}
+            }, {
+                'name': self._update_themes_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
     def _search(self) -> None:
         try:
             self._get_current_element()['vm'].search()
@@ -1470,6 +1567,11 @@ class Window(QMainWindow):
             "modules", modules)
         QQmlProperty.write(
             self.intro_screen, "modulesInstalledCount", len(modules.keys()))
+
+    def _update_themes_info_qml(self) -> None:
+        themes = self.theme_manager.list_themes()
+        self.context.setContextProperty(
+            "themes", themes)
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -1559,11 +1661,11 @@ class SignalHandler():
 class ThemeManager():
     """Manages the theme."""
 
-    def __init__(self, config_retriever: ConfigRetriever, app: QApplication) -> None:
+    def __init__(self, config_retriever: ConfigRetriever) -> None:
         """Initialize the module manager."""
         self.config_retriever = config_retriever
-        self.themes_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
-        self.app = app
+        self.theme_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
+        self.logger = None  # type: Optional[Logger]
 
     @staticmethod
     def add_prefix(theme_name: str) -> str:
@@ -1581,6 +1683,18 @@ class ThemeManager():
 
         return theme_name
 
+    def _log(self, message: str) -> None:
+        if self.logger:
+            self.logger.add_message("", message)
+        else:
+            print(message)
+
+    def _log_error(self, message: str) -> None:
+        if self.logger:
+            self.logger.add_error("", message)
+        else:
+            print(message)
+
     def _get_palette_mappings(self) -> Dict[str, int]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}
         for key in dir(QPalette):
@@ -1594,7 +1708,12 @@ class ThemeManager():
 
         return mapping
 
-    def load_and_apply_theme(self, theme_name: str) -> None:
+    def list_themes(self) -> Dict[str, Dict[str, Dict[str, str]]]:
+        """Return a list of modules together with their source."""
+        return ObjectManager().list_objects(self.theme_dir)
+
+    def load_theme(self, theme_name: str) -> QPalette:
+        """Return the parsed palette."""
         theme_name = ThemeManager.add_prefix(theme_name)
 
         palette = QPalette()
@@ -1602,7 +1721,7 @@ class ThemeManager():
 
         config = configparser.ConfigParser()
         config.optionxform = lambda option: option  # No lowercase
-        config.read(os.path.join(self.themes_dir, theme_name, 'theme.conf'))
+        config.read(os.path.join(self.theme_dir, theme_name, 'theme.conf'))
 
         for colour_group in config.sections():
             for colour_role in config[colour_group]:
@@ -1613,7 +1732,104 @@ class ThemeManager():
                 except KeyError as e:
                     print("Theme contained an unknown key, {}, skipping.".format(e))
 
-        self.app.setPalette(palette)
+        return palette
+
+    def apply_theme_to_app(self, palette: QPalette, app: QApplication) -> None:
+        """Apply the palette to the app (use this before creating a window)."""
+        app.setPalette(palette)
+
+    def install_theme(self, url: str, verbose=False, interactive=True) -> bool:
+        """Install a theme."""
+        theme_name = url.split("/")[-1]
+
+        dir_name = ThemeManager.add_prefix(theme_name).replace('.', '_')
+        theme_name = ThemeManager.remove_prefix(theme_name)
+
+        if os.path.exists(os.path.join(self.theme_dir, dir_name)):
+            if verbose:
+                self._log_error('{} is already installed'.format(theme_name))
+
+            return False
+
+        if verbose:
+            self._log('Installing {} from {}'.format(theme_name, url))
+
+        try:
+            git_env = os.environ.copy()
+            git_env['GIT_ASKPASS'] = 'true'
+            return_code = Popen(['git', 'clone', url, dir_name],
+                                cwd=self.theme_dir,
+                                env=git_env if not interactive else None).wait()
+        except Exception as e:
+            self._log_error('Failed to download {}: {}'.format(theme_name, e))
+
+            return False
+
+        if return_code != 0:
+            if verbose:
+                self._log_error('Failed to install {}'.format(theme_name))
+
+            try:
+                rmtree(os.path.join(self.theme_dir, dir_name))
+            except FileNotFoundError:
+                pass
+
+            return False
+
+        if verbose:
+            self._log('Installed {}'.format(theme_name))
+
+        return True
+
+    def uninstall_theme(self, theme_name: str, verbose=False) -> bool:
+        """Uninstall a theme."""
+        dir_name = ThemeManager.add_prefix(theme_name)
+        theme_name = ThemeManager.remove_prefix(theme_name)
+
+        if verbose:
+            self._log('Uninstalling {}'.format(theme_name))
+
+        try:
+            rmtree(os.path.join(self.theme_dir, dir_name))
+        except FileNotFoundError:
+            if verbose:
+                self._log_error(
+                    'Cannot uninstall {}, it is not installed'.format(theme_name))
+
+            return False
+
+        if verbose:
+            self._log('Uninstalled {}'.format(theme_name))
+
+        return True
+
+    def update_theme(self, theme_name: str, verbose=False) -> bool:
+        """Update a theme."""
+        dir_name = ThemeManager.add_prefix(theme_name)
+        theme_name = ThemeManager.remove_prefix(theme_name)
+
+        if verbose:
+            self._log('Updating {}'.format(theme_name))
+
+        try:
+            check_call(
+                ['git', 'pull'], cwd=os.path.join(self.theme_dir, dir_name))
+        except Exception as e:
+            if verbose:
+                self._log_error(
+                    'Failed to update {}: {}'.format(theme_name, e))
+
+            return False
+
+        if verbose:
+            self._log('Updated {}'.format(theme_name))
+
+        return True
+
+    def update_all_themes(self, verbose=False) -> None:
+        """Update all themes."""
+        for theme in self.list_themes().keys():
+            self.update_theme(theme, verbose=verbose)
 
 
 class Tray():
@@ -1713,12 +1929,17 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                                                   "update-module=",
                                                   "update-modules",
                                                   "list-modules",
+                                                  "theme=",
+                                                  "install-theme=",
+                                                  "uninstall-theme=",
+                                                  "update-theme=",
+                                                  "updates-themes",
+                                                  "list-themes",
                                                   "profile=",
                                                   "create-profile=",
                                                   "remove-profile=",
                                                   "list-profiles",
-                                                  "no-tray",
-                                                  "theme="] + module_opts)
+                                                  "no-tray"] + module_opts)
 
     except getopt.GetoptError as err:
         print("{}\n".format(err))
@@ -1732,8 +1953,10 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             print("Pext {}".format(VersionRetriever.get_version()))
         elif opt == "--exit":
             sys.exit(0)
+
         elif opt == "--locale":
             settings['locale'] = arg
+
         elif opt == "--list-styles":
             for style in QStyleFactory().keys():
                 print(style)
@@ -1743,14 +1966,14 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             else:
                 # PyQt5 does not have bindings for QQuickStyle yet
                 os.environ["QT_QUICK_CONTROLS_STYLE"] = arg
-        elif opt in ("-b", "--binary"):
-            settings['binary'] = arg
+
         elif opt in ("-c", "--clipboard"):
             if arg not in ["clipboard", "selection"]:
                 print("Invalid clipboard requested")
                 sys.exit(2)
 
             settings['clipboard'] = arg
+
         elif opt in ("-m", "--module"):
             if not arg.startswith('pext_module_'):
                 arg = 'pext_module_' + arg
@@ -1769,6 +1992,21 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-modules":
             for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
                 print('{} ({})'.format(module_name, module_data['source']))
+
+        elif opt == "--theme":
+            settings['theme'] = arg
+        elif opt == "--install-theme":
+            ThemeManager(config_retriever).install_theme(arg, verbose=True)
+        elif opt == "--uninstall-theme":
+            ThemeManager(config_retriever).uninstall_theme(arg, verbose=True)
+        elif opt == "--update-theme":
+            ThemeManager(config_retriever).update_theme(arg, verbose=True)
+        elif opt == "--update-themes":
+            ThemeManager(config_retriever).update_all_themes(verbose=True)
+        elif opt == "--list-themes":
+            for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
+                print('{} ({})'.format(theme_name, theme_data['source']))
+        
         elif opt == "--profile":
             settings['profile'] = arg
             # Create directory for profile if not existant
@@ -1783,10 +2021,9 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-profiles":
             for profile in ProfileManager(config_retriever).list_profiles():
                 print(profile)
+
         elif opt == "--no-tray":
             settings['tray'] = False
-        elif opt == "--theme":
-            settings['theme'] = arg
 
     return settings
 
@@ -1893,8 +2130,11 @@ def main() -> None:
     if 'style' in settings:
         app.setStyle(QStyleFactory().create(settings['style']))
 
+
     if 'theme' in settings:
-        ThemeManager(config_retriever, app).load_and_apply_theme(settings['theme'])
+        theme_manager = ThemeManager(config_retriever)
+        theme = theme_manager.load_theme(settings['theme'])
+        theme_manager.apply_theme_to_app(theme, app)
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
