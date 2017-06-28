@@ -31,7 +31,7 @@ ScrollView {
         visible: headerText.text
         Text {
             id: headerText
-            color: palette.light
+            color: palette.mid
             objectName: "headerText"
             font.pointSize: 12
 
