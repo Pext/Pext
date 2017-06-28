@@ -31,7 +31,7 @@ Dialog {
 
     property url themesPath
 
-    height: 250
+    height: 125
     width: 400
 
     ColumnLayout {

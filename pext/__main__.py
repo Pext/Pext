@@ -490,6 +490,22 @@ class ProfileManager():
 
         return modules
 
+    def save_theme(self, profile: str, theme_name: str) -> None:
+        """Save the currently in use theme to load it next launch."""
+        theme_file = os.path.join(self.profileDir, profile, 'theme')
+
+        with open(theme_file, 'w') as configfile:
+            configfile.write(theme_name)
+
+    def retrieve_theme(self, profile: str) -> str:
+        """Retrieve the theme to load."""
+        try:
+            with open(os.path.join(self.profileDir, profile, 'theme'), 'r') as configfile:
+                return configfile.readline()
+        except (FileNotFoundError):
+            return ThemeManager.get_system_theme_name()  # Default theme
+
+
 class ObjectManager():
     """Shared management for modules and themes."""
 
@@ -526,9 +542,6 @@ class ObjectManager():
                     metadata = json.load(metadata_json)
             except (FileNotFoundError, json.decoder.JSONDecodeError):
                 print("Object {} lacks a metadata.json file".format(name))
-
-            if not all(key in metadata for key in ['name', 'developer', 'description', 'homepage', 'license']):
-                print("Object {} does override all default keys".format(name))
 
             objects[name] = {"source": source, "metadata": metadata}
 
@@ -1579,6 +1592,7 @@ class Window(QMainWindow):
     def bind_logger(self, logger: 'Logger') -> None:
         """Bind the logger to the window and further initialize the module."""
         self.module_manager.bind_logger(logger)
+        self.theme_manager.bind_logger(logger)
 
         # Now that the logger is bound, we can show messages in the window, so
         # start binding the modules
@@ -1667,6 +1681,16 @@ class ThemeManager():
         self.theme_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
         self.logger = None  # type: Optional[Logger]
 
+        # Create an empty system theme
+        system_theme_path = os.path.join(config_retriever.get_setting('config_path'), 'themes', ThemeManager.add_prefix(ThemeManager.get_system_theme_name()))
+
+        open(os.path.join(system_theme_path, 'theme.conf'), 'w').close()
+        with open(os.path.join(system_theme_path, 'metadata.json'), 'w') as system_theme_metadata:
+            system_theme_metadata.write(json.dumps(
+                {'name': 'System',
+                 'developer': 'Sylvia van Os',
+                 'description': "Use the system's default Qt5 theme"}))
+
     @staticmethod
     def add_prefix(theme_name: str) -> str:
         """Ensure the string starts with pext_theme_."""
@@ -1683,6 +1707,10 @@ class ThemeManager():
 
         return theme_name
 
+    @staticmethod
+    def get_system_theme_name() -> str:
+        return "system"
+
     def _log(self, message: str) -> None:
         if self.logger:
             self.logger.add_message("", message)
@@ -1694,6 +1722,14 @@ class ThemeManager():
             self.logger.add_error("", message)
         else:
             print(message)
+
+    def bind_logger(self, logger: Logger) -> str:
+        """Connect a logger to the module manager.
+
+        If a logger is connected, the module manager will log all
+        messages directly to the logger.
+        """
+        self.logger = logger
 
     def _get_palette_mappings(self) -> Dict[str, int]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}
@@ -1786,6 +1822,11 @@ class ThemeManager():
         dir_name = ThemeManager.add_prefix(theme_name)
         theme_name = ThemeManager.remove_prefix(theme_name)
 
+        if theme_name == ThemeManager.get_system_theme_name():
+            if verbose:
+                self._log('The default system theme cannot be uninstalled')
+            return
+
         if verbose:
             self._log('Uninstalling {}'.format(theme_name))
 
@@ -1808,6 +1849,11 @@ class ThemeManager():
         dir_name = ThemeManager.add_prefix(theme_name)
         theme_name = ThemeManager.remove_prefix(theme_name)
 
+        if theme_name == ThemeManager.get_system_theme_name():
+            if verbose:
+                self._log('The default system theme cannot be updated')
+            return
+
         if verbose:
             self._log('Updating {}'.format(theme_name))
 
@@ -1829,6 +1875,9 @@ class ThemeManager():
     def update_all_themes(self, verbose=False) -> None:
         """Update all themes."""
         for theme in self.list_themes().keys():
+            if theme == ThemeManager.get_system_theme_name():
+                continue
+                
             self.update_theme(theme, verbose=verbose)
 
 
@@ -2036,6 +2085,7 @@ def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: Con
     os.unlink(pidfile)
     if window.settings['save_settings']:
         ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
+        ProfileManager(config_retriever).save_theme(profile, window.settings['theme'])
 
 
 def usage() -> None:
@@ -2101,7 +2151,7 @@ def main() -> None:
     config_retriever = ConfigRetriever()
 
     # Ensure our necessary directories exist
-    for directory in ['modules', 'module_dependencies', 'profiles', 'profiles/default']:
+    for directory in ['modules', 'module_dependencies', 'themes', os.path.join('themes', ThemeManager.add_prefix(ThemeManager.get_system_theme_name())), 'profiles', 'profiles/default']:
         try:
             os.makedirs(os.path.join(config_retriever.get_setting('config_path'), directory))
         except OSError:
@@ -2127,14 +2177,16 @@ def main() -> None:
     app.installTranslator(translator)
 
     app.setWindowIcon(app_icon)
+
     if 'style' in settings:
         app.setStyle(QStyleFactory().create(settings['style']))
 
-
-    if 'theme' in settings:
-        theme_manager = ThemeManager(config_retriever)
-        theme = theme_manager.load_theme(settings['theme'])
-        theme_manager.apply_theme_to_app(theme, app)
+    if not 'theme' in settings:
+        settings['theme'] = ProfileManager(config_retriever).retrieve_theme(settings['profile'])
+        
+    theme_manager = ThemeManager(config_retriever)
+    theme = theme_manager.load_theme(settings['theme'])
+    theme_manager.apply_theme_to_app(theme, app)
 
     # Check if clipboard is supported
     if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
