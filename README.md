@@ -34,6 +34,8 @@ to turn the simple user interface into an useful and powerful application.
 
     sudo apt-get install git libnotify-bin python3-pip python3-pyqt5.qtquick qml-module-qtquick-controls
 
+You may also need to install libssl1.0-dev due to what seems like a Debian packaging issue. See https://stackoverflow.com/a/42297296 for more info.
+
 #### Fedora
 
     sudo dnf install git libnotify python3-pip python3-qt5 qt5-qtquickcontrols
