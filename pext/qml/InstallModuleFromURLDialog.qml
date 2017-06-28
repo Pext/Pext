@@ -50,7 +50,7 @@ Dialog {
     }
 
     onAccepted: {
-        installRequest(moduleURL);
+        installRequest(textfield.text);
     }
 }
 
