@@ -87,7 +87,7 @@ Dialog {
                         themesData.push(JSON.parse(response));
                         if (themesData.length === themes.length) {
                             var installThemeFromRepositorySelectThemeDialog = Qt.createComponent("InstallThemeFromRepositorySelectThemeDialog.qml");
-                            installThemeFromRepositorySelectThemeleDialog.createObject(applicationWindow,
+                            installThemeFromRepositorySelectThemeDialog.createObject(applicationWindow,
                                 {"installRequest": installRequest,
                                  "themes": themesData});
                         };
