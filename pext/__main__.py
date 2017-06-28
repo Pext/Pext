@@ -2106,10 +2106,6 @@ def usage() -> None:
                      limitations, loadable QtQuick styles cannot currently be
                      listed.
 
---install-module   : download and install a module from the given git URL.
-
---list-modules     : list all installed modules.
-
 --module           : name the module to use. This option may be given multiple
                      times to use multiple modules. When this option is given,
                      the profile module list will be overwritten.
@@ -2119,11 +2115,27 @@ def usage() -> None:
                      binary, use --module-binary=value. Check the module
                      documentation for the supported module-specific settings.
 
+--install-module   : download and install a module from the given git URL.
+
+--list-modules     : list all installed modules.
+
 --uninstall-module : uninstall a module by name.
 
 --update-module    : update a module by name.
 
 --update-modules   : update all installed modules.
+
+--theme            : load a theme.
+
+--install-theme    : download and install a theme from the given git URL.
+
+--list-themes      : list all installed themes.
+
+--uninstall-theme  : uninstall a theme by name.
+
+--update-theme     : update a theme by name.
+
+--update-themes    : update all installed themes.
 
 --profile          : use a specific profile, creating it if it doesn't exist
                      yet. Defaults to "default", use "none" to not save the
@@ -2134,8 +2146,6 @@ def usage() -> None:
 --remove-profile   : remove a profile.
 
 --list-profiles    : list all profiles.
-
---theme            : load a theme.
 
 --no-tray          : do not create a tray icon.
 
