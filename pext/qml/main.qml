@@ -223,7 +223,7 @@ ApplicationWindow {
                 id: menuLoadModule
                 objectName: "menuLoadModule"
 
-                signal loadRequest(string name, string settings)
+                signal loadModuleRequest(string name, string settings)
 
                 text: qsTr("Load module")
 
@@ -237,7 +237,7 @@ ApplicationWindow {
                         var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
                         loadModuleDialog.createObject(applicationWindow,
                             {"modules": Object.keys(modules).sort(),
-                             "loadRequest": loadRequest,
+                             "loadRequest": loadModuleRequest,
                              "modulesPath": modulesPath});
                     }
                 }
@@ -248,19 +248,19 @@ ApplicationWindow {
                 objectName: "menuManageModules"
                 text: qsTr("Manage modules")
 
-                signal updateRequest(string name)
-                signal uninstallRequest(string name)
+                signal updateModuleRequest(string name)
+                signal uninstallModuleRequest(string name)
 
                 onTriggered: {
                     if (Object.keys(modules).length == 0) {
                         var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
                         noModulesInstalledDialog.createObject(applicationWindow);
                     } else {
-                        var manageModulesDialog = Qt.createComponent("ManageModulesDialog.qml");
-                        manageModulesDialog.createObject(applicationWindow,
-                            {"modules": modules,
-                             "updateRequest": updateRequest,
-                             "uninstallRequest": uninstallRequest});
+                        var manageDialog = Qt.createComponent("ManageDialog.qml");
+                        manageDialog.createObject(applicationWindow,
+                            {"manageableObjects": modules,
+                             "updateRequest": updateModuleRequest,
+                             "uninstallRequest": uninstallModuleRequest});
 					}
                 }
             }
@@ -270,7 +270,7 @@ ApplicationWindow {
                 objectName: "menuInstallModule"
                 title: qsTr("Install module")
 
-                signal installRequest(string url)
+                signal installModuleRequest(string url)
 
                 MenuItem {
                     text: qsTr("From online module list")
@@ -288,7 +288,7 @@ ApplicationWindow {
                         var installModuleFromRepositoryDialog = Qt.createComponent("InstallModuleFromRepositoryDialog.qml");
                         installModuleFromRepositoryDialog.createObject(applicationWindow,
                             {"applicationWindow": applicationWindow,
-                             "installRequest": menuInstallModule.installRequest,
+                             "installRequest": menuInstallModule.installModuleRequest,
                              "repositories": repositories})
                     }
                 }
@@ -308,10 +308,108 @@ ApplicationWindow {
                 objectName: "menuUpdateAllModules"
                 text: qsTr("Update all modules")
 
-                signal updateAllRequest()
+                signal updateAllModulesRequest()
 
                 onTriggered: {
-                    updateAllRequest()
+                    updateAllModulesRequest()
+                }
+            }
+        }
+
+        Menu {
+            title: qsTr("&Theme")
+
+            MenuItem {
+                id: menuLoadTheme
+                objectName: "menuLoadTheme"
+
+                signal loadThemeRequest(string name)
+
+                text: qsTr("Switch theme")
+
+                onTriggered: {
+                    if (Object.keys(themes).length == 0) {
+                        var noThemesInstalledDialog = Qt.createComponent("NoThemesInstalledDialog.qml");
+                        noThemesInstalledDialog.createObject(applicationWindow);
+                    } else {
+                        var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
+                        loadThemeDialog.createObject(applicationWindow,
+                            {"themes": Object.keys(themes).sort(),
+                             "loadRequest": loadThemeRequest,
+                             "themesPath": themesPath});
+                    }
+                }
+            }
+
+            MenuItem {
+                id: menuManageThemes
+                objectName: "menuManageThemes"
+                text: qsTr("Manage themes")
+
+                signal updateThemeRequest(string name)
+                signal uninstallThemeRequest(string name)
+
+                onTriggered: {
+                    if (Object.keys(themes).length == 0) {
+                        var noThemesInstalledDialog = Qt.createComponent("NoThemesInstalledDialog.qml");
+                        noThemesInstalledDialog.createObject(applicationWindow);
+                    } else {
+                        var manageDialog = Qt.createComponent("ManageDialog.qml");
+                        manageDialog.createObject(applicationWindow,
+                            {"manageableObjects": themes,
+                             "updateRequest": updateThemeRequest,
+                             "uninstallRequest": uninstallThemeRequest});
+					}
+                }
+            }
+
+            Menu {
+                id: menuInstallTheme
+                objectName: "menuInstallTheme"
+                title: qsTr("Install theme")
+
+                signal installThemeRequest(string url)
+
+                MenuItem {
+                    text: qsTr("From online theme list")
+
+                    property var repositories:
+                        [{
+                          "name": "Pext team",
+                          "url": "https://pext.hackerchick.me/themes_v2.json"
+                        }, {
+                          "name": "Other developers",
+                          "url": "https://pext.hackerchick.me/third_party_themes_v2.json"
+                        }]
+
+                    onTriggered: {
+                        var installThemeFromRepositoryDialog = Qt.createComponent("InstallThemeFromRepositoryDialog.qml");
+                        installThemeFromRepositoryDialog.createObject(applicationWindow,
+                            {"applicationWindow": applicationWindow,
+                             "installRequest": menuInstallTheme.installThemeRequest,
+                             "repositories": repositories})
+                    }
+                }
+
+                MenuItem {
+                    text: qsTr("From URL")
+
+                    onTriggered: {
+                        var installThemeFromURLDialog = Qt.createComponent("InstallThemeFromURLDialog.qml");
+                        installThemeFromURLDialog.createObject(applicationWindow,
+                            {"installRequest": menuInstallTheme.installThemeRequest});
+                    }
+                }
+            }
+
+            MenuItem {
+                objectName: "menuUpdateAllThemes"
+                text: qsTr("Update all themes")
+
+                signal updateAllThemesRequest()
+
+                onTriggered: {
+                    updateAllThemesRequest()
                 }
             }
         }
