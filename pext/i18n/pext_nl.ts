@@ -14,7 +14,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="unfinished">Bronformaat wordt niet ondersteund (verwachte versie %1, kreeg versie %2).</translation>
+        <translation>Bronformaat wordt niet ondersteund (verwachte versie %1, kreeg versie %2).</translation>
     </message>
 </context>
 <context>
@@ -96,7 +96,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get themes from?</source>
-        <translation type="unfinished"></translation>
+        <translation>Waar wilt u thema's vandaan halen?</translation>
     </message>
 </context>
 <context>
@@ -104,7 +104,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen thema's gevonden in deze bron.</translation>
     </message>
 </context>
 <context>
@@ -112,32 +112,32 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
         <source>Choose the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kies het te installeren thema:</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="44"/>
         <source>Choose the preferred download source:</source>
-        <translation type="unfinished">Kies de gewenste downloadbron:</translation>
+        <translation>Kies de gewenste downloadbron:</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="54"/>
         <source>Theme information:</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema-informatie:</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="58"/>
         <source>Developer: </source>
-        <translation type="unfinished">Ontwikkelaar: </translation>
+        <translation>Ontwikkelaar: </translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="62"/>
         <source>Description: </source>
-        <translation type="unfinished">Omschrijving: </translation>
+        <translation>Omschrijving: </translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="66"/>
         <source>License: </source>
-        <translation type="unfinished">Licentie: </translation>
+        <translation>Licentie: </translation>
     </message>
 </context>
 <context>
@@ -145,7 +145,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer de git-URL in van het te installeren thema:</translation>
     </message>
 </context>
 <context>
@@ -161,12 +161,12 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="43"/>
         <source>Choose the theme to switch to:</source>
-        <translation type="unfinished"></translation>
+        <translation>Kies het thema waarnaar moet worden overgeschakeld:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="53"/>
         <source>Note: You must restart Pext to apply the new theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>Let op: u moet Pext herstarten om het nieuwe thema toe te passen.</translation>
     </message>
 </context>
 <context>
@@ -174,37 +174,37 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="60"/>
         <source>Developer: %1</source>
-        <translation type="unfinished">Ontwikkelaar: %1</translation>
+        <translation>Ontwikkelaar: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="66"/>
         <source>Description: %1</source>
-        <translation type="unfinished">Omschrijving: %1</translation>
+        <translation>Omschrijving: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="72"/>
         <source>License: %1</source>
-        <translation type="unfinished">Licentie: %1</translation>
+        <translation>Licentie: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="78"/>
         <source>Homepage: %1</source>
-        <translation type="unfinished">Website: %1</translation>
+        <translation>Website: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="93"/>
         <source>Download source: %1</source>
-        <translation type="unfinished">Downloadbron: %1</translation>
+        <translation>Downloadbron: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="109"/>
         <source>Update</source>
-        <translation type="unfinished">Bijwerken</translation>
+        <translation>Bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="117"/>
         <source>Uninstall</source>
-        <translation type="unfinished">Verwijderen</translation>
+        <translation>Deïnstalleren</translation>
     </message>
 </context>
 <context>
@@ -251,7 +251,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen thema's geïnstalleerd; installeer er een.</translation>
     </message>
 </context>
 <context>
@@ -305,32 +305,32 @@
     <message>
         <location filename="../qml/main.qml" line="320"/>
         <source>&amp;Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Thema</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="328"/>
         <source>Switch theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema wisselen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="347"/>
         <source>Manage themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema's beheren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="369"/>
         <source>Install theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema installeren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="374"/>
         <source>From online theme list</source>
-        <translation type="unfinished"></translation>
+        <translation>Uit online themalijst</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="407"/>
         <source>Update all themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle thema's bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="418"/>
