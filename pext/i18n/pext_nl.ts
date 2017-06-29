@@ -31,7 +31,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="66"/>
         <source>Spanish</source>
-        <translation type="unfinished"></translation>
+        <translation>Spaans</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="71"/>
@@ -131,7 +131,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get themes from?</source>
-        <translation>Waar wilt u thema&apos;s vandaan halen?</translation>
+        <translation>Waar wilt u thema's vandaan halen?</translation>
     </message>
 </context>
 <context>
@@ -139,7 +139,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation>Geen thema&apos;s gevonden in deze bron.</translation>
+        <translation>Geen thema's gevonden in deze bron.</translation>
     </message>
 </context>
 <context>
@@ -286,7 +286,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Geen thema&apos;s geïnstalleerd; installeer er een.</translation>
+        <translation>Geen thema's geïnstalleerd; installeer er een.</translation>
     </message>
 </context>
 <context>
@@ -350,7 +350,7 @@
     <message>
         <location filename="../qml/main.qml" line="349"/>
         <source>Manage themes</source>
-        <translation>Thema&apos;s beheren</translation>
+        <translation>Thema's beheren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="371"/>
@@ -365,7 +365,7 @@
     <message>
         <location filename="../qml/main.qml" line="409"/>
         <source>Update all themes</source>
-        <translation>Alle thema&apos;s bijwerken</translation>
+        <translation>Alle thema's bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="420"/>
