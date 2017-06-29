@@ -14,7 +14,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="unfinished">不支援的軟體倉庫格式（預期版本 %1，實際版本 %2）。</translation>
+        <translation>不支援的軟體倉庫格式（預期版本 %1，實際版本 %2）。</translation>
     </message>
 </context>
 <context>
@@ -96,7 +96,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get themes from?</source>
-        <translation type="unfinished"></translation>
+        <translation>您想要從哪裡取得佈景主題？</translation>
     </message>
 </context>
 <context>
@@ -104,7 +104,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>在此軟體倉庫中找不到佈景主題。</translation>
     </message>
 </context>
 <context>
@@ -112,32 +112,32 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
         <source>Choose the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>選擇要安裝的主題：</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="44"/>
         <source>Choose the preferred download source:</source>
-        <translation type="unfinished">選取偏好的下載來源：</translation>
+        <translation>選取偏好的下載來源：</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="54"/>
         <source>Theme information:</source>
-        <translation type="unfinished"></translation>
+        <translation>佈景主題資訊：</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="58"/>
         <source>Developer: </source>
-        <translation type="unfinished">開發者： </translation>
+        <translation>開發者： </translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="62"/>
         <source>Description: </source>
-        <translation type="unfinished">描述： </translation>
+        <translation>描述： </translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="66"/>
         <source>License: </source>
-        <translation type="unfinished">授權條款： </translation>
+        <translation>授權條款： </translation>
     </message>
 </context>
 <context>
@@ -145,7 +145,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>輸入要安裝的佈景主題的 git URL：</translation>
     </message>
 </context>
 <context>
@@ -161,12 +161,12 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="43"/>
         <source>Choose the theme to switch to:</source>
-        <translation type="unfinished"></translation>
+        <translation>選擇要切換到哪個佈景主題：</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="53"/>
         <source>Note: You must restart Pext to apply the new theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：您必須重新啟動 Pext 以套用新佈景主題。</translation>
     </message>
 </context>
 <context>
@@ -174,37 +174,37 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="60"/>
         <source>Developer: %1</source>
-        <translation type="unfinished">開發者：%1</translation>
+        <translation>開發者：%1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="66"/>
         <source>Description: %1</source>
-        <translation type="unfinished">描述：%1</translation>
+        <translation>描述：%1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="72"/>
         <source>License: %1</source>
-        <translation type="unfinished">授權條款：%1</translation>
+        <translation>授權條款：%1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="78"/>
         <source>Homepage: %1</source>
-        <translation type="unfinished">首頁：%1</translation>
+        <translation>首頁：%1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="93"/>
         <source>Download source: %1</source>
-        <translation type="unfinished">下載來源：%1</translation>
+        <translation>下載來源：%1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="109"/>
         <source>Update</source>
-        <translation type="unfinished">更新</translation>
+        <translation>更新</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="117"/>
         <source>Uninstall</source>
-        <translation type="unfinished">解除安裝</translation>
+        <translation>解除安裝</translation>
     </message>
 </context>
 <context>
@@ -251,7 +251,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation type="unfinished"></translation>
+        <translation>未安裝佈景主題，請先安裝一個。</translation>
     </message>
 </context>
 <context>
@@ -269,7 +269,7 @@
     <message>
         <location filename="../qml/main.qml" line="205"/>
         <source>&amp;Module</source>
-        <translation type="unfinished"></translation>
+        <translation>模組(&amp;M)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="209"/>
@@ -305,37 +305,37 @@
     <message>
         <location filename="../qml/main.qml" line="320"/>
         <source>&amp;Theme</source>
-        <translation type="unfinished"></translation>
+        <translation>佈景主題(&amp;T)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="328"/>
         <source>Switch theme</source>
-        <translation type="unfinished"></translation>
+        <translation>切換佈景主題</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="347"/>
         <source>Manage themes</source>
-        <translation type="unfinished"></translation>
+        <translation>管理佈景主題</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="369"/>
         <source>Install theme</source>
-        <translation type="unfinished"></translation>
+        <translation>安裝佈景主題</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="374"/>
         <source>From online theme list</source>
-        <translation type="unfinished"></translation>
+        <translation>從線上佈景主題清單</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="407"/>
         <source>Update all themes</source>
-        <translation type="unfinished"></translation>
+        <translation>更新所有佈景主題</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="418"/>
         <source>&amp;Help</source>
-        <translation type="unfinished"></translation>
+        <translation>說明(&amp;H)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="488"/>
