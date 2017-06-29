@@ -4,8 +4,38 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="24"/>
+        <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="38"/>
+        <source>Copyright</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="57"/>
+        <source>Translators</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="64"/>
+        <source>Want to help translate Pext? Please click here.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="65"/>
+        <source>The Pext team would like to thank the following users for translating Pext:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="66"/>
+        <source>Chinese (Traditional)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="68"/>
+        <source>Dutch</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -144,7 +174,7 @@
 <context>
     <name>LoadModuleDialog</name>
     <message>
-        <location filename="../qml/LoadModuleDialog.qml" line="45"/>
+        <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -152,12 +182,12 @@
 <context>
     <name>LoadThemeDialog</name>
     <message>
-        <location filename="../qml/LoadThemeDialog.qml" line="43"/>
+        <location filename="../qml/LoadThemeDialog.qml" line="41"/>
         <source>Choose the theme to switch to:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/LoadThemeDialog.qml" line="53"/>
+        <location filename="../qml/LoadThemeDialog.qml" line="51"/>
         <source>Note: You must restart Pext to apply the new theme.</source>
         <translation type="unfinished"></translation>
     </message>
