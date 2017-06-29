@@ -18,7 +18,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - pext_dev's generated base file now leaves the copyright open for the author to fill in
-- Installing a module from URL did not work
 
 ## [0.8] - 2017-04-28
 ### API changes
