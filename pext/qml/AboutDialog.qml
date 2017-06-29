@@ -32,10 +32,13 @@ Dialog {
         width: parent.width
         height: parent.height
 
+        SystemPalette { id: palette; colorGroup: SystemPalette.Active }
+
         Tab {
             title: qsTr("Copyright")
             ScrollView {
                 Text {
+                    color: palette.text
                     width: parent.parent.width
                     wrapMode: Text.Wrap
                     text:
@@ -54,6 +57,7 @@ Dialog {
             title: qsTr("Translators")
             ScrollView {
                 Text {
+                    color: palette.text
                     width: parent.parent.width
                     wrapMode: Text.Wrap
                     text:
