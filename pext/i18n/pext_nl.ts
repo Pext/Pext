@@ -4,9 +4,39 @@
 <context>
     <name>AboutDialog</name>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="24"/>
+        <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
         <translation>Over Pext</translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="38"/>
+        <source>Copyright</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="57"/>
+        <source>Translators</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="64"/>
+        <source>Want to help translate Pext? Please click here.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="65"/>
+        <source>The Pext team would like to thank the following users for translating Pext:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="66"/>
+        <source>Chinese (Traditional)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="68"/>
+        <source>Dutch</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -96,7 +126,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get themes from?</source>
-        <translation>Waar wilt u thema's vandaan halen?</translation>
+        <translation>Waar wilt u thema&apos;s vandaan halen?</translation>
     </message>
 </context>
 <context>
@@ -104,7 +134,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation>Geen thema's gevonden in deze bron.</translation>
+        <translation>Geen thema&apos;s gevonden in deze bron.</translation>
     </message>
 </context>
 <context>
@@ -151,7 +181,7 @@
 <context>
     <name>LoadModuleDialog</name>
     <message>
-        <location filename="../qml/LoadModuleDialog.qml" line="45"/>
+        <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
         <translation>Kies de te laden module:</translation>
     </message>
@@ -159,12 +189,12 @@
 <context>
     <name>LoadThemeDialog</name>
     <message>
-        <location filename="../qml/LoadThemeDialog.qml" line="43"/>
+        <location filename="../qml/LoadThemeDialog.qml" line="41"/>
         <source>Choose the theme to switch to:</source>
         <translation>Kies het thema waarnaar moet worden overgeschakeld:</translation>
     </message>
     <message>
-        <location filename="../qml/LoadThemeDialog.qml" line="53"/>
+        <location filename="../qml/LoadThemeDialog.qml" line="51"/>
         <source>Note: You must restart Pext to apply the new theme.</source>
         <translation>Let op: u moet Pext herstarten om het nieuwe thema toe te passen.</translation>
     </message>
@@ -251,7 +281,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Geen thema's geïnstalleerd; installeer er een.</translation>
+        <translation>Geen thema&apos;s geïnstalleerd; installeer er een.</translation>
     </message>
 </context>
 <context>
@@ -315,7 +345,7 @@
     <message>
         <location filename="../qml/main.qml" line="347"/>
         <source>Manage themes</source>
-        <translation>Thema's beheren</translation>
+        <translation>Thema&apos;s beheren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="369"/>
@@ -330,7 +360,7 @@
     <message>
         <location filename="../qml/main.qml" line="407"/>
         <source>Update all themes</source>
-        <translation>Alle thema's bijwerken</translation>
+        <translation>Alle thema&apos;s bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="418"/>
