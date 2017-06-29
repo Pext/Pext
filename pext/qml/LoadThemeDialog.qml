@@ -31,10 +31,8 @@ Dialog {
 
     property url themesPath
 
-    height: 125
-    width: 400
-
     ColumnLayout {
+        id: columnLayout
         width: parent.width
 
         anchors.fill: parent
