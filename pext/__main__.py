@@ -202,9 +202,9 @@ class Logger():
             message = self.queued_messages.pop(0)
 
             if message['type'] == 'error':
-                statusbar_message = "<font color='red'>{}</color>".format(
+                statusbar_message = "<font color='red'>⚠ {}</color>".format(
                     message['message'])
-                notification_message = 'E: {}'.format(message['message'])
+                notification_message = '⚠ {}'.format(message['message'])
             else:
                 statusbar_message = message['message']
                 notification_message = message['message']
@@ -831,12 +831,12 @@ class ModuleManager():
 
         if os.path.exists(os.path.join(self.module_dir, dir_name)):
             if verbose:
-                self._log_error('{} is already installed'.format(module_name))
+                self._log('✔⇩ {}'.format(module_name))
 
             return False
 
         if verbose:
-            self._log('Installing {} from {}'.format(module_name, url))
+            self._log('⇩ {} ({})'.format(module_name, url))
 
         try:
             git_env = os.environ.copy()
@@ -845,13 +845,13 @@ class ModuleManager():
                                 cwd=self.module_dir,
                                 env=git_env if not interactive else None).wait()
         except Exception as e:
-            self._log_error('Failed to download {}: {}'.format(module_name, e))
+            self._log_error('⇩ {}: {}'.format(module_name, e))
 
             return False
 
         if return_code != 0:
             if verbose:
-                self._log_error('Failed to install {}'.format(module_name))
+                self._log_error('⇩ {}'.format(module_name))
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -861,12 +861,12 @@ class ModuleManager():
             return False
 
         if verbose:
-            self._log('Installing dependencies for {}'.format(module_name))
+            self._log('⇩⇩ {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                self._log_error('Failed to install dependencies for {}, error {}'.format(module_name, pip_exit_code))
+                self._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code))
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -881,7 +881,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            self._log('Installed {}'.format(module_name))
+            self._log('✔⇩⇩ {}'.format(module_name))
 
         return True
 
@@ -891,14 +891,14 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log('Uninstalling {}'.format(module_name))
+            self._log('♻ {}'.format(module_name))
 
         try:
             rmtree(os.path.join(self.module_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                self._log_error(
-                    'Cannot uninstall {}, it is not installed'.format(module_name))
+                self._log(
+                    '✔♻ {}'.format(module_name))
 
             return False
 
@@ -908,7 +908,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            self._log('Uninstalled {}'.format(module_name))
+            self._log('✔♻ {}'.format(module_name))
 
         return True
 
@@ -918,7 +918,7 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log('Updating {}'.format(module_name))
+            self._log('⇩ {}'.format(module_name))
 
         try:
             check_call(
@@ -926,22 +926,22 @@ class ModuleManager():
         except Exception as e:
             if verbose:
                 self._log_error(
-                    'Failed to update {}: {}'.format(module_name, e))
+                    '⇩ {}: {}'.format(module_name, e))
 
             return False
 
         if verbose:
-            self._log('Updating dependencies for {}'.format(module_name))
+            self._log('⇩⇩ {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                self._log_error('Failed to update dependencies for {}, error {}'.format(module_name, pip_exit_code))
+                self._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code))
 
             return False
 
         if verbose:
-            self._log('Updated {}'.format(module_name))
+            self._log('✔⇩⇩ {}'.format(module_name))
 
         return True
 
@@ -1783,12 +1783,12 @@ class ThemeManager():
 
         if os.path.exists(os.path.join(self.theme_dir, dir_name)):
             if verbose:
-                self._log_error('{} is already installed'.format(theme_name))
+                self._log('✔⇩ {}'.format(theme_name))
 
             return False
 
         if verbose:
-            self._log('Installing {} from {}'.format(theme_name, url))
+            self._log('⇩ {} ({})'.format(theme_name, url))
 
         try:
             git_env = os.environ.copy()
@@ -1797,13 +1797,13 @@ class ThemeManager():
                                 cwd=self.theme_dir,
                                 env=git_env if not interactive else None).wait()
         except Exception as e:
-            self._log_error('Failed to download {}: {}'.format(theme_name, e))
+            self._log_error('⇩ {}: {}'.format(theme_name, e))
 
             return False
 
         if return_code != 0:
             if verbose:
-                self._log_error('Failed to install {}'.format(theme_name))
+                self._log_error('⇩ {}'.format(theme_name))
 
             try:
                 rmtree(os.path.join(self.theme_dir, dir_name))
@@ -1813,7 +1813,7 @@ class ThemeManager():
             return False
 
         if verbose:
-            self._log('Installed {}'.format(theme_name))
+            self._log('✔⇩ {}'.format(theme_name))
 
         return True
 
@@ -1824,23 +1824,23 @@ class ThemeManager():
 
         if theme_name == ThemeManager.get_system_theme_name():
             if verbose:
-                self._log('The default system theme cannot be uninstalled')
+                self._log('⏩{}'.format(theme_name))
             return
 
         if verbose:
-            self._log('Uninstalling {}'.format(theme_name))
+            self._log('♻ {}'.format(theme_name))
 
         try:
             rmtree(os.path.join(self.theme_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                self._log_error(
-                    'Cannot uninstall {}, it is not installed'.format(theme_name))
+                self._log(
+                    '✔♻ {}'.format(theme_name))
 
             return False
 
         if verbose:
-            self._log('Uninstalled {}'.format(theme_name))
+            self._log('✔♻ {}'.format(theme_name))
 
         return True
 
@@ -1851,11 +1851,11 @@ class ThemeManager():
 
         if theme_name == ThemeManager.get_system_theme_name():
             if verbose:
-                self._log('The default system theme cannot be updated')
+                self._log('⏩{}'.format(theme_name))
             return
 
         if verbose:
-            self._log('Updating {}'.format(theme_name))
+            self._log('⇩ {}'.format(theme_name))
 
         try:
             check_call(
@@ -1863,12 +1863,12 @@ class ThemeManager():
         except Exception as e:
             if verbose:
                 self._log_error(
-                    'Failed to update {}: {}'.format(theme_name, e))
+                    '⇩ {}: {}'.format(theme_name, e))
 
             return False
 
         if verbose:
-            self._log('Updated {}'.format(theme_name))
+            self._log('✔⇩ {}'.format(theme_name))
 
         return True
 
