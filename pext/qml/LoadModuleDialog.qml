@@ -33,9 +33,6 @@ Dialog {
     property var moduleSettings: []
     property var moduleChosenSettings: {}
 
-    height: 250
-    width: 400
-
     ColumnLayout {
         width: parent.width
 
