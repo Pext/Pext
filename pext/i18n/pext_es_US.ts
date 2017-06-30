@@ -11,7 +11,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="38"/>
         <source>Copyright</source>
-        <translation>Derechos de Autor</translation>
+        <translation>Copyright</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="57"/>
@@ -44,7 +44,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>El formato del repositorio no es soportado (versión esperada% 1, versión obtenida% 2).</translation>
+        <translation>El formato del repositorio no es soportado (versión esperada %1, versión obtenida %2).</translation>
     </message>
 </context>
 <context>
@@ -235,7 +235,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Ningún módulos instalados, por favor instale uno primero.</translation>
+        <translation>Ningún módulo instalado, por favor instale uno primero.</translation>
     </message>
 </context>
 <context>
