@@ -11,7 +11,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="38"/>
         <source>Copyright</source>
-        <translation>Derechos de Autor</translation>
+        <translation>Copyright</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="57"/>
@@ -240,7 +240,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Ningún módulos instalados, por favor instale uno primero.</translation>
+        <translation>Ningún módulo instalado, por favor instale uno primero.</translation>
     </message>
 </context>
 <context>
