@@ -32,6 +32,8 @@ ApplicationWindow {
 
     flags: Qt.Window
 
+    SystemPalette { id: palette; colorGroup: SystemPalette.Active }
+
     function pageUp() {
         var tab = tabs.getTab(tabs.currentIndex);
         if (typeof tab === "undefined")
