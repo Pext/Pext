@@ -2180,9 +2180,9 @@ def main() -> None:
     app = QApplication(['Pext ({})'.format(settings['profile'])])
 
     translator = QTranslator()
-    print('Using locale: {}'.format(settings['locale']))
-    print('Localization loaded: ',
-        translator.load('pext_' + settings['locale'] + '.qm', os.path.join(AppFile.get_path('i18n'))))
+    print('Using locale: {}'.format(QLocale(settings['locale']).name()))
+    print('Localization loaded:',
+        translator.load(QLocale(settings['locale']), 'pext', '_', os.path.join(AppFile.get_path('i18n')), '.qm'))
 
     app.installTranslator(translator)
 
