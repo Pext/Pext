@@ -44,7 +44,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>El formato del repositorio no es soportado (versión esperada% 1, versión obtenida% 2).</translation>
+        <translation>El formato del repositorio no es soportado (versión esperada %1, versión obtenida %2).</translation>
     </message>
 </context>
 <context>
