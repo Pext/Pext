@@ -31,7 +31,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="66"/>
         <source>Spanish</source>
-        <translation type="unfinished"></translation>
+        <translation>Español</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="71"/>
