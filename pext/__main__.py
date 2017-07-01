@@ -447,20 +447,20 @@ class ProfileManager():
 
     def __init__(self, config_retriever: ConfigRetriever) -> None:
         """Initialize the profile manager."""
-        self.profileDir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
+        self.profile_dir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
         self.config_retriever = config_retriever
 
     def create_profile(self, profile: str) -> None:
         """Create a new empty profile."""
-        os.mkdir(os.path.join(self.profileDir, profile))
+        os.mkdir(os.path.join(self.profile_dir, profile))
 
     def remove_profile(self, profile: str) -> None:
         """Remove a profile and all associated data."""
-        rmtree(os.path.join(self.profileDir, profile))
+        rmtree(os.path.join(self.profile_dir, profile))
 
     def list_profiles(self) -> List:
         """List the existing profiles."""
-        return os.listdir(self.profileDir)
+        return os.listdir(self.profile_dir)
 
     def save_modules(self, profile: str, modules: List[Dict]) -> None:
         """Save the list of open modules and their settings to the profile."""
@@ -469,7 +469,7 @@ class ProfileManager():
             name = ModuleManager.add_prefix(module['module_name'])
             config['{}_{}'.format(number, name)] = module['settings']
 
-        with open(os.path.join(self.profileDir, profile, 'modules'), 'w') as configfile:
+        with open(os.path.join(self.profile_dir, profile, 'modules'), 'w') as configfile:
             config.write(configfile)
 
     def retrieve_modules(self, profile: str) -> List[Dict]:
@@ -477,7 +477,7 @@ class ProfileManager():
         config = configparser.ConfigParser()
         modules = []
 
-        config.read(os.path.join(self.profileDir, profile, 'modules'))
+        config.read(os.path.join(self.profile_dir, profile, 'modules'))
 
         for module in config.sections():
             settings = {}
@@ -492,7 +492,7 @@ class ProfileManager():
 
     def save_theme(self, profile: str, theme_name: str) -> None:
         """Save the currently in use theme to load it next launch."""
-        theme_file = os.path.join(self.profileDir, profile, 'theme')
+        theme_file = os.path.join(self.profile_dir, profile, 'theme')
 
         with open(theme_file, 'w') as configfile:
             configfile.write(theme_name)
@@ -500,7 +500,7 @@ class ProfileManager():
     def retrieve_theme(self, profile: str) -> str:
         """Retrieve the theme to load."""
         try:
-            with open(os.path.join(self.profileDir, profile, 'theme'), 'r') as configfile:
+            with open(os.path.join(self.profile_dir, profile, 'theme'), 'r') as configfile:
                 return configfile.readline()
         except (FileNotFoundError):
             return ThemeManager.get_system_theme_name()  # Default theme
