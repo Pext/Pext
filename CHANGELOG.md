@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Translation updates
 - Added traditional Chinese (thanks, Jeff Huang!)
+- Added Spanish (thanks, Emily Lau!)
+- Updated Dutch (thanks, Heimen Stoffels!)
 
 ### Added
 - Theming support based on QPalette
@@ -15,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - The design philosophy is now explained in the empty state screen
 - pyqt5 is added as install_requires
+- The about dialog now thanks translators
 
 ### Fixed
 - pext_dev's generated base file now leaves the copyright open for the author to fill in
