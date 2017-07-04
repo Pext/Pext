@@ -1032,6 +1032,14 @@ class ViewModel():
             # We fully match a string
             return ''.join(common_chars)
 
+    def _clear_queue(self) -> None:
+        while True:
+            try:
+                self.queue.get_nowait()
+            except Empty:
+                return
+            self.queue.task_done()
+
     def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject,
                      header_text: QObject, result_list_model: QObject) -> None:
         """Bind the QML context so we can communicate with the QML front-end."""
@@ -1066,8 +1074,13 @@ class ViewModel():
             self.entry_list = []
             self.command_list = []
 
+            self.search(new_entries=True)
+
             self.context.setContextProperty(
                 "resultListModelDepth", len(self.selection))
+
+            self._clear_queue()
+            self.window.update()
 
             self.module.selection_made(self.selection)
         else:
@@ -1189,9 +1202,12 @@ class ViewModel():
             self.context.setContextProperty(
                 "resultListModelDepth", len(self.selection))
 
-            self.module.selection_made(self.selection)
-
             QQmlProperty.write(self.search_input_model, "text", "")
+            self.search(new_entries=True)
+            self._clear_queue()
+            self.window.update()
+
+            self.module.selection_made(self.selection)
 
             return
 
@@ -1205,9 +1221,12 @@ class ViewModel():
         self.context.setContextProperty(
             "resultListModelDepth", len(self.selection))
 
-        self.module.selection_made(self.selection)
-
         QQmlProperty.write(self.search_input_model, "text", "")
+        self.search(new_entries=True)
+        self._clear_queue()
+        self.window.update()
+
+        self.module.selection_made(self.selection)
 
     def set_header(self, content) -> None:
         """Set the header text."""
