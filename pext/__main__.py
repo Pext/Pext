@@ -1174,7 +1174,7 @@ class ViewModel():
 
     def select(self) -> None:
         """Notify the module of our selection entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0 or self.queue.qsize() > 0:
+        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             return
 
         self.entry_list = []
