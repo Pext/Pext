@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
+- Whenever the state changes (either by the user going back, selecting something or set_selection being called), the queue is now emptied
+
 ### Translation updates
 - Added traditional Chinese (thanks, Jeff Huang!)
 - Added Spanish (thanks, Emily Lau!)
