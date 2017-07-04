@@ -518,8 +518,9 @@ class ObjectManager():
             if not os.path.isdir(os.path.join(core_directory, directory)):
                 continue
 
-            name = ModuleManager.remove_prefix(directory)
-            name = ThemeManager.remove_prefix(directory)
+            name = directory
+            name = ModuleManager.remove_prefix(name)
+            name = ThemeManager.remove_prefix(name)
 
             try:
                 source = check_output(
