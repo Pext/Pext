@@ -21,10 +21,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The design philosophy is now explained in the empty state screen
 - pyqt5 is added as install_requires
 - The about dialog now thanks translators
-- Due to the API change, a selection can now be made while waiting for the list to fill
 
 ### Fixed
 - pext_dev's generated base file now leaves the copyright open for the author to fill in
+- Not being able to select an entry until the list is fully loaded
+- Selection constantly resetting while items are being added
 
 ## [0.8] - 2017-04-28
 ### API changes
