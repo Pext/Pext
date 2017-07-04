@@ -1100,20 +1100,35 @@ class ViewModel():
         if not new_entries and search_string == self.last_search:
             return
 
+        # Get current match
+        try:
+            current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model, "currentIndex")]
+        except IndexError:
+            current_match = None
+
         # If empty, show all
         if len(search_string) == 0 and not new_entries:
             self.filtered_entry_list = self.entry_list
             self.filtered_command_list = self.command_list
-            combined_list = self.entry_list + self.command_list
-            self.result_list_model_list = QStringListModel(
-                [str(entry) for entry in combined_list])
-            self.result_list_model_max_index = len(self.entry_list) - 1
-            self.context.setContextProperty(
-                "resultListModelCommandMode", False)
+
+            combined_list = self.filtered_entry_list + self.filtered_command_list
+
+            self.result_list_model_list.setStringList(combined_list)
+
+            self.result_list_model_max_index = len(self.filtered_entry_list) - 1
             self.context.setContextProperty(
                 "resultListModelMaxIndex", self.result_list_model_max_index)
+
             self.context.setContextProperty(
-                "resultListModel", self.result_list_model_list)
+                "resultListModelCommandMode", False)
+
+            # Keep existing selection, otherwise ensure something is selected
+            try:
+                current_index = combined_list.index(current_match)
+            except ValueError:
+                current_index = 0
+
+            QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
             # Enable checking for changes next time
             self.last_search = search_string
@@ -1164,10 +1179,15 @@ class ViewModel():
         self.context.setContextProperty(
             "resultListModelMaxIndex", self.result_list_model_max_index)
 
-        self.result_list_model_list = QStringListModel(
-            [str(entry) for entry in combined_list])
-        self.context.setContextProperty(
-            "resultListModel", self.result_list_model_list)
+        self.result_list_model_list.setStringList(combined_list)
+
+        # Keep existing selection, otherwise ensure something is selected
+        try:
+            current_index = combined_list.index(current_match)
+        except ValueError:
+            current_index = 0
+
+        QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
         # Enable checking for changes next time
         self.last_search = search_string
