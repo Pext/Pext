@@ -817,9 +817,9 @@ class ModuleManager():
 
             # Focus on active tab
             QQmlProperty.write(window.tabs, "currentIndex", str(current_index))
-        else:
-            # Ensure the event gets called if there's only one tab
-            window.tabs.currentIndexChanged.emit()
+
+        # Ensure a proper refresh on the UI side
+        window.tabs.currentIndexChanged.emit()
 
         return True
 
@@ -1468,6 +1468,9 @@ class Window(QMainWindow):
         # First module? Enforce load
         if len(self.tab_bindings) == 1:
             self.tabs.currentIndexChanged.emit()
+
+        # Apply filter if one exists
+        self.tab_bindings[-1]['vm'].search()
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
