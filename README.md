@@ -12,14 +12,21 @@ graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
 
 ## Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using
-Python 3 and Qt5 QML and intended to have its behaviour decided by modules. Pext
-provides a simple window with a search bar, allowing modules to define what
-data is shown and how it is manipulated.
+Python 3 and Qt5 QML and has its behaviour decided by modules. Pext provides
+a simple window with a search bar, allowing modules to define what data is
+shown and how it is manipulated.
 
-Much like the leoger (a mix between a tiger and a leopard) in the logo, Pext
-modules can turn Pext into a completely different beast. From password
-management to weather information, modules can harness the full power of Python
-to turn the simple user interface into an useful and powerful application.
+For example, say you want to use Pext as a password manager. You load in the
+pass module, and it will show you a list of your passwords which you can
+filter with the search bar. When you select a password in the list, it will
+copy the password to your clipboard and Pext will hide itself, waiting for you
+to ask for it again.
+
+Depending on the module you choose, what entries are shown and what happens
+when you select an entry changes. So choose the module appropriate for what you
+want to do, and Pext makes it easy.
+
+Several modules are available for effortless install right within Pext.
 
 ![Pext](/screenshot.jpg)  
 ![Pext](/screenshot2.jpg)  
