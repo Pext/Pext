@@ -1,0 +1,29 @@
+digraph G {
+    start [label="Open Pext"];
+    hide [label="Pext hides", style=filled, color=".7 .3 1.0"];
+
+    switch_module [label="Switch to or load the appropriate module (if not already active)"]
+
+    select_password [label="Select password\nGith<Enter>"];
+    copy_password [label="Password is copied to clipboard", style=filled, color=".7 .3 1.0"];
+
+    select_radio [label="Select a radio station\nta<Enter>idm<Enter>Soma<Enter>"];
+    tune_in_radio [label="Radio station starts playing", style=filled, color=".7 .3 1.0"];
+
+    select_launcher [label="Select app to launch\npyth<Enter>"];
+    launch_app [label="App gets launched", style=filled, color=".7 .3 1.0"];
+
+    start -> switch_module;
+
+    switch_module->select_password;
+    select_password->copy_password;
+    copy_password->hide;
+
+    switch_module->select_radio;
+    select_radio->tune_in_radio;
+    tune_in_radio->hide;
+
+    switch_module->select_launcher;
+    select_launcher->launch_app;
+    launch_app->hide;
+}
