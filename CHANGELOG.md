@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - pext_dev's generated base file now leaves the copyright open for the author to fill in
 - Not being able to select an entry until the list is fully loaded
 - Selection constantly resetting while items are being added
+- Loading and reloading a module while text is in search now applies the filter correctly
 
 ## [0.8] - 2017-04-28
 ### API changes
