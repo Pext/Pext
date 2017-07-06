@@ -1139,8 +1139,7 @@ class ViewModel():
         search_strings = search_string.split(" ")
 
         # If longer and no new entries, only filter existing list
-        if len(search_string) > len(self.last_search) and not (self.result_list_model_command_mode and
-                                                               len(search_strings) == 2 and search_strings[1] == ""):
+        if len(self.last_search) > 0 and len(search_string) > len(self.last_search):
 
             filter_entry_list = self.filtered_entry_list
             filter_command_list = self.filtered_command_list
@@ -1469,9 +1468,6 @@ class Window(QMainWindow):
         # First module? Enforce load
         if len(self.tab_bindings) == 1:
             self.tabs.currentIndexChanged.emit()
-
-        # Apply filter if one exists
-        self.tab_bindings[-1]['vm'].search()
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
