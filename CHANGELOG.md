@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The design philosophy is now explained in the empty state screen
 - pyqt5 is added as install_requires
 - The about dialog now thanks translators
+- Info-only CLI parameters will no longer launch Pext as well (--help, --version, --list-styles, --list-modules, --list-themes)
 
 ### Fixed
 - pext_dev's generated base file now leaves the copyright open for the author to fill in
