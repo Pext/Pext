@@ -1139,7 +1139,7 @@ class ViewModel():
         search_strings = search_string.split(" ")
 
         # If longer and no new entries, only filter existing list
-        if len(self.last_search) > 0 and len(search_string) > len(self.last_search):
+        if len(self.last_search) > 0 and len(search_string) > len(self.last_search) and not self.result_list_model_command_mode:
 
             filter_entry_list = self.filtered_entry_list
             filter_command_list = self.filtered_command_list
