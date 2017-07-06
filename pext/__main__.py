@@ -50,11 +50,12 @@ from urllib.request import urlopen
 from queue import Queue, Empty
 
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
+warn_no_openGL_linux = False
 if platform.system() == "Linux":
     try:
         from OpenGL import GL
     except ImportError:
-        print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
+        warn_no_openGL_linux = True
 
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
@@ -2219,6 +2220,10 @@ def main() -> None:
             pass
 
     settings = _load_settings(sys.argv[1:], config_retriever)
+
+    # Warn if we may get UI issues
+    if warn_no_openGL_linux:
+        print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
 
     # Set up persistence
     pidfile = _init_persist(settings['profile'])
