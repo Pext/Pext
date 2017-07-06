@@ -2041,8 +2041,10 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
+            sys.exit(0)
         elif opt == "--version":
             print("Pext {}".format(VersionRetriever.get_version()))
+            sys.exit(0)
         elif opt == "--exit":
             sys.exit(0)
 
@@ -2052,6 +2054,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-styles":
             for style in QStyleFactory().keys():
                 print(style)
+            sys.exit(0)
         elif opt == "--style":
             if arg in QStyleFactory().keys():
                 settings['style'] = arg
@@ -2084,6 +2087,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-modules":
             for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
                 print('{} ({})'.format(module_name, module_data['source']))
+            sys.exit(0)
 
         elif opt == "--theme":
             settings['theme'] = arg
@@ -2098,6 +2102,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-themes":
             for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
                 print('{} ({})'.format(theme_name, theme_data['source']))
+            sys.exit(0)
         
         elif opt == "--profile":
             settings['profile'] = arg
@@ -2113,6 +2118,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-profiles":
             for profile in ProfileManager(config_retriever).list_profiles():
                 print(profile)
+            sys.exit(0)
 
         elif opt == "--no-tray":
             settings['tray'] = False
@@ -2139,15 +2145,15 @@ def usage() -> None:
                      are "clipboard" for the global system clipboard and
                      "selection" for the global mouse selection.
 
---help             : show this screen.
+--help             : show this screen and exit.
 
 --locale           : load Pext with the given locale.
 
 --style            : sets a certain Qt system style for the UI.
 
---list-styles      : print a list of loadable Qt system styles. Due to PyQt5
-                     limitations, loadable QtQuick styles cannot currently be
-                     listed.
+--list-styles      : print a list of loadable Qt system styles and exit. Due to
+                     PyQt5 limitations, loadable QtQuick styles cannot
+                     currently be listed.
 
 --module           : name the module to use. This option may be given multiple
                      times to use multiple modules. When this option is given,
@@ -2160,7 +2166,7 @@ def usage() -> None:
 
 --install-module   : download and install a module from the given git URL.
 
---list-modules     : list all installed modules.
+--list-modules     : list all installed modules and exit.
 
 --uninstall-module : uninstall a module by name.
 
@@ -2172,7 +2178,7 @@ def usage() -> None:
 
 --install-theme    : download and install a theme from the given git URL.
 
---list-themes      : list all installed themes.
+--list-themes      : list all installed themes and exit.
 
 --uninstall-theme  : uninstall a theme by name.
 
@@ -2188,14 +2194,15 @@ def usage() -> None:
 
 --remove-profile   : remove a profile.
 
---list-profiles    : list all profiles.
+--list-profiles    : list all profiles and exit.
 
 --no-tray          : do not create a tray icon.
 
---version          : show the current version.
+--version          : show the current version and exit.
 
---exit             : exit upon reaching this argument, useful to retrieve
-                     information without starting the Pext GUI.''')
+--exit             : exit upon reaching this argument, useful for
+                     module/profile/theme management without starting the Pext
+                     GUI.''')
 
 
 def main() -> None:
