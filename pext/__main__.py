@@ -2045,6 +2045,11 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             sys.exit(0)
         elif opt == "--version":
             print("Pext {}".format(VersionRetriever.get_version()))
+            print()
+            print("Copyright (C) 2016 - 2017 Sylvia van Os")
+            print("This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.")
+            print()
+            print("Written by Sylvia van Os.")
             sys.exit(0)
         elif opt == "--exit":
             sys.exit(0)
@@ -2142,68 +2147,82 @@ def usage() -> None:
     """Print usage information."""
     print('''Options:
 
---clipboard        : choose the clipboard to copy entries to. Acceptable values
-                     are "clipboard" for the global system clipboard and
-                     "selection" for the global mouse selection.
+  -c, --clipboard[=CLIPBOARD]
+    Choose the clipboard to copy entries to. Acceptable values are "clipboard" for the global system clipboard and "selection" for the global mouse selection.
 
---help             : show this screen and exit.
+  --locale[=LOCALE]
+    Load Pext with the given locale.
 
---locale           : load Pext with the given locale.
+  --style[=STYLE]
+    Sets the given Qt system style for the UI.
 
---style            : sets a certain Qt system style for the UI.
+  --list-styles
+    Print a list of loadable Qt system styles and exit. Due to PyQt5 limitations, loadable QtQuick styles cannot currently be listed.
 
---list-styles      : print a list of loadable Qt system styles and exit. Due to
-                     PyQt5 limitations, loadable QtQuick styles cannot
-                     currently be listed.
+  --module[=NAME]
+    Name the module to use. This option may be given multiple times to use multiple modules. When this option is given, the profile module list will be overwritten.
 
---module           : name the module to use. This option may be given multiple
-                     times to use multiple modules. When this option is given,
-                     the profile module list will be overwritten.
+  --module-*[=VALUE]
+    Set a module setting for the most recently given module. For example, to set a module-specific setting called binary, use --module-binary=value. Check the module documentation for the supported module-specific settings.
 
---module-*         : set a module setting for the most recently given module.
-                     For example, to set a module-specific setting called
-                     binary, use --module-binary=value. Check the module
-                     documentation for the supported module-specific settings.
+  --install-module[=URL]
+    Download and install a module from the given git URL.
 
---install-module   : download and install a module from the given git URL.
+  --list-modules
+    List all installed modules and exit.
 
---list-modules     : list all installed modules and exit.
+  --uninstall-module[=NAME]
+    Uninstall a module by name.
 
---uninstall-module : uninstall a module by name.
+  --update-module[=NAME]
+    Update a module by name.
 
---update-module    : update a module by name.
+  --update-modules
+    Update all installed modules.
 
---update-modules   : update all installed modules.
+  --theme[=NAME]
+    Use the named theme.
 
---theme            : load a theme.
+  --install-theme[=URL]
+    Download and install a theme from the given git URL.
 
---install-theme    : download and install a theme from the given git URL.
+  --list-themes
+    List all installed themes and exit.
 
---list-themes      : list all installed themes and exit.
+  --uninstall-theme[=NAME]
+    uninstall a theme by name.
 
---uninstall-theme  : uninstall a theme by name.
+  --update-theme[=NAME]
+    Update a theme by name.
 
---update-theme     : update a theme by name.
+  --update-themes
+    Update all installed themes.
 
---update-themes    : update all installed themes.
+  --profile[=NAME]
+    Use the chosen profile, creating it if it doesn't exist yet. Defaults to "default", use "none" to not save the application state between runs.
 
---profile          : use a specific profile, creating it if it doesn't exist
-                     yet. Defaults to "default", use "none" to not save the
-                     application state between runs.
+  --create-profile[=NAME]
+    Create a new blank profile with the given name for later use.
 
---create-profile   : create a new blank profile for later use.
+  --remove-profile[=NAME]
+    Remove a profile by name.
 
---remove-profile   : remove a profile.
+  --list-profiles
+    List all profiles and exit.
 
---list-profiles    : list all profiles and exit.
+  --no-tray
+    Do not create a tray icon.
 
---no-tray          : do not create a tray icon.
+  -h, --help
+    Display this help and exit.
 
---version          : show the current version and exit.
+  --version
+    Show the current version and exit.
 
---exit             : exit upon reaching this argument, useful for
-                     module/profile/theme management without starting the Pext
-                     GUI.''')
+  --exit
+    Exit upon reaching this argument, useful for module/profile/theme management without starting the Pext GUI.
+
+Report bugs to https://github.com/Pext/Pext.''')
 
 
 def main() -> None:
