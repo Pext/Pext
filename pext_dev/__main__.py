@@ -71,22 +71,12 @@ class Module():
             AppFile().get_path('LICENSE'),
             os.path.join(directory, 'LICENSE'))
 
-    def run(self, argv: List[str]) -> None:
+    def run(self, tempdir: str, argv: List[str]) -> None:
         """Run the module in the current directory in a new Pext instance."""
         # Prepare vars
-        tempdir = '.pext_temp'
         module_path = os.path.join(tempdir, 'pext', 'modules', 'pext_module_development')
         module_requirements_path = os.path.join(module_path, 'requirements.txt')
         module_dependencies_path = os.path.join(tempdir, 'pext', 'module_dependencies')
-
-        # Make sure there are no leftover files
-        try:
-            rmtree(tempdir)
-        except FileNotFoundError:
-            pass
-
-        # Prepare temp directory for module
-        os.environ["XDG_CONFIG_HOME"] = tempdir
 
         # Copy module to there
         print('Copying resources...')
@@ -180,20 +170,10 @@ class Theme():
             AppFile().get_path('LICENSE'),
             os.path.join(directory, 'LICENSE'))
 
-    def run(self, argv: List[str]) -> None:
+    def run(self, tempdir: str, argv: List[str]) -> None:
         """Run the theme in the current directory in a new Pext instance."""
         # Prepare vars
-        tempdir = '.pext_temp'
         theme_path = os.path.join(tempdir, 'pext', 'themes', 'pext_theme_development')
-
-        # Make sure there are no leftover files
-        try:
-            rmtree(tempdir)
-        except FileNotFoundError:
-            pass
-
-        # Prepare temp directory for module
-        os.environ["XDG_CONFIG_HOME"] = tempdir
 
         # Copy module to there
         print('Copying resources...')
@@ -234,7 +214,18 @@ def run(argv: List[str]) -> None:
 
         classInstance.init(directory)
     elif (argv[1] == "run"):
-        classInstance.run(argv[2:])
+        tempdir = '.pext_temp'
+
+        # Make sure there are no leftover files
+        try:
+            rmtree(tempdir)
+        except FileNotFoundError:
+            pass
+
+        # Prepare temp directory for module
+        os.environ["XDG_CONFIG_HOME"] = tempdir
+
+        classInstance.run(tempdir, argv[2:])
     else:
         usage()
         sys.exit(2)
