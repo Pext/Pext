@@ -2252,7 +2252,7 @@ def main() -> None:
     translator = QTranslator()
     print('Using locale: {}'.format(QLocale(settings['locale']).name()))
     print('Localization loaded:',
-        translator.load(QLocale(settings['locale']), 'pext', '_', os.path.join(AppFile.get_path('i18n')), '.qm'))
+        translator.load(QLocale(settings['locale']), 'pext', '_', AppFile.get_path('i18n'), '.qm'))
 
     app.installTranslator(translator)
 
