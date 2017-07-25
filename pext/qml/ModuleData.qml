@@ -68,7 +68,7 @@ ScrollView {
                 width: parent.width
                 height: text.height
                 Column {
-                     Text {
+                    Text {
                         id: text
                         text: display
                         textFormat: Text.PlainText
@@ -79,7 +79,7 @@ ScrollView {
                             } else {
                                 index == 0
                             }
-                        color: resultList.currentIndex === index ? palette.highlight : palette.text
+                        color: resultList.currentIndex === index ? palette.highlightedText : palette.text
                     }
                 }
                 MouseArea {
@@ -95,6 +95,9 @@ ScrollView {
                     }
                 }
             }
+        }
+        highlight: Rectangle {
+            color: palette.highlight
         }
     }
 }
