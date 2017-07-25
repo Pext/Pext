@@ -36,7 +36,7 @@ setup(
         'pext_dev'
     ],
     package_data={'pext': ['i18n/*.qm', 'images/scalable/*', 'qml/*'],
-                  'pext_dev': ['LICENSE']},
+                  'pext_dev': ['LICENSE', 'module/*', 'theme/*']},
     include_package_data=True,
     zip_safe=False,
     data_files=[
