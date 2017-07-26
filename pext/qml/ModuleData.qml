@@ -80,6 +80,7 @@ ScrollView {
                                 index == 0
                             }
                         color: resultList.currentIndex === index ? palette.highlightedText : palette.text
+                        Behavior on color { PropertyAnimation {} }
                     }
                 }
                 MouseArea {
@@ -99,5 +100,6 @@ ScrollView {
         highlight: Rectangle {
             color: palette.highlight
         }
+        highlightMoveDuration: 250
     }
 }
