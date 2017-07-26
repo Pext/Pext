@@ -2112,6 +2112,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                                                   "create-profile=",
                                                   "remove-profile=",
                                                   "list-profiles",
+                                                  "tray",
                                                   "no-tray"] + module_opts)
 
     except getopt.GetoptError as err:
@@ -2211,7 +2212,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             for profile in ProfileManager(config_retriever).list_profiles():
                 print(profile)
             sys.exit(0)
-
+        elif opt == "--tray":
+            settings['tray'] = True
         elif opt == "--no-tray":
             settings['tray'] = False
 
@@ -2296,6 +2298,9 @@ def usage() -> None:
 
   --list-profiles
     List all profiles and exit.
+
+  --tray
+    Create a tray icon (this is the default).
 
   --no-tray
     Do not create a tray icon.
