@@ -2119,6 +2119,20 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         usage()
         sys.exit(1)
 
+    # First, check for profile
+    for opt, arg in opts:
+        if opt == "--profile":
+            settings['profile'] = arg
+            # Create directory for profile if not existant
+            try:
+                ProfileManager(config_retriever).create_profile(arg)
+            except OSError:
+                pass
+
+            # Load all from profile
+            settings.update(ProfileManager(config_retriever).retrieve_settings(arg))
+
+    # Then, check for the rest
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
@@ -2189,16 +2203,6 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
                 print('{} ({})'.format(theme_name, theme_data['source']))
             sys.exit(0)
-        elif opt == "--profile":
-            settings['profile'] = arg
-            # Create directory for profile if not existant
-            try:
-                ProfileManager(config_retriever).create_profile(arg)
-            except OSError:
-                pass
-
-            # Load all from profile
-            settings.update(ProfileManager(config_retriever).retrieve_settings(arg))
         elif opt == "--create-profile":
             ProfileManager(config_retriever).create_profile(arg)
         elif opt == "--remove-profile":
