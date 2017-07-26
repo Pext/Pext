@@ -450,6 +450,7 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
         self.config_retriever = config_retriever
+        self.saved_settings = ['clipboard', 'tray', 'minimize_mode', 'locale']
 
     def create_profile(self, profile: str) -> None:
         """Create a new empty profile."""
@@ -505,6 +506,32 @@ class ProfileManager():
                 return configfile.readline()
         except (FileNotFoundError):
             return ThemeManager.get_system_theme_name()  # Default theme
+
+    def save_settings(self, profile: str, settings: Dict) -> None:
+        """Save the current settings to the profile."""
+        config = configparser.ConfigParser()
+        settings_to_store = {}
+        for setting in settings:
+            if setting in self.saved_settings:
+                settings_to_store[setting] = settings[setting]
+
+        config['settings'] = settings_to_store
+
+        with open(os.path.join(self.profile_dir, profile, 'settings'), 'w') as configfile:
+            config.write(configfile)
+
+    def retrieve_settings(self, profile: str) -> Dict:
+        """Retrieve the settings from the profile."""
+        config = configparser.ConfigParser()
+        settings = {}
+
+        config.read(os.path.join(self.profile_dir, profile, 'settings'))
+
+        for setting in config['settings']:
+            if setting in self.saved_settings:
+                settings[setting] = config['settings'][setting]
+
+        return settings
 
 
 class ObjectManager():
@@ -1411,9 +1438,9 @@ class Window(QMainWindow):
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
-        QQmlProperty.write(menu_minimize_when_done_shortcut, "checked", self.settings['minimize_mode'] == 0)
-        QQmlProperty.write(menu_minimize_to_tray_when_done_shortcut, "checked", self.settings['minimize_mode'] == 1)
-        QQmlProperty.write(menu_dont_minimize_when_done_shortcut, "checked", self.settings['minimize_mode'] == 2)
+        QQmlProperty.write(menu_minimize_when_done_shortcut, "checked", int(self.settings['minimize_mode']) == 0)
+        QQmlProperty.write(menu_minimize_to_tray_when_done_shortcut, "checked", int(self.settings['minimize_mode']) == 1)
+        QQmlProperty.write(menu_dont_minimize_when_done_shortcut, "checked", int(self.settings['minimize_mode']) == 2)
         QQmlProperty.write(menu_show_tray_icon_shortcut, "checked", self.settings['tray'])
 
         # Get reference to tabs list
@@ -1629,6 +1656,7 @@ class Window(QMainWindow):
             self.settings['minimize_mode'] = 2
 
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
+        self.settings['tray'] = enabled
         try:
             self.tray.show() if enabled else self.tray.hide()
         except AttributeError:
@@ -2161,7 +2189,6 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
                 print('{} ({})'.format(theme_name, theme_data['source']))
             sys.exit(0)
-        
         elif opt == "--profile":
             settings['profile'] = arg
             # Create directory for profile if not existant
@@ -2169,6 +2196,9 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                 ProfileManager(config_retriever).create_profile(arg)
             except OSError:
                 pass
+
+            # Load all from profile
+            settings.update(ProfileManager(config_retriever).retrieve_settings(arg))
         elif opt == "--create-profile":
             ProfileManager(config_retriever).create_profile(arg)
         elif opt == "--remove-profile":
@@ -2193,6 +2223,7 @@ def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: Con
     if window.settings['save_settings']:
         ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
         ProfileManager(config_retriever).save_theme(profile, window.settings['theme'])
+        ProfileManager(config_retriever).save_settings(profile, window.settings)
 
 
 def usage() -> None:
