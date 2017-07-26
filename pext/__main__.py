@@ -1364,6 +1364,15 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut = self.window.findChild(
             QObject, "menuUpdateAllThemes")
 
+        menu_minimize_when_done_shortcut = self.window.findChild(
+            QObject, "menuMinimizeWhenDone")
+        menu_minimize_to_tray_when_done_shortcut = self.window.findChild(
+            QObject, "menuMinimizeToTrayWhenDone")
+        menu_dont_minimize_when_done_shortcut = self.window.findChild(
+            QObject, "menuDontMinimizeWhenDone")
+        menu_show_tray_icon_shortcut = self.window.findChild(
+            QObject, "menuShowTrayIcon")
+
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
@@ -1391,10 +1400,21 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
             self._menu_update_all_themes)
 
+        menu_minimize_when_done_shortcut.toggled.connect(self._menu_minimize_when_done)
+        menu_minimize_to_tray_when_done_shortcut.toggled.connect(self._menu_minimize_to_tray_when_done)
+        menu_dont_minimize_when_done_shortcut.toggled.connect(self._menu_dont_minimize_when_done)
+        menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
+
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
+
+        # Set entry states
+        QQmlProperty.write(menu_minimize_when_done_shortcut, "checked", self.settings['minimize_mode'] == 0)
+        QQmlProperty.write(menu_minimize_to_tray_when_done_shortcut, "checked", self.settings['minimize_mode'] == 1)
+        QQmlProperty.write(menu_dont_minimize_when_done_shortcut, "checked", self.settings['minimize_mode'] == 2)
+        QQmlProperty.write(menu_show_tray_icon_shortcut, "checked", self.settings['tray'])
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -1596,6 +1616,24 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
+    def _menu_minimize_when_done(self, enabled: bool) -> None:
+        if enabled:
+            self.settings['minimize_mode'] = 0
+
+    def _menu_minimize_to_tray_when_done(self, enabled: bool) -> None:
+        if enabled:
+            self.settings['minimize_mode'] = 1
+
+    def _menu_dont_minimize_when_done(self, enabled: bool) -> None:
+        if enabled:
+            self.settings['minimize_mode'] = 2
+
+    def _menu_toggle_tray_icon(self, enabled: bool) -> None:
+        try:
+            self.tray.show() if enabled else self.tray.hide()
+        except AttributeError:
+            pass
+
     def _search(self) -> None:
         try:
             self._get_current_element()['vm'].search()
@@ -1651,9 +1689,19 @@ class Window(QMainWindow):
         elif len(self.tab_bindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
+    def bind_tray(self, tray: 'Tray') -> None:
+        """Bind the tray to the window."""
+        self.tray = tray
+
+        if self.settings['tray']:
+            tray.show()
+
     def close(self) -> None:
         """Close the window."""
-        self.window.hide()
+        if self.settings['minimize_mode'] == 0:
+            self.window.showMinimized()
+        elif self.settings['minimize_mode'] == 1:
+            self.window.hide()
 
         need_search = False
 
@@ -1947,7 +1995,6 @@ class Tray():
         self.tray.activated.connect(self.icon_clicked)
         self.tray.setContextMenu(tray_menu)
         self.tray.setToolTip('Pext ({})'.format(profile))
-        self.tray.show()
 
     def icon_clicked(self, reason: int) -> None:
         """React to a click event."""
@@ -1955,6 +2002,14 @@ class Tray():
         if platform.system() != "Darwin":
             if reason == 3:
                 self.window.toggle_visibility()
+
+    def show(self) -> None:
+        """Show the tray icon."""
+        self.tray.show()
+
+    def hide(self) -> None:
+        """Hide the tray icon."""
+        self.tray.hide()
 
 
 def _init_persist(profile: str) -> str:
@@ -1989,6 +2044,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     settings = {'clipboard': 'clipboard',
                 'locale': QLocale.system().name(),
                 'modules': [],
+                'minimize_mode': 0 if platform.system() == "Darwin" else 1,
                 'profile': 'default',
                 'save_settings': True,
                 'tray': True}
@@ -2294,8 +2350,10 @@ def main() -> None:
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
-    if settings['tray']:
-        tray = Tray(window, app_icon, settings['profile'])  # noqa: F841
+    tray = Tray(window, app_icon, settings['profile'])  # noqa: F841
+
+    # Give the window a reference to the tray
+    window.bind_tray(tray)
 
     # And run...
     main_loop.run()

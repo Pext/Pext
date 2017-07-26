@@ -417,6 +417,44 @@ ApplicationWindow {
         }
 
         Menu {
+            title: "&Settings"
+
+            ExclusiveGroup {
+                id: menuMinimizeGroup
+                objectName: "menuMinimizeGroup"
+            }
+
+            MenuItem {
+                objectName: "menuMinimizeWhenDone"
+                text: qsTr("Minimize when done")
+                checkable: true
+                exclusiveGroup: menuMinimizeGroup
+            }
+
+            MenuItem {
+                objectName: "menuMinimizeToTrayWhenDone"
+                text: qsTr("Minimize to tray when done")
+                checkable: true
+                exclusiveGroup: menuMinimizeGroup
+            }
+
+            MenuItem {
+                objectName: "menuDontMinimizeWhenDone"
+                text: qsTr("Don't minimize when done")
+                checkable: true
+                exclusiveGroup: menuMinimizeGroup
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                objectName: "menuShowTrayIcon"
+                text: qsTr("Show tray icon")
+                checkable: true
+            }
+        }
+
+        Menu {
             title: qsTr("&Help")
 
             MenuItem {
