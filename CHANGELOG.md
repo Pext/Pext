@@ -16,12 +16,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Theming support based on QPalette
+- UI toggle to choose minimizing behaviour
+- UI toggle to enable/disable tray icon
 
 ### Changed
 - The design philosophy is now explained in the empty state screen
 - pyqt5 is added as install_requires
 - The about dialog now thanks translators
 - Info-only CLI parameters will no longer launch Pext as well (--help, --version, --list-styles, --list-modules, --list-themes)
+- Closing the main window will now quit Pext and save state
 
 ### Fixed
 - pext_dev's generated base file now leaves the copyright open for the author to fill in

@@ -57,7 +57,7 @@ if platform.system() == "Linux":
     except ImportError:
         warn_no_openGL_linux = True
 
-from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
+from PyQt5.QtCore import QStringListModel, QTimer, QLocale, QTranslator
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMenu, QMessageBox, QTextEdit, QVBoxLayout,
@@ -527,9 +527,12 @@ class ProfileManager():
 
         config.read(os.path.join(self.profile_dir, profile, 'settings'))
 
-        for setting in config['settings']:
-            if setting in self.saved_settings:
-                settings[setting] = config['settings'][setting]
+        try:
+            for setting in config['settings']:
+                if setting in self.saved_settings:
+                    settings[setting] = config['settings'][setting]
+        except KeyError:
+            pass
 
         return settings
 
@@ -1113,7 +1116,7 @@ class ViewModel():
 
             self.module.selection_made(self.selection)
         else:
-            self.window.close()
+            self.window.close(manual=True)
 
     def search(self, new_entries=False) -> None:
         """Filter the entry list.
@@ -1346,6 +1349,10 @@ class Window(QMainWindow):
 
         self.window = self.engine.rootObjects()[0]
 
+        # Override quit and minimize
+        self.window.closing.connect(self.quit)
+        self.window.windowStateChanged.connect(self._process_window_state)
+
         # Give QML the module info
         self.intro_screen = self.window.findChild(QObject, "introScreen")
         self.module_manager = ModuleManager(self.config_retriever)
@@ -1391,12 +1398,14 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut = self.window.findChild(
             QObject, "menuUpdateAllThemes")
 
-        menu_minimize_when_done_shortcut = self.window.findChild(
-            QObject, "menuMinimizeWhenDone")
-        menu_minimize_to_tray_when_done_shortcut = self.window.findChild(
-            QObject, "menuMinimizeToTrayWhenDone")
-        menu_dont_minimize_when_done_shortcut = self.window.findChild(
-            QObject, "menuDontMinimizeWhenDone")
+        menu_minimize_normally_shortcut = self.window.findChild(
+            QObject, "menuMinimizeNormally")
+        menu_minimize_to_tray_shortcut = self.window.findChild(
+            QObject, "menuMinimizeToTray")
+        menu_minimize_normally_manually_shortcut = self.window.findChild(
+            QObject, "menuMinimizeNormallyManually")
+        menu_minimize_to_tray_manually_shortcut = self.window.findChild(
+            QObject, "menuMinimizeToTrayManually")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
 
@@ -1427,9 +1436,10 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
             self._menu_update_all_themes)
 
-        menu_minimize_when_done_shortcut.toggled.connect(self._menu_minimize_when_done)
-        menu_minimize_to_tray_when_done_shortcut.toggled.connect(self._menu_minimize_to_tray_when_done)
-        menu_dont_minimize_when_done_shortcut.toggled.connect(self._menu_dont_minimize_when_done)
+        menu_minimize_normally_shortcut.toggled.connect(self._menu_minimize_normally)
+        menu_minimize_to_tray_shortcut.toggled.connect(self._menu_minimize_to_tray)
+        menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
+        menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
 
         menu_quit_shortcut.triggered.connect(self.quit)
@@ -1438,9 +1448,10 @@ class Window(QMainWindow):
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
-        QQmlProperty.write(menu_minimize_when_done_shortcut, "checked", int(self.settings['minimize_mode']) == 0)
-        QQmlProperty.write(menu_minimize_to_tray_when_done_shortcut, "checked", int(self.settings['minimize_mode']) == 1)
-        QQmlProperty.write(menu_dont_minimize_when_done_shortcut, "checked", int(self.settings['minimize_mode']) == 2)
+        QQmlProperty.write(menu_minimize_normally_shortcut, "checked", int(self.settings['minimize_mode']) == 0)
+        QQmlProperty.write(menu_minimize_to_tray_shortcut, "checked", int(self.settings['minimize_mode']) == 1)
+        QQmlProperty.write(menu_minimize_normally_manually_shortcut, "checked", int(self.settings['minimize_mode']) == 2)
+        QQmlProperty.write(menu_minimize_to_tray_manually_shortcut, "checked", int(self.settings['minimize_mode']) == 3)
         QQmlProperty.write(menu_show_tray_icon_shortcut, "checked", self.settings['tray'])
 
         # Get reference to tabs list
@@ -1485,6 +1496,11 @@ class Window(QMainWindow):
 
         # Done initializing
         element['init'] = True
+
+    def _process_window_state(self, event) -> None:
+        if event & 1: ## FIXME: Use the WindowMinimized enum instead
+            if self.settings['minimize_mode'] == [1, 3]:
+                self.window.hide()
 
     def _get_current_element(self) -> Optional[Dict]:
         current_tab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -1643,17 +1659,21 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_minimize_when_done(self, enabled: bool) -> None:
+    def _menu_minimize_normally(self, enabled: bool) -> None:
         if enabled:
             self.settings['minimize_mode'] = 0
 
-    def _menu_minimize_to_tray_when_done(self, enabled: bool) -> None:
+    def _menu_minimize_to_tray(self, enabled: bool) -> None:
         if enabled:
             self.settings['minimize_mode'] = 1
 
-    def _menu_dont_minimize_when_done(self, enabled: bool) -> None:
+    def _menu_minimize_normally_manually(self, enabled: bool) -> None:
         if enabled:
             self.settings['minimize_mode'] = 2
+
+    def _menu_minimize_to_tray_manually(self, enabled: bool) -> None:
+        if enabled:
+            self.settings['minimize_mode'] = 3
 
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
         self.settings['tray'] = enabled
@@ -1724,11 +1744,11 @@ class Window(QMainWindow):
         if self.settings['tray']:
             tray.show()
 
-    def close(self) -> None:
+    def close(self, manual=False) -> None:
         """Close the window."""
-        if self.settings['minimize_mode'] == 0:
+        if self.settings['minimize_mode'] == 0 or (manual and self.settings['minimize_mode'] == 2):
             self.window.showMinimized()
-        elif self.settings['minimize_mode'] == 1:
+        elif self.settings['minimize_mode'] == 1 or (manual and self.settings['minimize_mode'] == 3):
             self.window.hide()
 
         need_search = False
@@ -2124,14 +2144,15 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     for opt, arg in opts:
         if opt == "--profile":
             settings['profile'] = arg
-            # Create directory for profile if not existant
-            try:
-                ProfileManager(config_retriever).create_profile(arg)
-            except OSError:
-                pass
 
-            # Load all from profile
-            settings.update(ProfileManager(config_retriever).retrieve_settings(arg))
+    # Create directory for profile if not existant
+    try:
+        ProfileManager(config_retriever).create_profile(settings['profile'])
+    except OSError:
+        pass
+
+    # Load all from profile
+    settings.update(ProfileManager(config_retriever).retrieve_settings(settings['profile']))
 
     # Then, check for the rest
     for opt, arg in opts:

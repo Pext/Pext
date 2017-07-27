@@ -425,22 +425,29 @@ ApplicationWindow {
             }
 
             MenuItem {
-                objectName: "menuMinimizeWhenDone"
-                text: qsTr("Minimize when done")
+                objectName: "menuMinimizeNormally"
+                text: qsTr("Minimize normally")
                 checkable: true
                 exclusiveGroup: menuMinimizeGroup
             }
 
             MenuItem {
-                objectName: "menuMinimizeToTrayWhenDone"
-                text: qsTr("Minimize to tray when done")
+                objectName: "menuMinimizeToTray"
+                text: qsTr("Minimize to tray")
                 checkable: true
                 exclusiveGroup: menuMinimizeGroup
             }
 
             MenuItem {
-                objectName: "menuDontMinimizeWhenDone"
-                text: qsTr("Don't minimize when done")
+                objectName: "menuMinimizeNormallyManually"
+                text: qsTr("Manual only: Minimize normally")
+                checkable: true
+                exclusiveGroup: menuMinimizeGroup
+            }
+
+            MenuItem {
+                objectName: "menuMinimizeToTrayManually"
+                text: qsTr("Manual only: Minimize to tray")
                 checkable: true
                 exclusiveGroup: menuMinimizeGroup
             }
