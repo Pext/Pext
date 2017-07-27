@@ -74,6 +74,14 @@ able to retrieve the online module list, please read https://bugs.python.org/msg
     pip3 install pyqt5 urllib3 certifi
     /Applications/Python\ 3.6/Install\ Certificates.command
 
+After this, a .app file can be generated using the following command:
+
+    python3 setup.py py2app -A --emulate-shell-environment
+
+The .app file appears in the dist directory and can be dragged to
+"My Applications". Please note that actual py2app buils do not work yet. This
+is an aliased build, so it will break if you delete your git clone.
+
 ## Installation (optional)
 Pext does not need to be installed to run. However, if you prefer to install
 it, you can do so:
