@@ -1,0 +1,8 @@
+os: osx
+language: generic
+
+before_install:
+    - brew install python3
+    - pip3 install pyqt5
+
+install: "python3 setup.py py2app"

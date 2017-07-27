@@ -1,5 +1,5 @@
 import os, sys
-from setuptools import setup
+from setuptools import find_packages, setup
 
 with open(os.path.join('pext', 'VERSION')) as version_file:
     version = version_file.read().strip()
@@ -9,7 +9,8 @@ if sys.platform == 'darwin':
         setup_requires=['py2app'],
         app=['pext/__main__.py'],
         options={'py2app': {
-            'iconfile': 'pext/images/scalable/pext.icns'
+            'iconfile': 'pext/images/scalable/pext.icns',
+            'packages': ['pext', 'pext.helpers', 'pext_dev']
         }}
     )
 else:
@@ -49,11 +50,7 @@ setup(
         'Topic :: Utilities'
     ],
     keywords='extendable pluggable',
-    packages=[
-        'pext',
-        'pext/helpers',
-        'pext_dev'
-    ],
+    packages=find_packages(),
     package_data={'pext': ['i18n/*.qm', 'images/scalable/*', 'qml/*'],
                   'pext_dev': ['LICENSE', 'module/*', 'theme/*']},
     include_package_data=True,
