@@ -2090,7 +2090,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     """Load the settings from the command line and set defaults."""
     # Default options
     settings = {'clipboard': 'clipboard',
-                'locale': QLocale.system().name(),
+                'locale': None,
                 'modules': [],
                 'minimize_mode': 0 if platform.system() == "Darwin" else 1,
                 'profile': 'default',
@@ -2367,9 +2367,10 @@ def main() -> None:
     app = QApplication(['Pext ({})'.format(settings['profile'])])
 
     translator = QTranslator()
-    print('Using locale: {}'.format(QLocale(settings['locale']).name()))
+    locale_to_use = settings['locale'] if settings['locale'] else QLocale.system().name()
+    print('Using locale: {} {}'.format(QLocale(locale_to_use).name(), "(manually set)" if settings['locale'] else ""))
     print('Localization loaded:',
-        translator.load(QLocale(settings['locale']), 'pext', '_', AppFile.get_path('i18n'), '.qm'))
+        translator.load(QLocale(locale_to_use), 'pext', '_', AppFile.get_path('i18n'), '.qm'))
 
     app.installTranslator(translator)
 
