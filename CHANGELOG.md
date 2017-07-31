@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### API changes
 - Whenever the state changes (either by the user going back, selecting something or set_selection being called), the queue is now emptied
+- ask_input and ask_input_password now ask for a prefill before the identifier
 
 ### Translation updates
 - Added traditional Chinese (thanks, Jeff Huang!)
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Not being able to select an entry until the list is fully loaded
 - Selection constantly resetting while items are being added
 - Loading and reloading a module while text is in search now applies the filter correctly
+- Fix crash in command mode when pressing enter while hovering over a wrong entry
 
 ## [0.8] - 2017-04-28
 ### API changes
