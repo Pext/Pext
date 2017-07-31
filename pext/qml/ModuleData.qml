@@ -79,11 +79,13 @@ ScrollView {
                             } else {
                                 index == 0
                             }
-                        color: resultList.currentIndex === index ? palette.highlightedText : palette.text
+                        font.bold: resultListModelCommandMode && index == 0
+                        color: resultListModelCommandMode ? palette.text : resultList.currentIndex === index ? palette.highlightedText : palette.text
                         Behavior on color { PropertyAnimation {} }
                     }
                 }
                 MouseArea {
+                    enabled: !resultListModelCommandMode
                     anchors.fill: parent
 
                     hoverEnabled: true
@@ -98,6 +100,7 @@ ScrollView {
             }
         }
         highlight: Rectangle {
+            visible: !resultListModelCommandMode
             color: palette.highlight
         }
         highlightMoveDuration: 250
