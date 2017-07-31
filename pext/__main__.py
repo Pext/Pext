@@ -328,12 +328,14 @@ class MainLoop():
             answer, ok = QInputDialog.getText(
                 self.window,
                 "Pext",
-                action[1])
+                action[1],
+                QLineEdit.Normal,
+                action[2] if len(action) > 2 else "")
 
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
                 tab['vm'].module.process_response(
                     answer if ok else None,
-                    action[2] if len(action) > 2 else None)
+                    action[3] if len(action) > 3 else None)
             else:
                 tab['vm'].module.process_response(
                     answer if ok else None)
@@ -343,12 +345,13 @@ class MainLoop():
                 self.window,
                 "Pext",
                 action[1],
-                QLineEdit.Password)
+                QLineEdit.Password,
+                action[2] if len(action) > 2 else "")
 
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
                 tab['vm'].module.process_response(
                     answer if ok else None,
-                    action[2] if len(action) > 2 else None)
+                    action[3] if len(action) > 3 else None)
             else:
                 tab['vm'].module.process_response(
                     answer if ok else None)

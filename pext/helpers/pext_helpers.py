@@ -182,9 +182,10 @@ class Action(Enum):
         Ask the user to input a single line of text.
 
         text -- the text to show the user
+        prefill -- the text to already put into the input field
         identifier -- an optional identifier which gets passed back to process_response
 
-        Example: self.q.put([Action.ask_input, "Please choose a new name for this entry", 0])
+        Example: self.q.put([Action.ask_input, "Please choose a new name for this entry", "Example name", 0])
 
     ask_input_password:
         Introduced in API version 0.1.0.
@@ -192,9 +193,10 @@ class Action(Enum):
         Ask the user to input a single line of text into a password field.
 
         text -- the text to show the user
+        prefill -- the text to already put into the input field (hidden behind asterisks, of course)
         identifier -- an optional identifier which gets passed back to process_response
 
-        Example: self.q.put([Action.ask_input_password, "Please enter your password", 0])
+        Example: self.q.put([Action.ask_input_password, "Please enter your password", "Current password", 0])
 
     ask_input_multi_line
         Introduced in API version 0.1.0.
