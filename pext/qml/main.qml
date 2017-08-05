@@ -417,7 +417,35 @@ ApplicationWindow {
         }
 
         Menu {
-            title: "&Settings"
+            title: qsTr("&Settings")
+
+            ExclusiveGroup {
+                id: menuSortGroup
+                objectName: "menuSortGroup"
+            }
+
+            MenuItem {
+                objectName: "menuSortModule"
+                text: qsTr("Sort by module choice")
+                checkable: true
+                exclusiveGroup: menuSortGroup
+            }
+
+            MenuItem {
+                objectName: "menuSortAscending"
+                text: qsTr("Sort ascending")
+                checkable: true
+                exclusiveGroup: menuSortGroup
+            }
+
+            MenuItem {
+                objectName: "menuSortDescending"
+                text: qsTr("Sort descending")
+                checkable: true
+                exclusiveGroup: menuSortGroup
+            }
+
+            MenuSeparator { }
 
             ExclusiveGroup {
                 id: menuMinimizeGroup
