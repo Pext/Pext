@@ -178,6 +178,7 @@ class Action(Enum):
 
     ask_input
         Introduced in API version 0.1.0.
+        Changed in API version 0.2.0.
 
         Ask the user to input a single line of text.
 
@@ -189,6 +190,7 @@ class Action(Enum):
 
     ask_input_password:
         Introduced in API version 0.1.0.
+        Changed in API version 0.2.0.
 
         Ask the user to input a single line of text into a password field.
 

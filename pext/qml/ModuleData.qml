@@ -99,10 +99,12 @@ ScrollView {
                 }
             }
         }
+
         highlight: Rectangle {
             visible: !resultListModelCommandMode
             color: palette.highlight
         }
+
         highlightMoveDuration: 250
     }
 }
