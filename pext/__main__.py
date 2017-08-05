@@ -486,7 +486,13 @@ class ProfileManager():
         config = configparser.ConfigParser()
         for number, module in enumerate(modules):
             name = ModuleManager.add_prefix(module['module_name'])
-            config['{}_{}'.format(number, name)] = module['settings']
+            settings = {}
+            for setting in module['settings']:
+                # Only save non-internal variables
+                if setting[0] != "_":
+                    settings[setting] = module['settings'][setting]
+
+            config['{}_{}'.format(number, name)] = settings
 
         with open(os.path.join(self.profile_dir, profile, 'modules'), 'w') as configfile:
             config.write(configfile)
@@ -535,7 +541,6 @@ class ProfileManager():
                     settings_to_store[setting] = setting_data
 
         config['settings'] = settings_to_store
-        print(config['settings'])
 
         with open(os.path.join(self.profile_dir, profile, 'settings'), 'w') as configfile:
             config.write(configfile)
