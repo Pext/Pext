@@ -37,6 +37,7 @@ import time
 import traceback
 import webbrowser
 
+from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from shutil import rmtree
@@ -80,6 +81,18 @@ sys.path.append(AppFile.get_path('helpers'))
 
 from pext_base import ModuleBase  # noqa: E402
 from pext_helpers import Action, SelectionType  # noqa: E402
+
+class MinimizeMode(IntEnum):
+    Normal = 0
+    Tray = 1
+    NormalManualOnly = 2
+    TrayManualOnly = 3
+
+
+class SortMode(IntEnum):
+    Module = 0
+    Ascending = 1
+    Descending = 2
 
 
 class VersionRetriever():
@@ -453,7 +466,8 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
         self.config_retriever = config_retriever
-        self.saved_settings = ['clipboard', 'tray', 'minimize_mode', 'locale']
+        self.saved_settings = ['clipboard', 'tray', 'minimize_mode', 'locale', 'sort_mode']
+        self.enum_settings = ['minimize_mode', 'sort_mode']
 
     def create_profile(self, profile: str) -> None:
         """Create a new empty profile."""
@@ -516,9 +530,12 @@ class ProfileManager():
         settings_to_store = {}
         for setting in settings:
             if setting in self.saved_settings:
-                settings_to_store[setting] = settings[setting]
+                setting_data = settings[setting].value if setting in self.enum_settings else settings[setting]
+                if setting_data is not None:
+                    settings_to_store[setting] = setting_data
 
         config['settings'] = settings_to_store
+        print(config['settings'])
 
         with open(os.path.join(self.profile_dir, profile, 'settings'), 'w') as configfile:
             config.write(configfile)
@@ -1134,6 +1151,19 @@ class ViewModel():
         if not new_entries and search_string == self.last_search:
             return
 
+        # Sort if sorting is enabled
+        if self.window.settings['sort_mode'] != SortMode.Module:
+            reverse = self.window.settings['sort_mode'] == SortMode.Descending
+            self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
+            self.sorted_command_list = sorted(self.command_list, reverse=reverse)
+            self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
+            self.sorted_filtered_command_list = sorted(self.filtered_command_list, reverse=reverse)
+        else:
+            self.sorted_entry_list = self.entry_list
+            self.sorted_command_list = self.command_list
+            self.sorted_filtered_entry_list = self.filtered_entry_list
+            self.sorted_filtered_command_list = self.filtered_command_list
+
         # Get current match
         try:
             current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model, "currentIndex")]
@@ -1142,14 +1172,14 @@ class ViewModel():
 
         # If empty, show all
         if len(search_string) == 0 and not new_entries:
-            self.filtered_entry_list = self.entry_list
-            self.filtered_command_list = self.command_list
+            self.sorted_filtered_entry_list = self.sorted_entry_list
+            self.sorted_filtered_command_list = self.sorted_command_list
 
-            combined_list = self.filtered_entry_list + self.filtered_command_list
+            combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
 
             self.result_list_model_list.setStringList(combined_list)
 
-            self.result_list_model_max_index = len(self.filtered_entry_list) - 1
+            self.result_list_model_max_index = len(self.sorted_filtered_entry_list) - 1
             self.context.setContextProperty(
                 "resultListModelMaxIndex", self.result_list_model_max_index)
 
@@ -1174,11 +1204,11 @@ class ViewModel():
         # If longer and no new entries, only filter existing list
         if len(self.last_search) > 0 and len(search_string) > len(self.last_search) and not self.result_list_model_command_mode:
 
-            filter_entry_list = self.filtered_entry_list
-            filter_command_list = self.filtered_command_list
+            filter_entry_list = self.sorted_filtered_entry_list
+            filter_command_list = self.sorted_filtered_command_list
         else:
-            filter_entry_list = self.entry_list
-            filter_command_list = self.command_list
+            filter_entry_list = self.sorted_entry_list
+            filter_command_list = self.sorted_command_list
 
         self.filtered_entry_list = []
         self.filtered_command_list = []
@@ -1398,6 +1428,13 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut = self.window.findChild(
             QObject, "menuUpdateAllThemes")
 
+        menu_sort_module_shortcut = self.window.findChild(
+            QObject, "menuSortModule")
+        menu_sort_ascending_shortcut = self.window.findChild(
+            QObject, "menuSortAscending")
+        menu_sort_descending_shortcut = self.window.findChild(
+            QObject, "menuSortDescending")
+
         menu_minimize_normally_shortcut = self.window.findChild(
             QObject, "menuMinimizeNormally")
         menu_minimize_to_tray_shortcut = self.window.findChild(
@@ -1436,6 +1473,10 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
             self._menu_update_all_themes)
 
+        menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
+        menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
+        menu_sort_descending_shortcut.toggled.connect(self._menu_sort_descending)
+
         menu_minimize_normally_shortcut.toggled.connect(self._menu_minimize_normally)
         menu_minimize_to_tray_shortcut.toggled.connect(self._menu_minimize_to_tray)
         menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
@@ -1448,10 +1489,15 @@ class Window(QMainWindow):
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
-        QQmlProperty.write(menu_minimize_normally_shortcut, "checked", int(self.settings['minimize_mode']) == 0)
-        QQmlProperty.write(menu_minimize_to_tray_shortcut, "checked", int(self.settings['minimize_mode']) == 1)
-        QQmlProperty.write(menu_minimize_normally_manually_shortcut, "checked", int(self.settings['minimize_mode']) == 2)
-        QQmlProperty.write(menu_minimize_to_tray_manually_shortcut, "checked", int(self.settings['minimize_mode']) == 3)
+        QQmlProperty.write(menu_sort_module_shortcut, "checked", int(self.settings['sort_mode']) == SortMode.Module)
+        QQmlProperty.write(menu_sort_ascending_shortcut, "checked", int(self.settings['sort_mode']) == SortMode.Ascending)
+        QQmlProperty.write(menu_sort_descending_shortcut, "checked", int(self.settings['sort_mode']) == SortMode.Descending)
+
+        QQmlProperty.write(menu_minimize_normally_shortcut, "checked", int(self.settings['minimize_mode']) == MinimizeMode.Normal)
+        QQmlProperty.write(menu_minimize_to_tray_shortcut, "checked", int(self.settings['minimize_mode']) == MinimizeMode.Tray)
+        QQmlProperty.write(menu_minimize_normally_manually_shortcut, "checked", int(self.settings['minimize_mode']) == MinimizeMode.NormalManualOnly)
+        QQmlProperty.write(menu_minimize_to_tray_manually_shortcut, "checked", int(self.settings['minimize_mode']) == MinimizeMode.TrayManualOnly)
+
         QQmlProperty.write(menu_show_tray_icon_shortcut, "checked", self.settings['tray'])
 
         # Get reference to tabs list
@@ -1499,7 +1545,7 @@ class Window(QMainWindow):
 
     def _process_window_state(self, event) -> None:
         if event & 1: ## FIXME: Use the WindowMinimized enum instead
-            if self.settings['minimize_mode'] == [1, 3]:
+            if self.settings['minimize_mode'] == [MinimizeMode.Tray, MinimizeMode.TrayManualOnly]:
                 self.window.hide()
 
     def _get_current_element(self) -> Optional[Dict]:
@@ -1659,21 +1705,39 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
+    def _menu_sort_module(self, enabled: bool) -> None:
+        if enabled:
+            self.settings['sort_mode'] = SortMode.Module
+            for tab in self.tab_bindings:
+                tab['vm'].search(new_entries=True)
+
+    def _menu_sort_ascending(self, enabled: bool) -> None:
+        if enabled:
+            self.settings['sort_mode'] = SortMode.Ascending
+            for tab in self.tab_bindings:
+                tab['vm'].search(new_entries=True)
+
+    def _menu_sort_descending(self, enabled: bool) -> None:
+        if enabled:
+            self.settings['sort_mode'] = SortMode.Descending
+            for tab in self.tab_bindings:
+                tab['vm'].search(new_entries=True)
+
     def _menu_minimize_normally(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = 0
+            self.settings['minimize_mode'] = MinimizeMode.Normal
 
     def _menu_minimize_to_tray(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = 1
+            self.settings['minimize_mode'] = MinimizeMode.Tray
 
     def _menu_minimize_normally_manually(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = 2
+            self.settings['minimize_mode'] = MinimizeMode.NormalManualOnly
 
     def _menu_minimize_to_tray_manually(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = 3
+            self.settings['minimize_mode'] = MinimizeMode.TrayManualOnly
 
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
         self.settings['tray'] = enabled
@@ -1746,9 +1810,9 @@ class Window(QMainWindow):
 
     def close(self, manual=False) -> None:
         """Close the window."""
-        if self.settings['minimize_mode'] == 0 or (manual and self.settings['minimize_mode'] == 2):
+        if self.settings['minimize_mode'] == MinimizeMode.Normal or (manual and self.settings['minimize_mode'] == MinimizeMode.NormalManualOnly):
             self.window.showMinimized()
-        elif self.settings['minimize_mode'] == 1 or (manual and self.settings['minimize_mode'] == 3):
+        elif self.settings['minimize_mode'] == MinimizeMode.Tray or (manual and self.settings['minimize_mode'] == MinimizeMode.TrayManualOnly):
             self.window.hide()
 
         need_search = False
@@ -2092,9 +2156,10 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     settings = {'clipboard': 'clipboard',
                 'locale': None,
                 'modules': [],
-                'minimize_mode': 0 if platform.system() == "Darwin" else 1,
+                'minimize_mode': MinimizeMode.Normal if platform.system() == "Darwin" else MinimizeMode.Tray,
                 'profile': 'default',
                 'save_settings': True,
+                'sort_mode': SortMode.Module,
                 'tray': True}
 
     # getopt requires all possible options to be listed, but we do not know

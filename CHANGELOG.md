@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Theming support based on QPalette
-- UI toggle to choose minimizing behaviour
+- UI option to choose minimizing behaviour
+- UI option to choose sorting behaviour
 - UI toggle to enable/disable tray icon
 
 ### Changed
