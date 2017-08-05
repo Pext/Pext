@@ -11,37 +11,37 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="38"/>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>版權</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="57"/>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>翻譯者</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="64"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation type="unfinished"></translation>
+        <translation>想要協助翻譯 Pext？請點選這裡。</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="65"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext 想要感謝下列這些翻譯 Pext 的使用者：</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="66"/>
         <source>Spanish</source>
-        <translation type="unfinished"></translation>
+        <translation>西班牙文</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="71"/>
         <source>Chinese (Traditional)</source>
-        <translation type="unfinished"></translation>
+        <translation>正體中文</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="68"/>
         <source>Dutch</source>
-        <translation type="unfinished"></translation>
+        <translation>荷蘭文</translation>
     </message>
 </context>
 <context>
