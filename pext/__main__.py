@@ -1182,7 +1182,7 @@ class ViewModel():
 
             combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
 
-            self.result_list_model_list.setStringList(combined_list)
+            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
 
             self.result_list_model_max_index = len(self.sorted_filtered_entry_list) - 1
             self.context.setContextProperty(
@@ -1247,7 +1247,7 @@ class ViewModel():
         self.context.setContextProperty(
             "resultListModelMaxIndex", self.result_list_model_max_index)
 
-        self.result_list_model_list.setStringList(combined_list)
+        self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
 
         # Keep existing selection, otherwise ensure something is selected
         try:
