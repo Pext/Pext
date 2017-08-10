@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - UI option to choose minimizing behaviour
 - UI option to choose sorting behaviour
 - UI toggle to enable/disable tray icon
+- --background command line option to make Pext not launch/foreground the UI
 
 ### Changed
 - The design philosophy is now explained in the empty state screen

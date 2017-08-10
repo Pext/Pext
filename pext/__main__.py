@@ -1511,8 +1511,9 @@ class Window(QMainWindow):
         # Bind the context when the tab is loaded
         self.tabs.currentIndexChanged.connect(self._bind_context)
 
-        # Show the window
-        self.show()
+        # Show the window if not --background
+        if not settings['background']:
+            self.show()
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2129,7 +2130,7 @@ class Tray():
         self.tray.hide()
 
 
-def _init_persist(profile: str) -> str:
+def _init_persist(profile: str, background: bool) -> str:
     """Open Pext if an instance is already running.
 
     Checks if Pext is already running and if so, send it SIGUSR1 to bring it
@@ -2139,9 +2140,13 @@ def _init_persist(profile: str) -> str:
     pidfile = '/tmp/pext_{}.pid'.format(profile)
 
     if os.path.isfile(pidfile):
-        # Notify the main process
         try:
-            os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
+            # Notify the main process if we are not using --background
+            if not background:
+                os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
+            else:
+                print("Pext is already running, but --background was given. Doing nothing...")
+
             sys.exit(0)
         except ProcessLookupError:
             # Pext closed, but did not clean up its pidfile
@@ -2158,7 +2163,8 @@ def _init_persist(profile: str) -> str:
 def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     """Load the settings from the command line and set defaults."""
     # Default options
-    settings = {'clipboard': 'clipboard',
+    settings = {'background': False,
+                'clipboard': 'clipboard',
                 'locale': None,
                 'modules': [],
                 'minimize_mode': MinimizeMode.Normal if platform.system() == "Darwin" else MinimizeMode.Tray,
@@ -2185,6 +2191,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                                                   "locale=",
                                                   "list-styles",
                                                   "style=",
+                                                  "background",
                                                   "clipboard=",
                                                   "module=",
                                                   "install-module=",
@@ -2253,6 +2260,9 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             else:
                 # PyQt5 does not have bindings for QQuickStyle yet
                 os.environ["QT_QUICK_CONTROLS_STYLE"] = arg
+
+        elif opt == "--background":
+            settings['background'] = True
 
         elif opt in ("-c", "--clipboard"):
             if arg not in ["clipboard", "selection"]:
@@ -2326,6 +2336,9 @@ def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: Con
 def usage() -> None:
     """Print usage information."""
     print('''Options:
+
+  --background
+    Do not open Pext's user interface this invocation.
 
   -c, --clipboard[=CLIPBOARD]
     Choose the clipboard to copy entries to. Acceptable values are "clipboard" for the global system clipboard and "selection" for the global mouse selection.
@@ -2428,7 +2441,7 @@ def main() -> None:
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. See https://github.com/Pext/Pext/issues/11.")
 
     # Set up persistence
-    pidfile = _init_persist(settings['profile'])
+    pidfile = _init_persist(settings['profile'], settings['background'])
 
     # Load the app icon
     app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
