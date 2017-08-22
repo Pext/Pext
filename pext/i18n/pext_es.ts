@@ -88,7 +88,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="58"/>
         <source>Developer: </source>
-        <translation>Autor: </translation>
+        <translation>Desarrollador: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="62"/>
