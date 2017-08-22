@@ -155,7 +155,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="58"/>
         <source>Developer: </source>
-        <translation>Autor: </translation>
+        <translation>Desarrollador: </translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="62"/>
@@ -202,7 +202,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="60"/>
         <source>Developer: %1</source>
-        <translation>Autor: %1</translation>
+        <translation>Desarrollador: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="66"/>
@@ -337,42 +337,42 @@
     <message>
         <location filename="../qml/main.qml" line="429"/>
         <source>Sort by module choice</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar por elección del módulo</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="436"/>
         <source>Sort ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Orden ascendente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="443"/>
         <source>Sort descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Orden descendiente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="457"/>
         <source>Minimize normally</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimizar normalmente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="464"/>
         <source>Minimize to tray</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimizar a la bandeja</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="471"/>
         <source>Manual only: Minimize normally</source>
-        <translation type="unfinished"></translation>
+        <translation>Manual solamente: Minimizar normalmente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="478"/>
         <source>Manual only: Minimize to tray</source>
-        <translation type="unfinished"></translation>
+        <translation>Manual solamente: Minimizar a la bandeja</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="487"/>
         <source>Show tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar icono en la bandeja</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="493"/>
