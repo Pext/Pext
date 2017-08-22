@@ -307,7 +307,7 @@
     <message>
         <location filename="../qml/main.qml" line="330"/>
         <source>Switch theme</source>
-        <translation>Cambia el tema</translation>
+        <translation>Cambia tema</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="349"/>
@@ -332,7 +332,7 @@
     <message>
         <location filename="../qml/main.qml" line="420"/>
         <source>&amp;Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ajuste&amp;s</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="429"/>
