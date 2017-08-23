@@ -370,47 +370,47 @@
     <message>
         <location filename="../qml/main.qml" line="420"/>
         <source>&amp;Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>設定(&amp;S)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="429"/>
         <source>Sort by module choice</source>
-        <translation type="unfinished"></translation>
+        <translation>按模組選擇排序</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="436"/>
         <source>Sort ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>遞增排序</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="443"/>
         <source>Sort descending</source>
-        <translation type="unfinished"></translation>
+        <translation>遞減排序</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="457"/>
         <source>Minimize normally</source>
-        <translation type="unfinished"></translation>
+        <translation>正常最小化</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="464"/>
         <source>Minimize to tray</source>
-        <translation type="unfinished"></translation>
+        <translation>最小化至系統匣</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="471"/>
         <source>Manual only: Minimize normally</source>
-        <translation type="unfinished"></translation>
+        <translation>僅手動：正常最小化</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="478"/>
         <source>Manual only: Minimize to tray</source>
-        <translation type="unfinished"></translation>
+        <translation>僅手動：最小化至系統匣</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="487"/>
         <source>Show tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>顯示系統匣圖示</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="493"/>
