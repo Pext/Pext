@@ -39,11 +39,13 @@ ApplicationWindow {
         if (typeof tab === "undefined")
             return;
 
-        var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
+        var listView = tab.item.children[0].contentItem;
+        var newIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
 
-        if (listView.currentIndex < 0)
+        if (newIndex < 0)
             listView.currentIndex = 0;
+        else
+            listView.currentIndex = newIndex;
 
         listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
     }
@@ -53,8 +55,15 @@ ApplicationWindow {
         if (typeof tab === "undefined")
             return;
 
-        var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
+        var listView = tab.item.children[0].contentItem;
+        var newIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
+        var maxIndex = listView.count - 1;
+
+        if (newIndex > maxIndex)
+            listView.currentIndex = maxIndex;
+        else
+            listView.currentIndex = newIndex;
+
         listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
     }
 
@@ -89,22 +98,22 @@ ApplicationWindow {
 
     Shortcut {
         sequence: StandardKey.MoveToPreviousLine
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.decrementCurrentIndex()
     }
 
     Shortcut {
         sequence: "Ctrl+K"
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.decrementCurrentIndex()
     }
 
     Shortcut {
         sequence: StandardKey.MoveToNextLine
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.incrementCurrentIndex()
     }
 
     Shortcut {
         sequence: "Ctrl+J"
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.incrementCurrentIndex()
     }
 
     Shortcut {
@@ -520,7 +529,7 @@ ApplicationWindow {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
 
-                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.contentItem.depth > 0)
+                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].contentItem.depth > 0)
 
                 width: 60
                 text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
@@ -626,7 +635,7 @@ ApplicationWindow {
 
                 text: entriesLeftForeground || entriesLeftBackground ?
                       qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
-                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.contentItem.hasEntries ?
+                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.children[0].contentItem.hasEntries ?
                       qsTr("Waiting") : qsTr("Ready")
             }
         }
