@@ -1337,7 +1337,7 @@ class ViewModel():
             return # Not initialized yet
 
         info_selection = self.selection[:]
-        new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) else SelectionType.entry, 'value': current_item}
+        new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) or self.result_list_model_command_mode else SelectionType.entry, 'value': current_item}
         info_selection.append(new_selection_entry)
 
         # Prevent updating the list unnecessarily often
