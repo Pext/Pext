@@ -251,6 +251,16 @@ class Action(Enum):
         selection.
 
         Example: self.q.put([Action.close])
+
+    set_info:
+        Introduced in API version 0.3.0.
+
+        Set additional info for a certain extry, either in plain text or HTML.
+
+        key -- the key to set it for, formatted as a selection list
+        value -- the value to set it to
+
+        Example: self.q.put([Action.set_info, [{type: SelectionType.entry, value: "Audio settings"}], "Change the audio settings")
     """
 
     critical_error = 0
@@ -274,6 +284,7 @@ class Action(Enum):
     copy_to_clipboard = 18
     set_selection = 19
     close = 20
+    set_info = 21
 
 
 class SelectionType(Enum):
