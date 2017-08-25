@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
+- Page up and down causing QML errors when used too close to the start/end of the list
+
 ## [0.9] - 2017-08-23
 ### API changes
 - Whenever the state changes (either by the user going back, selecting something or set_selection being called), the queue is now emptied

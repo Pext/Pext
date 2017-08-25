@@ -1177,6 +1177,8 @@ class ViewModel():
 
         # If empty, show all
         if len(search_string) == 0 and not new_entries:
+            self.filtered_entry_list = self.entry_list
+            self.filtered_command_list = self.command_list
             self.sorted_filtered_entry_list = self.sorted_entry_list
             self.sorted_filtered_command_list = self.sorted_command_list
 
