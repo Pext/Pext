@@ -33,7 +33,6 @@ class ModuleBase(ABC):
 
     The base all Pext modules must implement."""
 
-    @abstractmethod
     def init(self, settings: Dict, q: Queue) -> None:
         """Introduced in API version 0.1.0.
 
@@ -62,7 +61,6 @@ class ModuleBase(ABC):
         """
         pass
 
-    @abstractmethod
     def stop(self):
         """Introduced in API version 0.1.0.
 
@@ -72,7 +70,6 @@ class ModuleBase(ABC):
         """
         pass
 
-    @abstractmethod
     def selection_made(self, selection: List[Dict[SelectionType, str]]) -> None:
         """Introduced in API version 0.1.0.
 
@@ -90,7 +87,6 @@ class ModuleBase(ABC):
         """
         pass
 
-    @abstractmethod
     def process_response(self, response: Union[bool, str], identifier: Any):
         """Introduced in API version 0.1.0.
 
@@ -102,5 +98,17 @@ class ModuleBase(ABC):
         When no specific identifier was given in a queue request, identifier
         is called with None. Otherwise, it is called with the identifier
         previously put in the queue.
+        """
+        pass
+
+    def extra_info_request(self, selection: List[Dict[SelectionType, str]]) -> None:
+        """Introduced in API version 0.3.0.
+
+        Called when the user selects a different entry.
+
+        The syntax of selection is the same as in selection_made.
+
+        If desired, this function could be used to update the current entry by
+        putting a new set_info request in the queue.
         """
         pass

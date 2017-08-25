@@ -22,89 +22,113 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
 
-ScrollView {
-    Layout.fillHeight: true
-    Layout.fillWidth: true
+Row {
+    id: contentRow
+    height: parent.height
 
-    Item {
-        width: parent.width
-        visible: headerText.text
-        Text {
-            id: headerText
-            color: palette.mid
-            objectName: "headerText"
-            font.pointSize: 12
+    ScrollView {
+        id: mainContent
+        width: infoPanel.visible ? (contentRow.width / 4 * 3) - 5 : contentRow.width
+        height: contentRow.height
 
-            textFormat: Text.PlainText
-        }
-    }
+        Behavior on width { PropertyAnimation {} }
 
-    BusyIndicator {
-        visible: resultList.hasEntries == false
-        anchors.centerIn: parent
-    }
+        Item {
+            width: parent.width
+            visible: headerText.text
+            Text {
+                id: headerText
+                color: palette.mid
+                objectName: "headerText"
+                font.pointSize: 12
 
-    ListView {
-        visible: resultList.hasEntries == true
-        anchors.topMargin: headerText.text ? headerText.height : 0
-        clip: true
-        id: resultList
-        objectName: "resultListModel"
-
-        signal entryClicked()
-
-        property int maximumIndex: resultListModelMaxIndex
-        property bool commandMode: resultListModelCommandMode
-        property bool hasEntries: resultListModelHasEntries
-        property int depth: resultListModelDepth
-
-        model: resultListModel
-
-        SystemPalette { id: palette; colorGroup: SystemPalette.Active }
-
-        delegate: Component {
-            Item {
-                property variant itemData: model.modelData
-                width: parent.width
-                height: text.height
-                Column {
-                    Text {
-                        id: text
-                        text: display
-                        textFormat: Text.PlainText
-                        font.pointSize: 12
-                        font.italic:
-                            if (!resultListModelCommandMode) {
-                                index > resultListModelMaxIndex
-                            } else {
-                                index == 0
-                            }
-                        font.bold: resultListModelCommandMode && index == 0
-                        color: resultListModelCommandMode ? palette.text : resultList.currentIndex === index ? palette.highlightedText : palette.text
-                        Behavior on color { PropertyAnimation {} }
-                    }
-                }
-                MouseArea {
-                    enabled: !resultListModelCommandMode
-                    anchors.fill: parent
-
-                    hoverEnabled: true
-
-                    onPositionChanged: {
-                        resultList.currentIndex = index
-                    }
-                    onClicked: {
-                        resultList.entryClicked()
-                    }
-                }
+                textFormat: Text.PlainText
             }
         }
 
-        highlight: Rectangle {
-            visible: !resultListModelCommandMode
-            color: palette.highlight
+        BusyIndicator {
+            visible: resultList.hasEntries == false
+            anchors.centerIn: parent
         }
 
-        highlightMoveDuration: 250
+        ListView {
+            visible: resultList.hasEntries == true
+            anchors.topMargin: headerText.text ? headerText.height : 0
+            clip: true
+            id: resultList
+            objectName: "resultListModel"
+
+            signal entryClicked()
+
+            property int maximumIndex: resultListModelMaxIndex
+            property bool commandMode: resultListModelCommandMode
+            property bool hasEntries: resultListModelHasEntries
+            property int depth: resultListModelDepth
+
+            model: resultListModel
+
+            SystemPalette { id: palette; colorGroup: SystemPalette.Active }
+
+            delegate: Component {
+                Item {
+                    property variant itemData: model.modelData
+                    width: parent.width
+                    height: text.height
+                    Column {
+                        Text {
+                            id: text
+                            objectName: "text"
+                            text: display
+                            textFormat: Text.PlainText
+                            font.pointSize: 12
+                            font.italic:
+                                if (!resultListModelCommandMode) {
+                                    index > resultListModelMaxIndex
+                                } else {
+                                    index == 0
+                                }
+                            font.bold: resultListModelCommandMode && index == 0
+                            color: resultListModelCommandMode ? palette.text : resultList.currentIndex === index ? palette.highlightedText : palette.text
+                            Behavior on color { PropertyAnimation {} }
+                        }
+                    }
+                    MouseArea {
+                        enabled: !resultListModelCommandMode
+                        anchors.fill: parent
+
+                        hoverEnabled: true
+
+                        onPositionChanged: {
+                            resultList.currentIndex = index
+                        }
+                        onClicked: {
+                            resultList.entryClicked()
+                        }
+                    }
+                }
+            }
+
+            highlight: Rectangle {
+                visible: !resultListModelCommandMode
+                color: palette.highlight
+            }
+
+            highlightMoveDuration: 250
+        }
+    }
+
+    ScrollView {
+        width: contentRow.width - mainContent.width
+        height: contentRow.height
+        visible: infoPanel.text
+        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+
+        Text {
+            id: infoPanel 
+            objectName: "infoPanel"
+            text: ""
+            wrapMode: Text.Wrap
+            width: contentRow.width - mainContent.width
+        }
     }
 }

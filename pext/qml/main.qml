@@ -40,6 +40,7 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
+        var listView = tab.item.children[0].contentItem;
         var newIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
 
         if (newIndex < 0)
@@ -56,6 +57,7 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
+        var listView = tab.item.children[0].contentItem;
         var newIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
         var maxIndex = listView.count - 1;
 
@@ -98,22 +100,22 @@ ApplicationWindow {
 
     Shortcut {
         sequence: StandardKey.MoveToPreviousLine
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.decrementCurrentIndex()
     }
 
     Shortcut {
         sequence: "Ctrl+K"
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.decrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.decrementCurrentIndex()
     }
 
     Shortcut {
         sequence: StandardKey.MoveToNextLine
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.incrementCurrentIndex()
     }
 
     Shortcut {
         sequence: "Ctrl+J"
-        onActivated: tabs.getTab(tabs.currentIndex).item.contentItem.incrementCurrentIndex()
+        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.incrementCurrentIndex()
     }
 
     Shortcut {
@@ -529,7 +531,7 @@ ApplicationWindow {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
 
-                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.contentItem.depth > 0)
+                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].contentItem.depth > 0)
 
                 width: 60
                 text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
@@ -635,7 +637,7 @@ ApplicationWindow {
 
                 text: entriesLeftForeground || entriesLeftBackground ?
                       qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
-                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.contentItem.hasEntries ?
+                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.children[0].contentItem.hasEntries ?
                       qsTr("Waiting") : qsTr("Ready")
             }
         }

@@ -404,6 +404,10 @@ class MainLoop():
         elif action[0] == Action.close:
             self.window.close()
 
+        elif action[0] == Action.set_info:
+            tab['vm'].extra_info[str(action[1])] = action[2]
+            tab['vm'].update_info_panel(request_update=False)
+
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
@@ -752,8 +756,7 @@ class ModuleManager():
         # thread
         q = Queue()  # type: Queue
 
-        # This will (correctly) fail if the module doesn't implement all necessary
-        # functionality
+        # Load module
         try:
             module_code = Module()
         except TypeError as e2:
@@ -785,7 +788,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        module['settings']['_api_version'] = [0, 2, 0]
+        module['settings']['_api_version'] = [0, 3, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1047,6 +1050,8 @@ class ViewModel():
         self.result_list_model_command_mode = False
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
+        self.extra_info = {}  # type: Dict[str, str]
+        self.extra_info_last_entry = []  # type: List[Dict[SelectionType, str]]
 
     def _get_longest_common_string(self, entries: List[str], start="") -> Optional[str]:
         """Return the longest common string.
@@ -1097,8 +1102,7 @@ class ViewModel():
                 return
             self.queue.task_done()
 
-    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject,
-                     header_text: QObject, result_list_model: QObject) -> None:
+    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject, header_text: QObject, result_list_model: QObject, info_panel: QObject) -> None:
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
@@ -1106,6 +1110,7 @@ class ViewModel():
         self.search_input_model = search_input_model
         self.header_text = header_text
         self.result_list_model = result_list_model
+        self.info_panel = info_panel
 
     def bind_module(self, module: ModuleBase) -> None:
         """Bind the module.
@@ -1204,6 +1209,8 @@ class ViewModel():
             # Enable checking for changes next time
             self.last_search = search_string
 
+            self.update_info_panel()
+
             return
 
         search_strings = search_string.split(" ")
@@ -1262,6 +1269,8 @@ class ViewModel():
         # Enable checking for changes next time
         self.last_search = search_string
 
+        self.update_info_panel()
+
     def select(self) -> None:
         """Notify the module of our selection entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
@@ -1315,6 +1324,32 @@ class ViewModel():
         self.window.update()
 
         self.module.selection_made(self.selection)
+
+    def update_info_panel(self, request_update=True) -> None:
+        current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
+
+        try:
+            current_item = QQmlProperty.read(self.result_list_model, "currentItem").findChild(QObject, "text")
+        except AttributeError:
+            return # Not initialized yet
+
+        info_selection = self.selection[:]
+        new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) else SelectionType.entry, 'value': QQmlProperty.read(current_item, "text")}
+        info_selection.append(new_selection_entry)
+
+        # Prevent updating the list unnecessarily often
+        if info_selection == self.extra_info_last_entry:
+            return
+
+        self.extra_info_last_entry = info_selection
+
+        if request_update:
+            threading.Thread(target=self.module.extra_info_request, args=(info_selection,)).start()
+
+        try:
+            QQmlProperty.write(self.info_panel, "text", self.extra_info[str(info_selection)])
+        except KeyError:
+            QQmlProperty.write(self.info_panel, "text", "")
 
     def set_header(self, content) -> None:
         """Set the header text."""
@@ -1535,8 +1570,15 @@ class Window(QMainWindow):
         result_list_model = self.tabs.getTab(
             current_tab).findChild(QObject, "resultListModel")
 
+        # Get the info pane
+        info_panel = self.tabs.getTab(
+            current_tab).findChild(QObject, "infoPanel")
+
         # Enable mouse selection support
         result_list_model.entryClicked.connect(element['vm'].select)
+
+        # Enable info pane
+        result_list_model.currentIndexChanged.connect(element['vm'].update_info_panel)
 
         # Bind it to the viewmodel
         element['vm'].bind_context(element['queue'],
@@ -1544,7 +1586,8 @@ class Window(QMainWindow):
                                    self,
                                    self.search_input_model,
                                    header_text,
-                                   result_list_model)
+                                   result_list_model,
+                                   info_panel)
 
         element['vm'].bind_module(element['module'])
 
