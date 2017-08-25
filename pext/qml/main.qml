@@ -40,10 +40,12 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
+        var newIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
 
-        if (listView.currentIndex < 0)
+        if (newIndex < 0)
             listView.currentIndex = 0;
+        else
+            listView.currentIndex = newIndex;
 
         listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
     }
@@ -54,7 +56,14 @@ ApplicationWindow {
             return;
 
         var listView = tab.item.contentItem;
-        listView.currentIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
+        var newIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
+        var maxIndex = listView.count - 1;
+
+        if (newIndex > maxIndex)
+            listView.currentIndex = maxIndex;
+        else
+            listView.currentIndex = newIndex;
+
         listView.positionViewAtIndex(listView.currentIndex, ListView.Beginning);
     }
 
