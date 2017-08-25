@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
+- Bump API version to 0.3.0
+- Add set_info queue call
+- Add extra_info_request function
+
+### Added
+- Add info panel which modules can use to show extra info on the entry that is currently being hovered over
+
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
 - Page up and down causing QML errors when used too close to the start/end of the list
