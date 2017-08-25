@@ -1326,15 +1326,18 @@ class ViewModel():
         self.module.selection_made(self.selection)
 
     def update_info_panel(self, request_update=True) -> None:
-        current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
+        if self.result_list_model_command_mode:
+            current_index = 0
+        else:
+            current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
         try:
-            current_item = QQmlProperty.read(self.result_list_model, "currentItem").findChild(QObject, "text")
-        except AttributeError:
+            current_item = QQmlProperty.read(self.result_list_model, "model").stringList()[current_index]
+        except IndexError as e:
             return # Not initialized yet
 
         info_selection = self.selection[:]
-        new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) else SelectionType.entry, 'value': QQmlProperty.read(current_item, "text")}
+        new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) else SelectionType.entry, 'value': current_item}
         info_selection.append(new_selection_entry)
 
         # Prevent updating the list unnecessarily often
