@@ -404,8 +404,12 @@ class MainLoop():
         elif action[0] == Action.close:
             self.window.close()
 
-        elif action[0] == Action.set_info:
-            tab['vm'].extra_info[str(action[1])] = action[2]
+        elif action[0] == Action.set_entry_info:
+            tab['vm'].extra_info_entries[str(action[1])] = action[2]
+            tab['vm'].update_info_panel(request_update=False)
+
+        elif action[0] == Action.set_command_info:
+            tab['vm'].extra_info_commands[str(action[1])] = action[2]
             tab['vm'].update_info_panel(request_update=False)
 
         else:
@@ -788,7 +792,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        module['settings']['_api_version'] = [0, 3, 0]
+        module['settings']['_api_version'] = [0, 3, 1]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1050,8 +1054,10 @@ class ViewModel():
         self.result_list_model_command_mode = False
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
-        self.extra_info = {}  # type: Dict[str, str]
-        self.extra_info_last_entry = []  # type: List[Dict[SelectionType, str]]
+        self.extra_info_entries = {}
+        self.extra_info_commands = {}
+        self.extra_info_last_entry = ""
+        self.extra_info_last_entry_type = None
 
     def _get_longest_common_string(self, entries: List[str], start="") -> Optional[str]:
         """Return the longest common string.
@@ -1278,6 +1284,8 @@ class ViewModel():
 
         self.entry_list = []
         self.command_list = []
+        self.extra_info_entries = {}
+        self.extra_info_commands = {}
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
@@ -1336,21 +1344,27 @@ class ViewModel():
         except IndexError as e:
             return # Not initialized yet
 
-        info_selection = self.selection[:]
-        new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) or self.result_list_model_command_mode else SelectionType.entry, 'value': current_item}
-        info_selection.append(new_selection_entry)
+        current_item_type = SelectionType.command if current_index >= len(self.filtered_entry_list) or self.result_list_model_command_mode else SelectionType.entry
 
         # Prevent updating the list unnecessarily often
-        if info_selection == self.extra_info_last_entry:
+        if current_item == self.extra_info_last_entry and current_item_type == self.extra_info_last_entry_type:
             return
 
-        self.extra_info_last_entry = info_selection
+        self.extra_info_last_entry = current_item
+        self.extra_info_last_entry_type = current_item_type
 
         if request_update:
+            info_selection = self.selection[:]
+            new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) or self.result_list_model_command_mode else SelectionType.entry, 'value': current_item}
+            info_selection.append(new_selection_entry)
+
             threading.Thread(target=self.module.extra_info_request, args=(info_selection,)).start()
 
         try:
-            QQmlProperty.write(self.info_panel, "text", self.extra_info[str(info_selection)])
+            if current_item_type == SelectionType.entry:
+                QQmlProperty.write(self.info_panel, "text", self.extra_info_entries[current_item])
+            else:
+                QQmlProperty.write(self.info_panel, "text", self.extra_info_commands[current_item])
         except KeyError:
             QQmlProperty.write(self.info_panel, "text", "")
 
