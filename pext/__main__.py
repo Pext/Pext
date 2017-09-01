@@ -2505,9 +2505,6 @@ def main() -> None:
     # Set up persistence
     pidfile = _init_persist(settings['profile'], settings['background'])
 
-    # Load the app icon
-    app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
-
     # Set up the app
     app = QApplication(['Pext ({})'.format(settings['profile'])])
 
@@ -2518,6 +2515,9 @@ def main() -> None:
         translator.load(QLocale(locale_to_use), 'pext', '_', AppFile.get_path('i18n'), '.qm'))
 
     app.installTranslator(translator)
+
+    # Load the app icon
+    app_icon = QIcon(AppFile.get_path(os.path.join('images', '128x128', 'pext.png')))
 
     app.setWindowIcon(app_icon)
 
