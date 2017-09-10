@@ -412,6 +412,12 @@ class MainLoop():
             tab['vm'].extra_info_commands[str(action[1])] = action[2]
             tab['vm'].update_info_panel(request_update=False)
 
+        elif action[0] == Action.set_entry_context:
+            tab['vm'].context_menu_entries[str(action[1])] = action[2]
+
+        elif action[0] == Action.set_command_context:
+            tab['vm'].context_menu_commands[str(action[1])] = action[2]
+
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
@@ -738,6 +744,10 @@ class ModuleManager():
             "resultListModelCommandMode", False)
         module_context.setContextProperty(
             "resultListModelDepth", 0)
+        module_context.setContextProperty(
+            "contextMenuModel", vm.context_menu_model_list)
+        module_context.setContextProperty(
+            "contextMenuEnabled", False)
 
         # Prepare module
         try:
@@ -792,7 +802,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        module['settings']['_api_version'] = [0, 3, 1]
+        module['settings']['_api_version'] = [0, 4, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1054,8 +1064,11 @@ class ViewModel():
         self.result_list_model_command_mode = False
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
+        self.context_menu_model_list = QStringListModel()
         self.extra_info_entries = {}
         self.extra_info_commands = {}
+        self.context_menu_entries = {}
+        self.context_menu_commands = {}
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
 
@@ -1108,7 +1121,7 @@ class ViewModel():
                 return
             self.queue.task_done()
 
-    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject, header_text: QObject, result_list_model: QObject, info_panel: QObject) -> None:
+    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject, header_text: QObject, result_list_model: QObject, context_menu_model: QObject, info_panel: QObject) -> None:
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
@@ -1116,6 +1129,7 @@ class ViewModel():
         self.search_input_model = search_input_model
         self.header_text = header_text
         self.result_list_model = result_list_model
+        self.context_menu_model = context_menu_model
         self.info_panel = info_panel
 
     def bind_module(self, module: ModuleBase) -> None:
@@ -1133,6 +1147,12 @@ class ViewModel():
         the search bar. If we're currently in the entry list and the search bar
         is empty, we tell the window to hide/close itself.
         """
+
+        if self.context.contextProperty("contextMenuEnabled"):
+            self.context.setContextProperty(
+                "contextMenuEnabled", False)
+            return
+
         if QQmlProperty.read(self.search_input_model, "text") != "":
             QQmlProperty.write(self.search_input_model, "text", "")
             return
@@ -1166,6 +1186,10 @@ class ViewModel():
         # Don't search if nothing changed
         if not new_entries and search_string == self.last_search:
             return
+
+        # TODO: Enable searching in context menu
+        self.context.setContextProperty(
+            "contextMenuEnabled", False)
 
         # Sort if sorting is enabled
         if self.window.settings['sort_mode'] != SortMode.Module:
@@ -1277,15 +1301,16 @@ class ViewModel():
 
         self.update_info_panel()
 
-    def select(self) -> None:
-        """Notify the module of our selection entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
-            return
+    def _get_entry(self, include_context=False) -> {}:
+        """Get info on the entry that's currently focused."""
+        if include_context and self.context.contextProperty("contextMenuEnabled"):
+            current_index = QQmlProperty.read(self.context_menu_model, "currentIndex")
 
-        self.entry_list = []
-        self.command_list = []
-        self.extra_info_entries = {}
-        self.extra_info_commands = {}
+            selected_entry = self._get_entry()
+
+            selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
+
+            return selected_entry
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
@@ -1301,28 +1326,31 @@ class ViewModel():
             except IndexError:
                 command_typed = selected_command_split[0]
 
-            self.selection.append(
-                {'type': SelectionType.command, 'value': command_typed})
-
-            self.context.setContextProperty(
-                "resultListModelDepth", len(self.selection))
-
-            QQmlProperty.write(self.search_input_model, "text", "")
-            self.search(new_entries=True)
-            self._clear_queue()
-            self.window.update()
-
-            self.module.selection_made(self.selection)
-
-            return
+            return {'type': SelectionType.command, 'value': command_typed, 'context_option': None}
 
         if current_index >= len(self.filtered_entry_list):
             entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
-            self.selection.append({'type': SelectionType.command, 'value': entry})
+            return {'type': SelectionType.command, 'value': entry, 'context_option': None}
         else:
             entry = self.filtered_entry_list[current_index]
-            self.selection.append({'type': SelectionType.entry, 'value': entry})
+            return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
 
+    def select(self) -> None:
+        """Notify the module of our selection entry."""
+        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+            return
+
+        self.entry_list = []
+        self.command_list = []
+        self.extra_info_entries = {}
+        self.extra_info_commands = {}
+        self.context_menu_entries = {}
+        self.context_menu_commands = {}
+
+        self.selection.append(self._get_entry(include_context = True))
+
+        self.context.setContextProperty(
+            "contextMenuEnabled", False)
         self.context.setContextProperty(
             "resultListModelDepth", len(self.selection))
 
@@ -1333,38 +1361,53 @@ class ViewModel():
 
         self.module.selection_made(self.selection)
 
-    def update_info_panel(self, request_update=True) -> None:
-        if self.result_list_model_command_mode:
-            current_index = 0
-        else:
-            current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
-
-        try:
-            current_item = QQmlProperty.read(self.result_list_model, "model").stringList()[current_index]
-        except IndexError as e:
-            return # Not initialized yet
-
-        current_item_type = SelectionType.command if current_index >= len(self.filtered_entry_list) or self.result_list_model_command_mode else SelectionType.entry
-
-        # Prevent updating the list unnecessarily often
-        if current_item == self.extra_info_last_entry and current_item_type == self.extra_info_last_entry_type:
+    def show_context(self) -> None:
+        """Show the context menu of the selected entry."""
+        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             return
 
-        self.extra_info_last_entry = current_item
-        self.extra_info_last_entry_type = current_item_type
+        current_entry = self._get_entry()
+
+        try:
+            if current_entry['type'] == SelectionType.entry:
+                self.context_menu_model_list.setStringList(str(entry) for entry in self.context_menu_entries[current_entry['value']])
+            else:
+                self.context_menu_model_list.setStringList(str(entry) for entry in self.context_menu_commands[current_entry['value']])
+            self.context.setContextProperty(
+                "contextMenuEnabled", True)
+        except KeyError:
+            pass # No menu available, do nothing
+
+    def hide_context(self) -> None:
+        """Hide the context menu."""
+        self.context.setContextProperty(
+            "contextMenuEnabled", False)
+
+    def update_info_panel(self, request_update=True) -> None:
+        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+            return
+
+        current_entry = self._get_entry()
+
+        # Prevent updating the list unnecessarily often
+        if current_entry['value'] == self.extra_info_last_entry and current_entry['type'] == self.extra_info_last_entry_type:
+            return
+
+        self.extra_info_last_entry = current_entry['value']
+        self.extra_info_last_entry_type = current_entry['type']
 
         if request_update:
             info_selection = self.selection[:]
-            new_selection_entry = {'type': SelectionType.command if current_index >= len(self.filtered_entry_list) or self.result_list_model_command_mode else SelectionType.entry, 'value': current_item}
+            new_selection_entry = current_entry
             info_selection.append(new_selection_entry)
 
             threading.Thread(target=self.module.extra_info_request, args=(info_selection,)).start()
 
         try:
-            if current_item_type == SelectionType.entry:
-                QQmlProperty.write(self.info_panel, "text", self.extra_info_entries[current_item])
+            if current_entry['type'] == SelectionType.entry:
+                QQmlProperty.write(self.info_panel, "text", self.extra_info_entries[current_entry['value']])
             else:
-                QQmlProperty.write(self.info_panel, "text", self.extra_info_commands[current_item])
+                QQmlProperty.write(self.info_panel, "text", self.extra_info_commands[current_entry['value']])
         except KeyError:
             QQmlProperty.write(self.info_panel, "text", "")
 
@@ -1587,12 +1630,19 @@ class Window(QMainWindow):
         result_list_model = self.tabs.getTab(
             current_tab).findChild(QObject, "resultListModel")
 
-        # Get the info pane
+        # Get the info panel
         info_panel = self.tabs.getTab(
             current_tab).findChild(QObject, "infoPanel")
 
+        # Get the context menu
+        context_menu_model = self.tabs.getTab(
+            current_tab).findChild(QObject, "contextMenuModel")
+
         # Enable mouse selection support
         result_list_model.entryClicked.connect(element['vm'].select)
+        result_list_model.openContextMenu.connect(element['vm'].show_context)
+        context_menu_model.entryClicked.connect(element['vm'].select)
+        context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
 
         # Enable info pane
         result_list_model.currentIndexChanged.connect(element['vm'].update_info_panel)
@@ -1604,6 +1654,7 @@ class Window(QMainWindow):
                                    self.search_input_model,
                                    header_text,
                                    result_list_model,
+                                   context_menu_model,
                                    info_panel)
 
         element['vm'].bind_module(element['module'])

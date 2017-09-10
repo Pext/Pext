@@ -27,8 +27,71 @@ Row {
     height: parent.height
 
     ScrollView {
+        id: contextMenuContainer
+        width: contentRow.width / 4
+        height: contentRow.height
+        visible: contextMenuVisible
+
+        onVisibleChanged: contextMenu.currentIndex = 0;
+
+        property bool contextMenuVisible: contextMenuEnabled
+
+        ListView {
+            clip: true
+            id: contextMenu
+            objectName: "contextMenuModel"
+
+            signal entryClicked()
+            signal closeContextMenu()
+
+            model: contextMenuModel
+
+            delegate: Component {
+                Item {
+                    property variant itemData: model.modelData
+                    width: parent.width
+                    height: text.height
+                    Column {
+                        Text {
+                            id: text
+                            objectName: "text"
+                            text: display
+                            textFormat: Text.PlainText
+                            font.pointSize: 12
+                            color: contextMenu.isCurrentIndex ? palette.highlightedText : palette.text
+                            Behavior on color { PropertyAnimation {} }
+                        }
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                        hoverEnabled: true
+
+                        onPositionChanged: {
+                            contextMenu.currentIndex = index
+                        }
+                        onClicked: {
+                            if (mouse.button == Qt.LeftButton) {
+                                contextMenu.entryClicked();
+                            } else {
+                                contextMenu.closeContextMenu();
+                            }
+                        }
+                    }
+                }
+            }
+            highlight: Rectangle {
+                color: palette.highlight
+            }
+
+            highlightMoveDuration: 250
+        }
+    }
+
+    ScrollView {
         id: mainContent
-        width: infoPanel.visible ? (contentRow.width / 4 * 3) - 5 : contentRow.width
+        width: contentRow.width / 4 * (4 - (infoPanel.visible ? 1 : 0) - (contextMenuContainer.visible ? 1 : 0))
         height: contentRow.height
 
         Behavior on width { PropertyAnimation {} }
@@ -47,18 +110,19 @@ Row {
         }
 
         BusyIndicator {
-            visible: resultList.hasEntries == false
+            visible: !resultList.hasEntries
             anchors.centerIn: parent
         }
 
         ListView {
-            visible: resultList.hasEntries == true
+            visible: resultList.hasEntries
             anchors.topMargin: headerText.text ? headerText.height : 0
             clip: true
             id: resultList
             objectName: "resultListModel"
 
             signal entryClicked()
+            signal openContextMenu()
 
             property int maximumIndex: resultListModelMaxIndex
             property bool commandMode: resultListModelCommandMode
@@ -68,6 +132,7 @@ Row {
             model: resultListModel
 
             SystemPalette { id: palette; colorGroup: SystemPalette.Active }
+            SystemPalette { id: inactivePalette; colorGroup: SystemPalette.Inactive }
 
             delegate: Component {
                 Item {
@@ -88,13 +153,14 @@ Row {
                                     index == 0
                                 }
                             font.bold: resultListModelCommandMode && index == 0
-                            color: resultListModelCommandMode ? palette.text : resultList.currentIndex === index ? palette.highlightedText : palette.text
+                            color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.isCurrentIndex ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
                             Behavior on color { PropertyAnimation {} }
                         }
                     }
                     MouseArea {
-                        enabled: !resultListModelCommandMode
+                        enabled: !resultListModelCommandMode && !contextMenuContainer.visible
                         anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
                         hoverEnabled: true
 
@@ -102,15 +168,18 @@ Row {
                             resultList.currentIndex = index
                         }
                         onClicked: {
-                            resultList.entryClicked()
+                            if (mouse.button == Qt.LeftButton) {
+                                resultList.entryClicked();
+                            } else {
+                                resultList.openContextMenu();
+                            }
                         }
                     }
                 }
             }
-
             highlight: Rectangle {
                 visible: !resultListModelCommandMode
-                color: palette.highlight
+                color: contextMenuContainer.visible ? inactivePalette.highlight : palette.highlight
             }
 
             highlightMoveDuration: 250

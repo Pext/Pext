@@ -34,13 +34,45 @@ ApplicationWindow {
 
     SystemPalette { id: palette; colorGroup: SystemPalette.Active }
 
-    function pageUp() {
+    function getActiveList() {
         var tab = tabs.getTab(tabs.currentIndex);
         if (typeof tab === "undefined")
             return;
 
-        var listView = tab.item.contentItem;
-        var listView = tab.item.children[0].contentItem;
+        if (tab.item.children[0].visible) {
+            return tab.item.children[0].contentItem;
+        } else {
+            return tab.item.children[1].contentItem;
+        }
+    }
+
+    function isContextMenuVisible() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        return tab.item.children[0].visible;
+    }
+
+    function openContextMenu() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        tab.item.children[1].contentItem.openContextMenu();
+    }
+
+    function moveUp() {
+        getActiveList().decrementCurrentIndex();
+    }
+
+    function moveDown() {
+        getActiveList().incrementCurrentIndex();
+    }
+
+    function pageUp() {
+        var listView = getActiveList();
+
         var newIndex = listView.currentIndex - (listView.height / listView.currentItem.height) + 1;
 
         if (newIndex < 0)
@@ -52,12 +84,8 @@ ApplicationWindow {
     }
 
     function pageDown() {
-        var tab = tabs.getTab(tabs.currentIndex);
-        if (typeof tab === "undefined")
-            return;
+        var listView = getActiveList();
 
-        var listView = tab.item.contentItem;
-        var listView = tab.item.children[0].contentItem;
         var newIndex = listView.currentIndex + (listView.height / listView.currentItem.height);
         var maxIndex = listView.count - 1;
 
@@ -99,23 +127,28 @@ ApplicationWindow {
     }
 
     Shortcut {
+        sequence: "Ctrl+."
+        onActivated: openContextMenu();
+    }
+
+    Shortcut {
         sequence: StandardKey.MoveToPreviousLine
-        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.decrementCurrentIndex()
+        onActivated: moveUp();
     }
 
     Shortcut {
         sequence: "Ctrl+K"
-        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.decrementCurrentIndex()
+        onActivated: moveUp();
     }
 
     Shortcut {
         sequence: StandardKey.MoveToNextLine
-        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.incrementCurrentIndex()
+        onActivated: moveDown();
     }
 
     Shortcut {
         sequence: "Ctrl+J"
-        onActivated: tabs.getTab(tabs.currentIndex).item.children[0].contentItem.incrementCurrentIndex()
+        onActivated: moveDown();
     }
 
     Shortcut {
@@ -531,7 +564,7 @@ ApplicationWindow {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
 
-                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].contentItem.depth > 0)
+                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[1].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].visible)
 
                 width: 60
                 text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
@@ -637,7 +670,7 @@ ApplicationWindow {
 
                 text: entriesLeftForeground || entriesLeftBackground ?
                       qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
-                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.children[0].contentItem.hasEntries ?
+                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.children[1].contentItem.hasEntries ?
                       qsTr("Waiting") : qsTr("Ready")
             }
         }

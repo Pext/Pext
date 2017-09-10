@@ -133,12 +133,13 @@ The Homebrew team refuses to fix this issue: https://github.com/Homebrew/brew/is
 ## Hotkeys
 ### Entry management
 - Escape: Go one level up
+- Tab: Tab-complete the current input
+- Enter / Left mouse button: Select entry or run command
+- Ctrl+. / Right mouse button: Open context menu
 - Ctrl+J / Down arrow: Go one entry down
 - Ctrl+H / Up arrow: Go one entry up
 - Ctrl+F / Page down: Go one page down
 - Ctrl+B / Page up: Go one page up
-- Tab: Tab-complete the current input
-- Enter: Select entry or run command
 
 ### Tab management
 - Ctrl+T: Open new tab
