@@ -1664,7 +1664,7 @@ class Window(QMainWindow):
 
     def _process_window_state(self, event) -> None:
         if event & 1: ## FIXME: Use the WindowMinimized enum instead
-            if self.settings['minimize_mode'] == [MinimizeMode.Tray, MinimizeMode.TrayManualOnly]:
+            if self.settings['minimize_mode'] in [MinimizeMode.Tray, MinimizeMode.TrayManualOnly]:
                 self.window.hide()
 
     def _get_current_element(self) -> Optional[Dict]:
@@ -1960,6 +1960,7 @@ class Window(QMainWindow):
     def show(self) -> None:
         """Show the window."""
         self.window.show()
+        self.window.raise_()
         self.activateWindow()
 
     def toggle_visibility(self) -> None:
