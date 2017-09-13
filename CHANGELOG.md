@@ -7,17 +7,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### API changes
-- Bump API version to 0.3.0
-- Add set_info queue call
+- Bump API version to 0.5.0
+- Add set_entry_info queue call
+- Add replace_entry_info_dict queue call
+- Add set_command_info queue call
+- Add replace_command_info_dict queue call
+- Add set_entry_context queue call
+- Add replace_entry_context_dict queue call
+- Add set_command_context queue call
+- Add replace_command_context_dict queue call
 - Add extra_info_request function
 
 ### Added
 - Add info panel which modules can use to show extra info on the entry that is currently being hovered over
 - Add context panel for secondary action entries
+- Traceback is now printing when an exception is triggered
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
 - Page up and down causing QML errors when used too close to the start/end of the list
+- Minimizing behaviour didn't always work
 
 ## [0.9] - 2017-08-23
 ### API changes
