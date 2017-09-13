@@ -255,22 +255,36 @@ class Action(Enum):
     set_entry_info:
         Introduced in API version 0.3.1.
 
-        Set additional info for a certain extry, either in plain text or HTML.
+        Set additional info for a certain entry, either in plain text or HTML.
 
         key -- the entry to set it for
         value -- the value to set it to
 
         Example: self.q.put([Action.set_entry_info, "Audio settings", "Change the audio settings")
 
+    replace_entry_info_dict:
+        Introduced in API version 0.5.
+
+        Set all entry info at once by passing a dictionary.
+
+        Example: self.q.put([Action.set_entry_info, {"Audio settings": "Change the audio settings", "Video settings": "Change the video settings"}])
+
     set_command_info:
         Introduced in API version 0.3.1.
 
-        Set additional info for a certain extry, either in plain text or HTML.
+        Set additional info for a certain command, either in plain text or HTML.
 
         key -- the command to set it for
         value -- the value to set it to
 
         Example: self.q.put([Action.set_command_info, "volume", "Set the volume to the desired percentage (0 - 100)")
+
+    replace_command_info_dict:
+        Introduced in API version 0.5.
+
+        Set all command info at once by passing a dictionary.
+
+        Example: self.q.put([Action.set_entry_info, {"volume": "Set the volume to the desired percentage (0 - 100)", "video": "Turn video on or off"}])
 
     set_entry_context:
         Introduced in API version 0.4.
@@ -280,7 +294,14 @@ class Action(Enum):
         key -- the entry to set it for
         value -- the list of context entries
 
-        Example: self.q.put([Action.set_entry_info, "Audio settings", ["Disable", "Decrease volume", "Increase volume"])
+        Example: self.q.put([Action.set_entry_context, "Audio settings", ["Disable", "Decrease volume", "Increase volume"])
+
+    replace_entry_context_dict:
+        Introduced in API version 0.5.
+
+        Set all entry context menu entries at once by passing a dictionary.
+
+        Example: self.q.put([Action.replace_entry_context, {"Audio settings": ["Disable"], "Video quality": ["High", "Low"]}
 
     set_command_context:
         Introduced in API version 0.4.
@@ -290,7 +311,15 @@ class Action(Enum):
         key -- the command to set it for
         value -- the value to set it to
 
-        Example: self.q.put([Action.set_command_info, "volume", [0%, 20%, 40%, 60%, 80%, 100%])
+        Example: self.q.put([Action.set_command_context, "volume", ["0%", "20%", "40%", "60%", "80%", "100%"])
+
+    replace_command_context_dict:
+        Introduced in API version 0.5.
+
+        Set all command context menu entries at once by passing a dictionary.
+
+        Example: self.q.put([Action.replace_command_context_dict, {"volume": ["0%", "20%", "40%", "60%", "80%", "100%"], "video": ["on", "off"]}
+
     """
 
     critical_error = 0
@@ -315,9 +344,13 @@ class Action(Enum):
     set_selection = 19
     close = 20
     set_entry_info = 21
-    set_command_info = 22
-    set_entry_context = 23
-    set_command_context = 24
+    replace_entry_info_dict = 22
+    set_command_info = 23
+    replace_command_info_dict = 24
+    set_entry_context = 25
+    replace_entry_context_dict = 26
+    set_command_context = 27
+    replace_command_context_dict = 28
 
 
 class SelectionType(Enum):

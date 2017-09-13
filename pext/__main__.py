@@ -408,15 +408,29 @@ class MainLoop():
             tab['vm'].extra_info_entries[str(action[1])] = action[2]
             tab['vm'].update_info_panel(request_update=False)
 
+        elif action[0] == Action.replace_entry_info_dict:
+            tab['vm'].extra_info_entries = action[1]
+            tab['vm'].update_info_panel(request_update=False)
+
         elif action[0] == Action.set_command_info:
             tab['vm'].extra_info_commands[str(action[1])] = action[2]
+            tab['vm'].update_info_panel(request_update=False)
+
+        elif action[0] == Action.replace_command_info_dict:
+            tab['vm'].extra_info_commands = action[1]
             tab['vm'].update_info_panel(request_update=False)
 
         elif action[0] == Action.set_entry_context:
             tab['vm'].context_menu_entries[str(action[1])] = action[2]
 
+        elif action[0] == Action.replace_entry_context_dict:
+            tab['vm'].context_menu_entries = action[1]
+
         elif action[0] == Action.set_command_context:
             tab['vm'].context_menu_commands[str(action[1])] = action[2]
+
+        elif action[0] == Action.replace_command_context_dict:
+            tab['vm'].context_menu_commands = action[1]
 
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
@@ -462,7 +476,8 @@ class MainLoop():
 
                     tab['entries_processed'] = 0
                 except Exception as e:
-                    print('WARN: Module caused exception {}'.format(e))
+                    print('WARN: Module {} caused exception {}'.format(tab['module_name'], e))
+                    traceback.print_exc()
 
             self.logger.set_queue_count(queue_size)
 
@@ -802,7 +817,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        module['settings']['_api_version'] = [0, 4, 0]
+        module['settings']['_api_version'] = [0, 5, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1174,7 +1189,7 @@ class ViewModel():
         else:
             self.window.close(manual=True)
 
-    def search(self, new_entries=False) -> None:
+    def search(self, new_entries=False, manual=False) -> None:
         """Filter the entry list.
 
         Filter the list of entries in the screen, setting the filtered list
@@ -1188,8 +1203,9 @@ class ViewModel():
             return
 
         # TODO: Enable searching in context menu
-        self.context.setContextProperty(
-            "contextMenuEnabled", False)
+        if manual:
+            self.context.setContextProperty(
+                "contextMenuEnabled", False)
 
         # Sort if sorting is enabled
         if self.window.settings['sort_mode'] != SortMode.Module:
@@ -1355,7 +1371,7 @@ class ViewModel():
             "resultListModelDepth", len(self.selection))
 
         QQmlProperty.write(self.search_input_model, "text", "")
-        self.search(new_entries=True)
+        self.search(new_entries=True, manual=True)
         self._clear_queue()
         self.window.update()
 
@@ -1385,6 +1401,8 @@ class ViewModel():
 
     def update_info_panel(self, request_update=True) -> None:
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+            QQmlProperty.write(self.info_panel, "text", "")
+            self.extra_info_last_entry_type = None
             return
 
         current_entry = self._get_entry()
