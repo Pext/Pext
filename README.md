@@ -28,8 +28,9 @@ want to do, and Pext makes it easy.
 
 Several modules are available for effortless install right within Pext.
 
-![Pext](/screenshot.jpg)  
-![Pext](/screenshot2.jpg)  
+![Pext running the radiobrowser module with info panel](/pext_radiobrowser_infopanel.png)  
+![Pext running the openweathermap module with context menu](/pext_openweathermap_contextmenu.png)  
+![Pext running the emoji module](/pext_emoji.png)
 
 ## How it works
 Pext is designed to quickly pop up and get out of your way as soon as you're done with something. It is recommended to bind Pext to some global hotkey, or possibly run multiple instances of it with different profiles under multiple hotkeys. Example Pext workflows look as follows:
