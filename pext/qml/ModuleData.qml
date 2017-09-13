@@ -198,6 +198,8 @@ Row {
             text: ""
             wrapMode: Text.Wrap
             width: contentRow.width - mainContent.width
+
+            onLinkActivated: Qt.openUrlExternally(link)
         }
     }
 }
