@@ -124,7 +124,8 @@ Row {
             signal entryClicked()
             signal openContextMenu()
 
-            property int maximumIndex: resultListModelMaxIndex
+            property int normalEntries: resultListModelNormalEntries
+            property int commandEntries: resultListModelCommandEntries
             property bool commandMode: resultListModelCommandMode
             property bool hasEntries: resultListModelHasEntries
             property int depth: resultListModelDepth
@@ -148,17 +149,16 @@ Row {
                             font.pointSize: 12
                             font.italic:
                                 if (!resultListModelCommandMode) {
-                                    index > resultListModelMaxIndex
+                                    index >= resultListModelNormalEntries
                                 } else {
-                                    index == 0
+                                    index < resultListModelCommandEntries
                                 }
-                            font.bold: resultListModelCommandMode && index == 0
                             color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.isCurrentIndex ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
                             Behavior on color { PropertyAnimation {} }
                         }
                     }
                     MouseArea {
-                        enabled: !resultListModelCommandMode && !contextMenuContainer.visible
+                        enabled: !contextMenuContainer.visible
                         anchors.fill: parent
                         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
@@ -178,7 +178,6 @@ Row {
                 }
             }
             highlight: Rectangle {
-                visible: !resultListModelCommandMode
                 color: contextMenuContainer.visible ? inactivePalette.highlight : palette.highlight
             }
 

@@ -23,6 +23,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add context panel for secondary action entries
 - Traceback is now printing when an exception is triggered
 
+### Changed
+- Command mode no longer locks onto the first entry
+- Commands are always displayed in italics, instead of using italics for whatever is unfocused
+
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
 - Page up and down causing QML errors when used too close to the start/end of the list
