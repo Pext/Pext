@@ -132,11 +132,10 @@ class Module():
         check_call([
             sys.executable,
             os.path.join(AppFile().get_path('..'), 'pext')] +
-            argv + [
-            '--module',
-            'pext_module_development',
-            '--profile',
-            'none'])
+            ['--module',
+             'pext_module_development',
+             '--profile',
+             'none'] + argv)
 
         # Clean up
         rmtree(tempdir)
@@ -186,11 +185,10 @@ class Theme():
         check_call([
             sys.executable,
             os.path.join(AppFile().get_path('..'), 'pext')] +
-            argv + [
-            '--theme',
-            'pext_theme_development',
-            '--profile',
-            'none'])
+            ['--theme',
+             'pext_theme_development',
+             '--profile',
+             'none'] + argv)
 
         # Clean up
         rmtree(tempdir)
