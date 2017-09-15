@@ -2614,7 +2614,12 @@ def main() -> None:
     app.installTranslator(translator)
 
     # Load the app icon
-    app_icon = QIcon(AppFile.get_path(os.path.join('images', '128x128', 'pext.png')))
+    # KDE doesn't support svg in the system tray and macOS makes the png in
+    # the dock yellow. Let's assume svg for macOS and PNG for Linux for now.
+    if platform.system() == "Darwin":
+        app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
+    else:
+        app_icon = QIcon(AppFile.get_path(os.path.join('images', '128x128', 'pext.png')))
 
     app.setWindowIcon(app_icon)
 
