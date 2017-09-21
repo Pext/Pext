@@ -22,10 +22,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add info panel which modules can use to show extra info on the entry that is currently being hovered over
 - Add context panel for secondary action entries
 - Traceback is now printing when an exception is triggered
+- Last updated info for modules
 
 ### Changed
 - Command mode no longer locks onto the first entry
 - Commands are always displayed in italics, instead of using italics for whatever is unfocused
+- Versioning is now more precise
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
