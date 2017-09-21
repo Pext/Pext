@@ -127,6 +127,36 @@ class RunConseq():
                 function['name'](**function['kwargs'])
 
 
+class GitWrapper():
+    """A simple helper to make sure the git environment is always set in a safe way."""
+
+    @staticmethod
+    def check_call(command: List, directory: str) -> str:
+        return check_call(
+            ['git'] + command,
+            cwd=directory,
+            env=GitWrapper.get_env(directory))
+
+
+    @staticmethod
+    def check_output(command: List, directory: str) -> str:
+        return check_output(
+            ['git'] + command,
+            cwd=directory,
+            env=GitWrapper.get_env(directory),
+            universal_newlines=True).strip()
+
+    @staticmethod
+    def get_env(directory: Optional[str]) -> Dict:
+        git_env = os.environ.copy()
+        git_env['GIT_ASKPASS'] = 'true'
+        if directory:
+            git_env['GIT_CEILING_DIRECTORIES'] = "{}:{}".format(os.path.dirname(AppFile.get_path()), directory)
+        else:
+            git_env['GIT_CEILING_DIRECTORIES'] = os.path.dirname(AppFile.get_path())
+
+        return git_env
+
 class InputDialog(QDialog):
     """A simple dialog requesting user input."""
 
@@ -599,11 +629,9 @@ class ObjectManager():
             name = ThemeManager.remove_prefix(name)
 
             try:
-                source = check_output(
-                    ['git', 'config', '--get', 'remote.origin.url'],
-                    cwd=os.path.join(
-                        core_directory, directory),
-                    universal_newlines=True).strip()
+                source = GitWrapper.check_output(
+                    ['config', '--get', 'remote.origin.url'],
+                    os.path.join(core_directory, directory))
 
             except (CalledProcessError, FileNotFoundError):
                 source = None
@@ -925,11 +953,9 @@ class ModuleManager():
             self._log('⇩ {} ({})'.format(module_name, url))
 
         try:
-            git_env = os.environ.copy()
-            git_env['GIT_ASKPASS'] = 'true'
             return_code = Popen(['git', 'clone', url, dir_name],
                                 cwd=self.module_dir,
-                                env=git_env if not interactive else None).wait()
+                                env=GitWrapper.get_env(self.module_dir)).wait()
         except Exception as e:
             self._log_error('⇩ {}: {}'.format(module_name, e))
 
@@ -1007,8 +1033,9 @@ class ModuleManager():
             self._log('⇩ {}'.format(module_name))
 
         try:
-            check_call(
-                ['git', 'pull'], cwd=os.path.join(self.module_dir, dir_name))
+            GitWrapper.check_call(
+                ['pull'],
+                os.path.join(self.module_dir, dir_name))
         except Exception as e:
             if verbose:
                 self._log_error(
@@ -1054,19 +1081,17 @@ class UpdateManager():
 
     def _get_git_commit(self) -> Optional[str]:
         try:
-            return check_output(
-                ['git', 'rev-parse', "HEAD"],
-                cwd=AppFile.get_path(),
-                universal_newlines=True).strip()
+            return GitWrapper.check_output(
+                ['rev-parse', "HEAD"],
+                AppFile.get_path())
         except (CalledProcessError, FileNotFoundError) as e:
             return None
 
     def _get_git_dirty(self) -> bool:
         try:
-            dirty_files = check_output(
-                ['git', 'status', '--porcelain'],
-                cwd=AppFile.get_path(),
-                universal_newlines=True).strip()
+            dirty_files = GitWrapper.check_output(
+                ['status', '--porcelain'],
+                AppFile.get_path())
 
         except (CalledProcessError, FileNotFoundError):
             return False
@@ -1081,11 +1106,9 @@ class UpdateManager():
         # Add last updated time
         try:
             return datetime.fromtimestamp(int(
-                check_output(
-                    ['git', 'show', '-s', '--format=%ct'],
-                    cwd=directory,
-                    stderr=STDOUT,
-                    universal_newlines=True).strip()))
+                GitWrapper.check_output(
+                    ['show', '-s', '--format=%ct'],
+                    directory)))
 
         except (CalledProcessError, FileNotFoundError):
             return None
@@ -2206,11 +2229,9 @@ class ThemeManager():
             self._log('⇩ {} ({})'.format(theme_name, url))
 
         try:
-            git_env = os.environ.copy()
-            git_env['GIT_ASKPASS'] = 'true'
             return_code = Popen(['git', 'clone', url, dir_name],
                                 cwd=self.theme_dir,
-                                env=git_env if not interactive else None).wait()
+                                env=GitWrapper.get_env(self.theme_dir)).wait()
         except Exception as e:
             self._log_error('⇩ {}: {}'.format(theme_name, e))
 
@@ -2273,8 +2294,9 @@ class ThemeManager():
             self._log('⇩ {}'.format(theme_name))
 
         try:
-            check_call(
-                ['git', 'pull'], cwd=os.path.join(self.theme_dir, dir_name))
+            GitWrapper.check_call(
+                ['pull'],
+                os.path.join(self.theme_dir, dir_name))
         except Exception as e:
             if verbose:
                 self._log_error(
