@@ -55,26 +55,42 @@ Dialog {
                     wrapMode: Text.Wrap 
                     font.bold: true
                 }
+
+                Label {
+                    visible: manageableObjects[modelData].metadata.last_updated !== undefined
+
+                    text: qsTr("Last updated: %1").arg(manageableObjects[modelData].metadata.last_updated)
+                    width: root.width
+                    wrapMode: Text.Wrap
+                }
     
                 Label {
+                    visible: manageableObjects[modelData].metadata.developer !== undefined
+
                     text: qsTr("Developer: %1").arg(manageableObjects[modelData].metadata.developer)
                     width: root.width
                     wrapMode: Text.Wrap 
                 }
     
                 Label {
+                    visible: manageableObjects[modelData].metadata.description !== undefined
+
                     text: qsTr("Description: %1").arg(manageableObjects[modelData].metadata.description)
                     width: root.width
                     wrapMode: Text.Wrap 
                 }
         
                 Label {
+                    visible: manageableObjects[modelData].metadata.license !== undefined
+
                     text: qsTr("License: %1").arg(manageableObjects[modelData].metadata.license)
                     width: root.width
                     wrapMode: Text.Wrap 
                 }
         
                 Label {
+                    visible: manageableObjects[modelData].metadata.homepage !== undefined
+
                     text: qsTr("Homepage: %1").arg("<a href='" + manageableObjects[modelData].metadata.homepage + "'>" + manageableObjects[modelData].metadata.homepage + "</a>")
                     textFormat: Text.RichText
                     width: root.width
@@ -90,6 +106,8 @@ Dialog {
                 }
                 
                 Label {
+                    visible: manageableObjects[modelData].source !== undefined
+
                     text: qsTr("Download source: %1").arg("<a href='" + manageableObjects[modelData].source + "'>" + manageableObjects[modelData].source + "</a>")
                     textFormat: Text.RichText
                     width: root.width
@@ -106,6 +124,8 @@ Dialog {
     
                 GridLayout {
                     Button {
+                        visible: manageableObjects[modelData].source !== undefined
+
                         text: qsTr("Update")
                         onClicked: {
                             updateRequest(modelData)
@@ -114,6 +134,8 @@ Dialog {
                     }
                     
                     Button {
+                        visible: manageableObjects[modelData].system
+
                         text: qsTr("Uninstall")
                         onClicked: {
                             uninstallRequest(modelData)

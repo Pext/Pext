@@ -37,11 +37,12 @@ import time
 import traceback
 import webbrowser
 
+from datetime import datetime
 from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from shutil import rmtree
-from subprocess import check_call, check_output, CalledProcessError, Popen
+from subprocess import check_call, check_output, CalledProcessError, Popen, STDOUT
 try:
     from typing import Dict, List, Optional, Tuple
 except ImportError:
@@ -71,13 +72,13 @@ class AppFile():
     """Get access to application-specific files."""
 
     @staticmethod
-    def get_path(name: str) -> str:
-        """Return the absolute path by file or directory name."""
-        return os.path.join(os.path.dirname(os.path.abspath(__file__)), name)
+    def get_path() -> str:
+        """Return the absolute current path."""
+        return os.path.dirname(os.path.abspath(__file__))
 
 
 # Ensure pext_base and pext_helpers can always be loaded by us and the modules
-sys.path.append(AppFile.get_path('helpers'))
+sys.path.append(os.path.join(AppFile.get_path(), 'helpers'))
 
 from pext_base import ModuleBase  # noqa: E402
 from pext_helpers import Action, SelectionType  # noqa: E402
@@ -93,16 +94,6 @@ class SortMode(IntEnum):
     Module = 0
     Ascending = 1
     Descending = 2
-
-
-class VersionRetriever():
-    """Retrieve general information."""
-
-    @staticmethod
-    def get_version() -> str:
-        """Return the version information and cache it."""
-        with open(AppFile.get_path('VERSION')) as version_file:
-            return version_file.read().strip()
 
 
 class ConfigRetriever():
@@ -615,21 +606,21 @@ class ObjectManager():
                     universal_newlines=True).strip()
 
             except (CalledProcessError, FileNotFoundError):
-                source = "Unknown"
-
-            metadata = {'name': 'Unknown',
-                        'developer': 'Unknown',
-                        'description': 'Unknown',
-                        'homepage': 'Unknown',
-                        'license': 'Unknown'}
+                source = None
 
             try:
                 with open(os.path.join(core_directory, directory, "metadata.json"), 'r') as metadata_json:
                     metadata = json.load(metadata_json)
             except (FileNotFoundError, json.decoder.JSONDecodeError):
                 print("Object {} lacks a metadata.json file".format(name))
+                metadata = {}
 
-            objects[name] = {"source": source, "metadata": metadata}
+            # Add last updated time
+            last_updated = UpdateManager.get_last_updated(os.path.join(core_directory, directory))
+            if last_updated:
+                metadata['last_updated'] = str(last_updated)
+
+            objects[name] = {"source": source, "metadata": metadata, "system": True}
 
         return objects
 
@@ -833,7 +824,7 @@ class ModuleManager():
         # Add tab
         tab_data = QQmlComponent(window.engine)
         tab_data.loadUrl(
-            QUrl.fromLocalFile(AppFile.get_path(os.path.join('qml', 'ModuleData.qml'))))
+            QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'ModuleData.qml')))
         window.engine.setContextForObject(tab_data, module_context)
         window.tabs.addTab(module_name, tab_data)
 
@@ -1045,6 +1036,59 @@ class ModuleManager():
         for module in self.list_modules().keys():
             self.update_module(module, verbose=verbose)
 
+
+class UpdateManager():
+    """Manages scheduling and checking automatic updates."""
+
+    def __init__(self) -> None:
+        with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
+            self.short_version = version_file.read().strip()
+
+        self.git_commit = self._get_git_commit()
+        self.git_dirty = self._get_git_dirty()
+
+        if self.git_commit:
+            self.version = "{} ({}{})".format(self.short_version, self.git_commit, "-dirty" if self.git_dirty else "")
+        else:
+            self.version = self.short_version
+
+    def _get_git_commit(self) -> Optional[str]:
+        try:
+            return check_output(
+                ['git', 'rev-parse', "HEAD"],
+                cwd=AppFile.get_path(),
+                universal_newlines=True).strip()
+        except (CalledProcessError, FileNotFoundError) as e:
+            return None
+
+    def _get_git_dirty(self) -> bool:
+        try:
+            dirty_files = check_output(
+                ['git', 'status', '--porcelain'],
+                cwd=AppFile.get_path(),
+                universal_newlines=True).strip()
+
+        except (CalledProcessError, FileNotFoundError):
+            return False
+
+        return bool(dirty_files)
+
+    def get_version(self) -> str:
+        return self.version
+
+    @staticmethod
+    def get_last_updated(directory) -> Optional[datetime]:
+        # Add last updated time
+        try:
+            return datetime.fromtimestamp(int(
+                check_output(
+                    ['git', 'show', '-s', '--format=%ct'],
+                    cwd=directory,
+                    stderr=STDOUT,
+                    universal_newlines=True).strip()))
+
+        except (CalledProcessError, FileNotFoundError):
+            return None
 
 class ModuleThreadInitializer(threading.Thread):
     """Initialize a thread for the module."""
@@ -1514,7 +1558,7 @@ class Window(QMainWindow):
 
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
-            "applicationVersion", VersionRetriever.get_version())
+            "applicationVersion", UpdateManager().get_version())
 
         self.context.setContextProperty(
             "modulesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'modules'))
@@ -1522,7 +1566,7 @@ class Window(QMainWindow):
             "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
 
         # Load the main UI
-        self.engine.load(QUrl.fromLocalFile(AppFile.get_path(os.path.join('qml', 'main.qml'))))
+        self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
 
         self.window = self.engine.rootObjects()[0]
 
@@ -2052,7 +2096,7 @@ class ThemeManager():
         open(os.path.join(system_theme_path, 'theme.conf'), 'w').close()
         with open(os.path.join(system_theme_path, 'metadata.json'), 'w') as system_theme_metadata:
             system_theme_metadata.write(json.dumps(
-                {'name': 'System',
+                {'name': ThemeManager.get_system_theme_name(),
                  'developer': 'Sylvia van Os',
                  'description': "Use the system's default Qt5 theme"}))
 
@@ -2111,7 +2155,13 @@ class ThemeManager():
 
     def list_themes(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
-        return ObjectManager().list_objects(self.theme_dir)
+        themes = ObjectManager().list_objects(self.theme_dir)
+        for theme in themes:
+            if themes[theme]["metadata"]["name"] == ThemeManager.get_system_theme_name():
+                themes[theme]["system"] = False
+                break
+
+        return themes
 
     def load_theme(self, theme_name: str) -> QPalette:
         """Return the parsed palette."""
@@ -2396,7 +2446,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             usage()
             sys.exit(0)
         elif opt == "--version":
-            print("Pext {}".format(VersionRetriever.get_version()))
+            print("Pext {}".format(UpdateManager().get_version()))
             print()
             print("Copyright (C) 2016 - 2017 Sylvia van Os")
             print("This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.")
@@ -2609,7 +2659,7 @@ def main() -> None:
     locale_to_use = settings['locale'] if settings['locale'] else QLocale.system().name()
     print('Using locale: {} {}'.format(QLocale(locale_to_use).name(), "(manually set)" if settings['locale'] else ""))
     print('Localization loaded:',
-        translator.load(QLocale(locale_to_use), 'pext', '_', AppFile.get_path('i18n'), '.qm'))
+        translator.load(QLocale(locale_to_use), 'pext', '_', os.path.join(AppFile.get_path(), 'i18n'), '.qm'))
 
     app.installTranslator(translator)
 
@@ -2617,9 +2667,9 @@ def main() -> None:
     # KDE doesn't support svg in the system tray and macOS makes the png in
     # the dock yellow. Let's assume svg for macOS and PNG for Linux for now.
     if platform.system() == "Darwin":
-        app_icon = QIcon(AppFile.get_path(os.path.join('images', 'scalable', 'pext.svg')))
+        app_icon = QIcon(os.path.join(AppFile.get_path(), 'images', 'scalable', 'pext.svg'))
     else:
-        app_icon = QIcon(AppFile.get_path(os.path.join('images', '128x128', 'pext.png')))
+        app_icon = QIcon(os.path.join(AppFile.get_path(), 'images', '128x128', 'pext.png'))
 
     app.setWindowIcon(app_icon)
 
