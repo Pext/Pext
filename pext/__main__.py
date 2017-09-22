@@ -150,10 +150,12 @@ class GitWrapper():
     def get_env(directory: Optional[str]) -> Dict:
         git_env = os.environ.copy()
         git_env['GIT_ASKPASS'] = 'true'
-        if directory:
-            git_env['GIT_CEILING_DIRECTORIES'] = "{}:{}".format(os.path.dirname(AppFile.get_path()), directory)
+
+        pext_root = os.path.dirname(os.path.dirname(AppFile.get_path()))
+        if not os.path.commonpath([os.path.abspath(pext_root)]) == os.path.commonpath([os.path.abspath(pext_root), os.path.abspath(directory)]):
+            git_env['GIT_CEILING_DIRECTORIES'] = directory
         else:
-            git_env['GIT_CEILING_DIRECTORIES'] = os.path.dirname(AppFile.get_path())
+            git_env['GIT_CEILING_DIRECTORIES'] = pext_root
 
         return git_env
 
@@ -1084,7 +1086,7 @@ class UpdateManager():
             return GitWrapper.check_output(
                 ['rev-parse', "HEAD"],
                 AppFile.get_path())
-        except (CalledProcessError, FileNotFoundError) as e:
+        except (CalledProcessError, FileNotFoundError):
             return None
 
     def _get_git_dirty(self) -> bool:
