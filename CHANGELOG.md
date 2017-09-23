@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add context panel for secondary action entries
 - Traceback is now printing when an exception is triggered
 - Last updated info for modules
+- Version info for modules
+- Ability to update Pext itself
 
 ### Changed
 - Command mode no longer locks onto the first entry

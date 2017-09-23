@@ -2347,7 +2347,7 @@ class ThemeManager():
         theme_name = ThemeManager.remove_prefix(theme_name)
 
         # Check if it's not already up-to-date or not the system theme
-        if not UpdateManager.has_update(os.path.join(self.module_dir, dir_name)) or theme_name == ThemeManager.get_system_theme_name():
+        if not UpdateManager.has_update(os.path.join(self.theme_dir, dir_name)) or theme_name == ThemeManager.get_system_theme_name():
             if verbose:
                 Logger._log('⏩{}'.format(theme_name), self.logger)
             return
