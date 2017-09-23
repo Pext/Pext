@@ -1070,35 +1070,13 @@ class UpdateManager():
     """Manages scheduling and checking automatic updates."""
 
     def __init__(self) -> None:
-        with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
-            self.short_version = version_file.read().strip()
-
-        self.git_commit = self._get_git_commit()
-        self.git_dirty = self._get_git_dirty()
-
-        if self.git_commit:
-            self.version = "{} ({}{})".format(self.short_version, self.git_commit, "-dirty" if self.git_dirty else "")
-        else:
-            self.version = self.short_version
-
-    def _get_git_commit(self) -> Optional[str]:
         try:
-            return GitWrapper.check_output(
-                ['rev-parse', "HEAD"],
+            self.version = GitWrapper.check_output(
+                ['describe', '--dirty'],
                 AppFile.get_path())
         except (CalledProcessError, FileNotFoundError):
-            return None
-
-    def _get_git_dirty(self) -> bool:
-        try:
-            dirty_files = GitWrapper.check_output(
-                ['status', '--porcelain'],
-                AppFile.get_path())
-
-        except (CalledProcessError, FileNotFoundError):
-            return False
-
-        return bool(dirty_files)
+            with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
+                self.version = version_file.read().strip()
 
     def get_version(self) -> str:
         return self.version
