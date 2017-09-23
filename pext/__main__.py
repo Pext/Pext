@@ -1031,6 +1031,12 @@ class ModuleManager():
         dir_name = ModuleManager.add_prefix(module_name)
         module_name = ModuleManager.remove_prefix(module_name)
 
+        # Check if it's not already up-to-date
+        if not UpdateManager.has_update(os.path.join(self.module_dir, dir_name)):
+            if verbose:
+                self._log('⏩{}'.format(module_name))
+            return
+
         if verbose:
             self._log('⇩ {}'.format(module_name))
 
@@ -1082,8 +1088,34 @@ class UpdateManager():
         return self.version
 
     @staticmethod
+    def has_update(directory, branch="master") -> bool:
+        """Check if an update is available for the selected directory."""
+        try:
+            GitWrapper.check_call(
+                ['fetch'],
+                directory)
+        except (CalledProcessError, FileNotFoundError):
+            return False
+
+        try:
+            upstream_version = GitWrapper.check_output(
+                ['rev-parse', 'origin/{}'.format(branch)],
+                directory)
+        except (CalledProcessError, FileNotFoundError):
+            return False
+
+        try:
+            own_version = GitWrapper.check_output(
+                ['rev-parse', branch],
+                directory)
+        except (CalledProcessError, FileNotFoundError):
+            return False
+
+        return upstream_version != own_version
+
+    @staticmethod
     def get_last_updated(directory) -> Optional[datetime]:
-        # Add last updated time
+        """Return the time of the latest update."""
         try:
             return datetime.fromtimestamp(int(
                 GitWrapper.check_output(
@@ -2265,7 +2297,8 @@ class ThemeManager():
         dir_name = ThemeManager.add_prefix(theme_name)
         theme_name = ThemeManager.remove_prefix(theme_name)
 
-        if theme_name == ThemeManager.get_system_theme_name():
+        # Check if it's not already up-to-date or not the system theme
+        if not UpdateManager.has_update(os.path.join(self.module_dir, dir_name)) or theme_name == ThemeManager.get_system_theme_name():
             if verbose:
                 self._log('⏩{}'.format(theme_name))
             return
