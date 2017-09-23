@@ -57,9 +57,9 @@ Dialog {
                 }
 
                 Label {
-                    visible: manageableObjects[modelData].metadata.last_updated !== undefined
+                    visible: manageableObjects[modelData].metadata.version !== undefined && manageableObjects[modelData].metadata.last_updated !== undefined
 
-                    text: qsTr("Last updated: %1").arg(manageableObjects[modelData].metadata.last_updated)
+                    text: qsTr("Version: %1 (%2)").arg(manageableObjects[modelData].metadata.version).arg(manageableObjects[modelData].metadata.last_updated)
                     width: root.width
                     wrapMode: Text.Wrap
                 }
