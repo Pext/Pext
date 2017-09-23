@@ -220,6 +220,21 @@ class Logger():
 
         return message_lines
 
+    @staticmethod
+    def _log(message: str, logger=None) -> None:
+        """If a logger is provided, log to the logger. Otherwise, print."""
+        if logger:
+            logger.add_message("", message)
+        else:
+            print(message)
+
+    def _log_error(message: str, logger=None) -> None:
+        """If a logger is provided, log to the logger. Otherwise, print."""
+        if logger:
+            logger.add_error("", message)
+        else:
+            print(message)
+
     def show_next_message(self) -> None:
         """Show next statusbar message.
 
@@ -685,18 +700,6 @@ class ModuleManager():
 
         return module_name
 
-    def _log(self, message: str) -> None:
-        if self.logger:
-            self.logger.add_message("", message)
-        else:
-            print(message)
-
-    def _log_error(self, message: str) -> None:
-        if self.logger:
-            self.logger.add_error("", message)
-        else:
-            print(message)
-
     def _pip_install(self, module_dir_name: str) -> int:
         """Install module dependencies using pip."""
         module_requirements_path = os.path.join(self.module_dir, module_dir_name, 'requirements.txt')
@@ -795,8 +798,9 @@ class ModuleManager():
         try:
             module_import = __import__(module_dir, fromlist=['Module'])
         except ImportError as e1:
-            self._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e1))
+            Logger._log_error(
+                "Failed to load module {} from {}: {}".format(module_name, module_dir, e1),
+                self.logger)
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -816,8 +820,9 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e2:
-            self._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
+            Logger._log_error(
+                "Failed to load module {} from {}: {}".format(module_name, module_dir, e2),
+                self.logger)
             return False
 
         # Check if the required functions have enough parameters
@@ -838,9 +843,10 @@ class ModuleManager():
                 if name == 'process_response' and param_length == 1:
                     print("WARN: Module {} uses old process_response signature and will not be able to receive an identifier if requested".format(module_name))
                 else:
-                    self._log_error(
+                    Logger._log_error(
                         "Failed to load module {} from {}: {} function has {} parameters (excluding self), expected {}"
-                        .format(module_name, module_dir, name, param_length, required_param_length))
+                        .format(module_name, module_dir, name, param_length, required_param_length),
+                        self.logger)
                     return False
 
         # Prefill API version and locale
@@ -951,25 +957,25 @@ class ModuleManager():
 
         if os.path.exists(os.path.join(self.module_dir, dir_name)):
             if verbose:
-                self._log('✔⇩ {}'.format(module_name))
+                Logger._log('✔⇩ {}'.format(module_name), self.logger)
 
             return False
 
         if verbose:
-            self._log('⇩ {} ({})'.format(module_name, url))
+            Logger._log('⇩ {} ({})'.format(module_name, url), self.logger)
 
         try:
             return_code = Popen(['git', 'clone', url, dir_name],
                                 cwd=self.module_dir,
                                 env=GitWrapper.get_env(self.module_dir)).wait()
         except Exception as e:
-            self._log_error('⇩ {}: {}'.format(module_name, e))
+            Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
 
             return False
 
         if return_code != 0:
             if verbose:
-                self._log_error('⇩ {}'.format(module_name))
+                Logger._log_error('⇩ {}'.format(module_name), self.logger)
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -979,12 +985,12 @@ class ModuleManager():
             return False
 
         if verbose:
-            self._log('⇩⇩ {}'.format(module_name))
+            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                self._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code))
+                Logger._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code), self.logger)
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -999,7 +1005,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            self._log('✔⇩⇩ {}'.format(module_name))
+            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
 
         return True
 
@@ -1009,14 +1015,15 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            self._log('♻ {}'.format(module_name))
+            Logger._log('♻ {}'.format(module_name), self.logger)
 
         try:
             rmtree(os.path.join(self.module_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                self._log(
-                    '✔♻ {}'.format(module_name))
+                Logger._log(
+                    '✔♻ {}'.format(module_name),
+                    self.logger)
 
             return False
 
@@ -1026,7 +1033,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            self._log('✔♻ {}'.format(module_name))
+            Logger._log('✔♻ {}'.format(module_name), self.logger)
 
         return True
 
@@ -1038,11 +1045,11 @@ class ModuleManager():
         # Check if it's not already up-to-date
         if not UpdateManager.has_update(os.path.join(self.module_dir, dir_name)):
             if verbose:
-                self._log('⏩{}'.format(module_name))
+                Logger._log('⏩{}'.format(module_name), self.logger)
             return
 
         if verbose:
-            self._log('⇩ {}'.format(module_name))
+            Logger._log('⇩ {}'.format(module_name), self.logger)
 
         try:
             GitWrapper.check_call(
@@ -1050,23 +1057,26 @@ class ModuleManager():
                 os.path.join(self.module_dir, dir_name))
         except Exception as e:
             if verbose:
-                self._log_error(
-                    '⇩ {}: {}'.format(module_name, e))
+                Logger._log_error(
+                    '⇩ {}: {}'.format(module_name, e),
+                    self.logger)
 
             return False
 
         if verbose:
-            self._log('⇩⇩ {}'.format(module_name))
+            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                self._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code))
+                Logger._log_error(
+                    '⇩⇩ {}: {}'.format(module_name, pip_exit_code),
+                    self.logger)
 
             return False
 
         if verbose:
-            self._log('✔⇩⇩ {}'.format(module_name))
+            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
 
         return True
 
@@ -1090,6 +1100,31 @@ class UpdateManager():
 
     def get_core_version(self) -> str:
         return self.version
+
+    @staticmethod
+    def update_core(verbose=False, logger=None) -> bool:
+        # Check if it's not already up-to-date
+        if not UpdateManager.has_update(AppFile.get_path()):
+            if verbose:
+                Logger._log('⏩Pext',logger)
+            return False
+
+        if verbose:
+            Logger._log('⇩ Pext', logger)
+
+        try:
+            GitWrapper.check_call(
+                ['pull'],
+                AppFile.get_path())
+        except Exception as e:
+            if verbose:
+                Logger._log_error(
+                    '⇩ Pext: {}'.format(e),
+                    logger)
+
+            return False
+
+        return True
 
     @staticmethod
     def has_update(directory, branch="master") -> bool:
@@ -1688,6 +1723,8 @@ class Window(QMainWindow):
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
+        menu_update_core_shortcut = self.window.findChild(
+            QObject, "menuUpdateCore")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
         # Bind menu entries
@@ -1725,6 +1762,7 @@ class Window(QMainWindow):
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
+        menu_update_core_shortcut.triggered.connect(self._menu_update_core)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
@@ -2034,11 +2072,18 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themes", themes)
 
+    def _menu_update_core(self) -> None:
+        if UpdateManager.update_core(verbose=True, logger=self.logger):
+            # Restart Pext by letting the wrapper know we want a restart
+            sys.exit(129)
+
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
 
     def bind_logger(self, logger: 'Logger') -> None:
         """Bind the logger to the window and further initialize the module."""
+        self.logger = logger
+
         self.module_manager.bind_logger(logger)
         self.theme_manager.bind_logger(logger)
 
@@ -2170,18 +2215,6 @@ class ThemeManager():
     def get_system_theme_name() -> str:
         return "system"
 
-    def _log(self, message: str) -> None:
-        if self.logger:
-            self.logger.add_message("", message)
-        else:
-            print(message)
-
-    def _log_error(self, message: str) -> None:
-        if self.logger:
-            self.logger.add_error("", message)
-        else:
-            print(message)
-
     def bind_logger(self, logger: Logger) -> str:
         """Connect a logger to the module manager.
 
@@ -2248,25 +2281,25 @@ class ThemeManager():
 
         if os.path.exists(os.path.join(self.theme_dir, dir_name)):
             if verbose:
-                self._log('✔⇩ {}'.format(theme_name))
+                Logger._log('✔⇩ {}'.format(theme_name), self.logger)
 
             return False
 
         if verbose:
-            self._log('⇩ {} ({})'.format(theme_name, url))
+            Logger._log('⇩ {} ({})'.format(theme_name, url), self.logger)
 
         try:
             return_code = Popen(['git', 'clone', url, dir_name],
                                 cwd=self.theme_dir,
                                 env=GitWrapper.get_env(self.theme_dir)).wait()
         except Exception as e:
-            self._log_error('⇩ {}: {}'.format(theme_name, e))
+            Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
 
             return False
 
         if return_code != 0:
             if verbose:
-                self._log_error('⇩ {}'.format(theme_name))
+                Logger._log_error('⇩ {}'.format(theme_name), self.logger)
 
             try:
                 rmtree(os.path.join(self.theme_dir, dir_name))
@@ -2276,7 +2309,7 @@ class ThemeManager():
             return False
 
         if verbose:
-            self._log('✔⇩ {}'.format(theme_name))
+            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
 
         return True
 
@@ -2287,23 +2320,24 @@ class ThemeManager():
 
         if theme_name == ThemeManager.get_system_theme_name():
             if verbose:
-                self._log('⏩{}'.format(theme_name))
+                Logger._log('⏩{}'.format(theme_name), self.logger)
             return
 
         if verbose:
-            self._log('♻ {}'.format(theme_name))
+            Logger._log('♻ {}'.format(theme_name), self.logger)
 
         try:
             rmtree(os.path.join(self.theme_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                self._log(
-                    '✔♻ {}'.format(theme_name))
+                Logger._log(
+                    '✔♻ {}'.format(theme_name),
+                    self.logger)
 
             return False
 
         if verbose:
-            self._log('✔♻ {}'.format(theme_name))
+            Logger._log('✔♻ {}'.format(theme_name), self.logger)
 
         return True
 
@@ -2315,11 +2349,11 @@ class ThemeManager():
         # Check if it's not already up-to-date or not the system theme
         if not UpdateManager.has_update(os.path.join(self.module_dir, dir_name)) or theme_name == ThemeManager.get_system_theme_name():
             if verbose:
-                self._log('⏩{}'.format(theme_name))
+                Logger._log('⏩{}'.format(theme_name), self.logger)
             return
 
         if verbose:
-            self._log('⇩ {}'.format(theme_name))
+            Logger._log('⇩ {}'.format(theme_name), self.logger)
 
         try:
             GitWrapper.check_call(
@@ -2327,13 +2361,14 @@ class ThemeManager():
                 os.path.join(self.theme_dir, dir_name))
         except Exception as e:
             if verbose:
-                self._log_error(
-                    '⇩ {}: {}'.format(theme_name, e))
+                Logger._log_error(
+                    '⇩ {}: {}'.format(theme_name, e),
+                    self.logger)
 
             return False
 
         if verbose:
-            self._log('✔⇩ {}'.format(theme_name))
+            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
 
         return True
 

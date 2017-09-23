@@ -236,6 +236,11 @@ ApplicationWindow {
             title: "&Pext"
 
             MenuItem {
+                objectName: "menuUpdateCore"
+                text: qsTr("Check for and install updates")
+            }
+
+            MenuItem {
                 objectName: "menuQuit"
                 text: qsTr("Quit")
                 shortcut: StandardKey.Quit
