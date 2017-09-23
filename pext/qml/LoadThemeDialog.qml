@@ -48,7 +48,7 @@ Dialog {
         }
 
         Label {
-            text: qsTr("Note: You must restart Pext to apply the new theme.")
+            text: qsTr("Note: Pext will restart to apply the new theme.")
         }
     }
 
