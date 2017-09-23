@@ -645,7 +645,11 @@ class ObjectManager():
                 print("Object {} lacks a metadata.json file".format(name))
                 metadata = {}
 
-            # Add last updated time
+            # Add revision last updated time
+            version = UpdateManager.get_version(os.path.join(core_directory, directory))
+            if version:
+                metadata['version'] = version
+
             last_updated = UpdateManager.get_last_updated(os.path.join(core_directory, directory))
             if last_updated:
                 metadata['last_updated'] = str(last_updated)
@@ -1078,13 +1082,13 @@ class UpdateManager():
     def __init__(self) -> None:
         try:
             self.version = GitWrapper.check_output(
-                ['describe', '--dirty'],
+                ['describe', '--always', '--dirty'],
                 AppFile.get_path())
         except (CalledProcessError, FileNotFoundError):
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
                 self.version = version_file.read().strip()
 
-    def get_version(self) -> str:
+    def get_core_version(self) -> str:
         return self.version
 
     @staticmethod
@@ -1112,6 +1116,15 @@ class UpdateManager():
             return False
 
         return upstream_version != own_version
+
+    @staticmethod
+    def get_version(directory) -> Optional[str]:
+        try:
+            return GitWrapper.check_output(
+                ['describe', '--always', '--dirty'],
+                directory)
+        except (CalledProcessError, FileNotFoundError):
+            return None
 
     @staticmethod
     def get_last_updated(directory) -> Optional[datetime]:
@@ -1593,7 +1606,7 @@ class Window(QMainWindow):
 
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
-            "applicationVersion", UpdateManager().get_version())
+            "applicationVersion", UpdateManager().get_core_version())
 
         self.context.setContextProperty(
             "modulesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'modules'))
@@ -2483,7 +2496,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             usage()
             sys.exit(0)
         elif opt == "--version":
-            print("Pext {}".format(UpdateManager().get_version()))
+            print("Pext {}".format(UpdateManager().get_core_version()))
             print()
             print("Copyright (C) 2016 - 2017 Sylvia van Os")
             print("This is free software; see the source for copying conditions. There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.")
