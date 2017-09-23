@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Command mode no longer locks onto the first entry
 - Commands are always displayed in italics, instead of using italics for whatever is unfocused
 - Versioning is now more precise
+- Check if a module/theme has an update before updating it
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
