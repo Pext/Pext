@@ -197,6 +197,7 @@ Row {
             text: ""
             wrapMode: Text.Wrap
             width: contentRow.width - mainContent.width
+            color: palette.text
 
             onLinkActivated: Qt.openUrlExternally(link)
         }
