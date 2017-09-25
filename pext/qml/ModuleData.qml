@@ -101,7 +101,7 @@ Row {
             visible: headerText.text
             Text {
                 id: headerText
-                color: palette.mid
+                color: palette.highlight
                 objectName: "headerText"
                 font.pointSize: 12
 
