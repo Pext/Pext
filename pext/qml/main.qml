@@ -612,6 +612,7 @@ ApplicationWindow {
                 text: "<h2>" + qsTr("Design philosophy") + "</h2>" +
                       "<p>" + qsTr("Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.") + "</p>"
 
+                color: palette.text
                 textFormat: TextEdit.RichText
                 readOnly: true
                 selectByMouse: false
@@ -644,6 +645,7 @@ ApplicationWindow {
                 text: "<h2>" + qsTr("Getting started") + "</h2>" +
                       "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab. When you are done with a tab, you can always close it by pressing <kbd>%2</kbd>. You currently have %n module(s) installed. You can manage modules in the Module menu.", "", modulesInstalledCount).arg(menuLoadModule.shortcut).arg(menuCloseActiveModule.shortcut) + "</p>"
 
+                color: palette.text
                 textFormat: TextEdit.RichText
                 readOnly: true
                 selectByMouse: false
