@@ -37,18 +37,31 @@ Dialog {
         Tab {
             title: qsTr("Copyright")
             ScrollView {
-                Text {
-                    color: palette.text
+                Item {
+                    height: childrenRect.height
                     width: parent.parent.width
-                    wrapMode: Text.Wrap
-                    text:
-                        "<h1>Pext " + version + "</h1><br>" +
-                        "Copyright 2016 - 2017 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
-                        "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>" +
-                        "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br>" +
-                        "You should have received a copy of the GNU General Public License along with this program. If not, see <a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
 
-                onLinkActivated: Qt.openUrlExternally(link)
+                    Image {
+                        asynchronous: true
+                        source: "../images/scalable/logo.svg"
+                        fillMode: Image.Pad
+                        height: 150
+                    }
+
+                    Text {
+                        y: 150
+                        color: palette.text
+                        width: parent.parent.width
+                        wrapMode: Text.Wrap
+                        text:
+                            "<h1>Pext " + version + "</h1><br>" +
+                            "Copyright 2016 - 2017 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
+                            "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>" +
+                            "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br>" +
+                            "You should have received a copy of the GNU General Public License along with this program. If not, see <a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
+
+                        onLinkActivated: Qt.openUrlExternally(link)
+                    }
                 }
             }
         }
