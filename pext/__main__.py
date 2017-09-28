@@ -26,10 +26,13 @@ import os
 import subprocess
 import sys
 
-if __name__ == "__main__":
+def main() -> None:
     while True:
-        command = [os.path.join(os.path.dirname(os.path.abspath(__file__)), "pext.py")] + sys.argv[1:]
+        command = [sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "pext.py")] + sys.argv[1:]
         return_code = subprocess.Popen(command).wait()
         if return_code != 129:
             sys.exit(return_code)
         print("Restarting...")
+
+if __name__ == "__main__":
+    main()
