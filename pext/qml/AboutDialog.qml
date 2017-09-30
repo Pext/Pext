@@ -77,7 +77,7 @@ Dialog {
                         "<a href='https://hosted.weblate.org/engage/pext/'>" + qsTr("Want to help translate Pext? Please click here.") + "</a><br>" +
                         "<h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:") + "</h3><br>" +
                         "<b>" + qsTr("Spanish") + "</b><br>" +
-                        "Emily Lau<br><br>" +
+                        "Emily Lau &lt;<a href='mailto:fuchslein@hackerchick.me'>fuchslein@hackerchick.me</a>&gt;<br><br>" +
                         "<b>" + qsTr("Dutch") + "</b><br>" +
                         "Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br>" +
                         "Heimen Stoffels &lt;<a href='mailto:vistausss@outlook.com'>vistausss@outlook.com</a>&gt;<br><br>" +
