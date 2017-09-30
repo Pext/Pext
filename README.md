@@ -136,7 +136,8 @@ The Homebrew team refuses to fix this issue: https://github.com/Homebrew/brew/is
 - Escape: Go one level up
 - Tab: Tab-complete the current input
 - Enter / Left mouse button: Select entry or run command
-- Ctrl+. / Right mouse button: Open context menu
+- Ctrl+Shift+. / Right mouse button on header: Open state menu
+- Ctrl+. / Right mouse button on any item: Open context menu
 - Ctrl+J / Down arrow: Go one entry down
 - Ctrl+H / Up arrow: Go one entry up
 - Ctrl+F / Page down: Go one page down

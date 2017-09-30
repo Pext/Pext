@@ -7,24 +7,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### API changes
-- Bump API version to 0.5.0
+- Bump API version to 0.6.0
 - Add set_entry_info queue call
 - Add replace_entry_info_dict queue call
 - Add set_command_info queue call
 - Add replace_command_info_dict queue call
+- Add set_base_info queue call
 - Add set_entry_context queue call
 - Add replace_entry_context_dict queue call
 - Add set_command_context queue call
 - Add replace_command_context_dict queue call
+- Add set_base_context queue call
 - Add extra_info_request function
+- Add a none SelectionType
 
 ### Added
-- Add info panel which modules can use to show extra info on the entry that is currently being hovered over
-- Add context panel for secondary action entries
+- Add info panels which modules can use to show extra info on the current status on selected entry
+- Add context panels for state changes and extra actions for entries/commands
 - Traceback is now printing when an exception is triggered
 - Last updated info for modules
 - Version info for modules
-- Ability to update Pext itself
+- Ability to update Pext itself if git is there
 
 ### Changed
 - Command mode no longer locks onto the first entry
@@ -32,6 +35,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Versioning is now more precise
 - Check if a module/theme has an update before updating it
 - Pext now auto-restarts after changing the theme
+- Pext now displays less broken when the height is higher than the width 
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
