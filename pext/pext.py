@@ -444,19 +444,25 @@ class MainLoop():
 
         elif action[0] == Action.set_entry_info:
             tab['vm'].extra_info_entries[str(action[1])] = action[2]
-            tab['vm'].update_info_panel(request_update=False)
+            tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.replace_entry_info_dict:
             tab['vm'].extra_info_entries = action[1]
-            tab['vm'].update_info_panel(request_update=False)
+            tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.set_command_info:
             tab['vm'].extra_info_commands[str(action[1])] = action[2]
-            tab['vm'].update_info_panel(request_update=False)
+            tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.replace_command_info_dict:
             tab['vm'].extra_info_commands = action[1]
-            tab['vm'].update_info_panel(request_update=False)
+            tab['vm'].update_context_info_panel(request_update=False)
+
+        elif action[0] == Action.set_base_info:
+            if len(action) > 1:
+                tab['vm'].update_base_info_panel(action[1])
+            else:
+                tab['vm'].update_base_info_panel("")
 
         elif action[0] == Action.set_entry_context:
             tab['vm'].context_menu_entries[str(action[1])] = action[2]
@@ -469,6 +475,12 @@ class MainLoop():
 
         elif action[0] == Action.replace_command_context_dict:
             tab['vm'].context_menu_commands = action[1]
+
+        elif action[0] == Action.set_base_context:
+            if len(action) > 0:
+                tab['vm'].context_menu_base = action[1]
+            else:
+                tab['vm'].context_menu_base = []
 
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
@@ -850,7 +862,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        module['settings']['_api_version'] = [0, 5, 0]
+        module['settings']['_api_version'] = [0, 6, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1219,6 +1231,8 @@ class ViewModel():
         self.extra_info_commands = {}
         self.context_menu_entries = {}
         self.context_menu_commands = {}
+        self.context_menu_base = []
+        self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
 
@@ -1271,7 +1285,7 @@ class ViewModel():
                 return
             self.queue.task_done()
 
-    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject, header_text: QObject, result_list_model: QObject, context_menu_model: QObject, info_panel: QObject) -> None:
+    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject, header_text: QObject, result_list_model: QObject, context_menu_model: QObject, base_info_panel: QObject, context_info_panel: QObject) -> None:
         """Bind the QML context so we can communicate with the QML front-end."""
         self.queue = queue
         self.context = context
@@ -1280,7 +1294,8 @@ class ViewModel():
         self.header_text = header_text
         self.result_list_model = result_list_model
         self.context_menu_model = context_menu_model
-        self.info_panel = info_panel
+        self.base_info_panel = base_info_panel
+        self.context_info_panel = context_info_panel
 
     def bind_module(self, module: ModuleBase) -> None:
         """Bind the module.
@@ -1299,6 +1314,7 @@ class ViewModel():
         """
 
         if self.context.contextProperty("contextMenuEnabled"):
+            self.context_menu_base_open = False
             self.context.setContextProperty(
                 "contextMenuEnabled", False)
             return
@@ -1339,6 +1355,7 @@ class ViewModel():
 
         # TODO: Enable searching in context menu
         if manual:
+            self.context_menu_base_open = False
             self.context.setContextProperty(
                 "contextMenuEnabled", False)
 
@@ -1391,7 +1408,7 @@ class ViewModel():
             # Enable checking for changes next time
             self.last_search = search_string
 
-            self.update_info_panel()
+            self.update_context_info_panel()
 
             return
 
@@ -1462,7 +1479,7 @@ class ViewModel():
         # Enable checking for changes next time
         self.last_search = search_string
 
-        self.update_info_panel()
+        self.update_context_info_panel()
 
     def _get_entry(self, include_context=False, shorten_command=False) -> {}:
         """Get info on the entry that's currently focused."""
@@ -1474,6 +1491,9 @@ class ViewModel():
             selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
 
             return selected_entry
+
+        if self.context.contextProperty("contextMenuEnabled") and self.context_menu_base_open:
+            return {'type': SelectionType.none, 'value': None, 'context_option': None}
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
@@ -1531,6 +1551,17 @@ class ViewModel():
 
         self.module.selection_made(self.selection)
 
+    def show_context_base(self) -> None:
+        """Show the base context menu."""
+        if not QQmlProperty.read(self.header_text, "text"):
+            return
+
+        self.context_menu_base_open = True
+
+        self.context_menu_model_list.setStringList(str(entry) for entry in self.context_menu_base)
+        self.context.setContextProperty(
+            "contextMenuEnabled", True)
+
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
@@ -1543,6 +1574,8 @@ class ViewModel():
                 self.context_menu_model_list.setStringList(str(entry) for entry in self.context_menu_entries[current_entry['value']])
             else:
                 self.context_menu_model_list.setStringList(str(entry) for entry in self.context_menu_commands[current_entry['value']])
+
+            self.context_menu_base_open = False
             self.context.setContextProperty(
                 "contextMenuEnabled", True)
         except KeyError:
@@ -1550,12 +1583,13 @@ class ViewModel():
 
     def hide_context(self) -> None:
         """Hide the context menu."""
+        self.context_menu_base_open = False
         self.context.setContextProperty(
             "contextMenuEnabled", False)
 
-    def update_info_panel(self, request_update=True) -> None:
+    def update_context_info_panel(self, request_update=True) -> None:
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
-            QQmlProperty.write(self.info_panel, "text", "")
+            QQmlProperty.write(self.context_info_panel, "text", "")
             self.extra_info_last_entry_type = None
             return
 
@@ -1577,11 +1611,14 @@ class ViewModel():
 
         try:
             if current_entry['type'] == SelectionType.entry:
-                QQmlProperty.write(self.info_panel, "text", self.extra_info_entries[current_entry['value']])
+                QQmlProperty.write(self.context_info_panel, "text", self.extra_info_entries[current_entry['value']])
             else:
-                QQmlProperty.write(self.info_panel, "text", self.extra_info_commands[current_entry['value']])
+                QQmlProperty.write(self.context_info_panel, "text", self.extra_info_commands[current_entry['value']])
         except KeyError:
-            QQmlProperty.write(self.info_panel, "text", "")
+            QQmlProperty.write(self.context_info_panel, "text", "")
+
+    def update_base_info_panel(self, base_info: str) -> None:
+        QQmlProperty.write(self.base_info_panel, "text", str(base_info))
 
     def set_header(self, content) -> None:
         """Set the header text."""
@@ -1805,9 +1842,11 @@ class Window(QMainWindow):
         result_list_model = self.tabs.getTab(
             current_tab).findChild(QObject, "resultListModel")
 
-        # Get the info panel
-        info_panel = self.tabs.getTab(
-            current_tab).findChild(QObject, "infoPanel")
+        # Get the info panels
+        base_info_panel = self.tabs.getTab(
+            current_tab).findChild(QObject, "baseInfoPanel")
+        context_info_panel = self.tabs.getTab(
+            current_tab).findChild(QObject, "contextInfoPanel")
 
         # Get the context menu
         context_menu_model = self.tabs.getTab(
@@ -1815,12 +1854,13 @@ class Window(QMainWindow):
 
         # Enable mouse selection support
         result_list_model.entryClicked.connect(element['vm'].select)
+        result_list_model.openBaseMenu.connect(element['vm'].show_context_base)
         result_list_model.openContextMenu.connect(element['vm'].show_context)
         context_menu_model.entryClicked.connect(element['vm'].select)
         context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
 
         # Enable info pane
-        result_list_model.currentIndexChanged.connect(element['vm'].update_info_panel)
+        result_list_model.currentIndexChanged.connect(element['vm'].update_context_info_panel)
 
         # Bind it to the viewmodel
         element['vm'].bind_context(element['queue'],
@@ -1830,7 +1870,8 @@ class Window(QMainWindow):
                                    header_text,
                                    result_list_model,
                                    context_menu_model,
-                                   info_panel)
+                                   base_info_panel,
+                                   context_info_panel)
 
         element['vm'].bind_module(element['module'])
 

@@ -286,6 +286,13 @@ class Action(Enum):
 
         Example: self.q.put([Action.set_entry_info, {"volume": "Set the volume to the desired percentage (0 - 100)", "video": "Turn video on or off"}])
 
+    set_base_info:
+        Introduced in API version 0.6.
+
+        Set an info block to always show regardless of the active selection.
+
+        Example: self.q.put([Action.set_base_info, "Type stop to stop listening to radio"])
+
     set_entry_context:
         Introduced in API version 0.4.
 
@@ -320,6 +327,13 @@ class Action(Enum):
 
         Example: self.q.put([Action.replace_command_context_dict, {"volume": ["0%", "20%", "40%", "60%", "80%", "100%"], "video": ["on", "off"]}
 
+    set_base_context:
+        Introduced in API version 0.6.
+
+        Set the base context, reachable by right-clicking the header text or Ctrl+Shift+..
+
+        Example: self.q.put([Action.set_base_context, ["Mute", "Stop"]])
+
     """
 
     critical_error = 0
@@ -347,10 +361,12 @@ class Action(Enum):
     replace_entry_info_dict = 22
     set_command_info = 23
     replace_command_info_dict = 24
-    set_entry_context = 25
-    replace_entry_context_dict = 26
-    set_command_context = 27
-    replace_command_context_dict = 28
+    set_base_info = 25
+    set_entry_context = 26
+    replace_entry_context_dict = 27
+    set_command_context = 28
+    replace_command_context_dict = 29
+    set_base_context = 30
 
 
 class SelectionType(Enum):
@@ -368,7 +384,13 @@ class SelectionType(Enum):
 
         A valid command was typed (valid commands start with an entry in the
         command list).
+
+    none
+        Introduced in API version 0.6.
+
+        The selection is not relevant to any entry or command.
     """
 
     entry = 0
     command = 1
+    none = 2

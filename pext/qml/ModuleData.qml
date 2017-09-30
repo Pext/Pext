@@ -22,184 +22,290 @@ import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
 
-Row {
+Item {
     id: contentRow
     height: parent.height
 
-    ScrollView {
-        id: contextMenuContainer
-        width: contentRow.width / 4
-        height: contentRow.height
-        visible: contextMenuVisible
+    GridLayout {
+        id: moduleDataGrid
+        anchors.fill: parent
+        rowSpacing: 0
+        columnSpacing: 0
+        flow: parent.width > parent.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
 
-        onVisibleChanged: contextMenu.currentIndex = 0;
+        ScrollView {
+            id: contextMenuContainer
+            visible: contextMenuVisible
 
-        property bool contextMenuVisible: contextMenuEnabled
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: moduleDataGrid.width / 4
+            Layout.minimumHeight: moduleDataGrid.height / 4
+            Layout.maximumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? moduleDataGrid.width / 4 : moduleDataGrid.width
+            Layout.maximumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? moduleDataGrid.height / 4 : moduleDataGrid.height
+            Layout.rowSpan: 1
+            Layout.columnSpan: 1
 
-        ListView {
-            clip: true
-            id: contextMenu
-            objectName: "contextMenuModel"
+            onVisibleChanged: contextMenu.currentIndex = 0;
 
-            signal entryClicked()
-            signal closeContextMenu()
+            property bool contextMenuVisible: contextMenuEnabled
 
-            model: contextMenuModel
+            ListView {
+                clip: true
+                id: contextMenu
+                objectName: "contextMenuModel"
 
-            delegate: Component {
-                Item {
-                    property variant itemData: model.modelData
-                    width: parent.width
-                    height: text.height
-                    Column {
-                        Text {
-                            id: text
-                            objectName: "text"
-                            text: display
-                            textFormat: Text.PlainText
-                            font.pointSize: 12
-                            color: contextMenu.isCurrentIndex ? palette.highlightedText : palette.text
-                            Behavior on color { PropertyAnimation {} }
-                        }
-                    }
-                    MouseArea {
-                        anchors.fill: parent
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                signal entryClicked()
+                signal closeContextMenu()
 
-                        hoverEnabled: true
+                model: contextMenuModel
 
-                        onPositionChanged: {
-                            contextMenu.currentIndex = index
-                        }
-                        onClicked: {
-                            if (mouse.button == Qt.LeftButton) {
-                                contextMenu.entryClicked();
-                            } else {
-                                contextMenu.closeContextMenu();
+                delegate: Component {
+                    Item {
+                        property variant itemData: model.modelData
+                        width: parent.width
+                        height: text.height
+                        Column {
+                            Text {
+                                id: text
+                                objectName: "text"
+                                text: display
+                                textFormat: Text.PlainText
+                                font.pointSize: 12
+                                color: contextMenu.isCurrentIndex ? palette.highlightedText : palette.text
+                                Behavior on color { PropertyAnimation {} }
                             }
                         }
-                    }
-                }
-            }
-            highlight: Rectangle {
-                color: palette.highlight
-            }
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-            highlightMoveDuration: 250
-        }
-    }
+                            hoverEnabled: true
 
-    ScrollView {
-        id: mainContent
-        width: contentRow.width / 4 * (4 - (infoPanel.visible ? 1 : 0) - (contextMenuContainer.visible ? 1 : 0))
-        height: contentRow.height
-
-        Behavior on width { PropertyAnimation {} }
-
-        Item {
-            width: parent.width
-            visible: headerText.text
-            Text {
-                id: headerText
-                color: palette.highlight
-                objectName: "headerText"
-                font.pointSize: 12
-
-                textFormat: Text.PlainText
-            }
-        }
-
-        BusyIndicator {
-            visible: !resultList.hasEntries
-            anchors.centerIn: parent
-        }
-
-        ListView {
-            visible: resultList.hasEntries
-            anchors.topMargin: headerText.text ? headerText.height : 0
-            clip: true
-            id: resultList
-            objectName: "resultListModel"
-
-            signal entryClicked()
-            signal openContextMenu()
-
-            property int normalEntries: resultListModelNormalEntries
-            property int commandEntries: resultListModelCommandEntries
-            property bool commandMode: resultListModelCommandMode
-            property bool hasEntries: resultListModelHasEntries
-            property int depth: resultListModelDepth
-
-            model: resultListModel
-
-            SystemPalette { id: palette; colorGroup: SystemPalette.Active }
-            SystemPalette { id: inactivePalette; colorGroup: SystemPalette.Inactive }
-
-            delegate: Component {
-                Item {
-                    property variant itemData: model.modelData
-                    width: parent.width
-                    height: text.height
-                    Column {
-                        Text {
-                            id: text
-                            objectName: "text"
-                            text: display
-                            textFormat: Text.PlainText
-                            font.pointSize: 12
-                            font.italic:
-                                if (!resultListModelCommandMode) {
-                                    index >= resultListModelNormalEntries
+                            onPositionChanged: {
+                                contextMenu.currentIndex = index
+                            }
+                            onClicked: {
+                                if (mouse.button == Qt.LeftButton) {
+                                    contextMenu.entryClicked();
                                 } else {
-                                    index < resultListModelCommandEntries
+                                    contextMenu.closeContextMenu();
                                 }
-                            color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.isCurrentIndex ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
-                            Behavior on color { PropertyAnimation {} }
-                        }
-                    }
-                    MouseArea {
-                        enabled: !contextMenuContainer.visible
-                        anchors.fill: parent
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-                        hoverEnabled: true
-
-                        onPositionChanged: {
-                            resultList.currentIndex = index
-                        }
-                        onClicked: {
-                            if (mouse.button == Qt.LeftButton) {
-                                resultList.entryClicked();
-                            } else {
-                                resultList.openContextMenu();
                             }
                         }
                     }
                 }
-            }
-            highlight: Rectangle {
-                color: contextMenuContainer.visible ? inactivePalette.highlight : palette.highlight
-            }
+                highlight: Rectangle {
+                    color: palette.highlight
+                }
 
-            highlightMoveDuration: 250
+                highlightMoveDuration: 250
+            }
         }
-    }
 
-    ScrollView {
-        width: contentRow.width - mainContent.width
-        height: contentRow.height
-        visible: infoPanel.text
-        horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+        Rectangle {
+            color: palette.base
+            visible: contextMenuContainer.visible
 
-        Text {
-            id: infoPanel 
-            objectName: "infoPanel"
-            text: ""
-            wrapMode: Text.Wrap
-            width: contentRow.width - mainContent.width
-            color: palette.text
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? 5 : moduleDataGrid.width
+            Layout.minimumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? 5 : moduleDataGrid.height
+            Layout.maximumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? 5 : moduleDataGrid.width
+            Layout.maximumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? 5 : moduleDataGrid.height
+            Layout.rowSpan: 1
+            Layout.columnSpan: 1
+        }
 
-            onLinkActivated: Qt.openUrlExternally(link)
+        ScrollView {
+            id: mainContent
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: moduleDataGrid.width / 4
+            Layout.minimumHeight: moduleDataGrid.height / 4
+            Layout.rowSpan: 1
+            Layout.columnSpan: 1
+
+
+            Item {
+                width: parent.width
+                visible: headerText.text
+                Column {
+                    Text {
+                        id: headerText
+                        color: palette.highlight
+                        objectName: "headerText"
+                        font.pointSize: 12
+
+                        textFormat: Text.PlainText
+                    }
+                }
+                MouseArea {
+                    anchors.fill: headerText.parent
+                    acceptedButtons: Qt.RightButton
+
+                    onClicked: {
+                        resultList.openBaseMenu();
+                    }
+                }
+            }
+
+            BusyIndicator {
+                visible: !resultList.hasEntries
+                anchors.centerIn: parent
+            }
+
+            ListView {
+                visible: resultList.hasEntries
+                anchors.topMargin: headerText.text ? headerText.height : 0
+                clip: true
+                id: resultList
+                objectName: "resultListModel"
+
+                signal entryClicked()
+                signal openContextMenu()
+                signal openBaseMenu()
+
+                property int normalEntries: resultListModelNormalEntries
+                property int commandEntries: resultListModelCommandEntries
+                property bool commandMode: resultListModelCommandMode
+                property bool hasEntries: resultListModelHasEntries
+                property int depth: resultListModelDepth
+
+                model: resultListModel
+
+                SystemPalette { id: palette; colorGroup: SystemPalette.Active }
+                SystemPalette { id: inactivePalette; colorGroup: SystemPalette.Inactive }
+
+                delegate: Component {
+                    Item {
+                        property variant itemData: model.modelData
+                        width: parent.width
+                        height: text.height
+                        Column {
+                            Text {
+                                id: text
+                                objectName: "text"
+                                text: display
+                                textFormat: Text.PlainText
+                                font.pointSize: 12
+                                font.italic:
+                                    if (!resultListModelCommandMode) {
+                                        index >= resultListModelNormalEntries
+                                    } else {
+                                        index < resultListModelCommandEntries
+                                    }
+                                color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.isCurrentIndex ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
+                                Behavior on color { PropertyAnimation {} }
+                            }
+                        }
+                        MouseArea {
+                            enabled: !contextMenuContainer.visible
+                            anchors.fill: parent
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                            hoverEnabled: true
+
+                            onPositionChanged: {
+                                resultList.currentIndex = index
+                            }
+                            onClicked: {
+                                if (mouse.button == Qt.LeftButton) {
+                                    resultList.entryClicked();
+                                } else {
+                                    resultList.openContextMenu();
+                                }
+                            }
+                        }
+                    }
+                }
+                highlight: Rectangle {
+                    color: contextMenuContainer.visible ? inactivePalette.highlight : palette.highlight
+                }
+
+                highlightMoveDuration: 250
+            }
+        }
+
+        Rectangle {
+            color: palette.base
+            visible: contextInfoPanel.text
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? 5 : moduleDataGrid.width
+            Layout.minimumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? 5 : moduleDataGrid.height
+            Layout.maximumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? 5 : moduleDataGrid.width
+            Layout.maximumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? 5 : moduleDataGrid.height
+            Layout.rowSpan: 1
+            Layout.columnSpan: 1
+        }
+
+        ScrollView {
+            visible: contextInfoPanel.text
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: moduleDataGrid.width / 4
+            Layout.minimumHeight: moduleDataGrid.height / 4
+            Layout.maximumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? moduleDataGrid.width / 4 : moduleDataGrid.width
+            Layout.maximumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? moduleDataGrid.height / 4 : moduleDataGrid.height
+            Layout.rowSpan: 1
+            Layout.columnSpan: 1
+
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+
+            Text {
+                id: contextInfoPanel
+                objectName: "contextInfoPanel"
+                text: ""
+                wrapMode: Text.Wrap
+                width: contentRow.width - mainContent.width
+                color: palette.text
+
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
+        }
+
+        Rectangle {
+            color: palette.base
+            visible: baseInfoPanel.text
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? 5 : moduleDataGrid.width
+            Layout.minimumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? 5 : moduleDataGrid.height
+            Layout.maximumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? 5 : moduleDataGrid.width
+            Layout.maximumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? 5 : moduleDataGrid.height
+            Layout.rowSpan: 1
+            Layout.columnSpan: 1
+        }
+
+        ScrollView {
+            visible: baseInfoPanel.text
+
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumWidth: moduleDataGrid.width / 4
+            Layout.minimumHeight: moduleDataGrid.height / 4
+            Layout.maximumWidth: moduleDataGrid.flow == GridLayout.LeftToRight ? moduleDataGrid.width / 4 : moduleDataGrid.width
+            Layout.maximumHeight: moduleDataGrid.flow == GridLayout.TopToBottom ? moduleDataGrid.height / 4 : moduleDataGrid.height
+            Layout.rowSpan: 1
+            Layout.columnSpan: 1
+
+            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+
+            Text {
+                id: baseInfoPanel
+                objectName: "baseInfoPanel"
+                text: ""
+                wrapMode: Text.Wrap
+                width: contentRow.width - mainContent.width
+                color: palette.highlight
+
+                onLinkActivated: Qt.openUrlExternally(link)
+            }
         }
     }
 }
