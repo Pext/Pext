@@ -21,7 +21,7 @@ This file contains the definition of the Pext module base, which all
 Pext modules must implement. This is basically the API of Pext.
 """
 
-from abc import ABC, abstractmethod  # type: ignore
+from abc import ABC  # type: ignore
 from queue import Queue
 from typing import Any, Dict, List, Union
 

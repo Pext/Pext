@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 from setuptools import setup
 
 with open(os.path.join('pext', 'VERSION')) as version_file:

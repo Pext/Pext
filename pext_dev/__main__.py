@@ -34,6 +34,7 @@ try:
 except ImportError:
     from backports.typing import List
 
+
 class AppFile():
     """Get access to application-specific files."""
 
@@ -41,6 +42,7 @@ class AppFile():
     def get_path(name: str) -> str:
         """Return the absolute path by file or directory name."""
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), name)
+
 
 class Module():
     """Module code."""
@@ -139,6 +141,7 @@ class Module():
 
         # Clean up
         rmtree(tempdir)
+
 
 class Theme():
     """Theme code."""
