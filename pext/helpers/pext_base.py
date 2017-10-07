@@ -31,7 +31,8 @@ from pext_helpers import SelectionType
 class ModuleBase(ABC):
     """Introduced in API version 0.1.0.
 
-    The base all Pext modules must implement."""
+    The base all Pext modules must implement.
+    """
 
     def init(self, settings: Dict, q: Queue) -> None:
         """Introduced in API version 0.1.0.

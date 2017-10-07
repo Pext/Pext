@@ -82,6 +82,8 @@ from pext_helpers import Action, SelectionType  # noqa: E402
 
 
 class MinimizeMode(IntEnum):
+    """A list of possible ways Pext can react on minimization."""
+
     Normal = 0
     Tray = 1
     NormalManualOnly = 2
@@ -89,13 +91,14 @@ class MinimizeMode(IntEnum):
 
 
 class SortMode(IntEnum):
+    """A list of possible ways Pext can sort module entries."""
+
     Module = 0
     Ascending = 1
     Descending = 2
 
 
 class ConfigRetriever():
-
     """Retrieve configuration entries."""
 
     def __init__(self) -> None:
@@ -130,6 +133,7 @@ class GitWrapper():
 
     @staticmethod
     def check_call(command: List, directory: str) -> int:
+        """Get the return code of the git command."""
         return check_call(
             ['git'] + command,
             cwd=directory,
@@ -137,6 +141,7 @@ class GitWrapper():
 
     @staticmethod
     def check_output(command: List, directory: str) -> str:
+        """Get the text output of the git command to stdout, with ending newline stripped."""
         return check_output(
             ['git'] + command,
             cwd=directory,
@@ -145,6 +150,7 @@ class GitWrapper():
 
     @staticmethod
     def get_env(directory: Optional[str]) -> Dict:
+        """Get the desired environment variables for a git command to run in the chosen directory."""
         git_env = os.environ.copy()
         git_env['GIT_ASKPASS'] = 'true'
 
@@ -1108,6 +1114,7 @@ class UpdateManager():
     """Manages scheduling and checking automatic updates."""
 
     def __init__(self) -> None:
+        """Initialize the UpdateManager and store the version info of Pext."""
         try:
             self.version = GitWrapper.check_output(
                 ['describe', '--always', '--dirty'],
@@ -1117,10 +1124,12 @@ class UpdateManager():
                 self.version = version_file.read().strip()
 
     def get_core_version(self) -> str:
+        """Return the version info of Pext itself."""
         return self.version
 
     @staticmethod
     def update_core(verbose=False, logger=None) -> bool:
+        """Attempt to update Pext itself from Git."""
         # Check if it's not already up-to-date
         if not UpdateManager.has_update(AppFile.get_path()):
             if verbose:
@@ -1146,7 +1155,7 @@ class UpdateManager():
 
     @staticmethod
     def has_update(directory, branch="master") -> bool:
-        """Check if an update is available for the selected directory."""
+        """Check if an update is available for a specific git-managed directory (module or theme)."""
         try:
             GitWrapper.check_call(
                 ['fetch'],
@@ -1172,6 +1181,7 @@ class UpdateManager():
 
     @staticmethod
     def get_version(directory) -> Optional[str]:
+        """Get the version of a specific git-managed directory (module or theme)."""
         try:
             return GitWrapper.check_output(
                 ['describe', '--always', '--dirty'],
@@ -1181,7 +1191,7 @@ class UpdateManager():
 
     @staticmethod
     def get_last_updated(directory) -> Optional[datetime]:
-        """Return the time of the latest update."""
+        """Return the time of the latest update of a specific git-managed directory (module or theme)."""
         try:
             return datetime.fromtimestamp(int(
                 GitWrapper.check_output(
@@ -1321,7 +1331,6 @@ class ViewModel():
         the search bar. If we're currently in the entry list and the search bar
         is empty, we tell the window to hide/close itself.
         """
-
         if self.context.contextProperty("contextMenuEnabled"):
             self.context_menu_base_open = False
             self.context.setContextProperty(
@@ -1601,6 +1610,7 @@ class ViewModel():
             "contextMenuEnabled", False)
 
     def update_context_info_panel(self, request_update=True) -> None:
+        """Update the context info panel with the info panel data of the currently selected entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             QQmlProperty.write(self.context_info_panel, "text", "")
             self.extra_info_last_entry_type = None
@@ -1632,6 +1642,7 @@ class ViewModel():
             QQmlProperty.write(self.context_info_panel, "text", "")
 
     def update_base_info_panel(self, base_info: str) -> None:
+        """Update the base info panel based on the current module state."""
         QQmlProperty.write(self.base_info_panel, "text", str(base_info))
 
     def set_header(self, content) -> None:
@@ -2288,6 +2299,7 @@ class ThemeManager():
 
     @staticmethod
     def get_system_theme_name() -> str:
+        """Return the name of the system theme, which is used to refer to no theme (OS theming)."""
         return "system"
 
     def bind_logger(self, logger: Logger) -> None:
