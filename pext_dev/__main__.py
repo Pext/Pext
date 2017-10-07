@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Pext Development Tools
+"""Pext Development Tools.
 
 This file aids in module development.
 """
@@ -198,6 +198,7 @@ class Theme():
 
 
 def run(argv: List[str]) -> None:
+    """Figure out the class and command to run from the CLI input and run it."""
     if (argv[0] == "module"):
         classInstance = Module()
     elif (argv[0] == "theme"):
