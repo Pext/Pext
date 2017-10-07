@@ -32,7 +32,7 @@ from shutil import copy, copytree, rmtree
 try:
     from typing import List
 except ImportError:
-    from backports.typing import List
+    from backports.typing import List  # type: ignore
 
 
 class AppFile():
@@ -201,7 +201,7 @@ def run(argv: List[str]) -> None:
     if (argv[0] == "module"):
         classInstance = Module()
     elif (argv[0] == "theme"):
-        classInstance = Theme()
+        classInstance = Theme()  # type: ignore
     else:
         usage()
         sys.exit(1)
@@ -249,10 +249,6 @@ theme run
     Run the theme in the current directory a new Pext instance. Added options are passed to Pext as-is.''')
 
 
-def main() -> None:
+if __name__ == "__main__":
     # Run chosen functionality
     run(sys.argv[1:])
-
-
-if __name__ == "__main__":
-    main()
