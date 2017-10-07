@@ -45,7 +45,7 @@ from subprocess import check_call, check_output, CalledProcessError, Popen
 try:
     from typing import Dict, List, Optional, Tuple
 except ImportError:
-    from backports.typing import Dict, List, Optional, Tuple
+    from backports.typing import Dict, List, Optional, Tuple  # type: ignore
 from queue import Queue, Empty
 
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
@@ -108,7 +108,7 @@ class ConfigRetriever():
 
         self.config = {'config_path': os.path.join(config_home, 'pext/')}
 
-    def get_setting(self, variable: str):
+    def get_setting(self, variable: str) -> str:
         """Get a specific configuration setting."""
         return self.config[variable]
 
@@ -129,7 +129,7 @@ class GitWrapper():
     """A simple helper to make sure the git environment is always set in a safe way."""
 
     @staticmethod
-    def check_call(command: List, directory: str) -> str:
+    def check_call(command: List, directory: str) -> int:
         return check_call(
             ['git'] + command,
             cwd=directory,
@@ -227,6 +227,7 @@ class Logger():
         else:
             print(message)
 
+    @staticmethod
     def _log_error(message: str, logger=None) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
         if logger:
@@ -763,7 +764,7 @@ class ModuleManager():
 
         return returncode
 
-    def bind_logger(self, logger: Logger) -> str:
+    def bind_logger(self, logger: Logger) -> None:
         """Connect a logger to the module manager.
 
         If a logger is connected, the module manager will log all
@@ -1063,7 +1064,7 @@ class ModuleManager():
         if not UpdateManager.has_update(os.path.join(self.module_dir, dir_name)):
             if verbose:
                 Logger._log('⏩{}'.format(module_name), self.logger)
-            return
+            return False
 
         if verbose:
             Logger._log('⇩ {}'.format(module_name), self.logger)
@@ -1233,11 +1234,11 @@ class ViewModel():
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
         self.context_menu_model_list = QStringListModel()
-        self.extra_info_entries = {}
-        self.extra_info_commands = {}
-        self.context_menu_entries = {}
-        self.context_menu_commands = {}
-        self.context_menu_base = []
+        self.extra_info_entries = {}  # type: Dict[str, str]
+        self.extra_info_commands = {}  # type: Dict[str, str]
+        self.context_menu_entries = {}  # type: Dict[str, List[str]]
+        self.context_menu_commands = {}  # type: Dict[str, List[str]]
+        self.context_menu_base = []  # type: List[str]
         self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
@@ -1491,7 +1492,7 @@ class ViewModel():
 
         self.update_context_info_panel()
 
-    def _get_entry(self, include_context=False, shorten_command=False) -> {}:
+    def _get_entry(self, include_context=False, shorten_command=False) -> Dict:
         """Get info on the entry that's currently focused."""
         if include_context and self.context.contextProperty("contextMenuEnabled"):
             current_index = QQmlProperty.read(self.context_menu_model, "currentIndex")
@@ -2108,7 +2109,7 @@ class Window(QMainWindow):
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
         self.settings['tray'] = enabled
         try:
-            self.tray.show() if enabled else self.tray.hide()
+            self.tray.show() if enabled else self.tray.hide()  # type: ignore
         except AttributeError:
             pass
 
@@ -2289,7 +2290,7 @@ class ThemeManager():
     def get_system_theme_name() -> str:
         return "system"
 
-    def bind_logger(self, logger: Logger) -> str:
+    def bind_logger(self, logger: Logger) -> None:
         """Connect a logger to the module manager.
 
         If a logger is connected, the module manager will log all
@@ -2298,7 +2299,7 @@ class ThemeManager():
         self.logger = logger
 
     def _get_palette_mappings(self) -> Dict[str, int]:
-        mapping = {'colour_roles': {}, 'colour_groups': {}}
+        mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
         for key in dir(QPalette):
             value = getattr(QPalette, key)
             if isinstance(value, QPalette.ColorRole):
@@ -2328,7 +2329,7 @@ class ThemeManager():
         palette_mappings = self._get_palette_mappings()
 
         config = configparser.ConfigParser()
-        config.optionxform = lambda option: option  # No lowercase
+        config.optionxform = lambda option: option  # type: ignore  # No lowercase
         config.read(os.path.join(self.theme_dir, theme_name, 'theme.conf'))
 
         for colour_group in config.sections():
@@ -2397,7 +2398,7 @@ class ThemeManager():
         if theme_name == ThemeManager.get_system_theme_name():
             if verbose:
                 Logger._log('⏩{}'.format(theme_name), self.logger)
-            return
+            return False
 
         if verbose:
             Logger._log('♻ {}'.format(theme_name), self.logger)
@@ -2427,7 +2428,7 @@ class ThemeManager():
                 or theme_name == ThemeManager.get_system_theme_name()):
             if verbose:
                 Logger._log('⏩{}'.format(theme_name), self.logger)
-            return
+            return False
 
         if verbose:
             Logger._log('⇩ {}'.format(theme_name), self.logger)
@@ -2595,12 +2596,12 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
 
     # Create directory for profile if not existant
     try:
-        ProfileManager(config_retriever).create_profile(settings['profile'])
+        ProfileManager(config_retriever).create_profile(str(settings['profile']))
     except OSError:
         pass
 
     # Load all from profile
-    settings.update(ProfileManager(config_retriever).retrieve_settings(settings['profile']))
+    settings.update(ProfileManager(config_retriever).retrieve_settings(str(settings['profile'])))
 
     # Then, check for the rest
     for opt, arg in opts:
