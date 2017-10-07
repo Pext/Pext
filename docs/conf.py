@@ -38,7 +38,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-from recommonmark.parser import CommonMarkParser
+from recommonmark.parser import CommonMarkParser  # NOQA
 
 source_parsers = {
     '.md': CommonMarkParser,
@@ -157,6 +157,3 @@ texinfo_documents = [
      author, 'Pext', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
-
