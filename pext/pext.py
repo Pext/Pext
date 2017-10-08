@@ -235,7 +235,11 @@ class Logger():
             QQmlProperty.write(self.status_text, "text", statusbar_message)
 
             if not self.window.window.isVisible():
-                Popen(['notify-send', 'Pext', notification_message])
+                try:
+                    Popen(['notify-send', 'Pext', notification_message])
+                except Exception as e:
+                    print("Could not open notify-send: {}. Notification follows:".format(e))
+                    print(notification_message)
 
             self.last_update = current_time
 
