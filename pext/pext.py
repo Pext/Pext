@@ -238,7 +238,8 @@ class Logger():
                 try:
                     Popen(['notify-send', 'Pext', notification_message])
                 except Exception as e:
-                    print("Could not open notify-send: {}. Notification follows:".format(e))
+                    print("Could not open notify-send: {}. Notification follows after exception:".format(e))
+                    traceback.print_exc()
                     print(notification_message)
 
             self.last_update = current_time
@@ -957,10 +958,10 @@ class ModuleManager():
         try:
             pygit2.clone_repository(url, os.path.join(self.module_dir, dir_name))
         except Exception as e:
-            Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
-
             if verbose:
-                Logger._log_error('⇩ {}'.format(module_name), self.logger)
+                Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
+
+            traceback.print_exc()
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -1044,6 +1045,8 @@ class ModuleManager():
                     '⇩ {}: {}'.format(module_name, e),
                     self.logger)
 
+            traceback.print_exc()
+
             return False
 
         if verbose:
@@ -1123,6 +1126,8 @@ class UpdateManager():
                     '⇩ Pext: {}'.format(e),
                     logger)
 
+            traceback.print_exc()
+
             return False
 
         return True
@@ -1146,6 +1151,7 @@ class UpdateManager():
             return False
         except Exception as e:
             print("Could not determine if updates are available for {}: {}".format(directory, e))
+            traceback.print_exc()
             return False
 
     @staticmethod
@@ -2383,10 +2389,10 @@ class ThemeManager():
         try:
             pygit2.clone_repository(url, os.path.join(self.theme_dir, dir_name))
         except Exception as e:
-            Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
-
             if verbose:
-                Logger._log_error('⇩ {}'.format(theme_name), self.logger)
+                Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
+
+            traceback.print_exc()
 
             try:
                 rmtree(os.path.join(self.theme_dir, dir_name))
@@ -2450,6 +2456,8 @@ class ThemeManager():
                 Logger._log_error(
                     '⇩ {}: {}'.format(theme_name, e),
                     self.logger)
+
+            traceback.print_exc()
 
             return False
 
