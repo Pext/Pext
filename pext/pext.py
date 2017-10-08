@@ -41,13 +41,14 @@ from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from shutil import rmtree
-from subprocess import check_call, check_output, CalledProcessError, Popen
+from subprocess import check_call, CalledProcessError, Popen
 try:
     from typing import Dict, List, Optional, Tuple
 except ImportError:
     from backports.typing import Dict, List, Optional, Tuple  # type: ignore
 from queue import Queue, Empty
 
+import pygit2
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
@@ -126,42 +127,6 @@ class RunConseq():
                 function['name'](function['args'], **function['kwargs'])
             else:
                 function['name'](**function['kwargs'])
-
-
-class GitWrapper():
-    """A simple helper to make sure the git environment is always set in a safe way."""
-
-    @staticmethod
-    def check_call(command: List, directory: str) -> int:
-        """Get the return code of the git command."""
-        return check_call(
-            ['git'] + command,
-            cwd=directory,
-            env=GitWrapper.get_env(directory))
-
-    @staticmethod
-    def check_output(command: List, directory: str) -> str:
-        """Get the text output of the git command to stdout, with ending newline stripped."""
-        return check_output(
-            ['git'] + command,
-            cwd=directory,
-            env=GitWrapper.get_env(directory),
-            universal_newlines=True).strip()
-
-    @staticmethod
-    def get_env(directory: Optional[str]) -> Dict:
-        """Get the desired environment variables for a git command to run in the chosen directory."""
-        git_env = os.environ.copy()
-        git_env['GIT_ASKPASS'] = 'true'
-
-        pext_root = os.path.dirname(os.path.dirname(AppFile.get_path()))
-        if not (os.path.commonpath([os.path.abspath(pext_root)]) ==
-                os.path.commonpath([os.path.abspath(pext_root), os.path.abspath(directory)])):
-            git_env['GIT_CEILING_DIRECTORIES'] = directory
-        else:
-            git_env['GIT_CEILING_DIRECTORIES'] = pext_root
-
-        return git_env
 
 
 class InputDialog(QDialog):
@@ -664,11 +629,8 @@ class ObjectManager():
             name = ThemeManager.remove_prefix(name)
 
             try:
-                source = GitWrapper.check_output(
-                    ['config', '--get', 'remote.origin.url'],
-                    os.path.join(core_directory, directory))
-
-            except (CalledProcessError, FileNotFoundError):
+                source = UpdateManager.get_remote_url(os.path.join(core_directory, directory))
+            except Exception as e:
                 source = None
 
             try:
@@ -989,15 +951,10 @@ class ModuleManager():
             Logger._log('⇩ {} ({})'.format(module_name, url), self.logger)
 
         try:
-            return_code = Popen(['git', 'clone', url, dir_name],
-                                cwd=self.module_dir,
-                                env=GitWrapper.get_env(self.module_dir)).wait()
+            pygit2.clone_repository(url, os.path.join(self.module_dir, dir_name))
         except Exception as e:
             Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
 
-            return False
-
-        if return_code != 0:
             if verbose:
                 Logger._log_error('⇩ {}'.format(module_name), self.logger)
 
@@ -1076,9 +1033,7 @@ class ModuleManager():
             Logger._log('⇩ {}'.format(module_name), self.logger)
 
         try:
-            GitWrapper.check_call(
-                ['pull'],
-                os.path.join(self.module_dir, dir_name))
+            UpdateManager.update(os.path.join(self.module_dir, dir_name))
         except Exception as e:
             if verbose:
                 Logger._log_error(
@@ -1115,17 +1070,34 @@ class UpdateManager():
 
     def __init__(self) -> None:
         """Initialize the UpdateManager and store the version info of Pext."""
-        try:
-            self.version = GitWrapper.check_output(
-                ['describe', '--always', '--dirty'],
-                AppFile.get_path())
-        except (CalledProcessError, FileNotFoundError):
+        self.version = UpdateManager.get_version(AppFile.get_path())
+        if not self.version:
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
                 self.version = version_file.read().strip()
+
+    @staticmethod
+    def _path_to_repo(directory: str) -> pygit2.Repository:
+        repository_path = pygit2.discover_repository(directory, False, UpdateManager.get_git_ceiling_dirs(directory))
+        return pygit2.Repository(repository_path)
 
     def get_core_version(self) -> str:
         """Return the version info of Pext itself."""
         return self.version
+
+    @staticmethod
+    def get_git_ceiling_dirs(directory: Optional[str]) -> str:
+        """Return the ceiling directories that pygit2 should stay inside of."""
+        pext_root = os.path.dirname(os.path.dirname(AppFile.get_path()))
+        if directory:
+            return "{}:{}".format(pext_root, directory)
+        else:
+            return pext_root
+
+    @staticmethod
+    def get_remote_url(directory, remote="origin") -> str:
+        """Get the url of the given remote for the specified git-managed directory."""
+        repo = UpdateManager._path_to_repo(directory)
+        return repo.remotes['origin'].url
 
     @staticmethod
     def update_core(verbose=False, logger=None) -> bool:
@@ -1140,9 +1112,7 @@ class UpdateManager():
             Logger._log('⇩ Pext', logger)
 
         try:
-            GitWrapper.check_call(
-                ['pull'],
-                AppFile.get_path())
+            UpdateManager.update(AppFile.get_path())
         except Exception as e:
             if verbose:
                 Logger._log_error(
@@ -1155,50 +1125,79 @@ class UpdateManager():
 
     @staticmethod
     def has_update(directory, branch="master") -> bool:
-        """Check if an update is available for a specific git-managed directory (module or theme)."""
+        """Check if an update is available for the git-managed directory."""
         try:
-            GitWrapper.check_call(
-                ['fetch'],
-                directory)
-        except (CalledProcessError, FileNotFoundError):
+            repo = UpdateManager._path_to_repo(directory)
+            for remote in repo.remotes:
+                if remote.name == 'origin':
+                    remote.fetch()
+                    remote_branch_id = repo.lookup_reference('refs/remotes/origin/{}'.format(branch)).target
+                    merge_result, _ = repo.merge_analysis(remote_branch_id)
+                    if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
+                        return False
+                    else:
+                        return True
+
+            print("Could not find origin remote")
+            return False
+        except Exception as e:
+            print("Could not determine if updates are available for {}: {}".format(directory, e))
             return False
 
-        try:
-            upstream_version = GitWrapper.check_output(
-                ['rev-parse', 'origin/{}'.format(branch)],
-                directory)
-        except (CalledProcessError, FileNotFoundError):
-            return False
+    @staticmethod
+    def update(directory, branch="master") -> None:
+        """If an update is available, attempt to update the git-managed directory."""
+        if UpdateManager.has_update(directory):
+            repo = UpdateManager._path_to_repo(directory)
+            for remote in repo.remotes:
+                if remote.name == 'origin':
+                    remote_branch_id = repo.lookup_reference('refs/remotes/origin/{}'.format(branch)).target
+                    merge_result, _ = repo.merge_analysis(remote_branch_id)
+                    if merge_result & pygit2.GIT_MERGE_ANALYSIS_FASTFORWARD:
+                        repo.checkout_tree(repo.get(remote_branch_id))
+                        branch_ref = repo.lookup_reference('refs/heads/{}'.format(branch))
+                        branch_ref.set_target(remote_branch_id)
+                        repo.head.set_target(remote_branch_id)
+                    elif merge_result & pygit2.GIT_MERGE_ANALYSIS_NORMAL:
+                        repo.merge(remote_branch_id)
+                        if repo.index.conflicts:
+                            raise Exception("Conflicts: {}".format(repo.index.conflicts))
 
-        try:
-            own_version = GitWrapper.check_output(
-                ['rev-parse', branch],
-                directory)
-        except (CalledProcessError, FileNotFoundError):
-            return False
+                        user = repo.default_signature
+                        tree = repo.index.write_tree()
+                        repo.create_commit('HEAD',
+                                           user,
+                                           user,
+                                           'Merge!',
+                                           tree,
+                                           [repo.head.target, remote_branch_id])
+                        repo.state_cleanup()
+                    else:
+                        raise Exception("Merge analysis result unknown: {}".format(merge_result))
 
-        return upstream_version != own_version
+                    return
+
+            raise Exception("Could not find origin remote")
 
     @staticmethod
     def get_version(directory) -> Optional[str]:
-        """Get the version of a specific git-managed directory (module or theme)."""
+        """Get the version of the git-managed directory."""
         try:
-            return GitWrapper.check_output(
-                ['describe', '--always', '--dirty'],
-                directory)
-        except (CalledProcessError, FileNotFoundError):
+            repo = UpdateManager._path_to_repo(directory)
+            return repo.describe(show_commit_oid_as_fallback=True, dirty_suffix='-dirty')
+        except Exception as e:
+            print("Could not describe {}: {}".format(directory, e))
             return None
 
     @staticmethod
     def get_last_updated(directory) -> Optional[datetime]:
-        """Return the time of the latest update of a specific git-managed directory (module or theme)."""
+        """Return the time of the latest update of the git-managed directory."""
         try:
-            return datetime.fromtimestamp(int(
-                GitWrapper.check_output(
-                    ['show', '-s', '--format=%ct'],
-                    directory)))
-
-        except (CalledProcessError, FileNotFoundError):
+            repo = UpdateManager._path_to_repo(directory)
+            commit = repo.revparse_single('HEAD')
+            return datetime.fromtimestamp(commit.commit_time)
+        except Exception as e:
+            print("Could not get last updated time for {}: {}".format(directory, e))
             return None
 
 
@@ -2378,15 +2377,10 @@ class ThemeManager():
             Logger._log('⇩ {} ({})'.format(theme_name, url), self.logger)
 
         try:
-            return_code = Popen(['git', 'clone', url, dir_name],
-                                cwd=self.theme_dir,
-                                env=GitWrapper.get_env(self.theme_dir)).wait()
+            pygit2.clone_repository(url, os.path.join(self.theme_dir, dir_name))
         except Exception as e:
             Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
 
-            return False
-
-        if return_code != 0:
             if verbose:
                 Logger._log_error('⇩ {}'.format(theme_name), self.logger)
 
@@ -2446,9 +2440,7 @@ class ThemeManager():
             Logger._log('⇩ {}'.format(theme_name), self.logger)
 
         try:
-            GitWrapper.check_call(
-                ['pull'],
-                os.path.join(self.theme_dir, dir_name))
+            UpdateManager.update(os.path.join(self.theme_dir, dir_name))
         except Exception as e:
             if verbose:
                 Logger._log_error(

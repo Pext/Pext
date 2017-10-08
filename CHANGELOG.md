@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Packaging changes
+- Pext now depends on pygit2, which uses libgit2, instead of git
+
 ### API changes
 - Bump API version to 0.6.0
 - Add set_entry_info queue call
