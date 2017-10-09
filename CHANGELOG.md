@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Last updated info for modules
 - Version info for modules
 - Ability to update Pext itself if git is there
+- Windows support
 
 ### Changed
 - Command mode no longer locks onto the first entry
