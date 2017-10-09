@@ -2522,14 +2522,15 @@ def _init_persist(profile: str, background: bool) -> str:
     to the foreground. If Pext is not already running, saves a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = tempfile.gettempdir() + '/pext_{}.pid'.format(profile)
+    pidfile = os.path.join(tempfile.gettempdir(), '/pext_{}.pid'.format(profile))
 
     if os.path.isfile(pidfile):
         try:
             # Notify the main process if we are not using --background
             if not background:
                 if os.name == 'nt':
-                    pass
+                    print("Pext is already running and foregrounding the running instance is currently not supported "
+                          "on Windows. Doing nothing...")
                 else:
                     os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
             else:
