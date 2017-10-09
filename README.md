@@ -6,25 +6,15 @@
 [Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
 graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
 
-[![ReadTheDocs latest](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
-[![ReadTheDocs stable](https://readthedocs.org/projects/pext/badge/?version=stable)](https://pext.readthedocs.io/en/stable/?badge=stable)
+[![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 
 ## Introduction
-Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using
-Python 3 and Qt5 QML and has its behaviour decided by modules. Pext provides
-a simple window with a search bar, allowing modules to define what data is
-shown and how it is manipulated.
+Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using Python 3 and Qt5 QML and has its behaviour decided by modules. Pext provides a simple window with a search bar, allowing modules to define what data is shown and how it is manipulated.
 
-For example, say you want to use Pext as a password manager. You load in the
-pass module, and it will show you a list of your passwords which you can
-filter with the search bar. When you select a password in the list, it will
-copy the password to your clipboard and Pext will hide itself, waiting for you
-to ask for it again.
+For example, say you want to use Pext as a password manager. You load in the pass module, and it will show you a list of your passwords which you can filter with the search bar. When you select a password in the list, it will copy the password to your clipboard and Pext will hide itself, waiting for you to ask for it again.
 
-Depending on the module you choose, what entries are shown and what happens
-when you select an entry changes. So choose the module appropriate for what you
-want to do, and Pext makes it easy.
+Depending on the module you choose, what entries are shown and what happens when you select an entry changes. So choose the module appropriate for what you want to do, and Pext makes it easy.
 
 Several modules are available for effortless install right within Pext.
 
@@ -43,121 +33,122 @@ Simply put:
 - Select (with Enter)
 - Hide (automatically)
 
-## Dependencies
+## Installation
+**Note: If you run into any issues, please check out the troubleshooting section near the end of this document before reporting a bug.**
+
 ### GNU/Linux
-#### Arch
+#### Preparation
+The following dependencies need to be installed:
+
+##### Arch
 
     sudo pacman -S libnotify python-pip python-pygit2 python-pyqt5 qt5-quickcontrols
 
-#### Debian (Stable (9) and later)
+##### Debian
 
     sudo apt-get install libnotify-bin python3-pip python3-pygit2 python3-pyqt5.qtquick qml-module-qtquick-controls
 
 You may also need to install libssl1.0-dev due to what seems like a Debian packaging issue. See https://stackoverflow.com/a/42297296 for more info.
 
-#### Fedora
+##### Fedora
 
     sudo dnf install libnotify python3-pip python3-pygit2 python3-qt5 qt5-qtquickcontrols
 
-#### Nix (any system, not just NixOS)
+##### Nix (any system, not just NixOS)
 
     nix-shell -p libnotify python3Packages.pip python3Packages.pygit2 python3Packages.pyqt5 qt5.qtquickcontrols
 
-#### openSUSE
+##### openSUSE
 
     sudo zypper install libnotify-tools python-pygit2 python3-pip python3-qt5
 
+#### Starting Pext
+After installing the dependencies, Pext can be ran by running one of the following commands in the place where you saved Pext to:
+- ``python3 pext`` to start Pext itself
+- ``python3 pext_dev`` to start the Pext tools for module and theme development
+
+If desired, it can also be installed using the following command (as root):
+
+    # pip3 install . --upgrade --no-deps
+
+After doing this, you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
+
 ### macOS
-Before running the Install Certificates command, which is only necessary to be
-able to retrieve the online module list, please read https://bugs.python.org/msg283984.
+#### Preparation
+The following commands need to be run. If you do not have the brew command, follow the installation instructions on [Homebrew's website](https://brew.sh/).
+
+Before running the Install Certificates command, which is only necessary to be able to retrieve the online module list, please read https://bugs.python.org/msg283984.
 
     brew install libgit2 libnotify python3 qt5
     pip3 install certifi pygit2 pyqt5 urllib3
     /Applications/Python\ 3.6/Install\ Certificates.command
 
-After this, a .app file can be generated using the following command:
+#### Starting Pext
+After installing the dependencies, Pext can be ran by running one of the following commands in a terminal window in the place where you saved Pext to:
+- ``python3 pext`` to start Pext itself
+- ``python3 pext_dev`` to start the Pext tools for module and theme development
+
+Optionally, a .app file can be generated using the following command:
 
     python3 setup.py py2app -A --emulate-shell-environment
 
-The .app file appears in the dist directory and can be dragged to
-"My Applications". Please note that actual py2app buils do not work yet. This
-is an aliased build, so it will break if you delete your git clone.
+The .app file appears in the dist directory and can be dragged to "My Applications". Please note that actual py2app buils do not work yet. This is an aliased build, so it will break if you delete your git clone.
 
 ### Windows (experimental)
+#### Preparation
 Assuming you have no previous python installation, either 
 
-    * Use a package manager like chocolatey (http://chocolatey.org/) to install python3
-    * Or install Python 3.6 manually from https://www.python.org/downloads/windows/
+- Use a package manager like [Chocolatey](http://chocolatey.org/) to install Python 3
+- Install Python 3.6 manually from https://www.python.org/downloads/windows/
 
-Then, assuming python and pip are installed, run `pip install PyQt5 pygit2` which should install PyQt5 and pygit2 and automatically use the right version for the version of python that you have installed.
+Then, assuming python and pip are installed, run `pip install PyQt5 pygit2` in a command window.
 
-* Clone pext to a location of your choice
-* In cmd: `cd pext`
-* And `python pext`
-
-## Installation (optional)
-Pext does not need to be installed to run. However, if you prefer to install
-it, you can do so:
-
-    # pip3 install . --upgrade --no-deps
-
-This also installs pext_dev, to aid module development.
+#### Starting Pext
+Pext can be ran by ran from a command window by running one of the following commands in the place where you saved Pext to (type ``cd place_you_saved_pext`` to go there):
+- ``python pext`` to start Pext itself
+- ``python pext_dev`` to start the Pext tools for module and theme development
 
 ## Usage
-Simply start Pext with Python 3. If you have installed Pext using the above
-command, simply start `pext`. Otherwise, go to the project's root directory and
-run `python3 pext`.
+To actually use Pext, you will first have to install one or more modules. Check out the Pext organisation on [GitHub](https://github.com/Pext) or [NotABug](https://notabug.org/Pext) or use `Module` -> `Install module` -> `From online module list` in the application for a list of modules.
 
-To actually use Pext, you will first have to install one or more modules. Check
-out the Pext organisation on
-[GitHub](https://github.com/Pext) or [NotABug](https://notabug.org/Pext)
-or use `Module` -> `Install module` -> `From online module list` in the
-application for a list of modules.
+After installating at least one module, you can load it from the `Module` -> `Load module` menu. After that, experiment! Each module is different.
 
 For command line options, use `--help`.
 
 ## Troubleshooting
 ### GNU/Linux
 #### Installing module dependencies fails
-Your distribution may ship with an outdated version of pip. Run
-``pip install --upgrade pip`` (possibly as root) in a terminal.
+Your distribution may ship with an outdated version of pip. Run ``pip install --upgrade pip`` (possibly as root) in a terminal.
 
 #### Pext's window is completely white
-The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu.
-You can work around this by running ``sudo apt-get install python3-opengl``.
+The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu. You can work around this by running ``sudo apt-get install python3-opengl``.
 
 Pext user report: https://github.com/Pext/Pext/issues/11  
 Ubuntu bug: https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 
 ### macOS
 #### I cannot brew/pip install anymore
-The Homebrew team completely broke pip's --target flag, which Pext depends on.
-To work around this, Pext automatically creates a ``~/.pydistutils.cfg`` file
-which resets the broken Homebrew pip defaults and deletes this file after its
-done installing module dependencies.
+The Homebrew team completely broke pip's --target flag, which Pext depends on. To work around this, Pext automatically creates a ``~/.pydistutils.cfg`` file which resets the broken Homebrew pip defaults and deletes this file after its done installing module dependencies.
 
-As a side effect, this means that using brew install or pip install while Pext
-is installing module dependencies may fail. If you cannot use brew install or
-pip install at all anymore after Pext crashed, please delete
-``~/.pydistutils.cfg`` if it exists.
+As a side effect, this means that using brew install or pip install while Pext is installing module dependencies may fail. If you cannot use brew install or pip install at all anymore after Pext crashed, please delete ``~/.pydistutils.cfg`` if it exists.
 
 The Homebrew team refuses to fix this issue: https://github.com/Homebrew/brew/issues/837
 
 ### Windows
 #### The python or pip commands do not work/The PATH variable is wrong
 
-In the installer, make sure that 'Include python in PATH' or similar is checked. Then after the installation, start a new command prompt and type `python -V` or `pip3` to check if it was properly installed. If the version number and the help message are returned respectively, you are good to go further. If not, in case you already had `cmd.exe` open, restart it or execute `refreshenv` to reload environment variables.
+In the installer, make sure that 'Include Python in PATH' or similar is checked. Then after the installation, start a new command prompt and type `python -V` or `pip3` to check if it was properly installed. If the version number and the help message are returned respectively, you are good to go further. If not, in case you already had `cmd.exe` open, restart it or execute `refreshenv` to reload environment variables.
 If it still does not work yet, check if the PATH was set in the GUI or manually with `cmd.exe`.
 
 GUI:
 
-* Start Menu > Computer (right click) > Properties > Advanced System Settings > Environment Variables
-* Check the PATH for both the system and the current user and in one of them the Python installation directory should be present, which is normally `C:\Python36` and `C:\Python36\Scripts`
+- Start Menu > Computer (right click) > Properties > Advanced System Settings > Environment Variables
+- Check the PATH for both the system and the current user and in one of them the Python installation directory should be present, which is normally `C:\Python36` and `C:\Python36\Scripts`
 
-CMD:
+cmd.exe:
 
-* Run `path` or `echo %PATH%` to check if the directory (`C:\Python36` and `C:\Python36\Scripts`) is included
-* The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows)
+- Run `path` or `echo %PATH%` to check if the directory (`C:\Python36` and `C:\Python36\Scripts`) is included
+- The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows)
 
 ## Hotkeys
 ### Entry management
