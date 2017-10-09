@@ -830,7 +830,7 @@ class ModuleManager():
 
             if param_length != required_param_length:
                 if name == 'process_response' and param_length == 1:
-                    print("WARN: Module {} uses old process_response signature and will not be able to receive an " \
+                    print("WARN: Module {} uses old process_response signature and will not be able to receive an "
                           "identifier if requested".format(module_name))
                 else:
                     Logger._log_error(
@@ -2628,7 +2628,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
             print("Pext {}".format(UpdateManager().get_core_version()))
             print()
             print("Copyright (C) 2016 - 2017 Sylvia van Os")
-            print("This is free software; see the source for copying conditions. " \
+            print("This is free software; see the source for copying conditions. "
                   "There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.")
             print()
             print("Written by Sylvia van Os.")
@@ -2832,7 +2832,7 @@ def main() -> None:
 
     # Warn if we may get UI issues
     if warn_no_openGL_linux:
-        print("python3-opengl is not installed. If Pext fails to render, please try installing it. " \
+        print("python3-opengl is not installed. If Pext fails to render, please try installing it. "
               "See https://github.com/Pext/Pext/issues/11.")
 
     # Set up persistence
