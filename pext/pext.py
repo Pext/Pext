@@ -2526,7 +2526,7 @@ def _init_persist(profile: str, background: bool) -> str:
     to the foreground. If Pext is not already running, saves a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = os.path.join(tempfile.gettempdir(), '/pext_{}.pid'.format(profile))
+    pidfile = os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(profile))
 
     if os.path.isfile(pidfile):
         try:
@@ -2893,9 +2893,7 @@ def main() -> None:
 
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)
-    if os.name == 'nt':
-        pass
-    else:
+    if not os.name == 'nt':
          signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
