@@ -35,6 +35,7 @@ import threading
 import time
 import traceback
 import webbrowser
+import tempfile
 
 from datetime import datetime
 from enum import IntEnum
@@ -2521,13 +2522,16 @@ def _init_persist(profile: str, background: bool) -> str:
     to the foreground. If Pext is not already running, saves a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = '/tmp/pext_{}.pid'.format(profile)
+    pidfile = tempfile.gettempdir() + '/pext_{}.pid'.format(profile)
 
     if os.path.isfile(pidfile):
         try:
             # Notify the main process if we are not using --background
             if not background:
-                os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
+                if os.name == 'nt':
+                    pass
+                else:
+                    os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
             else:
                 print("Pext is already running, but --background was given. Doing nothing...")
 
@@ -2884,7 +2888,10 @@ def main() -> None:
 
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)
-    signal.signal(signal.SIGUSR1, signal_handler.handle)
+    if os.name == 'nt':
+        pass
+    else:
+         signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
     main_loop = MainLoop(app, window, settings, logger)
