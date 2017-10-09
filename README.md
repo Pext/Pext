@@ -83,6 +83,30 @@ The .app file appears in the dist directory and can be dragged to
 "My Applications". Please note that actual py2app buils do not work yet. This
 is an aliased build, so it will break if you delete your git clone.
 
+### Windows (experimental)
+Assuming you have no previous python installation, either 
+    * use a package manager like chocolatey (http://chocolatey.org/) to install python3
+    * or install Python 3.6 manually from https://www.python.org/downloads/windows/
+
+In the installer, make sure that 'Include python in PATH' or similar is checked. Then after the installation, start a new command prompt and type `python -V` or `pip3` to check if it was properly installed. If the version number and the help message are returned respectively, you are good to go further. If not, in case you already had `cmd.exe` open, restart it or execute `refreshenv` to reload environment variables.
+If it still does not work yet, check if the PATH was set in the GUI or manually with `cmd.exe`.
+
+** In case pip is found but does not seem to work (error such as: "Fatal error in launcher: Unable to create process using `"`) you can start pip with `python -m pip` and then give the arguments like normal. **
+
+GUI:
+* Start Menu > Computer (right click) > Properties > Advanced System Settings > Environment Variables
+* Check the PATH for both the system and the current user and in one of them the Python installation directory should be present, which is normally `C:\Python36` and `C:\Python36\Scripts`
+
+CMD:
+* Run `path` or `echo %PATH%` to check if the directory (`C:\Python36` and `C:\Python36\Scripts`) is included
+* The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows)
+
+Then, assuming python and pip are installed, run `pip install PyQt5 pygit2` which should install PyQt5 and pygit2 and automatically use the right version for the version of python that you have installed.
+
+* Clone pext to a location of your choice
+* In cmd: `cd pext`
+* and `python pext`
+
 ## Installation (optional)
 Pext does not need to be installed to run. However, if you prefer to install
 it, you can do so:
