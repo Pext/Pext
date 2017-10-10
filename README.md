@@ -9,6 +9,21 @@ graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 
+## Contents
+- [Introduction](#introduction)
+- [How it works](#how-it-works)
+- [Installation](#installation)
+  - [GNU/Linux](#gnulinux)
+  - [macOS](#macos)
+  - [Windows (experimental)](#windows-experimental)
+- [Usage](#usage)
+- [Hotkeys](#hotkeys)
+- [Troubleshooting](#troubleshooting)
+  - [GNU/Linux](#gnulinux-1)
+  - [macOS](#macos-1)
+  - [Windows](#windows)
+- [License](#license)
+
 ## Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using Python 3 and Qt5 QML and has its behaviour decided by modules. Pext provides a simple window with a search bar, allowing modules to define what data is shown and how it is manipulated.
 
@@ -115,6 +130,30 @@ After installating at least one module, you can load it from the `Module` -> `Lo
 
 For command line options, use `--help`.
 
+## Hotkeys
+### Entry management
+- Escape: Go one level up
+- Tab: Tab-complete the current input
+- Enter / Left mouse button: Select entry or run command
+- Ctrl+Shift+. / Right mouse button on header: Open state menu
+- Ctrl+. / Right mouse button on any item: Open context menu
+- Ctrl+J / Down arrow: Go one entry down
+- Ctrl+H / Up arrow: Go one entry up
+- Ctrl+F / Page down: Go one page down
+- Ctrl+B / Page up: Go one page up
+
+### Tab management
+- Ctrl+T: Open new tab
+- Ctrl+W: Close current tab
+- Ctrl+Tab: Switch to next tab
+- Ctrl+Shift+Tab: Switch to previous tab
+- Alt+`<number>`: Switch to tab `<number>`
+- F5: Reload tab, including code changes to the module
+
+### Session management
+- Ctrl+Q: Quit and save the currently loaded modules and settings to the profile
+- Ctrl+Shift+Q: Quit without saving to the profile
+
 ## Troubleshooting
 ### GNU/Linux
 #### Installing module dependencies fails
@@ -149,30 +188,6 @@ cmd.exe:
 
 - Run `path` or `echo %PATH%` to check if the directory (`C:\Python36` and `C:\Python36\Scripts`) is included
 - The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows)
-
-## Hotkeys
-### Entry management
-- Escape: Go one level up
-- Tab: Tab-complete the current input
-- Enter / Left mouse button: Select entry or run command
-- Ctrl+Shift+. / Right mouse button on header: Open state menu
-- Ctrl+. / Right mouse button on any item: Open context menu
-- Ctrl+J / Down arrow: Go one entry down
-- Ctrl+H / Up arrow: Go one entry up
-- Ctrl+F / Page down: Go one page down
-- Ctrl+B / Page up: Go one page up
-
-### Tab management
-- Ctrl+T: Open new tab
-- Ctrl+W: Close current tab
-- Ctrl+Tab: Switch to next tab
-- Ctrl+Shift+Tab: Switch to previous tab
-- Alt+`<number>`: Switch to tab `<number>`
-- F5: Reload tab, including code changes to the module
-
-### Session management
-- Ctrl+Q: Quit and save the currently loaded modules and settings to the profile
-- Ctrl+Shift+Q: Quit without saving to the profile
 
 ## License
 GPLv3+.
