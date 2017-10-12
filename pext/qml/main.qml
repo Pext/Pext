@@ -26,6 +26,7 @@ import QtQuick.Window 2.0
 ApplicationWindow {
     id: applicationWindow
     property string version: applicationVersion
+    property string platform: systemPlatform
     property int margin: 10
     width: Screen.width
     height: 300

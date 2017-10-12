@@ -51,6 +51,12 @@ Dialog {
         }
 
         Label {
+            text: qsTr("This module does not seem to support %1.").arg(platform)
+            font.bold: true
+            visible: modules[combobox.currentIndex].platforms == null || !modules[combobox.currentIndex].platforms.indexOf(platform) == -1
+        }
+
+        Label {
             text: qsTr("Module information:")
         }
 

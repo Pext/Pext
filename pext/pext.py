@@ -1714,6 +1714,8 @@ class Window(QMainWindow):
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
             "applicationVersion", UpdateManager().get_core_version())
+        self.context.setContextProperty(
+            "systemPlatform", platform.system())
 
         self.context.setContextProperty(
             "modulesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'modules'))
