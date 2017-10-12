@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Pext now displays less broken when the height is higher than the width
 - Removed tray menu because it can't be translated due to PyQt limitations
 - Make clicking the tray icon toggle visibility on macOS
+- Minimizing normally after Pext is done is now the default on all platforms
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar

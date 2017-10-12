@@ -2543,7 +2543,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                 'clipboard': 'clipboard',
                 'locale': None,
                 'modules': [],
-                'minimize_mode': MinimizeMode.Normal if platform.system() == "Darwin" else MinimizeMode.Tray,
+                'minimize_mode': MinimizeMode.Normal,
                 'profile': 'default',
                 'save_settings': True,
                 'sort_mode': SortMode.Module,
