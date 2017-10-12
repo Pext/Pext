@@ -50,7 +50,7 @@ except ImportError:
 from queue import Queue, Empty
 
 import pygit2
-from PyQt5.QtCore import QStringListModel, QLocale, QTranslator
+from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
                              QMenu, QMessageBox, QTextEdit, QVBoxLayout,
@@ -1930,7 +1930,7 @@ class Window(QMainWindow):
         element['init'] = True
 
     def _process_window_state(self, event) -> None:
-        if event & 1:  # FIXME: Use the WindowMinimized enum instead
+        if event & Qt.WindowMinimized:
             if self.settings['minimize_mode'] in [MinimizeMode.Tray, MinimizeMode.TrayManualOnly]:
                 self.window.hide()
 
@@ -2203,9 +2203,11 @@ class Window(QMainWindow):
         if self.settings['tray']:
             tray.show()
 
-    def close(self, manual=False) -> None:
+    def close(self, manual=False, force_tray=False) -> None:
         """Close the window."""
-        if (self.settings['minimize_mode'] == MinimizeMode.Normal
+        if force_tray:
+            self.window.hide()
+        elif (self.settings['minimize_mode'] == MinimizeMode.Normal
                 or (manual and self.settings['minimize_mode'] == MinimizeMode.NormalManualOnly)):
             self.window.showMinimized()
         elif (self.settings['minimize_mode'] == MinimizeMode.Tray
@@ -2237,16 +2239,20 @@ class Window(QMainWindow):
 
     def show(self) -> None:
         """Show the window."""
-        self.window.show()
+        if self.window.windowState() == Qt.WindowMinimized:
+            self.window.showNormal()
+        else:
+            self.window.show()
+
         self.window.raise_()
         self.activateWindow()
 
-    def toggle_visibility(self) -> None:
+    def toggle_visibility(self, force_tray=False) -> None:
         """Toggle window visibility."""
-        if self.window.isVisible():
-            self.close()
-        else:
+        if self.window.windowState() == Qt.WindowMinimized or not self.window.isVisible():
             self.show()
+        else:
+            self.close(force_tray=force_tray)
 
     def quit(self) -> None:
         """Quit."""
@@ -2491,7 +2497,7 @@ class Tray():
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
         if reason == 3:
-            self.window.toggle_visibility()
+            self.window.toggle_visibility(force_tray=True)
 
     def show(self) -> None:
         """Show the tray icon."""
