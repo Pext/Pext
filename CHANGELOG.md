@@ -39,7 +39,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Versioning is now more precise
 - Check if a module/theme has an update before updating it
 - Pext now auto-restarts after changing the theme
-- Pext now displays less broken when the height is higher than the width 
+- Pext now displays less broken when the height is higher than the width
+- Removed tray menu because it can't be translated due to PyQt limitations
+- Make clicking the tray icon toggle visibility on macOS
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar

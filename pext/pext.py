@@ -2484,31 +2484,14 @@ class Tray():
         self.window = window
 
         self.tray = QSystemTrayIcon(app_icon)
-        tray_menu = QMenu()
-
-        tray_menu_open = QAction("Toggle visibility", tray_menu)
-        tray_menu_open.triggered.connect(window.toggle_visibility)
-        tray_menu.addAction(tray_menu_open)
-
-        tray_menu.addSeparator()
-
-        tray_menu_quit = QAction("Quit", tray_menu)
-        tray_menu_quit.triggered.connect(window.quit)
-        tray_menu.addAction(tray_menu_quit)
-        tray_menu_quit_without_saving = QAction("Quit without saving", tray_menu)
-        tray_menu_quit_without_saving.triggered.connect(window.quit_without_saving)
-        tray_menu.addAction(tray_menu_quit_without_saving)
 
         self.tray.activated.connect(self.icon_clicked)
-        self.tray.setContextMenu(tray_menu)
         self.tray.setToolTip('Pext ({})'.format(profile))
 
     def icon_clicked(self, reason: int) -> None:
-        """React to a click event."""
-        # Only show the window on a left click
-        if platform.system() != "Darwin":
-            if reason == 3:
-                self.window.toggle_visibility()
+        """Toggle window visibility on left click."""
+        if reason == 3:
+            self.window.toggle_visibility()
 
     def show(self) -> None:
         """Show the tray icon."""
