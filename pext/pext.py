@@ -2521,7 +2521,7 @@ def _init_persist(profile: str, background: bool) -> str:
         try:
             # Notify the main process if we are not using --background
             if not background:
-                if os.name == 'nt':
+                if platform.system() == 'Windows':
                     print("Pext is already running and foregrounding the running instance is currently not supported "
                           "on Windows. Doing nothing...")
                 else:
@@ -2882,7 +2882,7 @@ def main() -> None:
 
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)
-    if not os.name == 'nt':
+    if not platform.system() == 'Windows':
          signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
