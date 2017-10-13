@@ -647,15 +647,20 @@ class ObjectManager():
                 metadata = {}
 
             # Add revision last updated time
-            version = UpdateManager.get_version(os.path.join(core_directory, directory))
-            if version:
-                metadata['version'] = version
+            if source:
+                try:
+                    version = UpdateManager.get_version(os.path.join(core_directory, directory))
+                    metadata['version'] = version
+                except Exception as e:
+                    pass
 
-            last_updated = UpdateManager.get_last_updated(os.path.join(core_directory, directory))
-            if last_updated:
-                metadata['last_updated'] = str(last_updated)
+                try:
+                    last_updated = UpdateManager.get_last_updated(os.path.join(core_directory, directory))
+                    metadata['last_updated'] = str(last_updated)
+                except Exception as e:
+                    pass
 
-            objects[name] = {"source": source, "metadata": metadata, "system": True}
+            objects[name] = {"source": source, "metadata": metadata}
 
         return objects
 
@@ -1030,7 +1035,18 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         # Check if it's not already up-to-date
-        if not UpdateManager.has_update(os.path.join(self.module_dir, dir_name)):
+        try:
+            has_update = UpdateManager.has_update(os.path.join(self.module_dir, dir_name))
+        except Exception as e:
+            Logger._log_error(
+                '⇩ {}: {}'.format(module_name, e),
+                self.logger)
+
+            traceback.print_exc()
+
+            return False
+
+        if not has_update:
             if verbose:
                 Logger._log('⏩{}'.format(module_name), self.logger)
             return False
@@ -1078,8 +1094,9 @@ class UpdateManager():
 
     def __init__(self) -> None:
         """Initialize the UpdateManager and store the version info of Pext."""
-        self.version = UpdateManager.get_version(AppFile.get_path())
-        if not self.version:
+        try:
+            self.version = UpdateManager.get_version(AppFile.get_path())
+        except Exception as e:
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
                 self.version = version_file.read().strip()
 
@@ -1110,24 +1127,18 @@ class UpdateManager():
     @staticmethod
     def has_update(directory, branch="master") -> bool:
         """Check if an update is available for the git-managed directory."""
-        try:
-            repo = UpdateManager._path_to_repo(directory)
-            for remote in repo.remotes:
-                if remote.name == 'origin':
-                    remote.fetch()
-                    remote_branch_id = repo.lookup_reference('refs/remotes/origin/{}'.format(branch)).target
-                    merge_result, _ = repo.merge_analysis(remote_branch_id)
-                    if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
-                        return False
-                    else:
-                        return True
+        repo = UpdateManager._path_to_repo(directory)
+        for remote in repo.remotes:
+            if remote.name == 'origin':
+                remote.fetch()
+                remote_branch_id = repo.lookup_reference('refs/remotes/origin/{}'.format(branch)).target
+                merge_result, _ = repo.merge_analysis(remote_branch_id)
+                if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
+                    return False
+                else:
+                    return True
 
-            print("Could not find origin remote")
-            return False
-        except Exception as e:
-            print("Could not determine if updates are available for {}: {}".format(directory, e))
-            traceback.print_exc()
-            return False
+        raise Exception("Could not find origin remote")
 
     @staticmethod
     def update(directory, branch="master") -> None:
@@ -1167,23 +1178,15 @@ class UpdateManager():
     @staticmethod
     def get_version(directory) -> Optional[str]:
         """Get the version of the git-managed directory."""
-        try:
-            repo = UpdateManager._path_to_repo(directory)
-            return repo.describe(show_commit_oid_as_fallback=True, dirty_suffix='-dirty')
-        except Exception as e:
-            print("Could not describe {}: {}".format(directory, e))
-            return None
+        repo = UpdateManager._path_to_repo(directory)
+        return repo.describe(show_commit_oid_as_fallback=True, dirty_suffix='-dirty')
 
     @staticmethod
     def get_last_updated(directory) -> Optional[datetime]:
         """Return the time of the latest update of the git-managed directory."""
-        try:
-            repo = UpdateManager._path_to_repo(directory)
-            commit = repo.revparse_single('HEAD')
-            return datetime.fromtimestamp(commit.commit_time)
-        except Exception as e:
-            print("Could not get last updated time for {}: {}".format(directory, e))
-            return None
+        repo = UpdateManager._path_to_repo(directory)
+        commit = repo.revparse_single('HEAD')
+        return datetime.fromtimestamp(commit.commit_time)
 
 
 class ModuleThreadInitializer(threading.Thread):
@@ -2315,13 +2318,7 @@ class ThemeManager():
 
     def list_themes(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
-        themes = ObjectManager().list_objects(self.theme_dir)
-        for theme in themes:
-            if themes[theme]["metadata"]["name"] == ThemeManager.get_system_theme_name():
-                themes[theme]["system"] = False
-                break
-
-        return themes
+        return ObjectManager().list_objects(self.theme_dir)
 
     def load_theme(self, theme_name: str) -> QPalette:
         """Return the parsed palette."""
@@ -2421,7 +2418,18 @@ class ThemeManager():
         theme_name = ThemeManager.remove_prefix(theme_name)
 
         # Check if it's not already up-to-date or not the system theme
-        if (not UpdateManager.has_update(os.path.join(self.theme_dir, dir_name))
+        try:
+            has_update = UpdateManager.has_update(os.path.join(self.theme_dir, dir_name))
+        except Exception as e:
+            Logger._log_error(
+                '⇩ {}: {}'.format(theme_name, e),
+                self.logger)
+
+            traceback.print_exc()
+
+            return False
+
+        if (not has_update
                 or theme_name == ThemeManager.get_system_theme_name()):
             if verbose:
                 Logger._log('⏩{}'.format(theme_name), self.logger)

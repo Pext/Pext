@@ -134,7 +134,7 @@ Dialog {
                     }
                     
                     Button {
-                        visible: manageableObjects[modelData].system
+                        visible: manageableObjects[modelData].source !== undefined
 
                         text: qsTr("Uninstall")
                         onClicked: {
