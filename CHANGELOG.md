@@ -30,7 +30,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Traceback is now printing when an exception is triggered
 - Last updated info for modules
 - Version info for modules
-- Ability to update Pext itself if git is there
 - Windows support
 
 ### Changed

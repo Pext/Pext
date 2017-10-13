@@ -1108,32 +1108,6 @@ class UpdateManager():
         return repo.remotes['origin'].url
 
     @staticmethod
-    def update_core(verbose=False, logger=None) -> bool:
-        """Attempt to update Pext itself from Git."""
-        # Check if it's not already up-to-date
-        if not UpdateManager.has_update(AppFile.get_path()):
-            if verbose:
-                Logger._log('⏩Pex', logger)
-            return False
-
-        if verbose:
-            Logger._log('⇩ Pext', logger)
-
-        try:
-            UpdateManager.update(AppFile.get_path())
-        except Exception as e:
-            if verbose:
-                Logger._log_error(
-                    '⇩ Pext: {}'.format(e),
-                    logger)
-
-            traceback.print_exc()
-
-            return False
-
-        return True
-
-    @staticmethod
     def has_update(directory, branch="master") -> bool:
         """Check if an update is available for the git-managed directory."""
         try:
@@ -1797,8 +1771,8 @@ class Window(QMainWindow):
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
-        menu_update_core_shortcut = self.window.findChild(
-            QObject, "menuUpdateCore")
+        menu_restart_shortcut = self.window.findChild(
+            QObject, "menuRestart")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
         # Bind menu entries
@@ -1836,7 +1810,7 @@ class Window(QMainWindow):
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
-        menu_update_core_shortcut.triggered.connect(self._menu_update_core)
+        menu_restart_shortcut.triggered.connect(self._menu_restart)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
@@ -2036,8 +2010,7 @@ class Window(QMainWindow):
 
     def _menu_switch_theme(self, theme_name: str) -> None:
         self.settings['theme'] = theme_name
-        # Restart Pext by letting the wrapper know we want a restart
-        sys.exit(129)
+        self._menu_restart()
 
     def _menu_install_theme(self, theme_url: str) -> None:
         functions = [
@@ -2166,10 +2139,9 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themes", themes)
 
-    def _menu_update_core(self) -> None:
-        if UpdateManager.update_core(verbose=True, logger=self.logger):
-            # Restart Pext by letting the wrapper know we want a restart
-            sys.exit(129)
+    def _menu_restart(self) -> None:
+        """Restart Pext by letting the wrapper know we want a restart."""
+        sys.exit(129)
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')

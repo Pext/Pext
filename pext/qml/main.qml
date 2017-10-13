@@ -250,8 +250,8 @@ ApplicationWindow {
             title: "&Pext"
 
             MenuItem {
-                objectName: "menuUpdateCore"
-                text: qsTr("Check for and install updates")
+                objectName: "menuRestart"
+                text: qsTr("Restart")
             }
 
             MenuItem {
