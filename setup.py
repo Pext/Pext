@@ -1,9 +1,21 @@
 import os
+import pygit2
 import sys
 from setuptools import setup
 
 with open(os.path.join('pext', 'VERSION')) as version_file:
-    version = version_file.read().strip()
+    version_file_version = version_file.read().strip()
+
+try:
+    root_path = os.path.dirname(os.path.abspath(__file__))
+    repository_path = pygit2.discover_repository(root_path, False, os.path.dirname(root_path))
+    repo = pygit2.Repository(repository_path)
+    version = repo.describe(show_commit_oid_as_fallback=True, dirty_suffix='-dirty')
+    with open(os.path.join('pext', 'VERSION'), "w") as version_file:
+        version_file.write(version)
+except Exception as e:
+    print("Could not determine version from git, falling back to version file: {}".format(e))
+    version = version_file_version
 
 if sys.platform == 'darwin':
     extra_options = dict(
@@ -28,6 +40,7 @@ setup(
     name='Pext',
     version=version,
     install_requires=[
+        'pygit2',
         'pyqt5'
     ],
     description='Python-based extendable tool',
@@ -69,3 +82,7 @@ setup(
     },
     **extra_options
 )
+
+if version != version_file_version:
+    with open(os.path.join('pext', 'VERSION'), "w") as version_file:
+        version_file.write(version_file_version)
