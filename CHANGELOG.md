@@ -48,6 +48,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Page up and down causing QML errors when used too close to the start/end of the list
 - Minimizing behaviour didn't always work
 - Git commands are now properly limited to Pext directories
+- Desktop notifications only show when minimized to tray, not when minimized normally
 
 ## [0.9] - 2017-08-23
 ### API changes

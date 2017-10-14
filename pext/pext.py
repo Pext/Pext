@@ -235,7 +235,7 @@ class Logger():
 
             QQmlProperty.write(self.status_text, "text", statusbar_message)
 
-            if not self.window.window.isVisible():
+            if self.window.window.windowState() == Qt.WindowMinimized or not self.window.window.isVisible():
                 try:
                     Popen(['notify-send', 'Pext', notification_message])
                 except Exception as e:
