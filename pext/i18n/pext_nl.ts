@@ -36,7 +36,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation>Hongaars</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
@@ -88,7 +88,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Deze module lijkt %1 niet te ondersteunen.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="51"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>Let op: Pext zal herstarten om het nieuwe thema toe te passen.</translation>
     </message>
     <message>
         <source>Note: You must restart Pext to apply the new theme.</source>
@@ -223,7 +223,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="62"/>
         <source>Version: %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Versie: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="70"/>
@@ -467,7 +467,7 @@
     <message>
         <location filename="../qml/main.qml" line="254"/>
         <source>Restart</source>
-        <translation type="unfinished"></translation>
+        <translation>Herstarten</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="374"/>
