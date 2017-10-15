@@ -78,6 +78,8 @@ Dialog {
                         "<h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:") + "</h3><br>" +
                         "<b>" + qsTr("Spanish") + "</b><br>" +
                         "Emily Lau &lt;<a href='mailto:fuchslein@hackerchick.me'>fuchslein@hackerchick.me</a>&gt;<br><br>" +
+                        "<b>" + qsTr("Hungarian") + "</b><br>" +
+                        "Szöllősi Attila &lt;<a href='mailto:ata@openmailbox.org'>ata@openmailbox.org</a>&gt;<br><br>" +
                         "<b>" + qsTr("Dutch") + "</b><br>" +
                         "Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br>" +
                         "Heimen Stoffels &lt;<a href='mailto:vistausss@outlook.com'>vistausss@outlook.com</a>&gt;<br><br>" +
