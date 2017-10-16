@@ -36,7 +36,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation>magyar</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
