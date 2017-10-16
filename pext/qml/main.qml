@@ -326,7 +326,7 @@ ApplicationWindow {
                             {"manageableObjects": modules,
                              "updateRequest": updateModuleRequest,
                              "uninstallRequest": uninstallModuleRequest});
-					}
+                    }
                 }
             }
 
@@ -424,7 +424,7 @@ ApplicationWindow {
                             {"manageableObjects": themes,
                              "updateRequest": updateThemeRequest,
                              "uninstallRequest": uninstallThemeRequest});
-					}
+                    }
                 }
             }
 
