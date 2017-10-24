@@ -414,10 +414,16 @@ class MainLoop():
             tab['vm'].context.setContextProperty(
                 "resultListModelDepth", len(tab['vm'].selection))
 
-            tab['vm'].module.selection_made(tab['vm'].selection)
+            tab['vm'].make_selection()
 
         elif action[0] == Action.close:
             self.window.close()
+            tab['vm'].selection = []
+
+            tab['vm'].context.setContextProperty(
+                "resultListModelDepth", len(tab['vm'].selection))
+
+            tab['vm'].module.selection_made(tab['vm'].selection)
 
         elif action[0] == Action.set_entry_info:
             tab['vm'].extra_info_entries[str(action[1])] = action[2]
@@ -1239,6 +1245,19 @@ class ViewModel():
         self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
+        self.selection_thread = None
+
+    def make_selection(self):
+        """Make a selection if no selection is currently being processed.
+
+        Running the selection making in another thread prevents it from locking
+        up Pext's UI, while ensuring existing thread completion prevents race
+        conditions."""
+        if self.selection_thread and self.selection_thread.is_alive():
+            return
+
+        self.selection_thread = threading.Thread(target=self.module.selection_made, args=(self.selection,))
+        self.selection_thread.start()
 
     def _get_longest_common_string(self, entries: List[str], start="") -> Optional[str]:
         """Return the longest common string.
@@ -1328,6 +1347,9 @@ class ViewModel():
             QQmlProperty.write(self.search_input_model, "text", "")
             return
 
+        if self.selection_thread and self.selection_thread.is_alive():
+            return
+
         if len(self.selection) > 0:
             self.selection.pop()
             self.entry_list = []
@@ -1341,7 +1363,7 @@ class ViewModel():
             self._clear_queue()
             self.window.update()
 
-            self.module.selection_made(self.selection)
+            self.make_selection()
         else:
             self.window.close(manual=True)
 
@@ -1537,6 +1559,9 @@ class ViewModel():
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             return
 
+        if self.selection_thread and self.selection_thread.is_alive():
+            return
+
         self.entry_list = []
         self.command_list = []
         self.extra_info_entries = {}
@@ -1556,7 +1581,7 @@ class ViewModel():
         self._clear_queue()
         self.window.update()
 
-        self.module.selection_made(self.selection)
+        self.make_selection()
 
     def show_context_base(self) -> None:
         """Show the base context menu."""
@@ -2190,29 +2215,6 @@ class Window(QMainWindow):
         elif (self.settings['minimize_mode'] == MinimizeMode.Tray
                 or (manual and self.settings['minimize_mode'] == MinimizeMode.TrayManualOnly)):
             self.window.hide()
-
-        need_search = False
-
-        if QQmlProperty.read(self.search_input_model, "text") != "":
-            need_search = True
-            QQmlProperty.write(self.search_input_model, "text", "")
-
-        for tab in self.tab_bindings:
-            if not tab['init']:
-                continue
-
-            tab_needs_search = need_search or len(tab['vm'].selection) > 0
-
-            if len(tab['vm'].selection) > 0:
-                tab['vm'].selection = []
-
-                tab['vm'].context.setContextProperty(
-                    "resultListModelDepth", len(tab['vm'].selection))
-
-                tab['vm'].module.selection_made(tab['vm'].selection)
-
-            if tab_needs_search:
-                tab['vm'].search()
 
     def show(self) -> None:
         """Show the window."""

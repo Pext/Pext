@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed tray menu because it can't be translated due to PyQt limitations
 - Make clicking the tray icon toggle visibility on macOS
 - Minimizing normally after Pext is done is now the default on all platforms
+- Module requesting window hide will only reset the selection of that module instead of all
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
@@ -49,6 +50,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Minimizing behaviour didn't always work
 - Git commands are now properly limited to Pext directories
 - Desktop notifications now also show when Pext is minimized normally
+- Modules no longer lock up Pext while making a selection
 
 ## [0.9] - 2017-08-23
 ### API changes
