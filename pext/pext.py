@@ -1247,7 +1247,7 @@ class ViewModel():
         self.extra_info_last_entry_type = None
         self.selection_thread = None
 
-    def make_selection(self):
+    def make_selection(self) -> None:
         """Make a selection if no selection is currently being processed.
 
         Running the selection making in another thread prevents it from locking
