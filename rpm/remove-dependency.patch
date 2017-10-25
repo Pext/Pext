@@ -1,0 +1,10 @@
+--- setup.py.bak	2017-10-24 21:30:48.620552756 -0400
++++ setup.py	2017-10-24 21:43:59.691747057 -0400
+@@ -27,7 +27,6 @@
+     name='Pext',
+     version=version,
+     install_requires=[
+-        'pyqt5'
+     ],
+     description='Python-based extendable tool',
+     long_description='A Python-based application that uses modules for extendability',
