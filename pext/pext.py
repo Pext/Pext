@@ -277,15 +277,15 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            self.logger.add_error(tab['module_name'], action[1])
+            self.logger.add_error(tab['module_name'], str(action[1]))
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 
         elif action[0] == Action.add_message:
-            self.logger.add_message(tab['module_name'], action[1])
+            self.logger.add_message(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_error:
-            self.logger.add_error(tab['module_name'], action[1])
+            self.logger.add_error(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
             tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
@@ -297,7 +297,10 @@ class MainLoop():
             tab['vm'].entry_list.remove(action[1])
 
         elif action[0] == Action.replace_entry_list:
-            tab['vm'].entry_list = action[1]
+            if len(action) > 1:
+                tab['vm'].entry_list = action[1]
+            else:
+                tab['vm'].entry_list = []
 
         elif action[0] == Action.add_command:
             tab['vm'].command_list = tab['vm'].command_list + [action[1]]
@@ -309,16 +312,22 @@ class MainLoop():
             tab['vm'].command_list.remove(action[1])
 
         elif action[0] == Action.replace_command_list:
-            tab['vm'].command_list = action[1]
+            if len(action) > 1:
+                tab['vm'].command_list = action[1]
+            else:
+                tab['vm'].command_list = []
 
         elif action[0] == Action.set_header:
             if len(action) > 1:
-                tab['vm'].set_header(action[1])
+                tab['vm'].set_header(str(action[1]))
             else:
                 tab['vm'].set_header("")
 
         elif action[0] == Action.set_filter:
-            QQmlProperty.write(tab['vm'].search_input_model, "text", action[1])
+            if len(action) > 1:
+                QQmlProperty.write(tab['vm'].search_input_model, "text", str(action[1]))
+            else:
+                QQmlProperty.write(tab['vm'].search_input_model, "text", "")
 
         elif action[0] == Action.ask_question_default_yes:
             answer = QMessageBox.question(
@@ -409,7 +418,10 @@ class MainLoop():
             self.app.clipboard().setText(str(action[1]), mode)
 
         elif action[0] == Action.set_selection:
-            tab['vm'].selection = action[1]
+            if len(action) > 1:
+                tab['vm'].selection = action[1]
+            else:
+                tab['vm'].selection = []
 
             tab['vm'].context.setContextProperty(
                 "resultListModelDepth", len(tab['vm'].selection))
@@ -426,19 +438,41 @@ class MainLoop():
             tab['vm'].module.selection_made(tab['vm'].selection)
 
         elif action[0] == Action.set_entry_info:
-            tab['vm'].extra_info_entries[str(action[1])] = action[2]
+            if len(action) > 2:
+                tab['vm'].extra_info_entries[str(action[1])] = str(action[2])
+            else:
+                try:
+                    del tab['vm'].extra_info_entries[str(action[1])]
+                except KeyError:
+                    pass
+
             tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.replace_entry_info_dict:
-            tab['vm'].extra_info_entries = action[1]
+            if len(action) > 1:
+                tab['vm'].extra_info_entries = action[1]
+            else:
+                tab['vm'].extra_info_entries = {}
+
             tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.set_command_info:
-            tab['vm'].extra_info_commands[str(action[1])] = action[2]
+            if len(action) > 2:
+                tab['vm'].extra_info_commands[str(action[1])] = str(action[2])
+            else:
+                try:
+                    del tab['vm'].extra_info_commands[str(action[1])]
+                except KeyError:
+                    pass
+
             tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.replace_command_info_dict:
-            tab['vm'].extra_info_commands = action[1]
+            if len(action) > 1:
+                tab['vm'].extra_info_commands = action[1]
+            else:
+                tab['vm'].extra_info_commands = {}
+
             tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.set_base_info:
@@ -448,16 +482,34 @@ class MainLoop():
                 tab['vm'].update_base_info_panel("")
 
         elif action[0] == Action.set_entry_context:
-            tab['vm'].context_menu_entries[str(action[1])] = action[2]
+            if len(action) > 2:
+                tab['vm'].context_menu_entries[str(action[1])] = str(action[2])
+            else:
+                try:
+                    del tab['vm'].context_menu_entries[str(action[1])]
+                except KeyError:
+                    pass
 
         elif action[0] == Action.replace_entry_context_dict:
-            tab['vm'].context_menu_entries = action[1]
+            if len(action) > 1:
+                tab['vm'].context_menu_entries = action[1]
+            else:
+                tab['vm'].context_menu_entries = {}
 
         elif action[0] == Action.set_command_context:
-            tab['vm'].context_menu_commands[str(action[1])] = action[2]
+            if len(action) > 2:
+                tab['vm'].context_menu_commands[str(action[1])] = str(action[2])
+            else:
+                try:
+                    del tab['vm'].context_menu_commands[str(action[1])]
+                except KeyError:
+                    pass
 
         elif action[0] == Action.replace_command_context_dict:
-            tab['vm'].context_menu_commands = action[1]
+            if len(action) > 1:
+                tab['vm'].context_menu_commands = action[1]
+            else:
+                tab['vm'].context_menu_commands = {}
 
         elif action[0] == Action.set_base_context:
             if len(action) > 0:
