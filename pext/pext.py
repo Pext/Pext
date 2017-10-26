@@ -904,7 +904,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        module['settings']['_api_version'] = [0, 6, 0]
+        module['settings']['_api_version'] = [0, 7, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background

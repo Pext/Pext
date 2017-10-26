@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Pext now depends on pygit2, which uses libgit2, instead of git
 
 ### API changes
-- Bump API version to 0.6.0
+- Bump API version to 0.7.0
 - Add set_entry_info queue call
 - Add replace_entry_info_dict queue call
 - Add set_command_info queue call
@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Add set_base_context queue call
 - Add extra_info_request function
 - Add a none SelectionType
+- Made more parameters optional
 
 ### Added
 - Add info panels which modules can use to show extra info on the current status on selected entry
