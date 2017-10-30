@@ -72,7 +72,7 @@ find AppDir/usr/lib \
     -or -iname '*ucene*' \
     -or -iname '*pip*' \
     -or -iname '*setuptools*' \
-    -or -iname '*declarative*  \
+    -or -iname '*declarative*'  \
     -or -iname 'libkrb*.so*' \
     -or -iname 'libhcrypto*.so*' \
     -or -iname 'libheim*.so*' \
