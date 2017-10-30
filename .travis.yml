@@ -1,0 +1,24 @@
+language: python
+sudo: required
+
+python:
+  - "3.5"
+  - "3.6"
+
+install: pip install tox-travis
+script: tox
+
+jobs:
+  include:
+    - stage: package
+      install:
+      - wget https://raw.githubusercontent.com/AppImage/AppImages/master/set-up-ppas.sh -O- | sudo bash -x
+      - sudo apt install -y --force-yes curl libcurl3 libcurl-gnutls3 libcurl-nss3
+      script:
+      - mkdir -p build
+      - cd build
+      - bash -xe ../build-appimage.sh
+
+stages:
+  - test
+  - package
