@@ -1,18 +1,19 @@
 language: python
-sudo: required
 
 python:
   - "3.5"
   - "3.6"
 
-install: pip install tox-travis
-script:
+install:
+  # install tox and its wrapper tox-travis
+  - pip install tox-travis
   # install latest libgit2 from source, hoping that pygit2 will _not_ have a problem with it
   - git clone https://github.com/libgit2/libgit2
   - pushd libgit2; mkdir build/; cd build
   - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
   - sudo make install -j$(nproc)
   - popd
+script:
   # run tests
   - tox
 
