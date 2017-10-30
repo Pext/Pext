@@ -1304,7 +1304,8 @@ class ViewModel():
 
         Running the selection making in another thread prevents it from locking
         up Pext's UI, while ensuring existing thread completion prevents race
-        conditions."""
+        conditions.
+        """
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
