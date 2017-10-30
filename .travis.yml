@@ -6,7 +6,15 @@ python:
   - "3.6"
 
 install: pip install tox-travis
-script: tox
+script:
+  # install latest libgit2 from source, hoping that pygit2 will _not_ have a problem with it
+  - git clone https://github.com/libgit2/libgit2
+  - pushd libgit2; mkdir build/; cd build
+  - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  - sudo make install -j$(nproc)
+  - popd
+  # run tests
+  - tox
 
 jobs:
   include:
