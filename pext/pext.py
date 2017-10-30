@@ -51,9 +51,9 @@ from queue import Queue, Empty
 
 import pygit2
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
-from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
+from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
-                             QMenu, QMessageBox, QTextEdit, QVBoxLayout,
+                             QMessageBox, QTextEdit, QVBoxLayout,
                              QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
@@ -2919,7 +2919,7 @@ def main() -> None:
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)
     if not platform.system() == 'Windows':
-         signal.signal(signal.SIGUSR1, signal_handler.handle)
+        signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
     main_loop = MainLoop(app, window, settings, logger)
