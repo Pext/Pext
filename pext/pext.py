@@ -108,7 +108,7 @@ class ConfigRetriever():
         # Initialze defaults
         try:
             config_home = os.environ['XDG_CONFIG_HOME']
-        except:
+        except Exception:
             config_home = os.path.expanduser('~/.config/')
 
         self.config = {'config_path': os.path.join(config_home, 'pext/')}
@@ -694,7 +694,7 @@ class ObjectManager():
 
             try:
                 source = UpdateManager.get_remote_url(os.path.join(core_directory, directory))
-            except Exception as e:
+            except Exception:
                 source = None
 
             try:
@@ -709,13 +709,13 @@ class ObjectManager():
                 try:
                     version = UpdateManager.get_version(os.path.join(core_directory, directory))
                     metadata['version'] = version
-                except Exception as e:
+                except Exception:
                     pass
 
                 try:
                     last_updated = UpdateManager.get_last_updated(os.path.join(core_directory, directory))
                     metadata['last_updated'] = str(last_updated)
-                except Exception as e:
+                except Exception:
                     pass
 
             objects[name] = {"source": source, "metadata": metadata}
@@ -1154,7 +1154,7 @@ class UpdateManager():
         """Initialize the UpdateManager and store the version info of Pext."""
         try:
             self.version = UpdateManager.get_version(AppFile.get_path())
-        except Exception as e:
+        except Exception:
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
                 self.version = version_file.read().strip()
 

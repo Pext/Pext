@@ -1,5 +1,4 @@
 import os
-import pygit2
 import sys
 from setuptools import setup
 
@@ -7,6 +6,7 @@ with open(os.path.join('pext', 'VERSION')) as version_file:
     version_file_version = version_file.read().strip()
 
 try:
+    import pygit2
     root_path = os.path.dirname(os.path.abspath(__file__))
     repository_path = pygit2.discover_repository(root_path, False, os.path.dirname(root_path))
     repo = pygit2.Repository(repository_path)
