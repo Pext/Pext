@@ -51,9 +51,9 @@ from queue import Queue, Empty
 
 import pygit2
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
-from PyQt5.QtWidgets import (QAction, QApplication, QDialog, QDialogButtonBox,
+from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
-                             QMenu, QMessageBox, QTextEdit, QVBoxLayout,
+                             QMessageBox, QTextEdit, QVBoxLayout,
                              QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
@@ -1297,14 +1297,15 @@ class ViewModel():
         self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
-        self.selection_thread = None
+        self.selection_thread = None  # type: threading.Thread
 
     def make_selection(self) -> None:
         """Make a selection if no selection is currently being processed.
 
         Running the selection making in another thread prevents it from locking
         up Pext's UI, while ensuring existing thread completion prevents race
-        conditions."""
+        conditions.
+        """
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
@@ -2919,7 +2920,7 @@ def main() -> None:
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)
     if not platform.system() == 'Windows':
-         signal.signal(signal.SIGUSR1, signal_handler.handle)
+        signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
     main_loop = MainLoop(app, window, settings, logger)
