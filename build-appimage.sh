@@ -87,10 +87,13 @@ popd
 cat > AppDir/AppRun <<EAT
 #! /bin/sh
 
+# make sure to set APPDIR when run directly from the AppDir
+if [ -z \$APPDIR ]; then APPDIR=\$(readlink -f .); fi
+
 export LD_LIBRARY_PATH="\$APPDIR"/usr/lib:"\$APPDIR"/usr/lib/x86_64-linux-gnu/
 export PYTHONPATH="\$APPDIR"/usr/lib/python3.5:"\$APPDIR"/usr/lib/python3.5/site-packages/
 
-exec "\$APPDIR"/usr/bin/python "\$APPDIR"/usr/bin/pext "$@"
+exec "\$APPDIR"/usr/bin/python "\$APPDIR"/usr/bin/pext "\$@"
 EAT
 
 chmod +x AppDir/AppRun
