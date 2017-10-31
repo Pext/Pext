@@ -54,11 +54,6 @@ popd
 cp "$REPO_ROOT"/pext.desktop "$REPO_ROOT"/pext/images/scalable/pext.svg AppDir
 sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 
-# precompile bytecode to speed up startup
-pushd AppDir
-python -m compileall . -fqb || true
-popd
-
 # copy in libraries
 wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
 (. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && delete_blacklisted)
@@ -79,6 +74,12 @@ find AppDir/usr/lib \
     -or -iname 'libroken*.so*' \
     -or -iname 'libreadline*.so*' \
     -delete
+popd
+
+# precompile bytecode to speed up startup
+# do this after deleting lib2to3, otherwise it won't compile
+pushd AppDir
+python -m compileall . -fqb || true
 popd
 
 # install AppRun
