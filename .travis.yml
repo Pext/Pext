@@ -33,7 +33,7 @@ before_script: &installdeps
 
 # for test stage
 script:
-  - tox
+  - tox -v
 
 jobs:
   include:
