@@ -1,13 +1,16 @@
+sudo: required
+language: python
+
+python:
+  - "3.5"
+  - "3.6"
+
+install:
+  - pip install tox-travis
+
 jobs:
   include:
-    - stage: unit tests
-      sudo: required
-      language: python
-      python:
-        - "3.5"
-        - "3.6"
-      install:
-        - pip install tox-travis
+    - stage: test
       before_script: &installdeps
         # install custom built libcurl system wide between git clone and test script
         - sudo apt-get purge -y curl\* libcurl\*
