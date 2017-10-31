@@ -22,8 +22,7 @@ script:
   - pushd curl
   - patch -p1 < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
   - mkdir build; cd build
-  - cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 \
-  -     -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
+  - cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
   - sudo make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
   - popd
   # now we can build and install a custom build of libgit2, assuming that the latest version will also make
