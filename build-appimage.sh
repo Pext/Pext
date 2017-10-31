@@ -57,7 +57,7 @@ sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 
 # copy in libraries
 wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
-(. functions.sh && cd AppDir/usr && set +x && copy_deps && copy_deps && copy_deps && delete_blacklisted)
+(. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
 
 # remove unnecessary libraries and other useless data
 find AppDir/usr \
