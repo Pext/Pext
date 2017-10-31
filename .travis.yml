@@ -22,8 +22,10 @@ jobs:
   include:
     - stage: package
       install:
-      - wget https://raw.githubusercontent.com/AppImage/AppImages/master/set-up-ppas.sh -O- | sudo bash -x
-      - sudo apt install -y --force-yes curl libcurl3 libcurl-gnutls3 libcurl-nss3
+      # disabling until we have a working libcurl in the PPA
+      # un-bundling system libcurl in the AppImage build script for the same reason
+      # - wget https://raw.githubusercontent.com/AppImage/AppImages/master/set-up-ppas.sh -O- | sudo bash -x
+      # - sudo apt install -y --force-yes curl libcurl3 libcurl-gnutls3 libcurl-nss3
       script:
       - mkdir -p build
       - cd build

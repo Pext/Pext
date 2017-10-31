@@ -67,6 +67,8 @@ find AppDir/usr \
     -or -iname '*pip*' \
     -or -iname '*setuptools*' \
     -or -iname '*declarative*'  \
+    -or -iname 'libcurl*.so*' \
+    -or -iname 'libcrypt*.so*' \
     -or -iname 'libkrb*.so*' \
     -or -iname 'libhcrypto*.so*' \
     -or -iname 'libheim*.so*' \
