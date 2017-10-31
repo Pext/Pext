@@ -1,56 +1,61 @@
-language: python
-sudo: required
-
-python:
-  - "3.5"
-  - "3.6"
-
-# temporary solution for
-# $ ./Pext*.AppImage --version
-# QXcbConnection: Could not connect to display
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
-
-install:
-  # install tox and its wrapper tox-travis
-  - pip install tox-travis
-script:
-  # clone repositories with git before uninstalling curl, as git depends on it
-  - git clone https://github.com/curl/curl.git
-  - git clone https://github.com/libgit2/libgit2.git
-  # uninstall system curl... (can't do it in install step, as we need the patch from the repository)
-  - sudo apt-get purge -y curl\* libcurl\*
-  # ... now install static cmake, which was uninstalled in the previous step...
-  - wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | sudo tar xz -C /usr --strip-components=1
-  # ... and install custom built libcurl system wide
-  # the custom searches multiple locations for CA chains, and has everything but HTTP(S) disabled to remove
-  # the majority of dependencies
-  - pushd curl
-  - patch -p1 < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
-  - mkdir build; cd build
-  - cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
-  - sudo make install -j$(nproc)
-  - popd
-  # now we can build and install a custom build of libgit2, assuming that the latest version will also make
-  # pygit2 happy in the unit tests
-  - pushd libgit2; mkdir build/; cd build
-  - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-  - sudo make install -j$(nproc)
-  - popd
-  # run tests
-  - tox
-  # exit build unless we're on Python 3
-  - if [ $(python3 --version | cut -d' ' -f2 | cut -d. -f1-2) != "3.6" ]; then exit 0; fi
-  # build AppImage
-  - mkdir -p build
-  - cd build
-  - bash -xe ../build-appimage.sh
-  # test AppImage
-  - chmod +x Pext*.AppImage
-  - ./Pext*.AppImage --version
-  # pretend PR to upload to transfer.sh -- TODO: remove this line after merging
-  - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - chmod +x upload.sh
-  - env TRAVIS_EVENT_TYPE=pull_request bash upload.sh Pext*.AppImage*
+jobs:
+  include:
+    - stage: unit tests
+      sudo: required
+      language: python
+      python:
+        - "3.5"
+        - "3.6"
+      install:
+        - pip install tox-travis
+      before_script: &installdeps
+        # install custom built libcurl system wide between git clone and test script
+        - sudo apt-get purge -y curl\* libcurl\*
+        # install cmake, which had a dependency on curl and was uninstalled in the previous step
+        - wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | sudo tar xz -C /usr --strip-components=1
+        # the custom searches multiple locations for CA chains, and has everything but HTTP(S) disabled to remove
+        # the majority of dependencies
+        - url=$(wget -qO- https://api.github.com/repos/libgit2/libgit2/releases/latest | grep zipball_url | cut -d'"' -f4)
+        - wget "$url" -O- | tar xz
+        - pushd curl*
+        - patch -p1 < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
+        - mkdir build; cd build
+        - cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
+        - sudo make install -j$(nproc)
+        - popd
+        # build and install libgit2 from source, assuming that the latest version will also make pygit2 install without
+        # version errors
+        - url=$(wget -qO- https://api.github.com/repos/libgit2/libgit2/releases/latest | grep zipball_url | cut -d'"' -f4)
+        - wget "$url" -O- | tar xz
+        - pushd libgit2*; mkdir build/; cd build
+        - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+        - sudo make install -j$(nproc)
+        - popd
+      script:
+        - tox
+    - stage: packaging
+      sudo: required
+      before_script:
+        # install libcurl and libgit2
+        << *installdeps
+      script:
+        # exit build unless we're on Python 3
+        - if [ $(python3 --version | cut -d' ' -f2 | cut -d. -f1-2) != "3.6" ]; then exit 0; fi
+        # build AppImage
+        - mkdir -p build
+        - cd build
+        - bash -xe ../build-appimage.sh
+        # test AppImage
+        - chmod +x Pext*.AppImage
+        # temporary solution for
+        # $ ./Pext*.AppImage --version
+        # QXcbConnection: Could not connect to display
+        - "export DISPLAY=:99.0"
+        - "sh -e /etc/init.d/xvfb start"
+        - sleep 3 # give xvfb some time to start
+        - ./Pext*.AppImage --version
+      after_success:
+        # pretend PR to upload to transfer.sh -- TODO: remove this line after merging
+        - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
+        - chmod +x upload.sh
+        - env TRAVIS_EVENT_TYPE=pull_request bash upload.sh Pext*.AppImage*
