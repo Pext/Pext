@@ -59,8 +59,7 @@ wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
 (. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && delete_blacklisted)
 
 # remove unnecessary libraries and other useless data
-pushd AppDir
-find AppDir/usr/lib \
+find AppDir/usr \
     -iname '*Tk*' \
     -or -iname '*QtNetwork*' \
     -or -iname '*lib2to3*' \
@@ -74,7 +73,6 @@ find AppDir/usr/lib \
     -or -iname 'libroken*.so*' \
     -or -iname 'libreadline*.so*' \
     -delete
-popd
 
 # precompile bytecode to speed up startup
 # do this after deleting lib2to3, otherwise it won't compile
