@@ -34,11 +34,6 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 . AppDir/usr/bin/activate
 
 # install dependencies
-git clone https://github.com/libgit2/libgit2
-pushd libgit2; mkdir build/; cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
-popd
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate
 pip install -U pip
 pip download pygit2; tar xf pygit2*.tar.gz; pushd pygit2*/
@@ -47,8 +42,9 @@ python setup.py install
 popd
 
 # install Pext
-(cd "$REPO_ROOT" && python setup.py install)
-
+pushd "$REPO_ROOT"
+python setup.py install
+popd
 
 # copy resources to AppDir
 cp "$REPO_ROOT"/pext.desktop "$REPO_ROOT"/pext/images/scalable/pext.svg AppDir
@@ -56,7 +52,7 @@ sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 
 # copy in libraries
 wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
-(. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && delete_blacklisted)
+(. functions.sh && cd AppDir/usr && set +x && copy_deps && copy_deps && copy_deps && delete_blacklisted)
 
 # remove unnecessary libraries and other useless data
 find AppDir/usr \
