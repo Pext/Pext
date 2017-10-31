@@ -34,10 +34,15 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 . AppDir/usr/bin/activate
 
 # install dependencies
+git clone https://github.com/libgit2/libgit2.git
+pushd libgit2; mkdir build/; cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+make install -j$(nproc) DESTDIR="$BUILD_DIR"/AppDir
+popd
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate
 pip install -U pip
 pip download pygit2; tar xf pygit2*.tar.gz; pushd pygit2*/
-python setup.py build_ext --inplace
+python setup.py build_ext --inplace --include-dirs="$BUILD_DIR"/AppDir/usr/include --library-dirs="$BUILD_DIR"/AppDir/usr/lib
 python setup.py install
 popd
 
