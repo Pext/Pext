@@ -14,21 +14,23 @@ script:
   - git clone https://github.com/libgit2/libgit2.git
   # uninstall system curl... (can't do it in install step, as we need the patch from the repository)
   - sudo apt-get purge -y curl\* libcurl\*
+  # ... now install static cmake, which was uninstalled in the previous step...
+  - wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | tar xz -C /usr --strip-components=1
   # ... and install custom built libcurl system wide
   # the custom searches multiple locations for CA chains, and has everything but HTTP(S) disabled to remove
   # the majority of dependencies
   - pushd curl
-  - git apply < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
+  - patch -n1 < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
   - mkdir build; cd build
   - cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 \
   -     -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
-  - make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
+  - sudo make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
   - popd
   # now we can build and install a custom build of libgit2, assuming that the latest version will also make
   # pygit2 happy
   - pushd libgit2; mkdir build/; cd build
   - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-  - make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
+  - sudo make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
   - popd
   # run tests
   - tox
