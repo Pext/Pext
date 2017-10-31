@@ -5,6 +5,14 @@ python:
   - "3.5"
   - "3.6"
 
+# temporary solution for
+# $ ./Pext*.AppImage --version
+# QXcbConnection: Could not connect to display
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+
 install:
   # install tox and its wrapper tox-travis
   - pip install tox-travis
