@@ -14,7 +14,7 @@ before_script: &installdeps
   - wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | sudo tar xz -C /usr --strip-components=1
   # the custom searches multiple locations for CA chains, and has everything but HTTP(S) disabled to remove
   # the majority of dependencies
-  - url=$(wget -qO- https://api.github.com/repos/libgit2/libgit2/releases/latest | grep tarball_url | cut -d'"' -f4)
+  - url=$(wget -qO- https://api.github.com/repos/curl/curl/releases/latest | grep tarball_url | cut -d'"' -f4)
   - wget "$url" -O- | tar xz
   - pushd curl*/
   - patch -p1 < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
