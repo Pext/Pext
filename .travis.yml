@@ -8,12 +8,6 @@ python:
 install:
   # install tox and its wrapper tox-travis
   - pip install tox-travis
-  # install latest libgit2 from source, hoping that pygit2 will _not_ have a problem with it
-  - git clone https://github.com/libgit2/libgit2
-  - pushd libgit2; mkdir build/; cd build
-  - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-  - sudo make install -j$(nproc)
-  - popd
 script:
   # run tests
   - tox
@@ -27,6 +21,27 @@ jobs:
       # - wget https://raw.githubusercontent.com/AppImage/AppImages/master/set-up-ppas.sh -O- | sudo bash -x
       # - sudo apt install -y --force-yes curl libcurl3 libcurl-gnutls3 libcurl-nss3
       script:
+      # uninstall system curl...
+      - sudo apt-get purge -y curl\* libcurl\*
+      # ... and install custom built libcurl system wide
+      # the custom searches multiple locations for CA chains, and has everything but HTTP(S) disabled to remove
+      # the majority of dependencies
+      - git clone https://github.com/curl/curl.git
+      - pushd curl
+      - git apply < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
+      - mkdir build; cd build
+      - cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 \
+      -     -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
+      - make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
+      - popd
+      # now we can build and install a custom build of libgit2, assuming that the latest version will also make
+      # pygit2 happy
+      - git clone https://github.com/libgit2/libgit2.git
+      - pushd libgit2; mkdir build/; cd build
+      - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+      - make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
+      - popd
+      # build AppImage
       - mkdir -p build
       - cd build
       - bash -xe ../build-appimage.sh
