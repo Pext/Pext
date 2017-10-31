@@ -58,6 +58,7 @@ sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 # copy in libraries
 wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
 (. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
+rm -rf AppDir/usr/lib/x86_64-linux-gnu/
 
 # remove unnecessary libraries and other useless data
 find AppDir/usr \
@@ -75,6 +76,7 @@ find AppDir/usr \
     -or -iname 'libheim*.so*' \
     -or -iname 'libroken*.so*' \
     -or -iname 'libreadline*.so*' \
+    -or -iname '*.a' \
     -delete
 
 # precompile bytecode to speed up startup
@@ -90,8 +92,7 @@ cat > AppDir/AppRun <<EAT
 # make sure to set APPDIR when run directly from the AppDir
 if [ -z \$APPDIR ]; then APPDIR=\$(readlink -f .); fi
 
-export LD_LIBRARY_PATH="\$APPDIR"/usr/lib:"\$APPDIR"/usr/lib/x86_64-linux-gnu/
-export PYTHONPATH="\$APPDIR"/usr/lib/python3.5:"\$APPDIR"/usr/lib/python3.5/site-packages/
+export LD_LIBRARY_PATH="\$APPDIR"/usr/lib
 
 exec "\$APPDIR"/usr/bin/python "\$APPDIR"/usr/bin/pext "\$@"
 EAT
