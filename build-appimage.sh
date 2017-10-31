@@ -24,7 +24,7 @@ trap cleanup EXIT
 REPO_ROOT=$(readlink -f $(dirname $0))
 OLD_CWD=$(readlink -f .)
 
-pushd "$BUILD_DIR"
+pushd "$BUILD_DIR"/
 
 # install Miniconda, a self contained Python distribution, into AppDir
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
@@ -36,7 +36,7 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 # install dependencies
 url=$(wget -qO- https://api.github.com/repos/libgit2/libgit2/releases/latest | grep tarball_url | cut -d'"' -f4)
 wget "$url" -O- | tar xz
-pushd libgit2-*; mkdir build/; cd build
+pushd libgit2-*/; mkdir build/; cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 make install -j$(nproc) DESTDIR="$BUILD_DIR"/AppDir
 popd
@@ -48,7 +48,7 @@ python setup.py install
 popd
 
 # install Pext
-pushd "$REPO_ROOT"
+pushd "$REPO_ROOT"/
 python setup.py install
 popd
 
@@ -82,7 +82,7 @@ find AppDir/usr \
 
 # precompile bytecode to speed up startup
 # do this after deleting lib2to3, otherwise it won't compile
-pushd AppDir
+pushd AppDir/
 python -m compileall . -fqb || true
 popd
 
