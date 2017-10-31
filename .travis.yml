@@ -33,25 +33,13 @@ script:
   - popd
   # run tests
   - tox
-
-jobs:
-  include:
-    - stage: package
-      install:
-      # disabling until we have a working libcurl in the PPA
-      # un-bundling system libcurl in the AppImage build script for the same reason
-      # - wget https://raw.githubusercontent.com/AppImage/AppImages/master/set-up-ppas.sh -O- | sudo bash -x
-      # - sudo apt install -y --force-yes curl libcurl3 libcurl-gnutls3 libcurl-nss3
-      script:
-      # build AppImage
-      - mkdir -p build
-      - cd build
-      - bash -xe ../build-appimage.sh
-      # pretend PR to upload to transfer.sh -- TODO: remove this line after merging
-      - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
-      - chmod +x upload.sh
-      - env TRAVIS_EVENT_TYPE=pull_request bash upload.sh Pext*.AppImage*
-
-stages:
-  - test
-  - package
+  # exit build unless we're on Python 3
+  - [ $(python3 --version | cut -d' ' -f2 | cut -d. -f1-2) != "3.6" ] && exit 0
+  # build AppImage
+  - mkdir -p build
+  - cd build
+  - bash -xe ../build-appimage.sh
+  # pretend PR to upload to transfer.sh -- TODO: remove this line after merging
+  - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - chmod +x upload.sh
+  - env TRAVIS_EVENT_TYPE=pull_request bash upload.sh Pext*.AppImage*
