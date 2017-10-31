@@ -9,12 +9,14 @@ install:
   # install tox and its wrapper tox-travis
   - pip install tox-travis
 script:
+  # clone repositories with git before uninstalling curl, as git depends on it
+  - git clone https://github.com/curl/curl.git
+  - git clone https://github.com/libgit2/libgit2.git
   # uninstall system curl... (can't do it in install step, as we need the patch from the repository)
   - sudo apt-get purge -y curl\* libcurl\*
   # ... and install custom built libcurl system wide
   # the custom searches multiple locations for CA chains, and has everything but HTTP(S) disabled to remove
   # the majority of dependencies
-  - git clone https://github.com/curl/curl.git
   - pushd curl
   - git apply < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
   - mkdir build; cd build
@@ -24,7 +26,6 @@ script:
   - popd
   # now we can build and install a custom build of libgit2, assuming that the latest version will also make
   # pygit2 happy
-  - git clone https://github.com/libgit2/libgit2.git
   - pushd libgit2; mkdir build/; cd build
   - cmake .. -DCMAKE_INSTALL_PREFIX=/usr
   - make install DESTDIR="$BUILD_DIR"/AppDir -j$(nproc)
