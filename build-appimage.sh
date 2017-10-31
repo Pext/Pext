@@ -34,8 +34,8 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 . AppDir/usr/bin/activate
 
 # install dependencies
-git clone https://github.com/libgit2/libgit2.git
-pushd libgit2; mkdir build/; cd build
+wget https://github.com/libgit2/libgit2/archive/v0.26.0.tar.gz -O- | tar xz
+pushd libgit2-*; mkdir build/; cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr
 make install -j$(nproc) DESTDIR="$BUILD_DIR"/AppDir
 popd
