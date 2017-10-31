@@ -43,8 +43,6 @@ jobs:
         # install libcurl and libgit2
         << *installdeps
       script:
-        # exit build unless we're on Python 3
-        - if [ $(python3 --version | cut -d' ' -f2 | cut -d. -f1-2) != "3.6" ]; then exit 0; fi
         # build AppImage
         - mkdir -p build
         - cd build
