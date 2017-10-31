@@ -37,7 +37,7 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate
 pip install -U pip
 pip download pygit2; tar xf pygit2*.tar.gz; pushd pygit2*/
-python setup.py build_ext --inplace --include-dirs="$BUILD_DIR"/AppDir/usr/include --library-dirs="$BUILD_DIR"/AppDir/usr/lib
+python setup.py build_ext --inplace
 python setup.py install
 popd
 
