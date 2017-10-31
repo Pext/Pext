@@ -15,7 +15,7 @@ script:
   # uninstall system curl... (can't do it in install step, as we need the patch from the repository)
   - sudo apt-get purge -y curl\* libcurl\*
   # ... now install static cmake, which was uninstalled in the previous step...
-  - wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | tar xz -C /usr --strip-components=1
+  - wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | sudo tar xz -C /usr --strip-components=1
   # ... and install custom built libcurl system wide
   # the custom searches multiple locations for CA chains, and has everything but HTTP(S) disabled to remove
   # the majority of dependencies
