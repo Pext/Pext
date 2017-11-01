@@ -4,7 +4,7 @@
 sudo apt-get purge -y curl\* libcurl\*
 
 # install mbed TLS
-for pkg in tls-dev tls10 crypto0 x509-0; do
+for pkg in crypto0 x509-0 tls10 tls-dev; do
     filename=libmbed"$pkg"_2.6.0-1_amd64.deb
     wget https://ftp.fau.de/debian/pool/main/m/mbedtls/"$filename"
     sudo dpkg -i "$filename"
