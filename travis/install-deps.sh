@@ -4,7 +4,12 @@
 sudo apt-get purge -y curl\* libcurl\*
 
 # install mbed TLS
-sudo apt-get install -y libmbedtls-dev
+for pkg in tls-dev tls10 crypto0 x509-0; do
+    filename=libmbed"$pkg"_2.6.0-1_amd64.deb
+    wget https://ftp.fau.de/debian/pool/main/m/mbedtls/"$filename"
+    sudo dpkg -i "$filename"
+    rm "$filename"
+done
 
 # install cmake, which had a dependency on curl and was uninstalled in the previous step
 wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | sudo tar xz -C /usr --strip-components=1
