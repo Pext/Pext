@@ -24,7 +24,7 @@ jobs:
         # build AppImage
         - mkdir -p build
         - cd build
-        - bash -xe ../build-appimage.sh
+        - bash -xe ../travis/build-appimage.sh
         # test AppImage
         - chmod +x Pext*.AppImage
         # temporary solution for
