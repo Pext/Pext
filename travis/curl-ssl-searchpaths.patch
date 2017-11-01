@@ -18,10 +18,10 @@ index 3aaeb34..0e2bb2e 100644
  elseif("${CURL_CA_BUNDLE}" STREQUAL "none")
      unset(CURL_CA_BUNDLE CACHE)
 diff --git a/lib/url.c b/lib/url.c
-index 5a11e42..7a1b2a0 100644
+index 5a11e42..41e08c0 100644
 --- a/lib/url.c
 +++ b/lib/url.c
-@@ -585,15 +585,38 @@ CURLcode Curl_init_userdefined(struct UserDefined *set)
+@@ -585,15 +585,41 @@ CURLcode Curl_init_userdefined(struct UserDefined *set)
    set->socks5_gssapi_nec = FALSE;
  #endif
  
@@ -41,12 +41,15 @@ index 5a11e42..7a1b2a0 100644
 +    char *path;
 +    strcpy(delim, ":");
 +    searchpaths = strdup(CURL_CA_BUNDLE_SEARCHPATHS);
++    if (getenv("CURLOPT_VERBOSE")) fprintf(stderr, "*** testing CA certificate search paths: %s ***\n", searchpaths)
 +    path = strtok(searchpaths, delim);
 +    while (path != NULL) {
++      if (getenv("CURLOPT_VERBOSE")) fprintf(stderr, "*** checking path: %s ***\n", path);
 +      if (access(path, F_OK) != -1) {
 +        FILE *f = fopen(path, "r");
 +        fseek(f, 0, SEEK_END);
 +        if (ftell(f) > 0) {
++          if (getenv("CURLOPT_VERBOSE")) fprintf(stderr, "*** using path: %s ***\n", path);
 +          SET_CA_BUNDLE(path);
 +          break;
 +        }
