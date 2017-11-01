@@ -10,7 +10,7 @@ wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | su
 url=$(wget -qO- https://api.github.com/repos/curl/curl/releases/latest | grep tarball_url | cut -d'"' -f4)
 wget "$url" -O- | tar xz
 pushd curl*/
-patch -p1 < $TRAVIS_BUILD_DIR/curl-ssl-searchpaths.patch
+patch -p1 < "$TRAVIS_BUILD_DIR"/travis/curl-ssl-searchpaths.patch
 mkdir build; cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
 sudo make install -j$(nproc)
