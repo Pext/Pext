@@ -41,7 +41,7 @@ index 5a11e42..41e08c0 100644
 +    char *path;
 +    strcpy(delim, ":");
 +    searchpaths = strdup(CURL_CA_BUNDLE_SEARCHPATHS);
-+    if (getenv("CURLOPT_VERBOSE")) fprintf(stderr, "*** testing CA certificate search paths: %s ***\n", searchpaths)
++    if (getenv("CURLOPT_VERBOSE")) fprintf(stderr, "*** testing CA certificate search paths: %s ***\n", searchpaths);
 +    path = strtok(searchpaths, delim);
 +    while (path != NULL) {
 +      if (getenv("CURLOPT_VERBOSE")) fprintf(stderr, "*** checking path: %s ***\n", path);
