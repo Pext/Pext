@@ -3,6 +3,9 @@
 # install custom built libcurl system wide between git clone and test script
 sudo apt-get purge -y curl\* libcurl\*
 
+# install mbed TLS
+sudo apt-get install -y libmbedtls-dev
+
 # install cmake, which had a dependency on curl and was uninstalled in the previous step
 wget https://cmake.org/files/v3.10/cmake-3.10.0-rc3-Linux-x86_64.tar.gz -O- | sudo tar xz -C /usr --strip-components=1
 
@@ -12,7 +15,7 @@ wget "$url" -O- | tar xz
 pushd curl*/
 patch -p1 < "$TRAVIS_BUILD_DIR"/travis/curl-ssl-searchpaths.patch
 mkdir build; cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_OPENSSL=1 -DBUILD_TESTING=0 -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DHTTP_ONLY=1 -DCMAKE_USE_MBEDTLS=1 -DBUILD_TESTING=0 -DCURL_CA_BUNDLE_SEARCHPATHS="/etc/ssl/ca-bundle.pem:/etc/ssl/certs/ca-certificates.crt:/etc/ssl/cert.pem:/etc/pki/tls/certs/ca-bundle.crt:/etc/pki/tls/cert.pem:/etc/pki/tls/cacert.pem:/usr/local/share/certs/ca-root-nss.crt"
 sudo make install -j$(nproc)
 popd
 
