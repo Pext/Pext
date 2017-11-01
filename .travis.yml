@@ -26,6 +26,8 @@ jobs:
         - cd build
         - bash -xe ../travis/build-appimage.sh
         # test AppImage
+        - export PEXTHOME=$(mktemp -d)
+        - mkdir "$PEXTHOME"
         - chmod +x Pext*.AppImage
         # temporary solution for
         # $ ./Pext*.AppImage --version
@@ -33,9 +35,9 @@ jobs:
         - "export DISPLAY=:99.0"
         - "sh -e /etc/init.d/xvfb start"
         - sleep 3 # give xvfb some time to start
-        - ./Pext*.AppImage --version
+        - env HOME="$PEXTHOME" ./Pext*.AppImage --version
         # check for _pygit2.GitError: user cancelled certificate check by installing a demo module
-        - ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji --exit
+        - env HOME="$PEXTHOME" ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji --exit
       after_success:
         # pretend PR to upload to transfer.sh -- TODO: remove this line after merging
         - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
