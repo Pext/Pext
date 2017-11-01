@@ -74,6 +74,9 @@ find AppDir/usr \
     -or -iname '*.a' \
     -delete
 
+# TODO: for debugging only
+cp $(which curl) AppDir/usr/bin
+
 # precompile bytecode to speed up startup
 # do this after deleting lib2to3, otherwise it won't compile
 pushd AppDir/
