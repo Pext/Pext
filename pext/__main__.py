@@ -1141,10 +1141,15 @@ class ModuleManager():
 
         return True
 
-    def update_all_modules(self, verbose=False) -> None:
+    def update_all_modules(self, verbose=False) -> bool:
         """Update all modules."""
+        success = True
+
         for module in self.list_modules().keys():
-            self.update_module(module, verbose=verbose)
+            if not self.update_module(module, verbose=verbose):
+                success = False
+
+        return success
 
 
 class UpdateManager():
@@ -2520,13 +2525,18 @@ class ThemeManager():
 
         return True
 
-    def update_all_themes(self, verbose=False) -> None:
+    def update_all_themes(self, verbose=False) -> bool:
         """Update all themes."""
+        success = True
+
         for theme in self.list_themes().keys():
             if theme == ThemeManager.get_system_theme_name():
                 continue
 
-            self.update_theme(theme, verbose=verbose)
+            if not self.update_theme(theme, verbose=verbose):
+                success = False
+
+        return success
 
 
 class Tray():
@@ -2591,8 +2601,10 @@ def _init_persist(profile: str, background: bool) -> str:
 
 def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     """Load the settings from the command line and set defaults."""
+
     # Default options
-    settings = {'background': False,
+    settings = {'_launch_app': True, # Keep track if launching is normal
+                'background': False,
                 'clipboard': 'clipboard',
                 'locale': None,
                 'modules': [],
@@ -2664,7 +2676,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
-            sys.exit(0)
+
+            settings['_launch_app'] = False
         elif opt == "--version":
             print("Pext {}".format(UpdateManager().get_core_version()))
             print()
@@ -2673,9 +2686,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                   "There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.")
             print()
             print("Written by Sylvia van Os.")
-            sys.exit(0)
-        elif opt == "--exit":
-            sys.exit(0)
+
+            settings['_launch_app'] = False
 
         elif opt == "--locale":
             settings['locale'] = arg
@@ -2683,7 +2695,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--list-styles":
             for style in QStyleFactory().keys():
                 print(style)
-            sys.exit(0)
+
+            settings['_launch_app'] = False
         elif opt == "--style":
             if arg in QStyleFactory().keys():
                 settings['style'] = arg
@@ -2709,40 +2722,71 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt.startswith("--module-"):
             settings['modules'][-1]['settings'][opt[9:]] = arg  # type: ignore
         elif opt == "--install-module":
-            ModuleManager(config_retriever).install_module(arg, verbose=True)
+            if not ModuleManager(config_retriever).install_module(arg, verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--uninstall-module":
-            ModuleManager(config_retriever).uninstall_module(arg, verbose=True)
+            if not ModuleManager(config_retriever).uninstall_module(arg, verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--update-module":
-            ModuleManager(config_retriever).update_module(arg, verbose=True)
+            if not ModuleManager(config_retriever).update_module(arg, verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--update-modules":
-            ModuleManager(config_retriever).update_all_modules(verbose=True)
+            if not ModuleManager(config_retriever).update_all_modules(verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--list-modules":
             for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
                 print('{} ({})'.format(module_name, module_data['source']))
-            sys.exit(0)
+
+            settings['_launch_app'] = False
 
         elif opt == "--theme":
             settings['theme'] = arg
         elif opt == "--install-theme":
-            ThemeManager(config_retriever).install_theme(arg, verbose=True)
+            if not ThemeManager(config_retriever).install_theme(arg, verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--uninstall-theme":
-            ThemeManager(config_retriever).uninstall_theme(arg, verbose=True)
+            if not ThemeManager(config_retriever).uninstall_theme(arg, verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--update-theme":
-            ThemeManager(config_retriever).update_theme(arg, verbose=True)
+            if not ThemeManager(config_retriever).update_theme(arg, verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--update-themes":
-            ThemeManager(config_retriever).update_all_themes(verbose=True)
+            if not ThemeManager(config_retriever).update_all_themes(verbose=True):
+                sys.exit(3)
+
+            settings['_launch_app'] = False
         elif opt == "--list-themes":
             for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
                 print('{} ({})'.format(theme_name, theme_data['source']))
-            sys.exit(0)
+
+            settings['_launch_app'] = False
         elif opt == "--create-profile":
             ProfileManager(config_retriever).create_profile(arg)
+
+            settings['_launch_app'] = False
         elif opt == "--remove-profile":
             ProfileManager(config_retriever).remove_profile(arg)
+
+            settings['_launch_app'] = False
         elif opt == "--list-profiles":
             for profile in ProfileManager(config_retriever).list_profiles():
                 print(profile)
-            sys.exit(0)
+
+            settings['_launch_app'] = False
         elif opt == "--tray":
             settings['tray'] = True
         elif opt == "--no-tray":
@@ -2792,7 +2836,7 @@ def usage() -> None:
     Download and install a module from the given git URL.
 
   --list-modules
-    List all installed modules and exit.
+    List all installed modules.
 
   --uninstall-module[=NAME]
     Uninstall a module by name.
@@ -2810,7 +2854,7 @@ def usage() -> None:
     Download and install a theme from the given git URL.
 
   --list-themes
-    List all installed themes and exit.
+    List all installed themes.
 
   --uninstall-theme[=NAME]
     uninstall a theme by name.
@@ -2831,7 +2875,7 @@ def usage() -> None:
     Remove a profile by name.
 
   --list-profiles
-    List all profiles and exit.
+    List all profiles.
 
   --tray
     Create a tray icon (this is the default).
@@ -2840,13 +2884,10 @@ def usage() -> None:
     Do not create a tray icon.
 
   -h, --help
-    Display this help and exit.
+    Display this help.
 
   --version
-    Show the current version and exit.
-
-  --exit
-    Exit upon reaching this argument, useful for module/profile/theme management without starting the Pext GUI.
+    Show the current version.
 
 Report bugs to https://github.com/Pext/Pext.''')  # NOQA
 
@@ -2870,6 +2911,9 @@ def main() -> None:
             pass
 
     settings = _load_settings(sys.argv[1:], config_retriever)
+
+    if not settings['_launch_app']:
+        sys.exit(0)
 
     # Warn if we may get UI issues
     if warn_no_openGL_linux:

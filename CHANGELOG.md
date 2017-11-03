@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Make clicking the tray icon toggle visibility on macOS
 - Minimizing normally after Pext is done is now the default on all platforms
 - Module requesting window hide will only reset the selection of that module instead of all
+- The --exit option got removed, Pext now will only start the UI if no options were given or all options were session-related
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
