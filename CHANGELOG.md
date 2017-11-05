@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Last updated info for modules
 - Version info for modules
 - Windows support
+- Support for checking for updates (stable versions only)
 
 ### Changed
 - Command mode no longer locks onto the first entry

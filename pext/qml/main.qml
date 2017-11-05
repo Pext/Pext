@@ -573,6 +573,11 @@ ApplicationWindow {
             }
 
             MenuItem {
+                objectName: "menuCheckForUpdates"
+                text: qsTr("Check for updates")
+            }
+
+            MenuItem {
                 objectName: "menuHomepage"
                 text: qsTr("Visit homepage")
             }

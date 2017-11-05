@@ -47,6 +47,7 @@ try:
     from typing import Dict, List, Optional, Tuple
 except ImportError:
     from backports.typing import Dict, List, Optional, Tuple  # type: ignore
+from urllib.request import urlopen
 from queue import Queue, Empty
 
 import pygit2
@@ -1273,6 +1274,19 @@ class UpdateManager():
         commit = repo.revparse_single('HEAD')
         return datetime.fromtimestamp(commit.commit_time)
 
+    def check_core_update(self) -> Optional[str]:
+        """Check if there is an update of the core and if so, return the name of the new version."""
+        try:
+            with urlopen('https://pext.hackerchick.me/version/stable') as update_url:
+                available_version = update_url.readline().decode("utf-8").strip()
+
+            if self.version < available_version:
+                return available_version
+        except Exception as e:
+            print("Failed to check for updates: {}".format(e))
+            traceback.print_exc()
+
+        return None
 
 class ModuleThreadInitializer(threading.Thread):
     """Initialize a thread for the module."""
@@ -1883,6 +1897,7 @@ class Window(QMainWindow):
             QObject, "menuQuitWithoutSaving")
         menu_restart_shortcut = self.window.findChild(
             QObject, "menuRestart")
+        menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
         # Bind menu entries
@@ -1922,6 +1937,7 @@ class Window(QMainWindow):
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
         menu_restart_shortcut.triggered.connect(self._menu_restart)
+        menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
@@ -1975,7 +1991,6 @@ class Window(QMainWindow):
                 # Save user choice
                 updatePermissionDialog.yes.connect(lambda: self._menu_toggle_update_check(True))
                 updatePermissionDialog.no.connect(lambda: self._menu_toggle_update_check(False))
-                self.window.windowStateChanged.connect(self._process_window_state)
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2285,8 +2300,33 @@ class Window(QMainWindow):
         os.chdir(os.getcwd())
         os.execv(sys.executable, args)
 
+    def _menu_check_updates(self, verbose=True) -> None:
+        if verbose:
+            Logger._log('⇩ Pext', self.logger)
+
+        try:
+            new_version = UpdateManager().check_core_update()
+        except Exception as e:
+            Logger.log_error('⇩ Pext: {}'.format(e), self.logger)
+            return
+
+        if new_version:
+            updateAvailableDialogEngine = QQmlApplicationEngine(self)
+            updateAvailableDialogEngine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'UpdateAvailableDialog.qml')))
+
+            updateAvailableDialog = updateAvailableDialogEngine.rootObjects()[0]
+
+            # Show update page if user asks
+            updateAvailableDialog.yes.connect(self._show_download_page)
+        else:
+            if verbose:
+                Logger._log('✔⇩ Pext', self.logger)
+
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
+
+    def _show_download_page(self) -> None:
+        webbrowser.open('https://pext.hackerchick.me/download')
 
     def bind_logger(self, logger: 'Logger') -> None:
         """Bind the logger to the window and further initialize the module."""
@@ -2311,6 +2351,10 @@ class Window(QMainWindow):
             self.tabs.currentIndexChanged.emit()
         elif len(self.tab_bindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
+
+        # Check for updates too
+        if self.settings['update_check']:
+            self._menu_check_updates(verbose=False)
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""
