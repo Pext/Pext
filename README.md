@@ -103,11 +103,11 @@ After installing the dependencies, Pext can be ran by running one of the followi
 - ``python3 pext`` to start Pext itself
 - ``python3 pext_dev`` to start the Pext tools for module and theme development
 
-Optionally, a .app file can be generated using the following command:
+Optionally, a .app file can be generated using the following commands:
 
-    python3 setup.py py2app -A --emulate-shell-environment
+    ./build_mac_app.sh
 
-The .app file appears in the dist directory and can be dragged to "My Applications". Please note that actual py2app buils do not work yet. This is an aliased build, so it will break if you delete your git clone.
+The .app file appears in the dist directory and can be dragged to "My Applications".
 
 ### Windows (experimental)
 #### Preparation
