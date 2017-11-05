@@ -101,10 +101,10 @@ class SortMode(IntEnum):
 
 
 class ConfigRetriever():
-    """Retrieve configuration entries."""
+    """Retrieve global configuration entries."""
 
     def __init__(self) -> None:
-        """Initialize the configuration."""
+        """Initialize the configuration location."""
         # Initialze defaults
         try:
             config_home = os.environ['XDG_CONFIG_HOME']
@@ -116,6 +116,28 @@ class ConfigRetriever():
     def get_setting(self, variable: str) -> str:
         """Get a specific configuration setting."""
         return self.config[variable]
+
+    def get_updatecheck_permission_asked(self) -> bool:
+        """Return info on if allowing updates was asked."""
+        try:
+            with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r') as update_check_file:
+                return True
+        except (FileNotFoundError):
+            return False
+
+    def get_updatecheck_permission(self) -> bool:
+        """Return info on if update checking is allowed."""
+        try:
+            with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r') as update_check_file:
+                result = update_check_file.readline()
+                return True if result == str(1) else False
+        except (FileNotFoundError):
+            return False
+
+    def save_updatecheck_permission(self, granted: bool) -> None:
+        """Save the current updatecheck permission status."""
+        with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'w') as update_check_file:
+            update_check_file.write(str(int(granted)))
 
 
 class RunConseq():
@@ -1853,6 +1875,8 @@ class Window(QMainWindow):
             QObject, "menuMinimizeToTrayManually")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
+        self.menu_enable_update_check_shortcut = self.window.findChild(
+            QObject, "menuEnableUpdateCheck")
 
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
@@ -1892,6 +1916,7 @@ class Window(QMainWindow):
         menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
+        self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
 
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
@@ -1926,6 +1951,9 @@ class Window(QMainWindow):
         QQmlProperty.write(menu_show_tray_icon_shortcut,
                            "checked",
                            self.settings['tray'])
+        QQmlProperty.write(self.menu_enable_update_check_shortcut,
+                           "checked",
+                           self.settings['update_check'])
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -1936,6 +1964,18 @@ class Window(QMainWindow):
         # Show the window if not --background
         if not settings['background']:
             self.show()
+
+            if self.settings['update_check'] == None:
+                # Ask if the user wants to enable automatic update checking
+                permissionDialogEngine = QQmlApplicationEngine(self)
+                permissionDialogEngine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'UpdatePermissionDialog.qml')))
+
+                updatePermissionDialog = permissionDialogEngine.rootObjects()[0]
+
+                # Save user choice
+                updatePermissionDialog.yes.connect(lambda: self._menu_toggle_update_check(True))
+                updatePermissionDialog.no.connect(lambda: self._menu_toggle_update_check(False))
+                self.window.windowStateChanged.connect(self._process_window_state)
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2194,6 +2234,12 @@ class Window(QMainWindow):
             self.tray.show() if enabled else self.tray.hide()  # type: ignore
         except AttributeError:
             pass
+
+    def _menu_toggle_update_check(self, enabled: bool) -> None:
+        self.settings['update_check'] = enabled
+        QQmlProperty.write(self.menu_enable_update_check_shortcut,
+                           "checked",
+                           self.settings['update_check'])
 
     def _search(self) -> None:
         try:
@@ -2612,7 +2658,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                 'profile': 'default',
                 'save_settings': True,
                 'sort_mode': SortMode.Module,
-                'tray': True}
+                'tray': True,
+                'update_check': None} # None = not asked, True/False = permission
 
     # getopt requires all possible options to be listed, but we do not know
     # more about module-specific options in advance than that they start with
@@ -2792,6 +2839,10 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
         elif opt == "--no-tray":
             settings['tray'] = False
 
+    # See if automatic update checks are allowed
+    if config_retriever.get_updatecheck_permission_asked():
+        settings['update_check'] = config_retriever.get_updatecheck_permission()
+
     return settings
 
 
@@ -2805,6 +2856,9 @@ def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: Con
         ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
         ProfileManager(config_retriever).save_theme(profile, window.settings['theme'])
         ProfileManager(config_retriever).save_settings(profile, window.settings)
+
+        if window.settings['update_check'] != None:
+            config_retriever.save_updatecheck_permission(window.settings['update_check'])
 
 
 def usage() -> None:

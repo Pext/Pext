@@ -550,6 +550,14 @@ ApplicationWindow {
                 text: qsTr("Show tray icon")
                 checkable: true
             }
+
+            MenuSeparator { }
+
+            MenuItem {
+                objectName: "menuEnableUpdateCheck"
+                text: qsTr("Automatically check for updates")
+                checkable: true
+            }
         }
 
         Menu {
