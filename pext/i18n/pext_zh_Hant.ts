@@ -117,13 +117,6 @@
     </message>
 </context>
 <context>
-    <name>InstallModuleFromRepositoryUnsupportedDialog</name>
-    <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">不支援的軟體倉庫格式（預期版本 %1，實際版本 %2）。</translation>
-    </message>
-</context>
-<context>
     <name>InstallModuleFromURLDialog</name>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
@@ -213,10 +206,6 @@
         <source>Note: Pext will restart to apply the new theme.</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Note: You must restart Pext to apply the new theme.</source>
-        <translation type="vanished">注意：您必須重新啟動 Pext 以套用新佈景主題。</translation>
-    </message>
 </context>
 <context>
     <name>ManageDialog</name>
@@ -262,37 +251,6 @@
     </message>
 </context>
 <context>
-    <name>ManageModulesDialog</name>
-    <message>
-        <source>Developer: %1</source>
-        <translation type="vanished">開發者：%1</translation>
-    </message>
-    <message>
-        <source>Description: %1</source>
-        <translation type="vanished">描述：%1</translation>
-    </message>
-    <message>
-        <source>License: %1</source>
-        <translation type="vanished">授權條款：%1</translation>
-    </message>
-    <message>
-        <source>Homepage: %1</source>
-        <translation type="vanished">首頁：%1</translation>
-    </message>
-    <message>
-        <source>Download source: %1</source>
-        <translation type="vanished">下載來源：%1</translation>
-    </message>
-    <message>
-        <source>Update</source>
-        <translation type="vanished">更新</translation>
-    </message>
-    <message>
-        <source>Uninstall</source>
-        <translation type="vanished">解除安裝</translation>
-    </message>
-</context>
-<context>
     <name>NoModulesInstalledDialog</name>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
@@ -311,7 +269,7 @@
 <context>
     <name>UpdateAvailableDialog</name>
     <message>
-        <location filename="../qml/UpdateAvailableDialog.qml" line="28"/>
+        <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
         <translation type="unfinished"></translation>
     </message>
@@ -319,7 +277,7 @@
 <context>
     <name>UpdatePermissionDialog</name>
     <message>
-        <location filename="../qml/UpdatePermissionDialog.qml" line="28"/>
+        <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -327,215 +285,210 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="259"/>
+        <location filename="../qml/main.qml" line="282"/>
         <source>Quit</source>
         <translation>結束</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="265"/>
+        <location filename="../qml/main.qml" line="288"/>
         <source>Quit without saving</source>
         <translation>不儲存就結束</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="270"/>
+        <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Module</source>
         <translation>模組(&amp;M)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="274"/>
+        <location filename="../qml/main.qml" line="297"/>
         <source>Reload active module</source>
         <translation>重新載入作用中的模組</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="281"/>
+        <location filename="../qml/main.qml" line="304"/>
         <source>Close active module</source>
         <translation>關閉作用中的模組</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="293"/>
+        <location filename="../qml/main.qml" line="316"/>
         <source>Load module</source>
         <translation>載入模組</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="336"/>
+        <location filename="../qml/main.qml" line="359"/>
         <source>Install module</source>
         <translation>安裝模組</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="341"/>
+        <location filename="../qml/main.qml" line="364"/>
         <source>From online module list</source>
         <translation>從線上模組清單</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="362"/>
-        <location filename="../qml/main.qml" line="460"/>
+        <location filename="../qml/main.qml" line="385"/>
+        <location filename="../qml/main.qml" line="483"/>
         <source>From URL</source>
         <translation>從 URL</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="385"/>
+        <location filename="../qml/main.qml" line="408"/>
         <source>&amp;Theme</source>
         <translation>佈景主題(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="393"/>
+        <location filename="../qml/main.qml" line="416"/>
         <source>Switch theme</source>
         <translation>切換佈景主題</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="412"/>
+        <location filename="../qml/main.qml" line="435"/>
         <source>Manage themes</source>
         <translation>管理佈景主題</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="434"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Install theme</source>
         <translation>安裝佈景主題</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="439"/>
+        <location filename="../qml/main.qml" line="462"/>
         <source>From online theme list</source>
         <translation>從線上佈景主題清單</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="472"/>
+        <location filename="../qml/main.qml" line="495"/>
         <source>Update all themes</source>
         <translation>更新所有佈景主題</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="483"/>
+        <location filename="../qml/main.qml" line="506"/>
         <source>&amp;Settings</source>
         <translation>設定(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="492"/>
+        <location filename="../qml/main.qml" line="515"/>
         <source>Sort by module choice</source>
         <translation>按模組選擇排序</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="499"/>
+        <location filename="../qml/main.qml" line="522"/>
         <source>Sort ascending</source>
         <translation>遞增排序</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="506"/>
+        <location filename="../qml/main.qml" line="529"/>
         <source>Sort descending</source>
         <translation>遞減排序</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="520"/>
+        <location filename="../qml/main.qml" line="543"/>
         <source>Minimize normally</source>
         <translation>正常最小化</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="527"/>
+        <location filename="../qml/main.qml" line="550"/>
         <source>Minimize to tray</source>
         <translation>最小化至系統匣</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="534"/>
+        <location filename="../qml/main.qml" line="557"/>
         <source>Manual only: Minimize normally</source>
         <translation>僅手動：正常最小化</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="541"/>
+        <location filename="../qml/main.qml" line="564"/>
         <source>Manual only: Minimize to tray</source>
         <translation>僅手動：最小化至系統匣</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="550"/>
+        <location filename="../qml/main.qml" line="573"/>
         <source>Show tray icon</source>
         <translation>顯示系統匣圖示</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="558"/>
+        <location filename="../qml/main.qml" line="581"/>
         <source>Automatically check for updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="564"/>
+        <location filename="../qml/main.qml" line="587"/>
         <source>&amp;Help</source>
         <translation>說明(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="577"/>
+        <location filename="../qml/main.qml" line="600"/>
         <source>Check for updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="639"/>
+        <location filename="../qml/main.qml" line="662"/>
         <source>Design philosophy</source>
         <translation>設計哲學</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="640"/>
+        <location filename="../qml/main.qml" line="663"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>Pext 旨在讓您方便取得所需的資訊。一旦模組認為您使用結束了，Pext 就會將它自己隱藏至系統匣中。如果您在 Pext 隱藏它自己以後需要再次使用它，請再次啟動它，或是從系統匣開啟它。</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="672"/>
+        <location filename="../qml/main.qml" line="695"/>
         <source>Getting started</source>
         <translation>入門</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="673"/>
+        <location filename="../qml/main.qml" line="696"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>要開始，按下 &lt;kbd&gt;%1&lt;/kbd&gt; 來開啟新分頁。當您結束該分頁的使用時，您可以按下 &lt;kbd&gt;%2&lt;/kbd&gt; 來關閉它。您目前共安裝了 %n 個模組。您可以在模組選單中管理模組。</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="314"/>
+        <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
         <translation>管理模組</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="254"/>
-        <source>Restart</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="374"/>
+        <location filename="../qml/main.qml" line="397"/>
         <source>Update all modules</source>
         <translation>更新所有模組</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="568"/>
+        <location filename="../qml/main.qml" line="591"/>
         <source>About</source>
         <translation>關於</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="582"/>
+        <location filename="../qml/main.qml" line="605"/>
         <source>Visit homepage</source>
         <translation>造訪首頁</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="602"/>
+        <location filename="../qml/main.qml" line="625"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="602"/>
+        <location filename="../qml/main.qml" line="625"/>
         <source>Back</source>
         <translation>返回</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="611"/>
+        <location filename="../qml/main.qml" line="634"/>
         <source>Type to search</source>
         <translation>輸入以搜尋</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="706"/>
+        <location filename="../qml/main.qml" line="729"/>
         <source>Processing: %1 (%2)</source>
         <translation>正在處理：%1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="708"/>
+        <location filename="../qml/main.qml" line="731"/>
         <source>Ready</source>
         <translation>準備好了</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="708"/>
+        <location filename="../qml/main.qml" line="731"/>
         <source>Waiting</source>
         <translation>正在等待</translation>
     </message>
