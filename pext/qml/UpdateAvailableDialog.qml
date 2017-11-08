@@ -25,8 +25,14 @@ MessageDialog {
     icon: StandardIcon.Question
     standardButtons: StandardButton.Yes | StandardButton.No
 
+    property var updateAccepted
+
     text: qsTr("A new version of Pext is available. Do you want to open the download page?")
 
     Component.onCompleted: visible = true;
+
+    onYes: {
+        updateAccepted()
+    }
 }
 

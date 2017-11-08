@@ -1836,6 +1836,10 @@ class Window(QMainWindow):
         self.theme_manager = ThemeManager(self.config_retriever)
         self._update_themes_info_qml()
 
+        # Bind update dialog
+        self.update_available_requests = self.window.findChild(QObject, "updateAvailableRequests")
+        self.update_available_requests.updateAvailableDialogAccepted.connect(self._show_download_page)
+
         # Bind global shortcuts
         self.search_input_model = self.window.findChild(
             QObject, "searchInputModel")
@@ -1895,8 +1899,6 @@ class Window(QMainWindow):
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
-        menu_restart_shortcut = self.window.findChild(
-            QObject, "menuRestart")
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
@@ -1936,7 +1938,6 @@ class Window(QMainWindow):
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
-        menu_restart_shortcut.triggered.connect(self._menu_restart)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
@@ -1983,14 +1984,14 @@ class Window(QMainWindow):
 
             if self.settings['update_check'] == None:
                 # Ask if the user wants to enable automatic update checking
-                permissionDialogEngine = QQmlApplicationEngine(self)
-                permissionDialogEngine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'UpdatePermissionDialog.qml')))
+                permission_requests = self.window.findChild(QObject, "permissionRequests")
 
-                updatePermissionDialog = permissionDialogEngine.rootObjects()[0]
+                permission_requests.updatePermissionRequestAccepted.connect(
+                    lambda: self._menu_toggle_update_check(True))
+                permission_requests.updatePermissionRequestRejected.connect(
+                    lambda: self._menu_toggle_update_check(False))
 
-                # Save user choice
-                updatePermissionDialog.yes.connect(lambda: self._menu_toggle_update_check(True))
-                updatePermissionDialog.no.connect(lambda: self._menu_toggle_update_check(False))
+                permission_requests.updatePermissionRequest.emit()
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2151,7 +2152,19 @@ class Window(QMainWindow):
 
     def _menu_switch_theme(self, theme_name: str) -> None:
         self.settings['theme'] = theme_name
-        self._menu_restart()
+
+        """Restart Pext after switching theme."""
+        # Call _shut_down manually because it isn't called when using os.execv
+        _shut_down(os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(self.settings['profile'])), self.settings['profile'], self, self.config_retriever)
+
+        args = sys.argv[:]
+
+        args.insert(0, sys.executable)
+        if sys.platform == 'win32':
+            args = ['"%s"' % arg for arg in args]
+
+        os.chdir(os.getcwd())
+        os.execv(sys.executable, args)
 
     def _menu_install_theme(self, theme_url: str) -> None:
         functions = [
@@ -2256,6 +2269,14 @@ class Window(QMainWindow):
                            "checked",
                            self.settings['update_check'])
 
+        # Immediately save update status to file
+        self.config_retriever.save_updatecheck_permission(self.settings['update_check'])
+
+        # Check for updates immediately after toggling true
+        # This is also toggled on app launch because we bind before we toggle
+        if self.settings['update_check']:
+            self._menu_check_updates(verbose=False)
+
     def _search(self) -> None:
         try:
             self._get_current_element()['vm'].search(manual=True)
@@ -2286,20 +2307,6 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themes", themes)
 
-    def _menu_restart(self) -> None:
-        """Restart Pext by letting the wrapper know we want a restart."""
-        # Call _shut_down manually because it isn't called when using os.execv
-        _shut_down(os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(self.settings['profile'])), self.settings['profile'], self, self.config_retriever)
-
-        args = sys.argv[:]
-
-        args.insert(0, sys.executable)
-        if sys.platform == 'win32':
-            args = ['"%s"' % arg for arg in args]
-
-        os.chdir(os.getcwd())
-        os.execv(sys.executable, args)
-
     def _menu_check_updates(self, verbose=True) -> None:
         if verbose:
             Logger._log('⇩ Pext', self.logger)
@@ -2311,13 +2318,8 @@ class Window(QMainWindow):
             return
 
         if new_version:
-            updateAvailableDialogEngine = QQmlApplicationEngine(self)
-            updateAvailableDialogEngine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'UpdateAvailableDialog.qml')))
-
-            updateAvailableDialog = updateAvailableDialogEngine.rootObjects()[0]
-
-            # Show update page if user asks
-            updateAvailableDialog.yes.connect(self._show_download_page)
+            # Show update dialog (already bound at initialization)
+            self.update_available_requests.showUpdateAvailableDialog.emit()
         else:
             if verbose:
                 Logger._log('✔⇩ Pext', self.logger)
@@ -2351,10 +2353,6 @@ class Window(QMainWindow):
             self.tabs.currentIndexChanged.emit()
         elif len(self.tab_bindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
-
-        # Check for updates too
-        if self.settings['update_check']:
-            self._menu_check_updates(verbose=False)
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""
@@ -2900,9 +2898,6 @@ def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: Con
         ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
         ProfileManager(config_retriever).save_theme(profile, window.settings['theme'])
         ProfileManager(config_retriever).save_settings(profile, window.settings)
-
-        if window.settings['update_check'] != None:
-            config_retriever.save_updatecheck_permission(window.settings['update_check'])
 
 
 def usage() -> None:

@@ -25,8 +25,19 @@ MessageDialog {
     icon: StandardIcon.Question
     standardButtons: StandardButton.Yes | StandardButton.No
 
+    property var requestAccepted
+    property var requestRejected
+
     text: qsTr("May Pext automatically check for updates? You can change this at any time from the settings menu.")
 
     Component.onCompleted: visible = true;
+
+    onYes: {
+        requestAccepted()
+    }
+    onNo: {
+        requestRejected()
+    }
+
 }
 
