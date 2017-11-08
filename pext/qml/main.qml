@@ -35,6 +35,34 @@ ApplicationWindow {
 
     SystemPalette { id: palette; colorGroup: SystemPalette.Active }
 
+    Item {
+        objectName: "permissionRequests"
+
+        signal updatePermissionRequest()
+        signal updatePermissionRequestAccepted()
+        signal updatePermissionRequestRejected()
+
+        onUpdatePermissionRequest: {
+            var permissionRequestDialog = Qt.createComponent("UpdatePermissionDialog.qml");
+            permissionRequestDialog.createObject(applicationWindow,
+                {"requestAccepted": updatePermissionRequestAccepted,
+                 "requestRejected": updatePermissionRequestRejected});
+        }
+    }
+
+    Item {
+        objectName: "updateAvailableRequests"
+
+        signal showUpdateAvailableDialog()
+        signal updateAvailableDialogAccepted()
+
+        onShowUpdateAvailableDialog: {
+            var updateAvailableDialogRequestDialog = Qt.createComponent("UpdateAvailableDialog.qml");
+            updateAvailableDialogRequestDialog.createObject(applicationWindow,
+                {"updateAccepted": updateAvailableDialogAccepted});
+        }
+    }
+
     function getActiveList() {
         var tab = tabs.getTab(tabs.currentIndex);
         if (typeof tab === "undefined")
