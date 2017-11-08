@@ -196,7 +196,21 @@ Item {
                                     } else {
                                         index < resultListModelCommandEntries
                                     }
-                                color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.currentIndex === index ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
+                                color: {
+                                    if (resultList.currentIndex == index) {
+                                        if (contextMenu.visible) {
+                                            return inactivePalette.highlightedText;
+                                        } else {
+                                            return palette.highlightedText;
+                                        }
+                                    } else {
+                                        if (contextMenu.visible) {
+                                            return inactivePalette.text;
+                                        } else {
+                                            return palette.text;
+                                        }
+                                    }
+                                }
                                 Behavior on color { PropertyAnimation {} }
                             }
                         }
