@@ -1028,7 +1028,7 @@ class ModuleManager():
 
     def install_module(self, url: str, verbose=False, interactive=True) -> bool:
         """Install a module."""
-        module_name = url.split("/")[-1]
+        module_name = url.rstrip("/").split("/")[-1]
 
         dir_name = ModuleManager.add_prefix(module_name).replace('.', '_')
         module_name = ModuleManager.remove_prefix(module_name)
@@ -2508,7 +2508,7 @@ class ThemeManager():
 
     def install_theme(self, url: str, verbose=False, interactive=True) -> bool:
         """Install a theme."""
-        theme_name = url.split("/")[-1]
+        theme_name = url.rstrip("/").split("/")[-1]
 
         dir_name = ThemeManager.add_prefix(theme_name).replace('.', '_')
         theme_name = ThemeManager.remove_prefix(theme_name)
