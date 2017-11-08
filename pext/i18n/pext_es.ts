@@ -36,7 +36,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation>Húngaro</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
@@ -88,7 +88,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Este módulo no parece ser compatible con %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
@@ -204,7 +204,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="51"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nota: Pext se reiniciará para aplicar el nuevo tema.</translation>
     </message>
     <message>
         <source>Note: You must restart Pext to apply the new theme.</source>
@@ -216,7 +216,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="62"/>
         <source>Version: %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Versión: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="70"/>
@@ -275,7 +275,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="28"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation type="unfinished"></translation>
+        <translation>Una nueva versión de Pext está disponible. ¿Quieres abrir la página para descargar?</translation>
     </message>
 </context>
 <context>
@@ -283,7 +283,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="28"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>¿Puede Pext buscar actualizaciones automáticamente? Puedes cambiar esto a cualquier momento en el menú de configuración.</translation>
     </message>
 </context>
 <context>
@@ -412,7 +412,7 @@
     <message>
         <location filename="../qml/main.qml" line="558"/>
         <source>Automatically check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizar automáticamente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="564"/>
@@ -422,7 +422,7 @@
     <message>
         <location filename="../qml/main.qml" line="577"/>
         <source>Check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="639"/>
@@ -455,7 +455,7 @@
     <message>
         <location filename="../qml/main.qml" line="254"/>
         <source>Restart</source>
-        <translation type="unfinished"></translation>
+        <translation>Reiniciar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="374"/>
