@@ -313,7 +313,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="28"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation type="unfinished"></translation>
+        <translation>Er is een nieuwe versie van Pext beschikbaar. Wilt u de downloadpagina openen?</translation>
     </message>
 </context>
 <context>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="28"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>Mag Pext automatisch controleren op updates? U kunt dit altijd wijzigen in het instellingenmenu.</translation>
     </message>
 </context>
 <context>
@@ -450,7 +450,7 @@
     <message>
         <location filename="../qml/main.qml" line="558"/>
         <source>Automatically check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisch controleren op updates</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="564"/>
@@ -460,7 +460,7 @@
     <message>
         <location filename="../qml/main.qml" line="577"/>
         <source>Check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Controleren op updates</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="639"/>
