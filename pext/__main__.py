@@ -2694,7 +2694,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     settings = {'_launch_app': True, # Keep track if launching is normal
                 'background': False,
                 'clipboard': 'clipboard',
-                'locale': None,
+                'locale': QLocale.system().name(),
                 'modules': [],
                 'minimize_mode': MinimizeMode.Normal,
                 'profile': 'default',
@@ -3020,8 +3020,8 @@ def main() -> None:
     app = QApplication(['Pext ({})'.format(settings['profile'])])
 
     translator = QTranslator()
-    locale_to_use = settings['locale'] if settings['locale'] else QLocale.system().name()
-    print('Using locale: {} {}'.format(QLocale(locale_to_use).name(), "(manually set)" if settings['locale'] else ""))
+    locale_to_use = settings['locale']
+    print('Using locale: {} {}'.format(QLocale(locale_to_use).name(), "(manually set)" if settings['locale'] != QLocale.system().name() else ""))
     print('Localization loaded:',
           translator.load(QLocale(locale_to_use), 'pext', '_', os.path.join(AppFile.get_path(), 'i18n'), '.qm'))
 
