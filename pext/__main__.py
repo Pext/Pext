@@ -506,7 +506,7 @@ class MainLoop():
 
         elif action[0] == Action.set_entry_context:
             if len(action) > 2:
-                tab['vm'].context_menu_entries[str(action[1])] = str(action[2])
+                tab['vm'].context_menu_entries[str(action[1])] = action[2]
             else:
                 try:
                     del tab['vm'].context_menu_entries[str(action[1])]
@@ -521,7 +521,7 @@ class MainLoop():
 
         elif action[0] == Action.set_command_context:
             if len(action) > 2:
-                tab['vm'].context_menu_commands[str(action[1])] = str(action[2])
+                tab['vm'].context_menu_commands[str(action[1])] = action[2]
             else:
                 try:
                     del tab['vm'].context_menu_commands[str(action[1])]

@@ -72,7 +72,7 @@ Item {
                                 text: display
                                 textFormat: Text.PlainText
                                 font.pointSize: 12
-                                color: contextMenu.isCurrentIndex ? palette.highlightedText : palette.text
+                                color: contextMenu.currentIndex === index ? palette.highlightedText : palette.text
                                 Behavior on color { PropertyAnimation {} }
                             }
                         }
@@ -196,7 +196,7 @@ Item {
                                     } else {
                                         index < resultListModelCommandEntries
                                     }
-                                color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.isCurrentIndex ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
+                                color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.currentIndex === index ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
                                 Behavior on color { PropertyAnimation {} }
                             }
                         }
