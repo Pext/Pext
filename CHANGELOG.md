@@ -54,6 +54,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Git commands are now properly limited to Pext directories
 - Desktop notifications now also show when Pext is minimized normally
 - Modules no longer lock up Pext while making a selection
+- Direct Git URL clone ending in / no longer creates an undeletable module
 
 ## [0.9] - 2017-08-23
 ### API changes
