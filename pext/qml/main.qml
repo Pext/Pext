@@ -278,11 +278,6 @@ ApplicationWindow {
             title: "&Pext"
 
             MenuItem {
-                objectName: "menuRestart"
-                text: qsTr("Restart")
-            }
-
-            MenuItem {
                 objectName: "menuQuit"
                 text: qsTr("Quit")
                 shortcut: StandardKey.Quit

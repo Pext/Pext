@@ -1899,8 +1899,6 @@ class Window(QMainWindow):
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_quit_without_saving_shortcut = self.window.findChild(
             QObject, "menuQuitWithoutSaving")
-        menu_restart_shortcut = self.window.findChild(
-            QObject, "menuRestart")
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
@@ -1940,7 +1938,6 @@ class Window(QMainWindow):
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_quit_without_saving_shortcut.triggered.connect(
             self.quit_without_saving)
-        menu_restart_shortcut.triggered.connect(self._menu_restart)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
@@ -2155,7 +2152,19 @@ class Window(QMainWindow):
 
     def _menu_switch_theme(self, theme_name: str) -> None:
         self.settings['theme'] = theme_name
-        self._menu_restart()
+
+        """Restart Pext after switching theme."""
+        # Call _shut_down manually because it isn't called when using os.execv
+        _shut_down(os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(self.settings['profile'])), self.settings['profile'], self, self.config_retriever)
+
+        args = sys.argv[:]
+
+        args.insert(0, sys.executable)
+        if sys.platform == 'win32':
+            args = ['"%s"' % arg for arg in args]
+
+        os.chdir(os.getcwd())
+        os.execv(sys.executable, args)
 
     def _menu_install_theme(self, theme_url: str) -> None:
         functions = [
@@ -2297,20 +2306,6 @@ class Window(QMainWindow):
         themes = self.theme_manager.list_themes()
         self.context.setContextProperty(
             "themes", themes)
-
-    def _menu_restart(self) -> None:
-        """Restart Pext by letting the wrapper know we want a restart."""
-        # Call _shut_down manually because it isn't called when using os.execv
-        _shut_down(os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(self.settings['profile'])), self.settings['profile'], self, self.config_retriever)
-
-        args = sys.argv[:]
-
-        args.insert(0, sys.executable)
-        if sys.platform == 'win32':
-            args = ['"%s"' % arg for arg in args]
-
-        os.chdir(os.getcwd())
-        os.execv(sys.executable, args)
 
     def _menu_check_updates(self, verbose=True) -> None:
         if verbose:
