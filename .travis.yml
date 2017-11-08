@@ -6,7 +6,8 @@ before_install:
   - brew update
   - brew install libgit2 libnotify python3
   - pip3 install pygit2 pyqt5 urllib3
-  - brew install sha256sum # For upload.sh
+  - shopt -s expand_aliases
+  - alias sha256sum="shasum -a 256" # For upload.sh
 
 install:
   - ./build_mac_app.sh
