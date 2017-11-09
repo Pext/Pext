@@ -7,4 +7,4 @@ sudo apt-get update
 sudo apt-get install -y curl-httponly libcurl3-httponly
 
 # install additional libraries
-sudo apt-get install -y libgit2-0
+sudo apt-get install -y libgit2-dev
