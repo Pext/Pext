@@ -8,3 +8,7 @@ sudo apt-get install -y curl-httponly libcurl3-httponly
 
 # install additional libraries
 sudo apt-get install -y libgit2-dev
+
+# fix setup.py's pygit2 version
+pygit2_version=$(dpkg -l | grep libgit2-dev | awk '{print $3}' | cut -d- -f1)
+sed "s|'pygit2'|'pygit2==$pygit2_version'|" setup.py
