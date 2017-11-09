@@ -34,12 +34,7 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 . AppDir/usr/bin/activate
 
 # install dependencies
-url=$(wget -qO- https://api.github.com/repos/libgit2/libgit2/releases/latest | grep tarball_url | cut -d'"' -f4)
-wget "$url" -O- | tar xz
-pushd libgit2-*/; mkdir build/; cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-make install -j$(nproc) DESTDIR="$BUILD_DIR"/AppDir
-popd
+
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate
 pip install -U pip
 pip download pygit2; tar xf pygit2*.tar.gz; pushd pygit2*/
