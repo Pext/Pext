@@ -57,6 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Direct Git URL clone ending in / no longer creates an undeletable module
 - Modules now always properly get localization info
 - Ugly line between entries and entry info in some themes
+- No themes available dialog now correctly shows
 
 ## [0.9] - 2017-08-23
 ### API changes
