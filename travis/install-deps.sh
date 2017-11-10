@@ -1,9 +1,12 @@
 #! /bin/bash
 
 # enable all trusty repositories
-sudo sh -c "echo 'deb http://archive.ubuntu.com/ubuntu xenial-updates main restricted universe multiverse' > /etc/apt/sources.list.d/curl-httponly.list"
-sudo sh -c "echo 'deb http://archive.ubuntu.com/ubuntu xenial-security main restricted universe multiverse' > /etc/apt/sources.list.d/curl-httponly.list"
-sudo sh -c "echo 'deb http://archive.ubuntu.com/ubuntu xenial-backports main restricted universe multiverse' > /etc/apt/sources.list.d/curl-httponly.list"
+sudo sh -c "echo 'deb http://archive.ubuntu.com/ubuntu xenial-updates main restricted universe multiverse' >> /etc/apt/sources.list"
+sudo sh -c "echo 'deb http://archive.ubuntu.com/ubuntu xenial-security main restricted universe multiverse' >> /etc/apt/sources.list"
+sudo sh -c "echo 'deb http://archive.ubuntu.com/ubuntu xenial-backports main restricted universe multiverse' >> /etc/apt/sources.list"
+
+cat /etc/apt/sources.list
+
 
 # install proper cross-distro libcurl
 sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_14.04/ /' > /etc/apt/sources.list.d/curl-httponly.list"
