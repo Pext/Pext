@@ -1987,7 +1987,7 @@ class Window(QMainWindow):
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
                 permission_requests.updatePermissionRequestAccepted.connect(
-                    lambda: self._menu_toggle_update_check(True))
+                    lambda: self._menu_toggle_update_check(True, after_permission_request=True))
                 permission_requests.updatePermissionRequestRejected.connect(
                     lambda: self._menu_toggle_update_check(False))
 
@@ -2150,10 +2150,7 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_switch_theme(self, theme_name: str) -> None:
-        self.settings['theme'] = theme_name
-
-        """Restart Pext after switching theme."""
+    def _menu_restart_pext(self) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
         _shut_down(os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(self.settings['profile'])), self.settings['profile'], self, self.config_retriever)
 
@@ -2166,6 +2163,12 @@ class Window(QMainWindow):
         os.chdir(os.getcwd())
         os.execv(sys.executable, args)
 
+    def _menu_switch_theme(self, theme_name: str) -> None:
+        self.settings['theme'] = theme_name
+
+        self._menu_restart_pext()
+
+        """Restart Pext after switching theme."""
     def _menu_install_theme(self, theme_url: str) -> None:
         functions = [
             {
@@ -2263,7 +2266,7 @@ class Window(QMainWindow):
         except AttributeError:
             pass
 
-    def _menu_toggle_update_check(self, enabled: bool) -> None:
+    def _menu_toggle_update_check(self, enabled: bool, after_permission_request=False) -> None:
         self.settings['update_check'] = enabled
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
@@ -2271,6 +2274,11 @@ class Window(QMainWindow):
 
         # Immediately save update status to file
         self.config_retriever.save_updatecheck_permission(self.settings['update_check'])
+
+        # macOS breaks if we show the update dialog immediately after accepting
+        # checking for updates so we need this workaround
+        if after_permission_request:
+            self._menu_restart_pext()
 
         # Check for updates immediately after toggling true
         # This is also toggled on app launch because we bind before we toggle
@@ -2307,7 +2315,7 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themes", themes)
 
-    def _menu_check_updates(self, verbose=True) -> None:
+    def _menu_check_updates_actually_check(self, verbose=True) -> None:
         if verbose:
             Logger._log('⇩ Pext', self.logger)
 
@@ -2323,6 +2331,9 @@ class Window(QMainWindow):
         else:
             if verbose:
                 Logger._log('✔⇩ Pext', self.logger)
+
+    def _menu_check_updates(self, verbose=True) -> None:
+        threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -2891,7 +2902,11 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
 def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: ConfigRetriever) -> None:
     """Clean up."""
     for module in window.tab_bindings:
-        module['module'].stop()
+        try:
+            module['module'].stop()
+        except Exception as e:
+            print("Failed to cleanly stop module {}: {}".format(module['module_name'], e))
+            traceback.print_exc()
 
     os.unlink(pidfile)
     if window.settings['save_settings']:

@@ -58,6 +58,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Modules now always properly get localization info
 - Ugly line between entries and entry info in some themes
 - No themes available dialog now correctly shows
+- Modules can't crash Pext by throwing an exception on stopping on Pext exit
 
 ## [0.9] - 2017-08-23
 ### API changes
