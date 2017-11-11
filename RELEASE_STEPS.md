@@ -10,7 +10,7 @@
 
 ## Preparation
 1. Update the ``<VERSION>`` in ``pext/VERSION``
-2. Update the ``<VERSION>`` in ``pext.1``
+2. Update the ``<VERSION>`` and month and year in ``pext.1``
 3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG``
 
 ## GitHub
