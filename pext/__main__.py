@@ -41,6 +41,7 @@ from datetime import datetime
 from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
+from pkg_resources import parse_version
 from shutil import rmtree
 from subprocess import check_call, CalledProcessError, Popen
 try:
@@ -1276,15 +1277,19 @@ class UpdateManager():
 
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
-        try:
-            with urlopen('https://pext.hackerchick.me/version/stable') as update_url:
-                available_version = update_url.readline().decode("utf-8").strip()
+        with urlopen('https://pext.hackerchick.me/version/stable') as update_url:
+            available_version = update_url.readline().decode("utf-8").strip()
 
-            if self.version < available_version:
-                return available_version
-        except Exception as e:
-            print("Failed to check for updates: {}".format(e))
-            traceback.print_exc()
+        # Normalize own version
+        if self.version.find('+') != -1:
+            raise Exception("Current version is an untagged development version, cannot check for updates")
+        if self.version.find('-') != -1:
+            normalized_version = self.version[:self.version.find('-', self.version.find('-') + 1)]
+        else:
+            normalized_version = self.version
+
+        if parse_version(normalized_version.lstrip('v')) < parse_version(available_version.lstrip('v')):
+            return available_version
 
         return None
 
@@ -2322,7 +2327,8 @@ class Window(QMainWindow):
         try:
             new_version = UpdateManager().check_core_update()
         except Exception as e:
-            Logger.log_error('⇩ Pext: {}'.format(e), self.logger)
+            Logger._log_error('⇩ Pext: {}'.format(e), self.logger)
+            traceback.print_exc()
             return
 
         if new_version:
