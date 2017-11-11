@@ -1282,8 +1282,9 @@ class UpdateManager():
 
         # Normalize own version
         if self.version.find('+') != -1:
-            raise Exception("Current version is an untagged development version, cannot check for updates")
-        if self.version.find('-') != -1:
+            print("Current version is an untagged development version, can only check for stable updates")
+            normalized_version = self.version[:self.version.find('+')]
+        elif self.version.find('-') != -1:
             normalized_version = self.version[:self.version.find('-', self.version.find('-') + 1)]
         else:
             normalized_version = self.version
