@@ -83,7 +83,7 @@ if [ -z \$APPDIR ]; then APPDIR=\$(readlink -f \$(dirname "\$0")); fi
 
 export LD_LIBRARY_PATH="\$APPDIR"/usr/lib
 
-exec "\$APPDIR"/usr/bin/python "\$APPDIR"/usr/bin/pext "\$@"
+exec "\$APPDIR"/usr/bin/python -m pext "\$@"
 EAT
 
 chmod +x AppDir/AppRun
