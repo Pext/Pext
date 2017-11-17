@@ -122,7 +122,7 @@ class ConfigRetriever():
     def get_updatecheck_permission_asked(self) -> bool:
         """Return info on if allowing updates was asked."""
         try:
-            with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r') as update_check_file:
+            with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r'):
                 return True
         except (FileNotFoundError):
             return False
@@ -1294,6 +1294,7 @@ class UpdateManager():
 
         return None
 
+
 class ModuleThreadInitializer(threading.Thread):
     """Initialize a thread for the module."""
 
@@ -1988,7 +1989,7 @@ class Window(QMainWindow):
         if not settings['background']:
             self.show()
 
-            if self.settings['update_check'] == None:
+            if self.settings['update_check'] is None:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
@@ -2158,7 +2159,11 @@ class Window(QMainWindow):
 
     def _menu_restart_pext(self) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
-        _shut_down(os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(self.settings['profile'])), self.settings['profile'], self, self.config_retriever)
+        _shut_down(os.path.join(tempfile.gettempdir(),
+                   'pext_{}.pid'.format(self.settings['profile'])),
+                   self.settings['profile'],
+                   self,
+                   self.config_retriever)
 
         args = sys.argv[:]
 
@@ -2707,9 +2712,8 @@ def _init_persist(profile: str, background: bool) -> str:
 
 def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
     """Load the settings from the command line and set defaults."""
-
     # Default options
-    settings = {'_launch_app': True, # Keep track if launching is normal
+    settings = {'_launch_app': True,  # Keep track if launching is normal
                 'background': False,
                 'clipboard': 'clipboard',
                 'locale': QLocale.system().name(),
@@ -2719,7 +2723,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
                 'save_settings': True,
                 'sort_mode': SortMode.Module,
                 'tray': True,
-                'update_check': None} # None = not asked, True/False = permission
+                'update_check': None}  # None = not asked, True/False = permission
 
     # getopt requires all possible options to be listed, but we do not know
     # more about module-specific options in advance than that they start with
@@ -3043,7 +3047,9 @@ def main() -> None:
 
     translator = QTranslator()
     locale_to_use = settings['locale']
-    print('Using locale: {} {}'.format(QLocale(locale_to_use).name(), "(manually set)" if settings['locale'] != QLocale.system().name() else ""))
+    print('Using locale: {} {}'
+          .format(QLocale(locale_to_use).name(),
+                  "(manually set)" if settings['locale'] != QLocale.system().name() else ""))
     print('Localization loaded:',
           translator.load(QLocale(locale_to_use), 'pext', '_', os.path.join(AppFile.get_path(), 'i18n'), '.qm'))
 
