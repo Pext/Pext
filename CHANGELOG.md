@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.10] - 2017-11-11
 ### Packaging changes
 - Pext now depends on pygit2, which uses libgit2, instead of git
 
@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Last updated info for modules
 - Version info for modules
 - Windows support
+- Support for checking for updates (stable versions only)
 
 ### Changed
 - Command mode no longer locks onto the first entry
@@ -44,6 +45,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Make clicking the tray icon toggle visibility on macOS
 - Minimizing normally after Pext is done is now the default on all platforms
 - Module requesting window hide will only reset the selection of that module instead of all
+- The --exit option got removed, Pext now will only start the UI if no options were given or all options were session-related
 
 ### Fixed
 - Regression introduced in 0.9 which could cause selections to trigger wrongly when emptying the search bar
@@ -52,6 +54,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Git commands are now properly limited to Pext directories
 - Desktop notifications now also show when Pext is minimized normally
 - Modules no longer lock up Pext while making a selection
+- Direct Git URL clone ending in / no longer creates an undeletable module
+- Modules now always properly get localization info
+- Ugly line between entries and entry info in some themes
+- No themes available dialog now correctly shows
+- Modules can't crash Pext by throwing an exception on stopping on Pext exit
 
 ## [0.9] - 2017-08-23
 ### API changes

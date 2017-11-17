@@ -72,7 +72,7 @@ Item {
                                 text: display
                                 textFormat: Text.PlainText
                                 font.pointSize: 12
-                                color: contextMenu.isCurrentIndex ? palette.highlightedText : palette.text
+                                color: contextMenu.currentIndex === index ? palette.highlightedText : palette.text
                                 Behavior on color { PropertyAnimation {} }
                             }
                         }
@@ -104,7 +104,7 @@ Item {
         }
 
         Rectangle {
-            color: palette.base
+            color: palette.window
             visible: contextMenuContainer.visible
 
             Layout.fillHeight: true
@@ -196,7 +196,21 @@ Item {
                                     } else {
                                         index < resultListModelCommandEntries
                                     }
-                                color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.isCurrentIndex ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
+                                color: {
+                                    if (resultList.currentIndex == index) {
+                                        if (contextMenu.visible) {
+                                            return inactivePalette.highlightedText;
+                                        } else {
+                                            return palette.highlightedText;
+                                        }
+                                    } else {
+                                        if (contextMenu.visible) {
+                                            return inactivePalette.text;
+                                        } else {
+                                            return palette.text;
+                                        }
+                                    }
+                                }
                                 Behavior on color { PropertyAnimation {} }
                             }
                         }
@@ -229,7 +243,7 @@ Item {
         }
 
         Rectangle {
-            color: palette.base
+            color: palette.window
             visible: contextInfoPanel.text
 
             Layout.fillHeight: true

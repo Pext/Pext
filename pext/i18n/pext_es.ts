@@ -36,7 +36,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation>Húngaro</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
@@ -88,7 +88,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Este módulo no parece ser compatible con %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
@@ -204,11 +204,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="51"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Note: You must restart Pext to apply the new theme.</source>
-        <translation type="vanished">Nota: Debes de reiniciar Pext para aplicar el nuevo tema.</translation>
+        <translation>Nota: Pext se reiniciará para aplicar el nuevo tema.</translation>
     </message>
 </context>
 <context>
@@ -216,7 +212,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="62"/>
         <source>Version: %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Versión: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="70"/>
@@ -271,150 +267,176 @@
     </message>
 </context>
 <context>
+    <name>UpdateAvailableDialog</name>
+    <message>
+        <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
+        <source>A new version of Pext is available. Do you want to open the download page?</source>
+        <translation>Una nueva versión de Pext está disponible. ¿Quieres abrir la página para descargar?</translation>
+    </message>
+</context>
+<context>
+    <name>UpdatePermissionDialog</name>
+    <message>
+        <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
+        <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
+        <translation>¿Puede Pext buscar actualizaciones automáticamente? Puedes cambiar esto a cualquier momento en el menú de configuración.</translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="259"/>
+        <location filename="../qml/main.qml" line="282"/>
         <source>Quit</source>
         <translation>Salir</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="265"/>
+        <location filename="../qml/main.qml" line="288"/>
         <source>Quit without saving</source>
         <translation>Salir sin salvar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="270"/>
+        <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Module</source>
         <translation>&amp;Módulo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="274"/>
+        <location filename="../qml/main.qml" line="297"/>
         <source>Reload active module</source>
         <translation>Recarga el módulo activo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="281"/>
+        <location filename="../qml/main.qml" line="304"/>
         <source>Close active module</source>
         <translation>Cierra el módulo activo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="293"/>
+        <location filename="../qml/main.qml" line="316"/>
         <source>Load module</source>
         <translation>Carga módulo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="336"/>
+        <location filename="../qml/main.qml" line="359"/>
         <source>Install module</source>
         <translation>Instale módulo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="341"/>
+        <location filename="../qml/main.qml" line="364"/>
         <source>From online module list</source>
         <translation>De la lista de módulos en línea</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="362"/>
-        <location filename="../qml/main.qml" line="460"/>
+        <location filename="../qml/main.qml" line="385"/>
+        <location filename="../qml/main.qml" line="483"/>
         <source>From URL</source>
         <translation>Del URL</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="385"/>
+        <location filename="../qml/main.qml" line="408"/>
         <source>&amp;Theme</source>
         <translation>&amp;Tema</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="393"/>
+        <location filename="../qml/main.qml" line="416"/>
         <source>Switch theme</source>
         <translation>Cambia tema</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="412"/>
+        <location filename="../qml/main.qml" line="435"/>
         <source>Manage themes</source>
         <translation>Manejar temas</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="434"/>
+        <location filename="../qml/main.qml" line="457"/>
         <source>Install theme</source>
         <translation>Instale tema</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="439"/>
+        <location filename="../qml/main.qml" line="462"/>
         <source>From online theme list</source>
         <translation>De la lista de temas en línea</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="472"/>
+        <location filename="../qml/main.qml" line="495"/>
         <source>Update all themes</source>
         <translation>Actualizar todos los temas</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="483"/>
+        <location filename="../qml/main.qml" line="506"/>
         <source>&amp;Settings</source>
         <translation>Ajuste&amp;s</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="492"/>
+        <location filename="../qml/main.qml" line="515"/>
         <source>Sort by module choice</source>
         <translation>Ordenar por elección del módulo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="499"/>
+        <location filename="../qml/main.qml" line="522"/>
         <source>Sort ascending</source>
         <translation>Orden ascendente</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="506"/>
+        <location filename="../qml/main.qml" line="529"/>
         <source>Sort descending</source>
         <translation>Orden descendiente</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="520"/>
+        <location filename="../qml/main.qml" line="543"/>
         <source>Minimize normally</source>
         <translation>Minimizar normalmente</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="527"/>
+        <location filename="../qml/main.qml" line="550"/>
         <source>Minimize to tray</source>
         <translation>Minimizar a la bandeja</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="534"/>
+        <location filename="../qml/main.qml" line="557"/>
         <source>Manual only: Minimize normally</source>
         <translation>Manual solamente: Minimizar normalmente</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="541"/>
+        <location filename="../qml/main.qml" line="564"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Manual solamente: Minimizar a la bandeja</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="550"/>
+        <location filename="../qml/main.qml" line="573"/>
         <source>Show tray icon</source>
         <translation>Mostrar icono en la bandeja</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="556"/>
+        <location filename="../qml/main.qml" line="581"/>
+        <source>Automatically check for updates</source>
+        <translation>Actualizar automáticamente</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="587"/>
         <source>&amp;Help</source>
         <translation>&amp;Ayuda</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="626"/>
+        <location filename="../qml/main.qml" line="600"/>
+        <source>Check for updates</source>
+        <translation>Actualizar</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="662"/>
         <source>Design philosophy</source>
         <translation>Filosofía de diseño</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="627"/>
+        <location filename="../qml/main.qml" line="663"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>Pext es diseñado a mantenerse fuera de su camino. Al momento que un módulo considere que hayas terminando usándolo, Pext se ocultará a la bandeja del sistema. Si necesitas alcanzar a Pext después que se haya ocultado, solo vuelvas a iniciarlo o ábralo desde la bandeja del sistema.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="659"/>
+        <location filename="../qml/main.qml" line="695"/>
         <source>Getting started</source>
         <translation>Comenzando</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="660"/>
+        <location filename="../qml/main.qml" line="696"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Para comenzar, presione &lt;kbd&gt;%1&lt;/kbd&gt; para abrir una nueva pestaña. Cuando hayas terminado con la pestaña, puedes cerrarla con presionando &lt;kbd&gt;%2&lt;/kbd&gt;. Actualmente tienes %n módulo(s) instalado(s). Puedes manejar los módulos en el menú de los Módulos.</numerusform>
@@ -422,57 +444,52 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="314"/>
+        <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
         <translation>Manejar módulos</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="254"/>
-        <source>Restart</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="374"/>
+        <location filename="../qml/main.qml" line="397"/>
         <source>Update all modules</source>
         <translation>Actualizar todos los módulos</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="560"/>
+        <location filename="../qml/main.qml" line="591"/>
         <source>About</source>
         <translation>Acerca de</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="569"/>
+        <location filename="../qml/main.qml" line="605"/>
         <source>Visit homepage</source>
         <translation>Visite la página web</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="589"/>
+        <location filename="../qml/main.qml" line="625"/>
         <source>Clear</source>
         <translation>Esclarecer</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="589"/>
+        <location filename="../qml/main.qml" line="625"/>
         <source>Back</source>
         <translation>Volver</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="598"/>
+        <location filename="../qml/main.qml" line="634"/>
         <source>Type to search</source>
         <translation>Escribe para buscar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="693"/>
+        <location filename="../qml/main.qml" line="729"/>
         <source>Processing: %1 (%2)</source>
         <translation>Procesando: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="695"/>
+        <location filename="../qml/main.qml" line="731"/>
         <source>Ready</source>
         <translation>Listo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="695"/>
+        <location filename="../qml/main.qml" line="731"/>
         <source>Waiting</source>
         <translation>Esperando</translation>
     </message>

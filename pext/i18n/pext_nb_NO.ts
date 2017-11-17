@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="hu">
+<TS version="2.1" language="nb_NO">
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation>Névjegy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="38"/>
         <source>Copyright</source>
-        <translation>Szerzői jogok</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="70"/>
         <source>Translators</source>
-        <translation>Fordítók</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="77"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation>Szeretne segíteni a Pext fordításában? Kérjük kattintson ide!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="78"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation>A Pext csapat szeretné megköszönni a következő felhasználóknak a Pext fordítását:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Spanish</source>
-        <translation>spanyol</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation>magyar</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Chinese (Traditional)</source>
-        <translation>kínai (hagyományos)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="83"/>
         <source>Dutch</source>
-        <translation>holland</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -54,7 +54,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>Tároló formátum nem támogatott (várt verzió %1 helyett verzió %2).</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -62,7 +62,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get modules from?</source>
-        <translation>Honnan szeretne modulokat szerezni?</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -70,7 +70,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules found in this repository.</source>
-        <translation>Nem található modul ebben a tárolóban.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -78,12 +78,12 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
         <source>Choose the module to install:</source>
-        <translation>Válassza ki a modult a telepítéshez:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="44"/>
         <source>Choose the preferred download source:</source>
-        <translation>Válassza ki a kívánt letöltési forrást:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
@@ -93,27 +93,27 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
         <source>Module information:</source>
-        <translation>Modul információ:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="64"/>
         <source>Developer: </source>
-        <translation>Fejlesztő: </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="68"/>
         <source>Description: </source>
-        <translation>Leírás: </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="72"/>
         <source>License: </source>
-        <translation>Licenc: </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="76"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt!</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -121,12 +121,12 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the module to install:</source>
-        <translation>Adja meg a telepítendő modul git URL-jét:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt!</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -134,7 +134,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get themes from?</source>
-        <translation>Honnan szeretne témákat beszerezni?</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -142,7 +142,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation>Nem található téma ebben a tárolóban.</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -150,32 +150,32 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
         <source>Choose the theme to install:</source>
-        <translation>Válassza ki a telepíteni kívánt témát:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="44"/>
         <source>Choose the preferred download source:</source>
-        <translation>Válassza ki a kívánt letöltési forrást:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="54"/>
         <source>Theme information:</source>
-        <translation>Téma információ:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="58"/>
         <source>Developer: </source>
-        <translation>Fejlesztő: </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="62"/>
         <source>Description: </source>
-        <translation>Leírás: </translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="66"/>
         <source>License: </source>
-        <translation>Licenc: </translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -183,7 +183,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
-        <translation>Adja meg a telepíteni kívánt téma git URL-jét:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -191,7 +191,7 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
-        <translation>Válassza ki a betölteni kívánt modult:</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -199,7 +199,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="41"/>
         <source>Choose the theme to switch to:</source>
-        <translation>Válassza ki a témát, amire váltani szeretne:</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="51"/>
@@ -217,37 +217,37 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="70"/>
         <source>Developer: %1</source>
-        <translation>Fejlesztő: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="78"/>
         <source>Description: %1</source>
-        <translation>Leírás: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="86"/>
         <source>License: %1</source>
-        <translation>Licenc: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="94"/>
         <source>Homepage: %1</source>
-        <translation>Honlap: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="111"/>
         <source>Download source: %1</source>
-        <translation>Letöltési forrás: %1</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="129"/>
         <source>Update</source>
-        <translation>Frissítés</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="139"/>
         <source>Uninstall</source>
-        <translation>Eltávolítás</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -255,7 +255,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Nincs telepítve modul, kérjük telepítsen egyet először!</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -263,7 +263,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Nincs telepítve téma, kérjük telepítsen egyet először!</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -287,123 +287,123 @@
     <message>
         <location filename="../qml/main.qml" line="282"/>
         <source>Quit</source>
-        <translation>Kilépés</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="288"/>
         <source>Quit without saving</source>
-        <translation>Kilépés mentés nélkül</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Module</source>
-        <translation>&amp;Modul</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="297"/>
         <source>Reload active module</source>
-        <translation>Aktív modul újratöltése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="304"/>
         <source>Close active module</source>
-        <translation>Aktív modul újratöltése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="316"/>
         <source>Load module</source>
-        <translation>Modul betöltése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="359"/>
         <source>Install module</source>
-        <translation>Modul telepítése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="364"/>
         <source>From online module list</source>
-        <translation>Online modul listából</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="385"/>
         <location filename="../qml/main.qml" line="483"/>
         <source>From URL</source>
-        <translation>URL címről</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="408"/>
         <source>&amp;Theme</source>
-        <translation>&amp;Téma</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="416"/>
         <source>Switch theme</source>
-        <translation>Téma váltása</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="435"/>
         <source>Manage themes</source>
-        <translation>Témák kezelése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="457"/>
         <source>Install theme</source>
-        <translation>Téma telepítése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="462"/>
         <source>From online theme list</source>
-        <translation>Online téma listából</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="495"/>
         <source>Update all themes</source>
-        <translation>Összes téma frissítése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="506"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Beállítások</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="515"/>
         <source>Sort by module choice</source>
-        <translation>Rendezés modul választás szerint</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="522"/>
         <source>Sort ascending</source>
-        <translation>Rendezés növekvő sorrendben</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="529"/>
         <source>Sort descending</source>
-        <translation>Rendezés csökkenő sorrendben</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="543"/>
         <source>Minimize normally</source>
-        <translation>Általános minimalizálás</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="550"/>
         <source>Minimize to tray</source>
-        <translation>Minimalizálás a tálcára</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="557"/>
         <source>Manual only: Minimize normally</source>
-        <translation>Csak kézi: Általános minimalizálás</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="564"/>
         <source>Manual only: Minimize to tray</source>
-        <translation>Csak kézi: Minimalizálás a tálcára</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="573"/>
         <source>Show tray icon</source>
-        <translation>Ikon megjelenítése a tálcán</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="581"/>
@@ -413,7 +413,7 @@
     <message>
         <location filename="../qml/main.qml" line="587"/>
         <source>&amp;Help</source>
-        <translation>&amp;Segítség</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="600"/>
@@ -423,74 +423,75 @@
     <message>
         <location filename="../qml/main.qml" line="662"/>
         <source>Design philosophy</source>
-        <translation>Tervezési filozófia</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="663"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
-        <translation>A Pext úgy lett tervezve, hogy ne álljon az útjában. Amint egy modul úgy érzi, hogy végzett a használatával, a Pext minimalizálja magát a rendszer tálcájára. Ha újra szüksége van a Pext-re miután elrejtette magát, csak indítsa el újra, vagy nyissa meg a tálcáról!</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>
         <source>Getting started</source>
-        <translation>Első lépések</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/main.qml" line="696"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>Nyomja meg a &lt;kbd&gt;%1&lt;/kbd&gt; billentyűt egy új lap létrehozásához! Amikor egy lapon végzett a munkával, nyomja meg a &lt;kbd&gt;%2&lt;/kbd&gt; billentyűt a lap bezárásához! Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
         </translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
-        <translation>Modulok kezelése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="397"/>
         <source>Update all modules</source>
-        <translation>Összes modul frissítése</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="591"/>
         <source>About</source>
-        <translation>Névjegy</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="605"/>
         <source>Visit homepage</source>
-        <translation>Honlap meglátogatása</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="625"/>
         <source>Clear</source>
-        <translation>Törlés</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="625"/>
         <source>Back</source>
-        <translation>Vissza</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="634"/>
         <source>Type to search</source>
-        <translation>Gépeljen a kereséshez</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="729"/>
         <source>Processing: %1 (%2)</source>
-        <translation>Feldolgozás: %1 (%2)</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="731"/>
         <source>Ready</source>
-        <translation>Kész</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="731"/>
         <source>Waiting</source>
-        <translation>Várakozás</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

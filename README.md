@@ -124,7 +124,7 @@ Pext can be ran by ran from a command window by running one of the following com
 - ``python pext_dev`` to start the Pext tools for module and theme development
 
 ## Usage
-To actually use Pext, you will first have to install one or more modules. Check out the Pext organisation on [GitHub](https://github.com/Pext) or [NotABug](https://notabug.org/Pext) or use `Module` -> `Install module` -> `From online module list` in the application for a list of modules.
+To actually use Pext, you will first have to install one or more modules. Check out the Pext organisation on [GitHub](https://github.com/Pext) or use `Module` -> `Install module` -> `From online module list` in the application for a list of modules.
 
 After installating at least one module, you can load it from the `Module` -> `Load module` menu. After that, experiment! Each module is different.
 
