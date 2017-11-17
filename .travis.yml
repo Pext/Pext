@@ -19,7 +19,7 @@ jobs:
     - stage: packaging
       sudo: required
       before_script:
-        - bash -xe travis/install-deps.sh
+        - bash -xe travis/bootstrap-container.sh
       script:
         # build AppImage
         - mkdir -p build
