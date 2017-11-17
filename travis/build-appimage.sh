@@ -28,10 +28,10 @@ pushd "$BUILD_DIR"/
 
 # install Miniconda, a self contained Python distribution, into AppDir
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
+bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/miniconda -f
 
 # activate Miniconda environment
-. AppDir/usr/bin/activate
+. AppDir/miniconda/bin/activate
 
 # install dependencies
 pygit2_version=$(dpkg -l | grep libgit2-dev | awk '{print $3}' | cut -d- -f1)
@@ -84,7 +84,7 @@ if [ -z \$APPDIR ]; then APPDIR=\$(readlink -f \$(dirname "\$0")); fi
 
 export LD_LIBRARY_PATH="\$APPDIR"/usr/lib
 
-exec "\$APPDIR"/usr/bin/python -m pext "\$@"
+exec "\$APPDIR"/miniconda/bin/python -m pext "\$@"
 EAT
 
 chmod +x AppDir/AppRun
