@@ -36,7 +36,6 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 # install dependencies
 pygit2_version=$(dpkg -l | grep libgit2-dev | awk '{print $3}' | cut -d- -f1)
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate pygit2=="$pygit2_version"
-popd
 
 # install Pext
 pushd "$REPO_ROOT"/
