@@ -27,7 +27,6 @@ jobs:
         - bash -xe ../travis/build-appimage.sh
         # test AppImage
         - export PEXTHOME=$(mktemp -d)
-        - mkdir "$PEXTHOME"
         - chmod +x Pext*.AppImage
         # temporary solution for
         # $ ./Pext*.AppImage --version
