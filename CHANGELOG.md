@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Pext now depends on dulwich
 - Pext no longer depends on pygit2
 
+### Translation updates
+- Added Norwegian Bokmål
+- Update Chinese (Traditional) translation
+
 ### Fixed
 - Ubuntu/Debian compatibility for git operations over HTTPS
 - Install module from URL screen not working (regression from adding theming support for 0.9)
