@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Ubuntu/Debian compatibility for git operations over HTTPS
+- Install module from URL screen not working (regression from adding theming support for 0.9)
 
 ## [0.10] - 2017-11-11
 ### Packaging changes

@@ -387,7 +387,7 @@ ApplicationWindow {
                     onTriggered: {
                         var installModuleFromURLDialog = Qt.createComponent("InstallModuleFromURLDialog.qml");
                         installModuleFromURLDialog.createObject(applicationWindow,
-                            {"installRequest": menuInstallModule.installRequest});
+                            {"installRequest": menuInstallModule.installModuleRequest});
                     }
                 }
             }
