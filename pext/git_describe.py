@@ -34,57 +34,56 @@ def describe(directory):
     Examples: "abcdefg", "v0.1" or "v0.1-5-abcdefg".
     """
     # Get the repository
-    repo = Repo(directory)
+    with Repo(directory) as repo:
+        # Get a list of all tags
+        refs = repo.get_refs()
+        tags = {}
+        for key, value in refs.items():
+            key = key.decode()
+            obj = repo.get_object(value)
+            if u'tags' not in key:
+                continue
 
-    # Get a list of all tags
-    refs = repo.get_refs()
-    tags = {}
-    for key, value in refs.items():
-        key = key.decode()
-        obj = repo.get_object(value)
-        if u'tags' not in key:
-            continue
+            _, tag = key.rsplit(u'/', 1)
 
-        _, tag = key.rsplit(u'/', 1)
+            try:
+                commit = obj.object
+            except AttributeError:
+                continue
+            else:
+                commit = repo.get_object(commit[1])
+            tags[tag] = [
+                datetime.datetime(*time.gmtime(commit.commit_time)[:6]),
+                commit.id.decode('utf-8'),
+            ]
 
-        try:
-            commit = obj.object
-        except AttributeError:
-            continue
-        else:
-            commit = repo.get_object(commit[1])
-        tags[tag] = [
-            datetime.datetime(*time.gmtime(commit.commit_time)[:6]),
-            commit.id.decode('utf-8'),
-        ]
+        sorted_tags = sorted(tags.items(), key=lambda tag: tag[1][0], reverse=True)
 
-    sorted_tags = sorted(tags.items(), key=lambda tag: tag[1][0], reverse=True)
+        # If there are no tags, return the current commit
+        if len(sorted_tags) == 0:
+            return repo[repo.head()].id.decode('utf-8')[:7]
 
-    # If there are no tags, return the current commit
-    if len(sorted_tags) == 0:
-        return repo[repo.head()].id.decode('utf-8')[:7]
+        # We're now 0 commits from the top
+        commit_count = 0
 
-    # We're now 0 commits from the top
-    commit_count = 0
+        # Get the latest commit
+        latest_commit = repo[repo.head()]
 
-    # Get the latest commit
-    latest_commit = repo[repo.head()]
+        # Walk through all commits
+        walker = repo.get_walker()
+        for entry in walker:
+            # Check if tag
+            commit_id = entry.commit.id.decode('utf-8')
+            for tag in sorted_tags:
+                tag_name = tag[0]
+                tag_commit = tag[1][1]
+                if commit_id == tag_commit:
+                    if commit_count == 0:
+                        return tag_name
+                    else:
+                        return "{}-{}-{}".format(tag_name, commit_count, latest_commit.id.decode('utf-8')[:7])
 
-    # Walk through all commits
-    walker = repo.get_walker()
-    for entry in walker:
-        # Check if tag
-        commit_id = entry.commit.id.decode('utf-8')
-        for tag in sorted_tags:
-            tag_name = tag[0]
-            tag_commit = tag[1][1]
-            if commit_id == tag_commit:
-                if commit_count == 0:
-                    return tag_name
-                else:
-                    return "{}-{}-{}".format(tag_name, commit_count, latest_commit.id.decode('utf-8')[:7])
+            commit_count += 1
 
-        commit_count += 1
-
-    # We couldn't find the latest tag in the history, so return the commit (fallback)
-    return latest_commit.id.decode('utf-8')[:7]
+        # We couldn't find the latest tag in the history, so return the commit (fallback)
+        return latest_commit.id.decode('utf-8')[:7]

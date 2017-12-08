@@ -1195,23 +1195,23 @@ class UpdateManager():
     @staticmethod
     def get_remote_url(directory: str) -> str:
         """Get the url of the given remote for the specified git-managed directory."""
-        repo = UpdateManager._path_to_repo(directory)
-        config = repo.get_config()
-        return config.get(("remote".encode(), "origin".encode()), "url".encode()).decode()
+        with UpdateManager._path_to_repo(directory) as repo:
+            config = repo.get_config()
+            return config.get(("remote".encode(), "origin".encode()), "url".encode()).decode()
 
     @staticmethod
     def update(directory: str) -> bool:
         """If an update is available, attempt to update the git-managed directory."""
         # Get current commit
-        repo = UpdateManager._path_to_repo(directory)
-        old_commit = repo[repo.head()]
+        with UpdateManager._path_to_repo(directory) as repo:
+            old_commit = repo[repo.head()]
 
-        # Update
-        remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
-        porcelain.pull(repo, remote_url)
+            # Update
+            remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
+            porcelain.pull(repo, remote_url)
 
-        # See if anything was updated
-        return old_commit != repo[repo.head()]
+            # See if anything was updated
+            return old_commit != repo[repo.head()]
 
     @staticmethod
     def get_version(directory: str) -> Optional[str]:
@@ -1222,9 +1222,9 @@ class UpdateManager():
     @staticmethod
     def get_last_updated(directory: str) -> Optional[datetime]:
         """Return the time of the latest update of the git-managed directory."""
-        repo = UpdateManager._path_to_repo(directory)
-        commit = repo[repo.head()]
-        return datetime.fromtimestamp(commit.commit_time)
+        with UpdateManager._path_to_repo(directory) as repo:
+            commit = repo[repo.head()]
+            return datetime.fromtimestamp(commit.commit_time)
 
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
