@@ -422,7 +422,8 @@ ApplicationWindow {
                     } else {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
-                            {"themes": Object.keys(themes).sort(),
+                            {"currentTheme": currentTheme,
+                             "themes": Object.keys(themes).sort(),
                              "loadRequest": loadThemeRequest,
                              "themesPath": themesPath});
                     }

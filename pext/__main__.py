@@ -1776,6 +1776,8 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
 
+        self.context.setContextProperty("currentTheme", settings['theme'])
+
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
 
@@ -2127,6 +2129,7 @@ class Window(QMainWindow):
 
     def _menu_switch_theme(self, theme_name: str) -> None:
         self.settings['theme'] = theme_name
+        self.context.setContextProperty("currentTheme", self.settings['theme'])
 
         self._menu_restart_pext()
 
