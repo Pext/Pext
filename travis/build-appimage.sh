@@ -28,14 +28,13 @@ pushd "$BUILD_DIR"/
 
 # install Miniconda, a self contained Python distribution, into AppDir
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/miniconda -f
+bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 
 # activate Miniconda environment
-. AppDir/miniconda/bin/activate
+. AppDir/usr/bin/activate
 
 # install dependencies
-pygit2_version=$(dpkg -l | grep libgit2-dev | awk '{print $3}' | cut -d- -f1)
-pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate pygit2=="$pygit2_version"
+pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
 
 # install Pext
 pushd "$REPO_ROOT"/
@@ -49,7 +48,6 @@ sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 # copy in libraries
 wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
 (. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
-find AppDir/usr/lib/x86_64-linux-gnu/ -iname '*libssl*.so*'  -delete
 mv AppDir/usr/lib/x86_64-linux-gnu/*.so* AppDir/usr/lib/
 #rm -rf AppDir/usr/lib/x86_64-linux-gnu/
 
@@ -66,9 +64,6 @@ find AppDir/usr \
     -or -iname '*.a' \
     -delete
 
-# TODO: for debugging only
-cp $(which curl) AppDir/usr/bin
-
 # precompile bytecode to speed up startup
 # do this after deleting lib2to3, otherwise it won't compile
 pushd AppDir/
@@ -84,7 +79,7 @@ if [ -z \$APPDIR ]; then APPDIR=\$(readlink -f \$(dirname "\$0")); fi
 
 export LD_LIBRARY_PATH="\$APPDIR"/usr/lib
 
-exec "\$APPDIR"/miniconda/bin/python -m pext "\$@"
+exec "\$APPDIR"/usr/bin/python -m pext "\$@"
 EAT
 
 chmod +x AppDir/AppRun
