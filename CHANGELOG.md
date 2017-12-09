@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Packaging changes
+- Pext now depends on dulwich
+- Pext no longer depends on pygit2
+
+### Translation updates
+- Added Norwegian Bokmål
+- Update Chinese (Traditional) translation
+
+### Fixed
+- Ubuntu/Debian compatibility for git operations over HTTPS
+- Install module from URL screen not working (regression from adding theming support for 0.9)
+- Theme selector now correctly displays current theme before switching
+
 ## [0.10] - 2017-11-11
 ### Packaging changes
 - Pext now depends on pygit2, which uses libgit2, instead of git

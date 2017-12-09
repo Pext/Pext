@@ -36,7 +36,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation type="unfinished"></translation>
+        <translation>匈牙利文</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
@@ -88,7 +88,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>此模組似乎不支援 %1。</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
@@ -204,7 +204,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="51"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：Pext 將會重新啟動以套用新的主題。</translation>
     </message>
 </context>
 <context>
@@ -212,7 +212,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="62"/>
         <source>Version: %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>版本：%1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="70"/>
@@ -271,7 +271,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation type="unfinished"></translation>
+        <translation>已有新版本的 Pext。您想要開啟下載頁面嗎？</translation>
     </message>
 </context>
 <context>
@@ -279,7 +279,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext 可以自動檢查更新嗎？您可以在任何時候於設定選單中變更這個設定。</translation>
     </message>
 </context>
 <context>
@@ -408,7 +408,7 @@
     <message>
         <location filename="../qml/main.qml" line="581"/>
         <source>Automatically check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>自動檢查更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="587"/>
@@ -418,7 +418,7 @@
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>檢查更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="662"/>

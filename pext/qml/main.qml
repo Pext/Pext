@@ -387,7 +387,7 @@ ApplicationWindow {
                     onTriggered: {
                         var installModuleFromURLDialog = Qt.createComponent("InstallModuleFromURLDialog.qml");
                         installModuleFromURLDialog.createObject(applicationWindow,
-                            {"installRequest": menuInstallModule.installRequest});
+                            {"installRequest": menuInstallModule.installModuleRequest});
                     }
                 }
             }
@@ -422,7 +422,8 @@ ApplicationWindow {
                     } else {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
-                            {"themes": Object.keys(themes).sort(),
+                            {"currentTheme": currentTheme,
+                             "themes": Object.keys(themes).sort(),
                              "loadRequest": loadThemeRequest,
                              "themesPath": themesPath});
                     }

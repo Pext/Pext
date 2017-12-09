@@ -51,7 +51,8 @@ except ImportError:
 from urllib.request import urlopen
 from queue import Queue, Empty
 
-import pygit2
+from dulwich import porcelain
+from dulwich.repo import Repo
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
@@ -80,6 +81,7 @@ class AppFile():
 
 # Ensure pext_base and pext_helpers can always be loaded by us and the modules
 sys.path.append(os.path.join(AppFile.get_path(), 'helpers'))
+sys.path.append(os.path.join(AppFile.get_path()))
 
 from pext_base import ModuleBase  # noqa: E402
 from pext_helpers import Action, SelectionType  # noqa: E402
@@ -111,9 +113,9 @@ class ConfigRetriever():
         try:
             config_home = os.environ['XDG_CONFIG_HOME']
         except Exception:
-            config_home = os.path.expanduser('~/.config/')
+            config_home = os.path.join(os.path.expanduser('~'), '.config')
 
-        self.config = {'config_path': os.path.join(config_home, 'pext/')}
+        self.config = {'config_path': os.path.join(config_home, 'pext')}
 
     def get_setting(self, variable: str) -> str:
         """Get a specific configuration setting."""
@@ -1044,7 +1046,7 @@ class ModuleManager():
             Logger._log('⇩ {} ({})'.format(module_name, url), self.logger)
 
         try:
-            pygit2.clone_repository(url, os.path.join(self.module_dir, dir_name))
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.module_dir, dir_name))
         except Exception as e:
             if verbose:
                 Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
@@ -1116,28 +1118,15 @@ class ModuleManager():
         dir_name = ModuleManager.add_prefix(module_name)
         module_name = ModuleManager.remove_prefix(module_name)
 
-        # Check if it's not already up-to-date
-        try:
-            has_update = UpdateManager.has_update(os.path.join(self.module_dir, dir_name))
-        except Exception as e:
-            Logger._log_error(
-                '⇩ {}: {}'.format(module_name, e),
-                self.logger)
-
-            traceback.print_exc()
-
-            return False
-
-        if not has_update:
-            if verbose:
-                Logger._log('⏩{}'.format(module_name), self.logger)
-            return False
-
         if verbose:
             Logger._log('⇩ {}'.format(module_name), self.logger)
 
         try:
-            UpdateManager.update(os.path.join(self.module_dir, dir_name))
+            if not UpdateManager.update(os.path.join(self.module_dir, dir_name)):
+                if verbose:
+                    Logger._log('⏩{}'.format(module_name), self.logger)
+                return False
+
         except Exception as e:
             if verbose:
                 Logger._log_error(
@@ -1182,98 +1171,60 @@ class UpdateManager():
     def __init__(self) -> None:
         """Initialize the UpdateManager and store the version info of Pext."""
         try:
-            self.version = UpdateManager.get_version(AppFile.get_path())
+            self.version = UpdateManager.get_version(os.path.dirname(AppFile.get_path()))
         except Exception:
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
                 self.version = version_file.read().strip()
 
     @staticmethod
-    def _path_to_repo(directory: str) -> pygit2.Repository:
-        repository_path = pygit2.discover_repository(directory, False, UpdateManager.get_git_ceiling_dirs(directory))
-        return pygit2.Repository(repository_path)
+    def _path_to_repo(directory: str) -> Repo:
+        return Repo(directory)
 
     def get_core_version(self) -> str:
         """Return the version info of Pext itself."""
         return self.version
 
     @staticmethod
-    def get_git_ceiling_dirs(directory: Optional[str]) -> str:
-        """Return the ceiling directories that pygit2 should stay inside of."""
-        pext_root = os.path.dirname(os.path.dirname(AppFile.get_path()))
-        if directory:
-            return "{}:{}".format(pext_root, directory)
-        else:
-            return pext_root
+    def fix_git_url_for_dulwich(url: str) -> str:
+        # Dulwich before 0.18.4 sends an user agent GitHub doesn't respond to correctly
+        if url.startswith("https://") and not url.endswith(".git"):
+            url += ".git"
+
+        return url
 
     @staticmethod
-    def get_remote_url(directory, remote="origin") -> str:
+    def get_remote_url(directory: str) -> str:
         """Get the url of the given remote for the specified git-managed directory."""
-        repo = UpdateManager._path_to_repo(directory)
-        return repo.remotes['origin'].url
+        with UpdateManager._path_to_repo(directory) as repo:
+            config = repo.get_config()
+            return config.get(("remote".encode(), "origin".encode()), "url".encode()).decode()
 
     @staticmethod
-    def has_update(directory, branch="master") -> bool:
-        """Check if an update is available for the git-managed directory."""
-        repo = UpdateManager._path_to_repo(directory)
-        for remote in repo.remotes:
-            if remote.name == 'origin':
-                remote.fetch()
-                remote_branch_id = repo.lookup_reference('refs/remotes/origin/{}'.format(branch)).target
-                merge_result, _ = repo.merge_analysis(remote_branch_id)
-                if merge_result & pygit2.GIT_MERGE_ANALYSIS_UP_TO_DATE:
-                    return False
-                else:
-                    return True
-
-        raise Exception("Could not find origin remote")
-
-    @staticmethod
-    def update(directory, branch="master") -> None:
+    def update(directory: str) -> bool:
         """If an update is available, attempt to update the git-managed directory."""
-        if UpdateManager.has_update(directory):
-            repo = UpdateManager._path_to_repo(directory)
-            for remote in repo.remotes:
-                if remote.name == 'origin':
-                    remote_branch_id = repo.lookup_reference('refs/remotes/origin/{}'.format(branch)).target
-                    merge_result, _ = repo.merge_analysis(remote_branch_id)
-                    if merge_result & pygit2.GIT_MERGE_ANALYSIS_FASTFORWARD:
-                        repo.checkout_tree(repo.get(remote_branch_id))
-                        branch_ref = repo.lookup_reference('refs/heads/{}'.format(branch))
-                        branch_ref.set_target(remote_branch_id)
-                        repo.head.set_target(remote_branch_id)
-                    elif merge_result & pygit2.GIT_MERGE_ANALYSIS_NORMAL:
-                        repo.merge(remote_branch_id)
-                        if repo.index.conflicts:
-                            raise Exception("Conflicts: {}".format(repo.index.conflicts))
+        # Get current commit
+        with UpdateManager._path_to_repo(directory) as repo:
+            old_commit = repo[repo.head()]
 
-                        user = repo.default_signature
-                        tree = repo.index.write_tree()
-                        repo.create_commit('HEAD',
-                                           user,
-                                           user,
-                                           'Merge!',
-                                           tree,
-                                           [repo.head.target, remote_branch_id])
-                        repo.state_cleanup()
-                    else:
-                        raise Exception("Merge analysis result unknown: {}".format(merge_result))
+            # Update
+            remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
+            porcelain.pull(repo, remote_url)
 
-                    return
-
-            raise Exception("Could not find origin remote")
+            # See if anything was updated
+            return old_commit != repo[repo.head()]
 
     @staticmethod
-    def get_version(directory) -> Optional[str]:
+    def get_version(directory: str) -> Optional[str]:
         """Get the version of the git-managed directory."""
-        repo = UpdateManager._path_to_repo(directory)
-        return repo.describe(show_commit_oid_as_fallback=True, dirty_suffix='-dirty')
+        from git_describe import describe
+        return describe(directory)
 
     @staticmethod
-    def get_last_updated(directory) -> Optional[datetime]:
+    def get_last_updated(directory: str) -> Optional[datetime]:
         """Return the time of the latest update of the git-managed directory."""
-        repo = UpdateManager._path_to_repo(directory)
-        commit = repo.revparse_single('HEAD')
-        return datetime.fromtimestamp(commit.commit_time)
+        with UpdateManager._path_to_repo(directory) as repo:
+            commit = repo[repo.head()]
+            return datetime.fromtimestamp(commit.commit_time)
 
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
@@ -1825,6 +1776,8 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
 
+        self.context.setContextProperty("currentTheme", settings['theme'])
+
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
 
@@ -2176,6 +2129,7 @@ class Window(QMainWindow):
 
     def _menu_switch_theme(self, theme_name: str) -> None:
         self.settings['theme'] = theme_name
+        self.context.setContextProperty("currentTheme", self.settings['theme'])
 
         self._menu_restart_pext()
 
@@ -2546,7 +2500,7 @@ class ThemeManager():
             Logger._log('⇩ {} ({})'.format(theme_name, url), self.logger)
 
         try:
-            pygit2.clone_repository(url, os.path.join(self.theme_dir, dir_name))
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.theme_dir, dir_name))
         except Exception as e:
             if verbose:
                 Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
@@ -2598,20 +2552,7 @@ class ThemeManager():
         dir_name = ThemeManager.add_prefix(theme_name)
         theme_name = ThemeManager.remove_prefix(theme_name)
 
-        # Check if it's not already up-to-date or not the system theme
-        try:
-            has_update = UpdateManager.has_update(os.path.join(self.theme_dir, dir_name))
-        except Exception as e:
-            Logger._log_error(
-                '⇩ {}: {}'.format(theme_name, e),
-                self.logger)
-
-            traceback.print_exc()
-
-            return False
-
-        if (not has_update
-                or theme_name == ThemeManager.get_system_theme_name()):
+        if theme_name == ThemeManager.get_system_theme_name():
             if verbose:
                 Logger._log('⏩{}'.format(theme_name), self.logger)
             return False
@@ -2620,7 +2561,11 @@ class ThemeManager():
             Logger._log('⇩ {}'.format(theme_name), self.logger)
 
         try:
-            UpdateManager.update(os.path.join(self.theme_dir, dir_name))
+            if not UpdateManager.update(os.path.join(self.theme_dir, dir_name)):
+                if verbose:
+                    Logger._log('⏩{}'.format(theme_name), self.logger)
+                return False
+
         except Exception as e:
             if verbose:
                 Logger._log_error(
@@ -3022,7 +2967,7 @@ def main() -> None:
                       'themes',
                       os.path.join('themes', ThemeManager.add_prefix(ThemeManager.get_system_theme_name())),
                       'profiles',
-                      'profiles/default']:
+                      os.path.join('profiles', 'default')]:
         try:
             os.makedirs(os.path.join(config_retriever.get_setting('config_path'), directory))
         except OSError:

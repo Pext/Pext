@@ -26,6 +26,7 @@ Dialog {
     title: "Pext"
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    property var currentTheme
     property var themes
     property var loadRequest
 
@@ -53,6 +54,7 @@ Dialog {
     }
 
     Component.onCompleted: {
+        combobox.currentIndex = themes.indexOf(currentTheme);
         visible = true;
         combobox.focus = true;
     }
