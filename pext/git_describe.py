@@ -25,6 +25,7 @@ import time
 
 from dulwich.repo import Repo
 
+
 def describe(directory):
     """Describe the repository version in a similar way to git describe.
 
