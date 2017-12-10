@@ -17,8 +17,7 @@
 # License, Version 2.0.
 #
 
-"""Describe the repository version in a similar way to git describe.
-"""
+"""Describe the repository version in a similar way to git describe."""
 
 import datetime
 import time
