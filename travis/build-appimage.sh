@@ -47,8 +47,12 @@ sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 
 # copy in libraries
 wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
+# backup libssl -- system one won't work
+mkdir sslbak
+cp AppDir/usr/lib/libssl* sslbak/
 (. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
 mv AppDir/usr/lib/x86_64-linux-gnu/*.so* AppDir/usr/lib/
+cp sslbak/* AppDir/usr/lib/
 #rm -rf AppDir/usr/lib/x86_64-linux-gnu/
 
 # remove unnecessary libraries and other useless data
