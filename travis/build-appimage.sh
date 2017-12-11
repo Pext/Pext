@@ -54,7 +54,7 @@ sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 # copy in libraries
 wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
 # back up conda provided libraries -- system one won't work
-mkdir sslbak
+mkdir lib-bak
 cp AppDir/usr/lib/*.so* lib-bak/
 (. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
 mv AppDir/usr/lib/x86_64-linux-gnu/*.so* AppDir/usr/lib/
