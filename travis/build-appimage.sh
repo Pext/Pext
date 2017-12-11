@@ -39,8 +39,8 @@ pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
 # try to fix SSL issues as specified here:
 # https://github.com/ContinuumIO/anaconda-issues/issues/494#issuecomment-155097614
 conda list
-conda update openssl cryptography
-conda update certifi
+conda update -y openssl cryptography
+conda update -y certifi
 
 # install Pext
 pushd "$REPO_ROOT"/
