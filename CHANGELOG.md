@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Pext no longer depends on pygit2
 
 ### Translation updates
-- Added Norwegian Bokmål
+- Added Norwegian Bokmål (thanks, Allan Nordhøy!)
 - Update Chinese (Traditional) translation
 
 ### Fixed

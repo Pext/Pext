@@ -1186,7 +1186,10 @@ class UpdateManager():
 
     @staticmethod
     def fix_git_url_for_dulwich(url: str) -> str:
-        # Dulwich before 0.18.4 sends an user agent GitHub doesn't respond to correctly
+        """Append .git to the URL to work around a Dulwich + GitHub issue.
+
+        Dulwich before 0.18.4 sends an user agent GitHub doesn't respond to correctly.
+        """
         if url.startswith("https://") and not url.endswith(".git"):
             url += ".git"
 
