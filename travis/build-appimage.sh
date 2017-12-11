@@ -37,10 +37,10 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
 
 # try to fix SSL issues as specified here:
-# https://stackoverflow.com/a/34124833
-conda remove certifi
-conda install certifi
-conda update --all
+# https://github.com/ContinuumIO/anaconda-issues/issues/494#issuecomment-155097614
+conda list
+conda update openssl cryptography
+conda update certifi
 
 # install Pext
 pushd "$REPO_ROOT"/
