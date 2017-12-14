@@ -88,7 +88,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Úgy tűnik, ez a modul nem támogatott a(z) %1 által.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
@@ -204,7 +204,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="51"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation type="unfinished"></translation>
+        <translation>Megjegyzés: A Pext újraindul, hogy alkalmazza az új témát.</translation>
     </message>
 </context>
 <context>
@@ -212,7 +212,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="62"/>
         <source>Version: %1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>Verzió: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="70"/>
@@ -271,7 +271,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation type="unfinished"></translation>
+        <translation>A Pext új verziója érhető el. Szeretné megnyitni a letöltési oldalt?</translation>
     </message>
 </context>
 <context>
@@ -279,7 +279,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>Engedélyezi, hogy a Pext automatikusan keressen frissítéseket? Ezt bármikor megváltoztathatja a beállítások menüben.</translation>
     </message>
 </context>
 <context>
@@ -408,7 +408,7 @@
     <message>
         <location filename="../qml/main.qml" line="581"/>
         <source>Automatically check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Frissítések automatikus keresése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="587"/>
@@ -418,7 +418,7 @@
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Check for updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Frissítések keresése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="662"/>
