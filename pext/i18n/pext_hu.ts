@@ -67,7 +67,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
         <source>Where do you want to get modules from?</source>
-        <translation>Honnan szeretne modulokat szerezni?</translation>
+        <translation>Honnan szeretne modulokat beszerezni?</translation>
     </message>
 </context>
 <context>
@@ -83,12 +83,12 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
         <source>Choose the module to install:</source>
-        <translation>Válassza ki a modult a telepítéshez:</translation>
+        <translation>Válassza ki a telepítendő modult:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="44"/>
         <source>Choose the preferred download source:</source>
-        <translation>Válassza ki a kívánt letöltési forrást:</translation>
+        <translation>Válassza ki a letöltési forrást:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
@@ -155,7 +155,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
         <source>Choose the theme to install:</source>
-        <translation>Válassza ki a telepíteni kívánt témát:</translation>
+        <translation>Válassza ki a telepítendő témát:</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="44"/>
@@ -188,7 +188,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
-        <translation>Adja meg a telepíteni kívánt téma git URL-jét:</translation>
+        <translation>Adja meg a telepítendő téma git URL-jét:</translation>
     </message>
 </context>
 <context>
@@ -196,7 +196,7 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
-        <translation>Válassza ki a betölteni kívánt modult:</translation>
+        <translation>Válassza ki a betöltendő modult:</translation>
     </message>
 </context>
 <context>
@@ -265,7 +265,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Nincs telepítve modul, kérjük telepítsen egyet először!</translation>
+        <translation>Nincs telepítve modul, kérjük először telepítsen egyet!</translation>
     </message>
 </context>
 <context>
@@ -273,7 +273,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Nincs telepítve téma, kérjük telepítsen egyet először!</translation>
+        <translation>Nincs telepítve téma, kérjük először telepítsen egyet!</translation>
     </message>
 </context>
 <context>
@@ -448,10 +448,9 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="697"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>Nyomja meg a &lt;kbd&gt;%1&lt;/kbd&gt; billentyűt egy új lap létrehozásához! Amikor egy lapon végzett a munkával, nyomja meg a &lt;kbd&gt;%2&lt;/kbd&gt; billentyűt a lap bezárásához! Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Nyomja meg a &lt;kbd&gt;%1&lt;/kbd&gt; billentyűt egy új lap létrehozásához! Amikor egy lapon végzett a munkával, nyomja meg a &lt;kbd&gt;%2&lt;/kbd&gt; billentyűt a lap bezárásához! Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
+        <numerusform>Nyomja meg a &lt;kbd&gt;%1&lt;/kbd&gt; billentyűt egy új lap létrehozásához! Amikor egy lapon végzett a munkával, nyomja meg a &lt;kbd&gt;%2&lt;/kbd&gt; billentyűt a lap bezárásához! Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
