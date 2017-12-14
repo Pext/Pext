@@ -79,7 +79,7 @@ Dialog {
                         "<b>" + qsTr("Spanish") + "</b><br>" +
                         "Emily Lau &lt;<a href='mailto:fuchslein@hackerchick.me'>fuchslein@hackerchick.me</a>&gt;<br><br>" +
                         "<b>" + qsTr("Hungarian") + "</b><br>" +
-                        "Szöllősi Attila &lt;<a href='mailto:ata@openmailbox.org'>ata@openmailbox.org</a>&gt;<br><br>" +
+                        "Szöllősi Attila &lt;<a href='mailto:ata2001@airmail.cc'>ata2001@airmail.cc</a>&gt;<br><br>" +
                         "<b>" + qsTr("Norwegian Bokmål") + "</b><br>" +
                         "Allan Nordhøy &lt;<a href='mailto:epost@anotheragency.no'>epost@anotheragency.no</a>&gt;<br><br>" +
                         "<b>" + qsTr("Dutch") + "</b><br>" +
