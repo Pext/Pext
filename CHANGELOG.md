@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Ubuntu/Debian compatibility for git operations over HTTPS
 - Install module from URL screen not working (regression from adding theming support for 0.9)
 - Theme selector now correctly displays current theme before switching
+- Pext no longer creates an empty theme file for the system theme and doesn't show it in the list of themes
 
 ## [0.10] - 2017-11-11
 ### Packaging changes

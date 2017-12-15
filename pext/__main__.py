@@ -1809,7 +1809,7 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
 
-        self.context.setContextProperty("currentTheme", Settings.get('theme', ThemeManager.get_system_theme_name()))
+        self.context.setContextProperty("currentTheme", Settings.get('theme'))
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
@@ -2157,10 +2157,7 @@ class Window(QMainWindow):
         os.chdir(os.getcwd())
         os.execv(sys.executable, args)
 
-    def _menu_switch_theme(self, theme_name: str) -> None:
-        if theme_name == ThemeManager.get_system_theme_name():
-            theme_name = None
-
+    def _menu_switch_theme(self, theme_name: Optional[str]) -> None:
         Settings.set('theme', theme_name)
 
         self._menu_restart_pext()
@@ -2429,18 +2426,6 @@ class ThemeManager():
         self.theme_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
         self.logger = None  # type: Optional[Logger]
 
-        # Create an empty system theme
-        system_theme_path = os.path.join(config_retriever.get_setting('config_path'),
-                                         'themes',
-                                         ThemeManager.add_prefix(ThemeManager.get_system_theme_name()))
-
-        open(os.path.join(system_theme_path, 'theme.conf'), 'w').close()
-        with open(os.path.join(system_theme_path, 'metadata.json'), 'w') as system_theme_metadata:
-            system_theme_metadata.write(json.dumps(
-                {'name': ThemeManager.get_system_theme_name(),
-                 'developer': 'Sylvia van Os',
-                 'description': "Use the system's default Qt5 theme"}))
-
     @staticmethod
     def add_prefix(theme_name: str) -> str:
         """Ensure the string starts with pext_theme_."""
@@ -2456,11 +2441,6 @@ class ThemeManager():
             return theme_name[len('pext_theme_'):]
 
         return theme_name
-
-    @staticmethod
-    def get_system_theme_name() -> str:
-        """Return the name of the system theme, which is used to refer to no theme (OS theming)."""
-        return "system"
 
     def bind_logger(self, logger: Logger) -> None:
         """Connect a logger to the module manager.
@@ -2556,11 +2536,6 @@ class ThemeManager():
         dir_name = ThemeManager.add_prefix(theme_name)
         theme_name = ThemeManager.remove_prefix(theme_name)
 
-        if theme_name == ThemeManager.get_system_theme_name():
-            if verbose:
-                Logger._log('⏩{}'.format(theme_name), self.logger)
-            return False
-
         if verbose:
             Logger._log('♻ {}'.format(theme_name), self.logger)
 
@@ -2583,11 +2558,6 @@ class ThemeManager():
         """Update a theme."""
         dir_name = ThemeManager.add_prefix(theme_name)
         theme_name = ThemeManager.remove_prefix(theme_name)
-
-        if theme_name == ThemeManager.get_system_theme_name():
-            if verbose:
-                Logger._log('⏩{}'.format(theme_name), self.logger)
-            return False
 
         if verbose:
             Logger._log('⇩ {}'.format(theme_name), self.logger)
@@ -2618,9 +2588,6 @@ class ThemeManager():
         success = True
 
         for theme in self.list_themes().keys():
-            if theme == ThemeManager.get_system_theme_name():
-                continue
-
             if not self.update_theme(theme, verbose=verbose):
                 success = False
 
@@ -2984,7 +2951,6 @@ def main() -> None:
     for directory in ['modules',
                       'module_dependencies',
                       'themes',
-                      os.path.join('themes', ThemeManager.add_prefix(ThemeManager.get_system_theme_name())),
                       'profiles',
                       os.path.join('profiles', 'default')]:
         try:
@@ -2992,6 +2958,14 @@ def main() -> None:
         except OSError:
             # Probably already exists, that's okay
             pass
+
+    # Delete old system theme hack if exists
+    # TODO: Remove later
+    try:
+        rmtree(os.path.join(config_retriever.get_setting('config_path'), 'themes', "pext_theme_system"))
+    except FileNotFoundError:
+        # Probably already deleted
+        pass
 
     _load_settings(sys.argv[1:], config_retriever)
 
@@ -3033,12 +3007,10 @@ def main() -> None:
         app.setStyle(QStyleFactory().create(Settings.get('style')))
 
     theme_name = Settings.get('theme')
-    if theme_name is None:
-        theme_name = ThemeManager.get_system_theme_name()
-
-    theme_manager = ThemeManager(config_retriever)
-    theme = theme_manager.load_theme(theme_name)
-    theme_manager.apply_theme_to_app(theme, app)
+    if theme_name is not None:
+        theme_manager = ThemeManager(config_retriever)
+        theme = theme_manager.load_theme(theme_name)
+        theme_manager.apply_theme_to_app(theme, app)
 
     # Check if clipboard is supported
     if Settings.get('clipboard') == 'selection' and not app.clipboard().supportsSelection():
