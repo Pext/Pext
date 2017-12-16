@@ -39,12 +39,17 @@
         <translation>Ungarsk</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="83"/>
+        <source>Norwegian Bokmål</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Chinese (Traditional)</source>
         <translation>Tradisjonell kinesisk</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="83"/>
+        <location filename="../qml/AboutDialog.qml" line="85"/>
         <source>Dutch</source>
         <translation>Hollandsk</translation>
     </message>
@@ -197,12 +202,17 @@
 <context>
     <name>LoadThemeDialog</name>
     <message>
-        <location filename="../qml/LoadThemeDialog.qml" line="41"/>
+        <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
         <translation>Velg drakt å ikle:</translation>
     </message>
     <message>
-        <location filename="../qml/LoadThemeDialog.qml" line="51"/>
+        <location filename="../qml/LoadThemeDialog.qml" line="47"/>
+        <source>No theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
         <translation>Merk: Pext vil starte på nytt for å iføre ny drakt.</translation>
     </message>
@@ -326,7 +336,7 @@
     </message>
     <message>
         <location filename="../qml/main.qml" line="385"/>
-        <location filename="../qml/main.qml" line="483"/>
+        <location filename="../qml/main.qml" line="484"/>
         <source>From URL</source>
         <translation>Fra nettadresse</translation>
     </message>
@@ -341,106 +351,108 @@
         <translation>Bytt drakt</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="435"/>
+        <location filename="../qml/main.qml" line="436"/>
         <source>Manage themes</source>
         <translation>Behandle drakter</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="457"/>
+        <location filename="../qml/main.qml" line="458"/>
         <source>Install theme</source>
         <translation>Installer drakt</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="462"/>
+        <location filename="../qml/main.qml" line="463"/>
         <source>From online theme list</source>
         <translation>Fra nettbasert draktliste</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="495"/>
+        <location filename="../qml/main.qml" line="496"/>
         <source>Update all themes</source>
         <translation>Oppdater alle drakter</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="506"/>
+        <location filename="../qml/main.qml" line="507"/>
         <source>&amp;Settings</source>
         <translation>&amp;Innstillinger</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="515"/>
+        <location filename="../qml/main.qml" line="516"/>
         <source>Sort by module choice</source>
         <translation>Sorter etter modulvalg</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="522"/>
+        <location filename="../qml/main.qml" line="523"/>
         <source>Sort ascending</source>
         <translation>Sorter stigende</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="529"/>
+        <location filename="../qml/main.qml" line="530"/>
         <source>Sort descending</source>
         <translation>Sorter synkende</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="543"/>
+        <location filename="../qml/main.qml" line="544"/>
         <source>Minimize normally</source>
         <translation>Minimer normalt</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="550"/>
+        <location filename="../qml/main.qml" line="551"/>
         <source>Minimize to tray</source>
         <translation>Minimer til systemkurv</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="557"/>
+        <location filename="../qml/main.qml" line="558"/>
         <source>Manual only: Minimize normally</source>
         <translation>Kun manuelt: Minimer normalt</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="564"/>
+        <location filename="../qml/main.qml" line="565"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Kun manuelt: Minimer til systemkurv</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="573"/>
+        <location filename="../qml/main.qml" line="574"/>
         <source>Show tray icon</source>
         <translation>Vis systemkurvsikon</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="581"/>
+        <location filename="../qml/main.qml" line="582"/>
         <source>Automatically check for updates</source>
         <translation>Se etter oppgraderinger automatisk</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="587"/>
+        <location filename="../qml/main.qml" line="588"/>
         <source>&amp;Help</source>
         <translation>&amp;Hjelp</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="600"/>
+        <location filename="../qml/main.qml" line="601"/>
         <source>Check for updates</source>
         <translation>Se etter oppgraderinger</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="662"/>
+        <location filename="../qml/main.qml" line="663"/>
         <source>Design philosophy</source>
         <translation>Formgivningsfilosofi</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="663"/>
+        <location filename="../qml/main.qml" line="664"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>Pext er designet for å ikke være til bryderi. Så snart en modul anser at du er ferdig med å bruke den, vil Pext skjule seg i systemkurven. Hvis du ønsker å bruke det igjen, kan du starte det igjen, eller åpne det fra systemkurven.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="695"/>
+        <location filename="../qml/main.qml" line="696"/>
         <source>Getting started</source>
         <translation>Kom igang</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="696"/>
+        <location filename="../qml/main.qml" line="697"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation type="unfinished"><numerusform>For å komme i gang, trykk &lt;kbd&gt;%1&lt;/kbd&gt; for å åpne en ny fane. Når du er ferdig med en fane, kan du alltids lukke den ved å trykke &lt;kbd&gt;%2&lt;/kbd&gt;. Du har nå %n modul installert. Du kan behandle moduler i modul-menyen.</numerusform>
-        <numerusform>For å komme i gang, trykk &lt;kbd&gt;%1&lt;/kbd&gt; for å åpne en ny fane. Når du er ferdig med en fane, kan du alltids lukke den ved å trykke &lt;kbd&gt;%2&lt;/kbd&gt;. Du har nå %n moduler installert. Du kan behandle moduler i modul-menyen.</numerusform>
-        </translation></message>
+        <translation type="unfinished">
+            <numerusform>For å komme i gang, trykk &lt;kbd&gt;%1&lt;/kbd&gt; for å åpne en ny fane. Når du er ferdig med en fane, kan du alltids lukke den ved å trykke &lt;kbd&gt;%2&lt;/kbd&gt;. Du har nå %n modul installert. Du kan behandle moduler i modul-menyen.</numerusform>
+            <numerusform>For å komme i gang, trykk &lt;kbd&gt;%1&lt;/kbd&gt; for å åpne en ny fane. Når du er ferdig med en fane, kan du alltids lukke den ved å trykke &lt;kbd&gt;%2&lt;/kbd&gt;. Du har nå %n moduler installert. Du kan behandle moduler i modul-menyen.</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
@@ -452,42 +464,42 @@
         <translation>Oppdater alle moduler</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="591"/>
+        <location filename="../qml/main.qml" line="592"/>
         <source>About</source>
         <translation>Om</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="605"/>
+        <location filename="../qml/main.qml" line="606"/>
         <source>Visit homepage</source>
         <translation>Besøk hjemmeside</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="625"/>
+        <location filename="../qml/main.qml" line="626"/>
         <source>Clear</source>
         <translation>Tøm</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="625"/>
+        <location filename="../qml/main.qml" line="626"/>
         <source>Back</source>
         <translation>Tilbake</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="634"/>
+        <location filename="../qml/main.qml" line="635"/>
         <source>Type to search</source>
         <translation>Skriv for å søke</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="729"/>
+        <location filename="../qml/main.qml" line="730"/>
         <source>Processing: %1 (%2)</source>
         <translation>Behandler: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="731"/>
+        <location filename="../qml/main.qml" line="732"/>
         <source>Ready</source>
         <translation>Klar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="731"/>
+        <location filename="../qml/main.qml" line="732"/>
         <source>Waiting</source>
         <translation>Venter</translation>
     </message>
