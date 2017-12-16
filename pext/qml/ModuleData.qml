@@ -104,7 +104,7 @@ Item {
         }
 
         Rectangle {
-            color: palette.base
+            color: palette.window
             visible: contextMenuContainer.visible
 
             Layout.fillHeight: true
@@ -243,7 +243,7 @@ Item {
         }
 
         Rectangle {
-            color: palette.base
+            color: palette.window
             visible: contextInfoPanel.text
 
             Layout.fillHeight: true

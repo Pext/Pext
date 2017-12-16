@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Packaging changes
+- Pext now depends on dulwich
+- Pext no longer depends on pygit2
+
+### Translation updates
+- Added Norwegian Bokmål (thanks, Allan Nordhøy!)
+- Update Chinese (Traditional) translation
+
+### Fixed
+- Ubuntu/Debian compatibility for git operations over HTTPS
+- Install module from URL screen not working (regression from adding theming support for 0.9)
+- Theme selector now correctly displays current theme before switching
+- Pext no longer creates an empty theme file for the system theme and doesn't show it in the list of themes
+
+## [0.10] - 2017-11-11
+### Packaging changes
 - Pext now depends on pygit2, which uses libgit2, instead of git
 
 ### API changes
@@ -54,6 +69,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Git commands are now properly limited to Pext directories
 - Desktop notifications now also show when Pext is minimized normally
 - Modules no longer lock up Pext while making a selection
+- Direct Git URL clone ending in / no longer creates an undeletable module
+- Modules now always properly get localization info
+- Ugly line between entries and entry info in some themes
+- No themes available dialog now correctly shows
+- Modules can't crash Pext by throwing an exception on stopping on Pext exit
 
 ## [0.9] - 2017-08-23
 ### API changes

@@ -26,6 +26,7 @@ Dialog {
     title: "Pext"
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    property var currentTheme
     property var themes
     property var loadRequest
 
@@ -43,7 +44,7 @@ Dialog {
 
         ComboBox {
             id: combobox
-            model: themes
+            model: [qsTr("No theme")].concat(themes)
             Layout.fillWidth: true
         }
 
@@ -53,12 +54,21 @@ Dialog {
     }
 
     Component.onCompleted: {
+        if (currentTheme === null) {
+            combobox.currentIndex = 0;
+        } else {
+            combobox.currentIndex = themes.indexOf(currentTheme) + 1;
+        }
         visible = true;
         combobox.focus = true;
     }
 
     onAccepted: {
-        loadRequest(combobox.currentText)
+        if (combobox.currentIndex == 0) {
+            loadRequest(null);
+        } else {
+            loadRequest(combobox.currentText);
+        }
     }
 }
 
