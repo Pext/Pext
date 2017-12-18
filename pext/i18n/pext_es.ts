@@ -41,7 +41,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="83"/>
         <source>Norwegian Bokmål</source>
-        <translation type="unfinished"></translation>
+        <translation>Noruego Bokmål</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="88"/>
@@ -209,7 +209,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
         <source>No theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Ningun tema</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
