@@ -6,7 +6,7 @@
 # When releasing, do the following:
 ## Cleanup
 1. ```git clean -df``` to delete all untracked files and directory
-2. Temporarily disable pygit2 version generation in setup.py
+2. Temporarily disable dulwich version generation in setup.py
 
 ## Preparation
 1. Update the ``<VERSION>`` in ``pext/VERSION``
