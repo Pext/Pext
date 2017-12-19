@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.11] - 2017-12-19
 ### Packaging changes
 - Pext now depends on dulwich
 - Pext no longer depends on pygit2
@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Translation updates
 - Added Norwegian Bokmål (thanks, Allan Nordhøy!)
 - Update Chinese (Traditional) translation
+- Update Spanish translation
+- Update Hungarian translation
+- Update Dutch translation
 
 ### Fixed
 - Ubuntu/Debian compatibility for git operations over HTTPS
