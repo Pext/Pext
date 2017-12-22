@@ -4,6 +4,10 @@
 ``<DATE>`` is the release date as YYYY-MM-DD (example: 2015-12-22)
 
 # When releasing, do the following:
+## i18n
+1. Merge i18n branch
+2. Compile translations
+
 ## Cleanup
 1. ```git clean -df``` to delete all untracked files and directory
 2. Temporarily disable dulwich version generation in setup.py
@@ -28,6 +32,8 @@
 ## IRC
 1. To OFTC ChanServ: ```set #pext topic Pext - Python-based Extendable Tool - https://pext.hackerchick.me/ - Latest release: <VERSION> (released <DATE>)```
 
+## Server
+1. Set version/stable to ```v<VERSION>```
 
 ## Afterwards
 1. ```git reset --hard```
