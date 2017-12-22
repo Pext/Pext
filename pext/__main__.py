@@ -104,53 +104,6 @@ class SortMode(IntEnum):
     Descending = 2
 
 
-class Settings():
-    """A globally accessible class that stores all Pext's settings."""
-
-    __settings = {
-        '_launch_app': True,  # Keep track if launching is normal
-        'background': False,
-        'clipboard': 'clipboard',
-        'locale': QLocale.system().name(),
-        'modules': [],
-        'minimize_mode': MinimizeMode.Normal,
-        'profile': 'default',
-        'save_settings': True,
-        'sort_mode': SortMode.Module,
-        'style': None,
-        'theme': None,
-        'tray': True,
-        'update_check': None  # None = not asked, True/False = permission
-    }
-
-    @staticmethod
-    def get(name, default=None):
-        """Return the value of a single setting, falling back to default if None."""
-        value = Settings.__settings[name]
-        if value is None:
-            return default
-
-        return value
-
-    @staticmethod
-    def get_all():
-        """Return all settings."""
-        return Settings.__settings
-
-    @staticmethod
-    def set(name, value):
-        """Set a single setting if this setting is known."""
-        if name in Settings.__settings:
-            Settings.__settings[name] = value
-        else:
-            raise NameError('{} is not a key of Settings'.format(name))
-
-    @staticmethod
-    def update(value):
-        """Update the dictionary with new values if any changed."""
-        Settings.__settings.update(value)
-
-
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
@@ -654,6 +607,11 @@ class ProfileManager():
         self.config_retriever = config_retriever
         self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
         self.enum_settings = ['minimize_mode', 'sort_mode']
+
+    @staticmethod
+    def default_profile_name() -> str:
+        """Return the default profile name."""
+        return "default"
 
     def create_profile(self, profile: str) -> None:
         """Create a new empty profile."""
@@ -2604,7 +2562,11 @@ class Tray():
         self.tray = QSystemTrayIcon(app_icon)
 
         self.tray.activated.connect(self.icon_clicked)
-        self.tray.setToolTip('Pext ({})'.format(Settings.get('profile')))
+
+        if Settings.get('profile') == ProfileManager.default_profile_name():
+            self.tray.setToolTip('Pext')
+        else:
+            self.tray.setToolTip('Pext ({})'.format(Settings.get('profile')))
 
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
@@ -2618,6 +2580,53 @@ class Tray():
     def hide(self) -> None:
         """Hide the tray icon."""
         self.tray.hide()
+
+
+class Settings():
+    """A globally accessible class that stores all Pext's settings."""
+
+    __settings = {
+        '_launch_app': True,  # Keep track if launching is normal
+        'background': False,
+        'clipboard': 'clipboard',
+        'locale': QLocale.system().name(),
+        'modules': [],
+        'minimize_mode': MinimizeMode.Normal,
+        'profile': ProfileManager.default_profile_name(),
+        'save_settings': True,
+        'sort_mode': SortMode.Module,
+        'style': None,
+        'theme': None,
+        'tray': True,
+        'update_check': None  # None = not asked, True/False = permission
+    }
+
+    @staticmethod
+    def get(name, default=None):
+        """Return the value of a single setting, falling back to default if None."""
+        value = Settings.__settings[name]
+        if value is None:
+            return default
+
+        return value
+
+    @staticmethod
+    def get_all():
+        """Return all settings."""
+        return Settings.__settings
+
+    @staticmethod
+    def set(name, value):
+        """Set a single setting if this setting is known."""
+        if name in Settings.__settings:
+            Settings.__settings[name] = value
+        else:
+            raise NameError('{} is not a key of Settings'.format(name))
+
+    @staticmethod
+    def update(value):
+        """Update the dictionary with new values if any changed."""
+        Settings.__settings.update(value)
 
 
 def _init_persist(profile: str, background: bool) -> None:
@@ -2952,7 +2961,7 @@ def main() -> None:
                       'module_dependencies',
                       'themes',
                       'profiles',
-                      os.path.join('profiles', 'default')]:
+                      os.path.join('profiles', ProfileManager.default_profile_name())]:
         try:
             os.makedirs(os.path.join(config_retriever.get_setting('config_path'), directory))
         except OSError:
@@ -2981,7 +2990,11 @@ def main() -> None:
     _init_persist(Settings.get('profile'), Settings.get('background'))
 
     # Set up the app
-    app = QApplication(['Pext ({})'.format(Settings.get('profile'))])
+    if Settings.get('profile') == ProfileManager.default_profile_name():
+        appname = 'Pext'
+    else:
+        appname = 'Pext ({})'.format(Settings.get('profile'))
+    app = QApplication([appname])
 
     translator = QTranslator()
     locale_to_use = Settings.get('locale')
