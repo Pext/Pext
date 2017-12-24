@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Changed
 - Profile name is no longer displayed if default
+- Trying to create a profile that already exists throws an error
+- Trying to delete a profile that is currently in use throws an error
 
 ## [0.11.1] - 2017-12-19
 ### Packaging

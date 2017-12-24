@@ -609,17 +609,59 @@ class ProfileManager():
         self.enum_settings = ['minimize_mode', 'sort_mode']
 
     @staticmethod
+    def _get_pid_path(profile: str) -> str:
+        return os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(profile))
+
+    @staticmethod
+    def lock_profile(profile: str) -> None:
+        """Claim the profile as in-use."""
+        pidfile = ProfileManager._get_pid_path(profile)
+        pid = str(os.getpid())
+        open(pidfile, 'w').write(pid)
+
+    @staticmethod
+    def get_lock_instance(profile: str) -> Optional[int]:
+        """Get the pid of the current process having a lock, if any."""
+        pidfile = ProfileManager._get_pid_path(profile)
+        if os.path.isfile(pidfile):
+            pid = int(open(pidfile, 'r').read())
+            if platform.system() == 'Windows':
+                return True
+
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                return None
+
+            return pid
+
+    @staticmethod
+    def unlock_profile(profile: str) -> None:
+        """Remove the status of the profile currently being in use."""
+        pidfile = ProfileManager._get_pid_path(profile)
+        os.unlink(pidfile)
+
+    @staticmethod
     def default_profile_name() -> str:
         """Return the default profile name."""
         return "default"
 
-    def create_profile(self, profile: str) -> None:
-        """Create a new empty profile."""
-        os.mkdir(os.path.join(self.profile_dir, profile))
+    def create_profile(self, profile: str) -> bool:
+        """Create a new empty profile if name not in use already."""
+        try:
+            os.mkdir(os.path.join(self.profile_dir, profile))
+        except OSError:
+            return False
 
-    def remove_profile(self, profile: str) -> None:
-        """Remove a profile and all associated data."""
+        return True
+
+    def remove_profile(self, profile: str) -> bool:
+        """Remove a profile and all associated data if not in use."""
+        if ProfileManager.get_lock_instance(profile):
+            return False
+
         rmtree(os.path.join(self.profile_dir, profile))
+        return True
 
     def list_profiles(self) -> List:
         """List the existing profiles."""
@@ -2636,28 +2678,21 @@ def _init_persist(profile: str, background: bool) -> None:
     to the foreground. If Pext is not already running, saves a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(profile))
-
-    if os.path.isfile(pidfile):
-        try:
-            # Notify the main process if we are not using --background
-            if not background:
-                if platform.system() == 'Windows':
-                    print("Pext is already running and foregrounding the running instance is currently not supported "
-                          "on Windows. Doing nothing...")
-                else:
-                    os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
+    lock = ProfileManager.get_lock_instance(profile)
+    if lock:
+        # Notify the main process if we are not using --background
+        if not background:
+            if platform.system() == 'Windows':
+                print("Pext is already running and foregrounding the running instance is currently not supported "
+                      "on Windows. Doing nothing...")
             else:
-                print("Pext is already running, but --background was given. Doing nothing...")
+                os.kill(lock, signal.SIGUSR1)
+        else:
+            print("Pext is already running, but --background was given. Doing nothing...")
 
-            sys.exit(0)
-        except ProcessLookupError:
-            # Pext closed, but did not clean up its pidfile
-            pass
+        sys.exit(0)
 
-    # We are the only instance, claim our pidfile
-    pid = str(os.getpid())
-    open(pidfile, 'w').write(pid)
+    ProfileManager.lock_profile(profile)
 
 
 def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
@@ -2825,11 +2860,15 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
 
             Settings.set('_launch_app', False)
         elif opt == "--create-profile":
-            ProfileManager(config_retriever).create_profile(arg)
+            if not ProfileManager(config_retriever).create_profile(arg):
+                print('Could not create profile {}, it already exists.'.format(arg))
+                sys.exit(3)
 
             Settings.set('_launch_app', False)
         elif opt == "--remove-profile":
-            ProfileManager(config_retriever).remove_profile(arg)
+            if not ProfileManager(config_retriever).remove_profile(arg):
+                print('Could not delete profile {}, it is in use.'.format(arg))
+                sys.exit(3)
 
             Settings.set('_launch_app', False)
         elif opt == "--list-profiles":
@@ -2857,9 +2896,7 @@ def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
             traceback.print_exc()
 
     profile = Settings.get('profile')
-    pidfile = os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(profile))
-
-    os.unlink(pidfile)
+    ProfileManager.unlock_profile(profile)
 
     if Settings.get('save_settings'):
         ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
