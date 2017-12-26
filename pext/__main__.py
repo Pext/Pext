@@ -2761,7 +2761,7 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     parser.add_argument('--rename-profile', nargs=2, action='append', help='rename the chosen profile.')
     parser.add_argument('--list-profiles', action='store_true', help='list all profiles.')
     parser.add_argument('--tray', action='store_true', dest='tray', help='create a tray icon (this is the default).')
-    parser.add_argument('--no-tray', action='store_true', dest='tray', help='do not create a tray icon.')
+    parser.add_argument('--no-tray', action='store_false', dest='tray', help='do not create a tray icon.')
 
     # Ensure module options get parsed
     for arg in argv:
