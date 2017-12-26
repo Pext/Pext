@@ -14,11 +14,10 @@
 
 ## Preparation
 1. Update the ``<VERSION>`` in ``pext/VERSION``
-2. Update the ``<VERSION>`` and month and year in ``pext.1``
 3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG``
 
 ## GitHub
-1. ```git add pext/VERSION pext.1 CHANGELOG```
+1. ```git add pext/VERSION CHANGELOG```
 2. ```git commit -m "Release Pext v<VERSION>"```
 3. ```git tag -a v<VERSION> -m "Release Pext v<VERSION>"```
 4. ```git push```

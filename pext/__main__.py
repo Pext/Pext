@@ -23,9 +23,9 @@ This is the main Pext file. It will initialize, run and manage the whole of
 Pext.
 """
 
+import argparse
 import atexit
 import configparser
-import getopt
 import json
 import os
 import platform
@@ -650,6 +650,18 @@ class ProfileManager():
         """Create a new empty profile if name not in use already."""
         try:
             os.mkdir(os.path.join(self.profile_dir, profile))
+        except OSError:
+            return False
+
+        return True
+
+    def rename_profile(self, old_name: str, new_name: str) -> bool:
+        """Rename a profile that's currently not in use, if the new name doesn't already exist."""
+        if ProfileManager.get_lock_instance(old_name):
+            return False
+
+        try:
+            os.rename(os.path.join(self.profile_dir, old_name), os.path.join(self.profile_dir, new_name))
         except OSError:
             return False
 
@@ -2671,6 +2683,24 @@ class Settings():
         Settings.__settings.update(value)
 
 
+class ModuleOptionParser(argparse.Action):
+    """Parse module options from the command line."""
+
+    def __call__(self, parser, namespace, value, option_string=None):
+        """Save the module and appropriate module options in the correct order."""
+        if '_modules' not in namespace:
+            setattr(namespace, '_modules', [])
+
+        modules = namespace._modules
+
+        if self.dest == 'module':
+            modules.append({'name': value, 'settings': {}})
+            setattr(namespace, '_modules', modules)
+        else:
+            modules[-1]['settings'][self.dest[len('module-'):]] = value
+            setattr(namespace, '_modules', modules)
+
+
 def _init_persist(profile: str, background: bool) -> None:
     """Open Pext if an instance is already running.
 
@@ -2697,54 +2727,57 @@ def _init_persist(profile: str, background: bool) -> None:
 
 def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     """Load the settings from the command line and set defaults."""
-    # getopt requires all possible options to be listed, but we do not know
-    # more about module-specific options in advance than that they start with
-    # module-. Therefore, we go through the argument list and create a new
-    # list filled with every entry that starts with module- so that getopt
-    # doesn't raise getoptError for these entries.
-    module_opts = []
+    parser = argparse.ArgumentParser(description='The Python-based extendable tool.')
+    parser.add_argument('--version', '-v', action='version',
+                        version='Pext {}'.format(UpdateManager().get_core_version()))
+    parser.add_argument('--locale', help='load the given locale.')
+    parser.add_argument('--list-styles', action='store_true',
+                        help='print a list of loadable Qt system styles and exit.')
+    parser.add_argument('--style', help='use the given Qt system style for the UI.')
+    parser.add_argument('--background', action='store_true', help='do not open the user interface this invocation.')
+    parser.add_argument('--clipboard', '-c', choices=['clipboard', 'selection'],
+                        help='choose the clipboard to copy entries to.')
+    parser.add_argument('--module', '-m', action=ModuleOptionParser,
+                        help='name the module to use. This option may be given multiple times. '
+                        'When this option is given, the profile module list will be overwritten.')
+    parser.add_argument('--install-module', action='append',
+                        help='download and install a module from the given git URL.')
+    parser.add_argument('--uninstall-module', action='append', help='uninstall the given module.')
+    parser.add_argument('--update-module', action='append', help='update the given module.')
+    parser.add_argument('--update-modules', action='store_true', help='update all modules.')
+    parser.add_argument('--list-modules', action='store_true', help='list all installed modules.')
+    parser.add_argument('--theme', help='use the chosen theme.')
+    parser.add_argument('--install-theme', action='append',
+                        help='download and install a theme from the given git URL.')
+    parser.add_argument('--uninstall-theme', action='append', help='uninstall a theme by name.')
+    parser.add_argument('--update-theme', action='append', help='update the chosen theme.')
+    parser.add_argument('--update-themes', action='store_true', help='update all themes.')
+    parser.add_argument('--list-themes', action='store_true', help='list all installed themes.')
+    parser.add_argument('--profile', '-p',
+                        help='use the chosen profile, creating it if it doesn\'t exist yet. '
+                        'Defaults to "default", use "none" to not save the application state between runs.')
+    parser.add_argument('--create-profile', action='append', help='create a new profile with the given name.')
+    parser.add_argument('--remove-profile', action='append', help='remove the chosen profile.')
+    parser.add_argument('--rename-profile', nargs=2, action='append', help='rename the chosen profile.')
+    parser.add_argument('--list-profiles', action='store_true', help='list all profiles.')
+    parser.add_argument('--tray', action='store_true', dest='tray', help='create a tray icon (this is the default).')
+    parser.add_argument('--no-tray', action='store_true', dest='tray', help='do not create a tray icon.')
+
+    # Ensure module options get parsed
     for arg in argv:
         arg = arg.split("=")[0]
         if arg.startswith("--module-"):
-            module_opts.append(arg[2:] + "=")
+            try:
+                parser.add_argument(arg, action=ModuleOptionParser)
+            except argparse.ArgumentError:
+                # Probably already added
+                pass
 
-    try:
-        opts, _ = getopt.getopt(argv, "hc:m:p:", ["help",
-                                                  "version",
-                                                  "exit",
-                                                  "locale=",
-                                                  "list-styles",
-                                                  "style=",
-                                                  "background",
-                                                  "clipboard=",
-                                                  "module=",
-                                                  "install-module=",
-                                                  "uninstall-module=",
-                                                  "update-module=",
-                                                  "update-modules",
-                                                  "list-modules",
-                                                  "theme=",
-                                                  "install-theme=",
-                                                  "uninstall-theme=",
-                                                  "update-theme=",
-                                                  "updates-themes",
-                                                  "list-themes",
-                                                  "profile=",
-                                                  "create-profile=",
-                                                  "remove-profile=",
-                                                  "list-profiles",
-                                                  "tray",
-                                                  "no-tray"] + module_opts)
-
-    except getopt.GetoptError as err:
-        print("{}\n".format(err))
-        usage()
-        sys.exit(1)
+    args = parser.parse_args()
 
     # First, check for profile
-    for opt, arg in opts:
-        if opt == "--profile":
-            Settings.set('profile', arg)
+    if args.profile:
+        Settings.set('profile', args.profile)
 
     # Create directory for profile if not existant
     try:
@@ -2756,130 +2789,133 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     Settings.update(ProfileManager(config_retriever).retrieve_settings(str(Settings.get('profile'))))
 
     # Then, check for the rest
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            usage()
+    if args.locale:
+        Settings.set('locale', args.locale)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--version":
-            print("Pext {}".format(UpdateManager().get_core_version()))
-            print()
-            print("Copyright (C) 2016 - 2017 Sylvia van Os")
-            print("This is free software; see the source for copying conditions. "
-                  "There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.")
-            print()
-            print("Written by Sylvia van Os.")
+    if args.list_styles:
+        for style in QStyleFactory().keys():
+            print(style)
 
-            Settings.set('_launch_app', False)
+        Settings.set('_launch_app', False)
 
-        elif opt == "--locale":
-            Settings.set('locale', arg)
+    if args.style:
+        if args.style in QStyleFactory().keys():
+            Settings.set('style', args.style)
+        else:
+            # PyQt5 does not have bindings for QQuickStyle yet
+            os.environ["QT_QUICK_CONTROLS_STYLE"] = args.style
 
-        elif opt == "--list-styles":
-            for style in QStyleFactory().keys():
-                print(style)
+    if args.background:
+        Settings.set('background', True)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--style":
-            if arg in QStyleFactory().keys():
-                Settings.set('style', arg)
-            else:
-                # PyQt5 does not have bindings for QQuickStyle yet
-                os.environ["QT_QUICK_CONTROLS_STYLE"] = arg
+    if args.clipboard:
+        Settings.set('clipboard', args.clipboard)
 
-        elif opt == "--background":
-            Settings.set('background', True)
-
-        elif opt in ("-c", "--clipboard"):
-            if arg not in ["clipboard", "selection"]:
-                print("Invalid clipboard requested")
-                sys.exit(2)
-
-            Settings.set('clipboard', arg)
-
-        elif opt in ("-m", "--module"):
-            if not arg.startswith('pext_module_'):
-                arg = 'pext_module_' + arg
-
-            Settings.set('modules', Settings.get('module').append({'name': arg, 'settings': {}}))  # type: ignore
-        elif opt.startswith("--module-"):
-            new_list = Settings.get('modules')
-            new_list[-1]['settings'][opt[9:]] = arg
-            Settings.set('modules', new_list)  # type: ignore
-        elif opt == "--install-module":
-            if not ModuleManager(config_retriever).install_module(arg, verbose=True):
+    if args.install_module:
+        for module in args.install_module:
+            if not ModuleManager(config_retriever).install_module(module, verbose=True):
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--uninstall-module":
-            if not ModuleManager(config_retriever).uninstall_module(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.uninstall_module:
+        for module in args.uninstall_module:
+            if not ModuleManager(config_retriever).uninstall_module(module, verbose=True):
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--update-module":
-            if not ModuleManager(config_retriever).update_module(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_module:
+        for module in args.update_module:
+            if not ModuleManager(config_retriever).update_module(module, verbose=True):
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--update-modules":
-            if not ModuleManager(config_retriever).update_all_modules(verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_modules:
+        if not ModuleManager(config_retriever).update_all_modules(verbose=True):
+            sys.exit(3)
+
+        Settings.set('_launch_app', False)
+
+    if args.list_modules:
+        for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
+            print('{} ({})'.format(module_name, module_data['source']))
+
+        Settings.set('_launch_app', False)
+
+    if args.theme:
+        Settings.set('theme', args.themes)
+
+    if args.install_theme:
+        for theme in args.install_theme:
+            if not ThemeManager(config_retriever).install_theme(theme, verbose=True):
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--list-modules":
-            for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
-                print('{} ({})'.format(module_name, module_data['source']))
+        Settings.set('_launch_app', False)
 
-            Settings.set('_launch_app', False)
-
-        elif opt == "--theme":
-            Settings.set('theme', arg)
-        elif opt == "--install-theme":
-            if not ThemeManager(config_retriever).install_theme(arg, verbose=True):
+    if args.uninstall_theme:
+        for theme in args.uninstall_theme:
+            if not ThemeManager(config_retriever).uninstall_theme(theme, verbose=True):
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--uninstall-theme":
-            if not ThemeManager(config_retriever).uninstall_theme(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_theme:
+        for theme in args.update_theme:
+            if not ThemeManager(config_retriever).update_theme(theme, verbose=True):
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--update-theme":
-            if not ThemeManager(config_retriever).update_theme(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_themes:
+        if not ThemeManager(config_retriever).update_all_themes(verbose=True):
+            sys.exit(3)
+
+        Settings.set('_launch_app', False)
+
+    if args.list_themes:
+        for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
+            print('{} ({})'.format(theme_name, theme_data['source']))
+
+        Settings.set('_launch_app', False)
+
+    if args.create_profile:
+        for profile in args.create_profile:
+            if not ProfileManager(config_retriever).create_profile(profile):
+                print('Could not create profile {}, it already exists.'.format(profile))
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--update-themes":
-            if not ThemeManager(config_retriever).update_all_themes(verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.remove_profile:
+        for profile in args.remove_profile:
+            if not ProfileManager(config_retriever).remove_profile(profile):
+                print('Could not delete profile {}, it is in use.'.format(profile))
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--list-themes":
-            for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
-                print('{} ({})'.format(theme_name, theme_data['source']))
+        Settings.set('_launch_app', False)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--create-profile":
-            if not ProfileManager(config_retriever).create_profile(arg):
-                print('Could not create profile {}, it already exists.'.format(arg))
+    if args.rename_profile:
+        for old_name, new_name in args.rename_profile:
+            if not ProfileManager(config_retriever).rename_profile(old_name, new_name):
+                print('Could not rename profile {} to {}.'.format(old_name, new_name))
                 sys.exit(3)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--remove-profile":
-            if not ProfileManager(config_retriever).remove_profile(arg):
-                print('Could not delete profile {}, it is in use.'.format(arg))
-                sys.exit(3)
+        Settings.set('_launch_app', False)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--list-profiles":
-            for profile in ProfileManager(config_retriever).list_profiles():
-                print(profile)
+    if args.list_profiles:
+        for profile in ProfileManager(config_retriever).list_profiles():
+            print(profile)
 
-            Settings.set('_launch_app', False)
-        elif opt == "--tray":
-            Settings.set('tray', True)
-        elif opt == "--no-tray":
-            Settings.set('tray', False)
+        Settings.set('_launch_app', False)
+
+    if args.tray is not None:
+        Settings.set('tray', args.tray)
+
+    # Set up the parsed modules
+    if '_modules' in args:
+        Settings.set('modules', args._modules)
 
     # See if automatic update checks are allowed
     if config_retriever.get_updatecheck_permission_asked():
@@ -2901,91 +2937,6 @@ def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
     if Settings.get('save_settings'):
         ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
         ProfileManager(config_retriever).save_settings(profile)
-
-
-def usage() -> None:
-    """Print usage information."""
-    print('''Options:
-
-  --background
-    Do not open Pext's user interface this invocation.
-
-  -c, --clipboard[=CLIPBOARD]
-    Choose the clipboard to copy entries to. Acceptable values are "clipboard" for the global system clipboard and "selection" for the global mouse selection.
-
-  --locale[=LOCALE]
-    Load Pext with the given locale.
-
-  --style[=STYLE]
-    Sets the given Qt system style for the UI.
-
-  --list-styles
-    Print a list of loadable Qt system styles and exit. Due to PyQt5 limitations, loadable QtQuick styles cannot currently be listed.
-
-  --module[=NAME]
-    Name the module to use. This option may be given multiple times to use multiple modules. When this option is given, the profile module list will be overwritten.
-
-  --module-*[=VALUE]
-    Set a module setting for the most recently given module. For example, to set a module-specific setting called binary, use --module-binary=value. Check the module documentation for the supported module-specific settings.
-
-  --install-module[=URL]
-    Download and install a module from the given git URL.
-
-  --list-modules
-    List all installed modules.
-
-  --uninstall-module[=NAME]
-    Uninstall a module by name.
-
-  --update-module[=NAME]
-    Update a module by name.
-
-  --update-modules
-    Update all installed modules.
-
-  --theme[=NAME]
-    Use the named theme.
-
-  --install-theme[=URL]
-    Download and install a theme from the given git URL.
-
-  --list-themes
-    List all installed themes.
-
-  --uninstall-theme[=NAME]
-    uninstall a theme by name.
-
-  --update-theme[=NAME]
-    Update a theme by name.
-
-  --update-themes
-    Update all installed themes.
-
-  --profile[=NAME]
-    Use the chosen profile, creating it if it doesn't exist yet. Defaults to "default", use "none" to not save the application state between runs.
-
-  --create-profile[=NAME]
-    Create a new blank profile with the given name for later use.
-
-  --remove-profile[=NAME]
-    Remove a profile by name.
-
-  --list-profiles
-    List all profiles.
-
-  --tray
-    Create a tray icon (this is the default).
-
-  --no-tray
-    Do not create a tray icon.
-
-  -h, --help
-    Display this help.
-
-  --version
-    Show the current version.
-
-Report bugs to https://github.com/Pext/Pext.''')  # NOQA
 
 
 def main() -> None:
