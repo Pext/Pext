@@ -504,6 +504,25 @@ ApplicationWindow {
         }
 
         Menu {
+            title: qsTr("&Profile")
+
+            MenuItem {
+                objectName: "menuLoadProfile"
+                text: qsTr("Switch profile")
+
+                signal loadProfileRequest(string name)
+
+                onTriggered: {
+                    var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");
+                    loadProfileDialog.createObject(applicationWindow,
+                        {"currentProfile": currentProfile,
+                         "profiles": profiles.sort(),
+                         "loadRequest": loadProfileRequest});
+                }
+            }
+        }
+
+        Menu {
             title: qsTr("&Settings")
 
             ExclusiveGroup {

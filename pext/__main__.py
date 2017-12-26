@@ -1810,6 +1810,7 @@ class Window(QMainWindow):
 
         self.engine = QQmlApplicationEngine(self)
 
+        # Set QML variables
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
             "applicationVersion", UpdateManager().get_core_version())
@@ -1822,6 +1823,8 @@ class Window(QMainWindow):
             "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
+        self.context.setContextProperty("currentProfile", Settings.get('profile'))
+        self.context.setContextProperty("profiles", ProfileManager(self.config_retriever).list_profiles())
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
@@ -1881,6 +1884,9 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut = self.window.findChild(
             QObject, "menuUpdateAllThemes")
 
+        menu_load_profile_shortcut = self.window.findChild(
+            QObject, "menuLoadProfile")
+
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
         menu_sort_ascending_shortcut = self.window.findChild(
@@ -1928,6 +1934,8 @@ class Window(QMainWindow):
         menu_manage_themes_shortcut.updateThemeRequest.connect(self._menu_update_theme)
         menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
             self._menu_update_all_themes)
+
+        menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2155,12 +2163,13 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_restart_pext(self) -> None:
+    def _menu_restart_pext(self, extra_args=[]) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
         _shut_down(self,
                    self.config_retriever)
 
         args = sys.argv[:]
+        args.extend(extra_args)
 
         args.insert(0, sys.executable)
         if sys.platform == 'win32':
@@ -2174,7 +2183,9 @@ class Window(QMainWindow):
 
         self._menu_restart_pext()
 
-        """Restart Pext after switching theme."""
+    def _menu_switch_profile(self, profile_name: str) -> None:
+        self._menu_restart_pext(['--profile={}'.format(profile_name)])
+
     def _menu_install_theme(self, theme_url: str) -> None:
         functions = [
             {
