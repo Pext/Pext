@@ -2728,7 +2728,7 @@ def _init_persist(profile: str, background: bool) -> None:
 def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     """Load the settings from the command line and set defaults."""
     parser = argparse.ArgumentParser(description='The Python-based extendable tool.')
-    parser.add_argument('--version', '-v', action='version',
+    parser.add_argument('-v', '--version', action='version',
                         version='Pext {}'.format(UpdateManager().get_core_version()))
     parser.add_argument('--locale', help='load the given locale.')
     parser.add_argument('--list-styles', action='store_true',
