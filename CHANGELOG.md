@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Support renaming profiles
 - Allow switching profile from the GUI
+- Allow basic profile management from the GUI
 
 ### Changed
 - Profile name is no longer displayed if default
