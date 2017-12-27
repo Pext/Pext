@@ -1824,7 +1824,6 @@ class Window(QMainWindow):
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
-        self.context.setContextProperty("profiles", ProfileManager(self.config_retriever).list_profiles())
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
@@ -1843,6 +1842,10 @@ class Window(QMainWindow):
         # Give QML the theme info
         self.theme_manager = ThemeManager(self.config_retriever)
         self._update_themes_info_qml()
+
+        # Give QML the profile info
+        self.profile_manager = ProfileManager(self.config_retriever)
+        self._update_profiles_info_qml()
 
         # Bind update dialog
         self.update_available_requests = self.window.findChild(QObject, "updateAvailableRequests")
@@ -1886,6 +1889,8 @@ class Window(QMainWindow):
 
         menu_load_profile_shortcut = self.window.findChild(
             QObject, "menuLoadProfile")
+        menu_manage_profiles_shortcut = self.window.findChild(
+            QObject, "menuManageProfiles")
 
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
@@ -1936,6 +1941,8 @@ class Window(QMainWindow):
             self._menu_update_all_themes)
 
         menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
+        menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
+        menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2186,6 +2193,34 @@ class Window(QMainWindow):
     def _menu_switch_profile(self, profile_name: str) -> None:
         self._menu_restart_pext(['--profile={}'.format(profile_name)])
 
+    def _menu_create_profile(self, profile_name: str) -> None:
+        functions = [
+            {
+                'name': self.profile_manager.create_profile,
+                'args': (profile_name),
+                'kwargs': {}
+            }, {
+                'name': self._update_profiles_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_remove_profile(self, profile_name: str) -> None:
+        functions = [
+            {
+                'name': self.profile_manager.remove_profile,
+                'args': (profile_name),
+                'kwargs': {}
+            }, {
+                'name': self._update_profiles_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
     def _menu_install_theme(self, theme_url: str) -> None:
         functions = [
             {
@@ -2331,6 +2366,11 @@ class Window(QMainWindow):
         themes = self.theme_manager.list_themes()
         self.context.setContextProperty(
             "themes", themes)
+
+    def _update_profiles_info_qml(self) -> None:
+        profiles = self.profile_manager.list_profiles()
+        self.context.setContextProperty(
+            "profiles", profiles)
 
     def _menu_check_updates_actually_check(self, verbose=True) -> None:
         if verbose:

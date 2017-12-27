@@ -520,6 +520,22 @@ ApplicationWindow {
                          "loadRequest": loadProfileRequest});
                 }
             }
+
+            MenuItem {
+                objectName: "menuManageProfiles"
+                text: qsTr("Manage profiles")
+
+                signal createProfileRequest(string name)
+                signal removeProfileRequest(string name)
+
+                onTriggered: {
+                    var manageProfilesDialog = Qt.createComponent("ManageProfilesDialog.qml");
+                    manageProfilesDialog.createObject(applicationWindow,
+                        {"profiles": profiles.sort(),
+                         "createRequest": createProfileRequest,
+                         "removeRequest": removeProfileRequest});
+                }
+            }
         }
 
         Menu {
