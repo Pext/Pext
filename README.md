@@ -84,9 +84,9 @@ After installing the dependencies, Pext can be ran by running one of the followi
 - ``python3 pext`` to start Pext itself
 - ``python3 pext_dev`` to start the Pext tools for module and theme development
 
-If desired, it can also be installed using the following command (as root):
+If desired, it can also be installed using the following command:
 
-    # pip3 install . --upgrade --no-deps
+    $ pip3 install . --user --upgrade --no-deps
 
 After doing this, you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
 
