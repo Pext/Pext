@@ -143,6 +143,19 @@ class ConfigRetriever():
         with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'w') as update_check_file:
             update_check_file.write(str(int(granted)))
 
+    def get_last_update_check_time(self) -> Optional[datetime]:
+        """Get the time of the last update check, returns None if there was never a check."""
+        try:
+            with open(os.path.join(self.get_setting('config_path'), 'update_check_time'), 'r') as update_check_file:
+                return datetime.fromtimestamp(int(float(update_check_file.readline())))
+        except (FileNotFoundError):
+            return None
+
+    def set_last_update_check_time(self, dt: datetime) -> None:
+        """Set the last update check time to the given time."""
+        with open(os.path.join(self.get_setting('config_path'), 'update_check_time'), 'w') as update_check_file:
+            update_check_file.write(str(dt.timestamp()))
+
 
 class RunConseq():
     """A simple helper to run several functions consecutively."""
@@ -2343,7 +2356,7 @@ class Window(QMainWindow):
         # Check for updates immediately after toggling true
         # This is also toggled on app launch because we bind before we toggle
         if Settings.get('update_check'):
-            self._menu_check_updates(verbose=False)
+            self._menu_check_updates(verbose=False, manual=False)
 
     def _search(self) -> None:
         try:
@@ -2398,8 +2411,18 @@ class Window(QMainWindow):
             if verbose:
                 Logger._log('✔⇩ Pext', self.logger)
 
-    def _menu_check_updates(self, verbose=True) -> None:
-        threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
+    def _menu_check_updates(self, verbose=True, manual=True) -> None:
+        # Set a timer to run this function again in an hour
+        if not manual:
+            t = threading.Timer(3600, self._menu_check_updates, None, {'verbose': False, 'manual': False})
+            t.daemon = True
+            t.start()
+
+        # Check if it's been over 24 hours or this is a manual check
+        last_update_check = self.config_retriever.get_last_update_check_time()
+        if manual or last_update_check is None or (datetime.now() - last_update_check).total_seconds() > (86400):
+            threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
+            self.config_retriever.set_last_update_check_time(datetime.now())
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')

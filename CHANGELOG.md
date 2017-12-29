@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Trying to create a profile that already exists throws an error
 - Trying to delete a profile that is currently in use throws an error
 - Use argparse for argument parsing instead of getopt
+- Update checking now happens if the last check was over 24 hours, instead of each app launch
 
 ### Removed
 - Removed manpage
