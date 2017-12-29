@@ -58,8 +58,7 @@ The following dependencies need to be installed:
 ##### Arch
 
     sudo pacman -S libnotify python-pip python-pyqt5 qt5-quickcontrols
-
-You will also need python-dulwich from the AUR.
+    pip3 install dulwich --user
 
 ##### Debian
 
