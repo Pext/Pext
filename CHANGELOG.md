@@ -8,8 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Support renaming profiles
-- Allow switching profile from the GUI
-- Allow basic profile management from the GUI
+- Switching profile from the GUI
+- Opening a second instance with another profile from the GUI
+- Basic profile management from the GUI
 
 ### Changed
 - Profile name is no longer displayed if default

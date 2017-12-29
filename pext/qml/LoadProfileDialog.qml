@@ -46,7 +46,13 @@ Dialog {
             Layout.fillWidth: true
         }
 
+        CheckBox {
+            id: newInstance
+            text: qsTr("Open in a new window")
+        }
+
         Label {
+            opacity: newInstance.checked ? 0 : 1
             text: qsTr("Note: Pext will restart to switch profile.")
         }
     }
@@ -58,7 +64,7 @@ Dialog {
     }
 
     onAccepted: {
-        loadRequest(combobox.currentText);
+        loadRequest(combobox.currentText, newInstance.checked);
     }
 }
 

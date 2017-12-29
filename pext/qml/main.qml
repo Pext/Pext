@@ -510,7 +510,7 @@ ApplicationWindow {
                 objectName: "menuLoadProfile"
                 text: qsTr("Switch profile")
 
-                signal loadProfileRequest(string name)
+                signal loadProfileRequest(string name, bool newInstance)
 
                 onTriggered: {
                     var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");

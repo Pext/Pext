@@ -2190,8 +2190,16 @@ class Window(QMainWindow):
 
         self._menu_restart_pext()
 
-    def _menu_switch_profile(self, profile_name: str) -> None:
-        self._menu_restart_pext(['--profile={}'.format(profile_name)])
+    def _menu_switch_profile(self, profile_name: str, new_instance=bool) -> None:
+        extra_args = ['--profile={}'.format(profile_name)]
+        if not new_instance:
+            self._menu_restart_pext(extra_args)
+        else:
+            args = sys.argv[:]
+            args.extend(extra_args)
+            args.insert(0, sys.executable)
+
+            Popen(args)
 
     def _menu_create_profile(self, profile_name: str) -> None:
         functions = [
