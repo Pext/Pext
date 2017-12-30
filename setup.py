@@ -36,8 +36,7 @@ setup(
     name='Pext',
     version=version,
     install_requires=[
-        'dulwich',
-        'pyqt5'
+        'dulwich'
     ],
     description='Python-based extendable tool',
     long_description='A Python-based application that uses modules for extendability',
