@@ -550,7 +550,7 @@ class MainLoop():
                 tab['vm'].context_menu_commands = {}
 
         elif action[0] == Action.set_base_context:
-            if len(action) > 0:
+            if len(action) > 1:
                 tab['vm'].context_menu_base = action[1]
             else:
                 tab['vm'].context_menu_base = []
