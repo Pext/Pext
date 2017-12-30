@@ -1,4 +1,4 @@
-Thank you for reporting a bug or requesting a feature. Please try to answer as many of the below questions as you can. It is okay if you cannot answer everything, your report is still very much appreciated.
+Thank you for reporting a bug or requesting a feature. Please try to answer as many of the questions below as you can. It is okay if you cannot answer everything; we still appreciate your report very much.
 
 ### Is this a bug or a feature request?
 
