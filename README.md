@@ -75,7 +75,7 @@ Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md)
 ### macOS
 See [Installing Pext from source](INSTALL_FROM_SOURCE.md)
 
-### Windows
+### Windows (experimental)
 See [Installing Pext from source](INSTALL_FROM_SOURCE.md)
 
 ## Usage
