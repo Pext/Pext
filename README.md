@@ -52,78 +52,31 @@ Simply put:
 **Note: If you run into any issues, please check out the troubleshooting section near the end of this document before reporting a bug.**
 
 ### GNU/Linux
-#### Preparation
-The following dependencies need to be installed:
+#### Arch
+The Arch packages are maintained by [Ivan Semkin](https://github.com/vanyasem)
 
-##### Arch
+For the stable version:
 
-    sudo pacman -S libnotify python-pip python-pyqt5 qt5-quickcontrols
+    $ pacaur -S pext
 
-You will also need python-dulwich from the AUR.
+For the git version:
 
-##### Debian
+    $ pacaur -S pext-git
 
-    sudo apt-get install libnotify-bin python3-pip python3-dulwich python3-pyqt5.qtquick qml-module-qtquick-controls
+#### Other distros
+You can install the stable version of Pext from pip:
 
-You may also need to install libssl1.0-dev due to what seems like a Debian packaging issue. See https://stackoverflow.com/a/42297296 for more info.
+    $ pip3 install pext --user
 
-##### Fedora
+On some systems, you may need to use pip instead of pip3.
 
-    sudo dnf install libnotify python3-dulwich python3-pip python3-qt5 qt5-qtquickcontrols
-
-##### Nix (any system, not just NixOS)
-
-    nix-shell -p libnotify python3Packages.pip python3Packages.dulwich python3Packages.pyqt5 qt5.qtquickcontrols
-
-##### openSUSE
-
-    sudo zypper install libnotify-tools python3-dulwich python3-pip python3-qt5
-
-#### Starting Pext
-After installing the dependencies, Pext can be ran by running one of the following commands in the place where you saved Pext to:
-- ``python3 pext`` to start Pext itself
-- ``python3 pext_dev`` to start the Pext tools for module and theme development
-
-If desired, it can also be installed using the following command:
-
-    $ pip3 install . --user --upgrade --no-deps
-
-After doing this, you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
+Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md)
 
 ### macOS
-#### Preparation
-The following commands need to be run. If you do not have the brew command, follow the installation instructions on [Homebrew's website](https://brew.sh/).
+See [Installing Pext from source](INSTALL_FROM_SOURCE.md)
 
-Before running the Install Certificates command, which is only necessary to be able to retrieve the online module list, please read https://bugs.python.org/msg283984.
-
-    brew install libgit2 libnotify python3 qt5
-    pip3 install certifi dulwich pyqt5 urllib3
-    /Applications/Python\ 3.6/Install\ Certificates.command
-
-#### Starting Pext
-After installing the dependencies, Pext can be ran by running one of the following commands in a terminal window in the place where you saved Pext to:
-- ``python3 pext`` to start Pext itself
-- ``python3 pext_dev`` to start the Pext tools for module and theme development
-
-Optionally, a .app file can be generated using the following command:
-
-    python3 setup.py py2app -A --emulate-shell-environment
-
-The .app file appears in the dist directory and can be dragged to "My Applications". Please note that actual py2app buils do not work yet. This is an aliased build, so it will break if you delete your git clone.
-
-### Windows (experimental)
-#### Preparation
-Assuming you have no previous python installation, either 
-
-- Use a package manager like [Chocolatey](http://chocolatey.org/) to install Python 3
-- Install Python 3.6 manually from https://www.python.org/downloads/windows/
-
-Then, assuming python and pip are installed, run `pip install dulwich PyQt5` in a command window.
-
-#### Starting Pext
-Pext can be ran by ran from a command window by running one of the following commands in the place where you saved Pext to (type ``cd place_you_saved_pext`` to go there):
-- ``python pext`` to start Pext itself
-- ``python pext_dev`` to start the Pext tools for module and theme development
+### Windows
+See [Installing Pext from source](INSTALL_FROM_SOURCE.md)
 
 ## Usage
 To actually use Pext, you will first have to install one or more modules. Check out the Pext organisation on [GitHub](https://github.com/Pext) or use `Module` -> `Install module` -> `From online module list` in the application for a list of modules.
