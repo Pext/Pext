@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Pext crash when module tries to empty context_menu_base
+- Inconsistent font sizing
 
 ### Removed
 - Removed manpage
