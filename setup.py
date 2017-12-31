@@ -19,7 +19,9 @@ if sys.platform == 'darwin':
         setup_requires=['py2app'],
         app=['pext/__main__.py'],
         options={'py2app': {
-            'iconfile': 'pext/images/scalable/pext.icns'
+            'iconfile': 'pext/images/scalable/pext.icns',
+            'emulate_shell_environment': 1,
+            'site_packages': 1
         }}
     )
 else:

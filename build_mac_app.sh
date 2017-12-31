@@ -1,7 +1,7 @@
 #/bin/sh
 
 # Run py2app
-python3 setup.py py2app --emulate-shell-environment
+python3 setup.py py2app
 
 # Copy additional files py2app doesn't copy for some reason
 RESOURCEDIR="dist/Pext.app/Contents/Resources"
