@@ -46,7 +46,7 @@ The following commands need to be run. If you do not have the brew command, foll
 
 Before running the Install Certificates command, which is only necessary to be able to retrieve the online module list, please read https://bugs.python.org/msg283984.
 
-    brew install libgit2 libnotify python3 qt5
+    brew install libnotify python3 qt5
     pip3 install certifi dulwich pyqt5 urllib3
     /Applications/Python\ 3.6/Install\ Certificates.command
 
@@ -54,6 +54,12 @@ Before running the Install Certificates command, which is only necessary to be a
 After installing the dependencies, Pext can be ran by running one of the following commands in a terminal window in the place where you saved Pext to:
 - ``python3 pext`` to start Pext itself
 - ``python3 pext_dev`` to start the Pext tools for module and theme development
+
+If desired, it can also be installed using the following command:
+
+    $ pip3 install . --user --upgrade --no-deps
+
+After doing this (and adding "$HOME/Library/Python/3.6/bin" to your $PATH), you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
 
 Optionally, a .app file can be generated using the following command:
 
