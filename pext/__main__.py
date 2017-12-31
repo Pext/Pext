@@ -2845,6 +2845,16 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     parser.add_argument('--tray', action='store_true', dest='tray', help='create a tray icon (this is the default).')
     parser.add_argument('--no-tray', action='store_false', dest='tray', help='do not create a tray icon.')
 
+    # Remove weird macOS-added parameter
+    # https://stackoverflow.com/questions/10242115/os-x-strange-psn-command-line-parameter-when-launched-from-finder
+    if platform.system() == "Darwin":
+        proper_argv = []
+        for arg in argv:
+            if not arg.startswith("-psn_0_"):
+                proper_argv.append(arg)
+
+        argv = proper_argv
+
     # Ensure module options get parsed
     for arg in argv:
         arg = arg.split("=")[0]
