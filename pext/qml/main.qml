@@ -387,7 +387,7 @@ ApplicationWindow {
                     onTriggered: {
                         var installModuleFromURLDialog = Qt.createComponent("InstallModuleFromURLDialog.qml");
                         installModuleFromURLDialog.createObject(applicationWindow,
-                            {"installRequest": menuInstallModule.installRequest});
+                            {"installRequest": menuInstallModule.installModuleRequest});
                     }
                 }
             }
@@ -422,7 +422,8 @@ ApplicationWindow {
                     } else {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
-                            {"themes": Object.keys(themes).sort(),
+                            {"currentTheme": currentTheme,
+                             "themes": Object.keys(themes).sort(),
                              "loadRequest": loadThemeRequest,
                              "themesPath": themesPath});
                     }
@@ -498,6 +499,41 @@ ApplicationWindow {
 
                 onTriggered: {
                     updateAllThemesRequest()
+                }
+            }
+        }
+
+        Menu {
+            title: qsTr("&Profile")
+
+            MenuItem {
+                objectName: "menuLoadProfile"
+                text: qsTr("Switch profile")
+
+                signal loadProfileRequest(string name, bool newInstance)
+
+                onTriggered: {
+                    var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");
+                    loadProfileDialog.createObject(applicationWindow,
+                        {"currentProfile": currentProfile,
+                         "profiles": profiles.sort(),
+                         "loadRequest": loadProfileRequest});
+                }
+            }
+
+            MenuItem {
+                objectName: "menuManageProfiles"
+                text: qsTr("Manage profiles")
+
+                signal createProfileRequest(string name)
+                signal removeProfileRequest(string name)
+
+                onTriggered: {
+                    var manageProfilesDialog = Qt.createComponent("ManageProfilesDialog.qml");
+                    manageProfilesDialog.createObject(applicationWindow,
+                        {"profiles": profiles.sort(),
+                         "createRequest": createProfileRequest,
+                         "removeRequest": removeProfileRequest});
                 }
             }
         }

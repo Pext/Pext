@@ -71,7 +71,6 @@ Item {
                                 objectName: "text"
                                 text: display
                                 textFormat: Text.PlainText
-                                font.pointSize: 12
                                 color: contextMenu.currentIndex === index ? palette.highlightedText : palette.text
                                 Behavior on color { PropertyAnimation {} }
                             }
@@ -104,7 +103,7 @@ Item {
         }
 
         Rectangle {
-            color: palette.base
+            color: palette.window
             visible: contextMenuContainer.visible
 
             Layout.fillHeight: true
@@ -136,7 +135,6 @@ Item {
                         id: headerText
                         color: palette.highlight
                         objectName: "headerText"
-                        font.pointSize: 12
 
                         textFormat: Text.PlainText
                     }
@@ -189,14 +187,27 @@ Item {
                                 objectName: "text"
                                 text: display
                                 textFormat: Text.PlainText
-                                font.pointSize: 12
                                 font.italic:
                                     if (!resultListModelCommandMode) {
                                         index >= resultListModelNormalEntries
                                     } else {
                                         index < resultListModelCommandEntries
                                     }
-                                color: resultListModelCommandMode ? (contextMenuContainer.visible ? inactivePalette.text : palette.text) : resultList.currentIndex === index ? (contextMenuContainer.visible ? inactivePalette.highlightedText : palette.highlightedText) : (contextMenuContainer.visible ? inactivePalette.text : palette.text)
+                                color: {
+                                    if (resultList.currentIndex == index) {
+                                        if (contextMenu.visible) {
+                                            return inactivePalette.highlightedText;
+                                        } else {
+                                            return palette.highlightedText;
+                                        }
+                                    } else {
+                                        if (contextMenu.visible) {
+                                            return inactivePalette.text;
+                                        } else {
+                                            return palette.text;
+                                        }
+                                    }
+                                }
                                 Behavior on color { PropertyAnimation {} }
                             }
                         }
@@ -229,7 +240,7 @@ Item {
         }
 
         Rectangle {
-            color: palette.base
+            color: palette.window
             visible: contextInfoPanel.text
 
             Layout.fillHeight: true

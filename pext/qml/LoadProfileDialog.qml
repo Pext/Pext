@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2017 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -23,14 +23,12 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: qsTr("Load profile")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
-    property var currentTheme
-    property var themes
+    property var currentProfile
+    property var profiles
     property var loadRequest
-
-    property url themesPath
 
     ColumnLayout {
         id: columnLayout
@@ -39,36 +37,34 @@ Dialog {
         anchors.fill: parent
 
         Label {
-            text: qsTr("Choose the theme to switch to:")
+            text: qsTr("Choose the profile to switch to:")
         }
 
         ComboBox {
             id: combobox
-            model: [qsTr("No theme")].concat(themes)
+            model: profiles
             Layout.fillWidth: true
         }
 
+        CheckBox {
+            id: newInstance
+            text: qsTr("Open in a new window")
+        }
+
         Label {
-            text: qsTr("Note: Pext will restart to apply the new theme.")
+            opacity: newInstance.checked ? 0 : 1
+            text: qsTr("Note: Pext will restart to switch profile.")
         }
     }
 
     Component.onCompleted: {
-        if (currentTheme === null) {
-            combobox.currentIndex = 0;
-        } else {
-            combobox.currentIndex = themes.indexOf(currentTheme) + 1;
-        }
+        combobox.currentIndex = profiles.indexOf(currentProfile);
         visible = true;
         combobox.focus = true;
     }
 
     onAccepted: {
-        if (combobox.currentIndex == 0) {
-            loadRequest(null);
-        } else {
-            loadRequest(combobox.currentText);
-        }
+        loadRequest(combobox.currentText, newInstance.checked);
     }
 }
 

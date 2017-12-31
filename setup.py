@@ -6,11 +6,8 @@ with open(os.path.join('pext', 'VERSION')) as version_file:
     version_file_version = version_file.read().strip()
 
 try:
-    import pygit2
-    root_path = os.path.dirname(os.path.abspath(__file__))
-    repository_path = pygit2.discover_repository(root_path, False, os.path.dirname(root_path))
-    repo = pygit2.Repository(repository_path)
-    version = repo.describe(show_commit_oid_as_fallback=True, dirty_suffix='-dirty')
+    from pext.git_describe import describe
+    version = describe(os.path.dirname(os.path.abspath(__file__)))
     with open(os.path.join('pext', 'VERSION'), "w") as version_file:
         version_file.write(version)
 except Exception as e:
@@ -32,7 +29,6 @@ else:
             ('share/icons/hicolor/48x48/apps', ['pext/images/48x48/pext.png']),
             ('share/icons/hicolor/128x128/apps', ['pext/images/128x128/pext.png']),
             ('share/applications', ['pext.desktop']),
-            ('man/man1', ['pext.1'])
         ]
     )
 
@@ -40,7 +36,7 @@ setup(
     name='Pext',
     version=version,
     install_requires=[
-        'pygit2',
+        'dulwich',
         'pyqt5'
     ],
     description='Python-based extendable tool',
@@ -68,8 +64,8 @@ setup(
         'pext/helpers',
         'pext_dev'
     ],
-    package_data={'pext': ['i18n/*.qm', 'images/scalable/*', 'qml/*'],
-                  'pext_dev': ['LICENSE', 'module/*', 'theme/*']},
+    package_data={'pext': ['i18n/*.qm', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
+                  'pext_dev': ['LICENSE', 'module/*', 'theme/*', '*.py']},
     include_package_data=True,
     zip_safe=False,
     entry_points={

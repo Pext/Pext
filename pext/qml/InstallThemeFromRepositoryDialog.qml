@@ -77,7 +77,7 @@ Dialog {
 
             if (themes.length == 0) {
                 var installThemeFromRepositoryNoThemesAvailableDialog = Qt.createComponent("InstallThemeFromRepositoryNoThemesAvailableDialog.qml");
-                installThemeFromRepositoryNoModulesAvailableDialog.createObject(applicationWindow);
+                installThemeFromRepositoryNoThemesAvailableDialog.createObject(applicationWindow);
             } else {
                 // Get theme data
                 var themesData = [];
