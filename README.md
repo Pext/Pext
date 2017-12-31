@@ -64,9 +64,13 @@ For the git version:
     $ pacaur -S pext-git
 
 #### Other distros
-You can install the stable version of Pext from pip:
+For the stable version:
 
     $ pip3 install pext --user
+
+For the git version:
+
+    $ pip3 install git+https://github.com/Pext/Pext.git --user
 
 On some systems, you may need to use pip instead of pip3.
 
