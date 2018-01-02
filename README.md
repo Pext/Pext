@@ -3,8 +3,8 @@
 ![Pext logo](/logo.png)
 
 *Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
-[Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
-graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
+donated by [vaeringjar](https://notabug.org/vaeringjar).*
 
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
