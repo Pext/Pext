@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Trying to delete a profile that is currently in use throws an error
 - Use argparse for argument parsing instead of getopt
 - Update checking now happens if the last check was over 24 hours, instead of each app launch
+- Relicensed documentation under CC BY-SA 4.0
 
 ### Fixed
 - Pext crash when module tries to empty context_menu_base

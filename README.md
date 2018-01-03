@@ -149,4 +149,15 @@ cmd.exe:
 - The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows)
 
 ## License
-GPLv3+.
+Pext is licensed under the [GNU GPLv3+](LICENSE), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSE-CCBYSA).
+
+Under artwork and documentation fall:
+- All files in the following directories:
+  - docs/
+  - pext/images/
+  - screenshots/
+  - .github/
+- All Markdown files in the root directory.
+- logo.png
+
+When attributing the artwork, it should be attributed as the Pext Logo by White Paper Fox. Please link to Pext with https://github.com/Pext/Pext or https://pext.hackerchick.me/ and to White Paper Fox with http://www.whitepaperfox.com/ where possible.
