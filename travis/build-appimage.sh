@@ -38,9 +38,6 @@ pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
 
 # try to fix SSL issues as specified here:
 # https://github.com/ContinuumIO/anaconda-issues/issues/494#issuecomment-155097614
-conda list
-conda update -y openssl cryptography
-conda update -y certifi
 
 # install Pext
 pushd "$REPO_ROOT"/
@@ -89,6 +86,17 @@ cat > AppDir/AppRun <<EAT
 if [ -z \$APPDIR ]; then APPDIR=\$(readlink -f \$(dirname "\$0")); fi
 
 export LD_LIBRARY_PATH="\$APPDIR"/usr/lib
+
+for path in /etc/ssl/ca-bundle.pem \\
+    /etc/ssl/certs/ca-certificates.crt \\
+    /etc/ssl/cert.pem /etc/pki/tls/certs/ca-bundle.crt \\
+    /etc/pki/tls/cert.pem /etc/pki/tls/cacert.pem \\
+    /usr/local/share/certs/ca-root-nss.crt; do
+    if [ -f "\$path" ]; then
+        export SSL_CERT_FILE="\$path"
+        break
+    fi
+done
 
 exec "\$APPDIR"/usr/bin/python -m pext "\$@"
 EAT
