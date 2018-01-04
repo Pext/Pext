@@ -21,7 +21,7 @@ import QtQuick 2.3
 import QtQuick.Dialogs 1.2
 
 MessageDialog {
-    title: "Pext"
+    title: qsTr("New version available")
     icon: StandardIcon.Question
     standardButtons: StandardButton.Yes | StandardButton.No
 

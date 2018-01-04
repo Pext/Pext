@@ -746,7 +746,7 @@ class ProfileManager():
         rmtree(os.path.join(self.profile_dir, profile))
         return True
 
-    def list_profiles(self) -> List:
+    def list_profiles(self) -> List[str]:
         """List the existing profiles."""
         return os.listdir(self.profile_dir)
 

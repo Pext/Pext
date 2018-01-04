@@ -346,7 +346,8 @@ ApplicationWindow {
                     } else {
                         var manageDialog = Qt.createComponent("ManageDialog.qml");
                         manageDialog.createObject(applicationWindow,
-                            {"manageableObjects": modules,
+                            {"type": "modules",
+                             "manageableObjects": modules,
                              "updateRequest": updateModuleRequest,
                              "uninstallRequest": uninstallModuleRequest});
                     }
@@ -445,7 +446,8 @@ ApplicationWindow {
                     } else {
                         var manageDialog = Qt.createComponent("ManageDialog.qml");
                         manageDialog.createObject(applicationWindow,
-                            {"manageableObjects": themes,
+                            {"type": "themes",
+                             "manageableObjects": themes,
                              "updateRequest": updateThemeRequest,
                              "uninstallRequest": uninstallThemeRequest});
                     }
