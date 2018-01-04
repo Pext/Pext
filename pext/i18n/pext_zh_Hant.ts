@@ -59,7 +59,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="24"/>
         <source>Unsupported repository format</source>
-        <translation type="unfinished"></translation>
+        <translation>不支援的軟體庫格式</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
@@ -72,7 +72,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>模組安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
@@ -85,7 +85,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="24"/>
         <source>No modules found</source>
-        <translation type="unfinished"></translation>
+        <translation>找不到模組</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
@@ -98,7 +98,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>模組安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
@@ -146,7 +146,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>模組安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
@@ -164,7 +164,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>佈景主題安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
@@ -177,7 +177,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="24"/>
         <source>No themes available</source>
-        <translation type="unfinished"></translation>
+        <translation>無可用主題</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
@@ -190,7 +190,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>佈景主題安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
@@ -228,7 +228,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>佈景主題安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
@@ -241,7 +241,7 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="26"/>
         <source>Load module</source>
-        <translation type="unfinished">載入模組</translation>
+        <translation>載入模組</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
@@ -254,22 +254,22 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation type="unfinished"></translation>
+        <translation>載入設定檔</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation type="unfinished"></translation>
+        <translation>選擇要切換至的設定檔：</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation type="unfinished"></translation>
+        <translation>在新視窗中開啟</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>注意：Pext 將會重新啟動以切換設定檔。</translation>
     </message>
 </context>
 <context>
@@ -277,7 +277,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="26"/>
         <source>Switch theme</source>
-        <translation type="unfinished">切換佈景主題</translation>
+        <translation>切換佈景主題</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
@@ -300,12 +300,12 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage modules</source>
-        <translation type="unfinished">管理模組</translation>
+        <translation>管理模組</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage themes</source>
-        <translation type="unfinished">管理佈景主題</translation>
+        <translation>管理佈景主題</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="63"/>
@@ -353,22 +353,22 @@
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="26"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>管理設定檔</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="43"/>
         <source>Enter profile name</source>
-        <translation type="unfinished"></translation>
+        <translation>輸入設定檔名稱</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="47"/>
         <source>Create</source>
-        <translation type="unfinished"></translation>
+        <translation>建立</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="79"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>移除</translation>
     </message>
 </context>
 <context>
@@ -376,7 +376,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="24"/>
         <source>No modules installed</source>
-        <translation type="unfinished"></translation>
+        <translation>沒有已安裝的模組</translation>
     </message>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
@@ -389,7 +389,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="24"/>
         <source>No themes installed</source>
-        <translation type="unfinished"></translation>
+        <translation>沒有已安裝的佈景主題</translation>
     </message>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
@@ -402,12 +402,12 @@
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation type="unfinished"></translation>
+        <translation>僅有一個設定檔可用</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation type="unfinished"></translation>
+        <translation>這是唯一可用的設定檔。請先建立第二個設定檔。</translation>
     </message>
 </context>
 <context>
@@ -415,7 +415,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="24"/>
         <source>New version available</source>
-        <translation type="unfinished"></translation>
+        <translation>有可更新的新版本</translation>
     </message>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
@@ -428,7 +428,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation type="unfinished"></translation>
+        <translation>更新管理員</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
@@ -517,17 +517,17 @@
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>&amp;Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>設定檔(&amp;P)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>Switch profile</source>
-        <translation type="unfinished"></translation>
+        <translation>切換設定檔</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="533"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>管理設定檔</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="549"/>
@@ -537,17 +537,17 @@
     <message>
         <location filename="../qml/main.qml" line="555"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>語言</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="565"/>
         <source>System locale</source>
-        <translation type="unfinished"></translation>
+        <translation>系統語系</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="589"/>
         <source>Sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>排序樣式</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="598"/>
@@ -567,7 +567,7 @@
     <message>
         <location filename="../qml/main.qml" line="619"/>
         <source>Minimizing behaviour</source>
-        <translation type="unfinished"></translation>
+        <translation>最小化行為</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="628"/>
