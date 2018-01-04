@@ -513,11 +513,16 @@ ApplicationWindow {
                 signal loadProfileRequest(string name, bool newInstance)
 
                 onTriggered: {
-                    var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");
-                    loadProfileDialog.createObject(applicationWindow,
-                        {"currentProfile": currentProfile,
-                         "profiles": profiles.sort(),
-                         "loadRequest": loadProfileRequest});
+                    if (profiles.length < 1) {
+                        var onlyOneProfileDialog = Qt.createComponent("OnlyOneProfileDialog.qml");
+                        onlyOneProfileDialog.createObject(applicationWindow);
+                    } else {
+                        var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");
+                        loadProfileDialog.createObject(applicationWindow,
+                            {"currentProfile": currentProfile,
+                             "profiles": profiles.sort(),
+                             "loadRequest": loadProfileRequest});
+                    }
                 }
             }
 
