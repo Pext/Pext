@@ -49,8 +49,7 @@ The following behaviours are expected and requested of all community members:
 * Refrain from demeaning, discriminatory and harassing behaviour and speech.
 * Be mindful of your surroundings and your fellow participants. Alert community
   leaders if you notice a dangerous situation, someone in distress, or
-  violations of this Safety and Well-Being Policy, even if they seem
-  inconsequential.
+  violations of this Code of Conduct, even if they seem inconsequential.
 * Remember that community venues, both physical and digital, may be shared with
   members of the public. Please be respectful to all patrons of such locations.
 
