@@ -147,10 +147,9 @@ knowledge and ability:
 * Whether you want any additional actions taken by the community organizers to 
   ensure that your safety and well-being remain intact.
 
-Additionally, community organizers are available to help community members
-engage with local law enforcement or otherwise help those experiencing
-unacceptable behaviour feel safe. In the context of in-person events, organizers
-will also provide escorts as desired by the person experiencing distress.
+Additionally, community organizers can assist local authorities and connect you
+with help or providing a safe environment. In the context of in-person events, 
+organizers will also provide escorts as desired by the person experiencing distress.
 
 ## Addressing grievances
 
