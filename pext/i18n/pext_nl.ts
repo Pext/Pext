@@ -639,7 +639,7 @@
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>P&amp;rofile</source>
-        <translation type="unfinished"></translation>
+        <translation>P&amp;rofiel</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="673"/>
