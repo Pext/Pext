@@ -77,7 +77,7 @@ our community:
   advances. If you do not have someone's prior consent, then any kind of sexual
   attention is unwelcome.
 * Deliberate intimidation or stalking (online or in person).
-* Advocating for, or encouraging, or assisting in any of the above behaviour.
+* Advocating for, encouraging, or assisting in any of the above behaviour.
 * Sustained disruption of community spaces or events.
 
 ## Consequences of unacceptable behaviour
