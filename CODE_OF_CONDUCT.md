@@ -76,7 +76,7 @@ our community:
   comments or jokes, inappropriate touching, groping and unwelcome sexual
   advances. If you do not have someone's prior consent, then any kind of sexual
   attention is unwelcome.
-* Deliberate intimidation, stalking or following (online or in person).
+* Deliberate intimidation or stalking (online or in person).
 * Advocating for, or encouraging, or assisting in any of the above behaviour.
 * Sustained disruption of community spaces or events.
 
