@@ -134,7 +134,7 @@ If you are subject to, or witness, unacceptable behaviour, or have any other
 concerns, please notify a community organizer as soon as possible. The current
 list of community organizers is:
 
-* Sylvia van Os <insert-email-here.nl> (lead organizer)
+* Sylvia van Os <sylvia@hackerchick.me> (lead organizer)
 * Koz Ross <koz.ross@retro-freedom.nz>
 
 When reporting, please include the following information, to the best of your
@@ -184,7 +184,7 @@ potential to adversely affect the safety and well-being of community members.
 This is the current list of community organizers, with appropriate contact
 information:
 
-* Sylvia van Os <insert-email-here.nl> (lead organizer)
+* Sylvia van Os <sylvia@hackerchick.me> (lead organizer)
 * Koz Ross <koz.ross@retro-freedom.nz>
 
 ## Modifications
