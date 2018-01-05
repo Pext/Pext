@@ -87,28 +87,21 @@ decision-making authority, will not be tolerated. Anyone asked to stop
 unacceptable behaviour is expected to comply immediately.
 
 If a community member engages in unacceptable behaviour, the community
-organizers may take any action they deem appropriate. These include, but are not
-limited to:
+organizers may take any action they deem appropriate, by agreement with, and
+subject to correction and reversal by, the lead organizer. These include, but 
+are not limited to:
 
 * A verbal warning (either in private or in public).
-* A temporary ban of any length with right of appeal.
-* A temporary ban of any length without right of appeal, by unanimous consent of
-  the community organizers.
-* A permanent ban with right of appeal.
-* A permanent ban without right of appeal, by unanimous consent of the community
-  organizers.
-* Temporary revocation of community organizer status for any length of time, with 
-  right of appeal.
-* Temporary revocation of community organizer status for any length of time,
-  without right of appeal, by unanimous consent of the remaining community
-  organizers.
-* Permanent revocation of community organizer status with right of appeal.
-* Permanent revocation of community organizer status without right of appeal, by
-  unanimous consent of the remaining community organizers.
+* A temporary ban of any length, with or without right of appeal, from any or
+  all community spaces.
+* A permanent ban, with or without right of appeal, from any or all community
+  spaces.
+* Temporary revocation of community organizer status for any length of time, 
+  with or without right of appeal.
+* Permanent revocation of community organizer status with or without right of 
+  appeal.
 * Removal of contributions to Pext from any Pext-associated repositories, with
-  right of appeal.
-* Removal of contributions to Pext from any Pext-associated repositories,
-  without right of appeal, by unanimous consent
+  or without right of appeal.
 * Notification of law enforcement, or other appropriate authorities, along with
   any evidence of wrongdoing provided to the community organizers.
 
@@ -134,7 +127,6 @@ concerns, please notify a community organizer as soon as possible. The current
 list of community organizers is:
 
 * Sylvia van Os <sylvia@hackerchick.me> (lead organizer)
-* Koz Ross <koz.ross@retro-freedom.nz>
 
 When reporting, please include the following information, to the best of your
 knowledge and ability:
@@ -183,7 +175,6 @@ This is the current list of community organizers, with appropriate contact
 information:
 
 * Sylvia van Os <sylvia@hackerchick.me> (lead organizer)
-* Koz Ross <koz.ross@retro-freedom.nz>
 
 ## Modifications
 
