@@ -506,7 +506,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Profile")
+            title: qsTr("P&rofile")
 
             MenuItem {
                 objectName: "menuLoadProfile"
