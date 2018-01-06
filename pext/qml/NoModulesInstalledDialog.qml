@@ -21,7 +21,7 @@ import QtQuick 2.3
 import QtQuick.Dialogs 1.2
 
 MessageDialog {
-    title: "Pext"
+    title: qsTr("No modules installed")
     icon: StandardIcon.Information
 
     text: qsTr("No modules installed, please install one first.")

@@ -23,7 +23,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: qsTr("Theme installation")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var applicationWindow

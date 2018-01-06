@@ -611,6 +611,64 @@ class MainLoop():
                     time.sleep(0.1)
 
 
+class LocaleManager():
+    """Load and switch locales."""
+
+    def __init__(self, app: QApplication) -> None:
+        """Initialize the locale manager."""
+        self.app = app
+        self.locale_dir = os.path.join(AppFile.get_path(), 'i18n')
+        self.current_locale = None
+        self.locales = self._get_locales()
+        self.translator = QTranslator()
+
+    def _get_locales(self) -> Dict[str, str]:
+        locales = {}
+        for locale_file in os.listdir(self.locale_dir):
+            if not locale_file.endswith('.qm'):
+                continue
+
+            locale_code = os.path.splitext(locale_file)[0][len('pext_'):]
+            locale_name = QLocale(locale_code).nativeLanguageName()
+            locales[locale_name] = locale_code
+
+        return locales
+
+    def get_locales(self) -> Dict[str, str]:
+        """Return the list of supported locales.
+
+        It is return as a dictionary formatted as follows: {nativeLanguageName: languageCode}.
+        """
+        return self.locales
+
+    def get_current_locale(self, system_if_unset=True) -> Optional[QLocale]:
+        """Get the current locale.
+
+        If no locale is explicitly set, it will return the current system locale, unless system_if_unset is set to
+        False, in which case it will return None.
+        """
+        if self.current_locale:
+            return self.current_locale
+
+        if system_if_unset:
+            return QLocale()
+
+        return None
+
+    def load_locale(self, locale=None) -> None:
+        """Load the given locale into the application."""
+        chosen_locale = QLocale(locale)
+        if locale:
+            self.current_locale = chosen_locale
+
+        print('Using locale: {} {}'
+              .format(chosen_locale.name(), "(manually set)" if locale else ""))
+        print('Localization loaded:',
+              self.translator.load(chosen_locale, 'pext', '_', self.locale_dir, '.qm'))
+
+        self.app.installTranslator(self.translator)
+
+
 class ProfileManager():
     """Create, remove, list, load and save to a profile."""
 
@@ -688,7 +746,7 @@ class ProfileManager():
         rmtree(os.path.join(self.profile_dir, profile))
         return True
 
-    def list_profiles(self) -> List:
+    def list_profiles(self) -> List[str]:
         """List the existing profiles."""
         return os.listdir(self.profile_dir)
 
@@ -1812,12 +1870,13 @@ class ViewModel():
 class Window(QMainWindow):
     """The main Pext window."""
 
-    def __init__(self, config_retriever: ConfigRetriever, parent=None) -> None:
+    def __init__(self, config_retriever: ConfigRetriever, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
 
         # Save settings
         self.config_retriever = config_retriever
+        self.locale_manager = locale_manager
 
         self.tab_bindings = []  # type: List[Dict]
 
@@ -1837,6 +1896,8 @@ class Window(QMainWindow):
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
+        self.context.setContextProperty("currentLocale", self.locale_manager.get_current_locale(system_if_unset=False))
+        self.context.setContextProperty("locales", self.locale_manager.get_locales())
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
@@ -1905,6 +1966,9 @@ class Window(QMainWindow):
         menu_manage_profiles_shortcut = self.window.findChild(
             QObject, "menuManageProfiles")
 
+        menu_change_language_shortcut = self.window.findChild(
+            QObject, "menuChangeLanguage")
+
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
         menu_sort_ascending_shortcut = self.window.findChild(
@@ -1956,6 +2020,8 @@ class Window(QMainWindow):
         menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
         menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
         menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
+
+        menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2185,8 +2251,7 @@ class Window(QMainWindow):
 
     def _menu_restart_pext(self, extra_args=[]) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
-        _shut_down(self,
-                   self.config_retriever)
+        _shut_down(self, self.config_retriever)
 
         args = sys.argv[:]
         args.extend(extra_args)
@@ -2297,6 +2362,10 @@ class Window(QMainWindow):
             }
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_change_language(self, lang_code: str) -> None:
+        Settings.set('locale', lang_code)
+        self._menu_restart_pext()
 
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
@@ -2725,7 +2794,7 @@ class Settings():
         '_launch_app': True,  # Keep track if launching is normal
         'background': False,
         'clipboard': 'clipboard',
-        'locale': QLocale.system().name(),
+        'locale': None,
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
@@ -3064,17 +3133,12 @@ def main() -> None:
         appname = 'Pext'
     else:
         appname = 'Pext ({})'.format(Settings.get('profile'))
+
     app = QApplication([appname])
 
-    translator = QTranslator()
-    locale_to_use = Settings.get('locale')
-    print('Using locale: {} {}'
-          .format(QLocale(locale_to_use).name(),
-                  "(manually set)" if Settings.get('locale') != QLocale.system().name() else ""))
-    print('Localization loaded:',
-          translator.load(QLocale(locale_to_use), 'pext', '_', os.path.join(AppFile.get_path(), 'i18n'), '.qm'))
-
-    app.installTranslator(translator)
+    # Load the locale
+    locale_manager = LocaleManager(app)
+    locale_manager.load_locale(Settings.get('locale'))
 
     # Load the app icon
     # KDE doesn't support svg in the system tray and macOS makes the png in
@@ -3101,7 +3165,7 @@ def main() -> None:
         sys.exit(3)
 
     # Get a window
-    window = Window(config_retriever)
+    window = Window(config_retriever, locale_manager)
 
     # Get a logger
     logger = Logger(window)

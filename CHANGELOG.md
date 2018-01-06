@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Switching profile from the GUI
 - Opening a second instance with another profile from the GUI
 - Basic profile management from the GUI
+- Ability to change language through the UI
 
 ### Changed
 - Profile name is no longer displayed if default
@@ -18,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Trying to delete a profile that is currently in use throws an error
 - Use argparse for argument parsing instead of getopt
 - Update checking now happens if the last check was over 24 hours, instead of each app launch
+- Combine all menu groups in settings for organizational purposes
 - Relicensed documentation under CC BY-SA 4.0
 
 ### Fixed

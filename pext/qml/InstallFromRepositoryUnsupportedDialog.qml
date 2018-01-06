@@ -21,7 +21,7 @@ import QtQuick 2.3
 import QtQuick.Dialogs 1.2
 
 MessageDialog {
-    title: "Pext"
+    title: qsTr("Unsupported repository format")
     icon: StandardIcon.Information
 
     property var expectedVersion

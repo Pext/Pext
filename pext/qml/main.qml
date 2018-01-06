@@ -346,7 +346,8 @@ ApplicationWindow {
                     } else {
                         var manageDialog = Qt.createComponent("ManageDialog.qml");
                         manageDialog.createObject(applicationWindow,
-                            {"manageableObjects": modules,
+                            {"type": "modules",
+                             "manageableObjects": modules,
                              "updateRequest": updateModuleRequest,
                              "uninstallRequest": uninstallModuleRequest});
                     }
@@ -445,7 +446,8 @@ ApplicationWindow {
                     } else {
                         var manageDialog = Qt.createComponent("ManageDialog.qml");
                         manageDialog.createObject(applicationWindow,
-                            {"manageableObjects": themes,
+                            {"type": "themes",
+                             "manageableObjects": themes,
                              "updateRequest": updateThemeRequest,
                              "uninstallRequest": uninstallThemeRequest});
                     }
@@ -504,7 +506,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Profile")
+            title: qsTr("P&rofile")
 
             MenuItem {
                 objectName: "menuLoadProfile"
@@ -513,11 +515,16 @@ ApplicationWindow {
                 signal loadProfileRequest(string name, bool newInstance)
 
                 onTriggered: {
-                    var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");
-                    loadProfileDialog.createObject(applicationWindow,
-                        {"currentProfile": currentProfile,
-                         "profiles": profiles.sort(),
-                         "loadRequest": loadProfileRequest});
+                    if (profiles.length < 1) {
+                        var onlyOneProfileDialog = Qt.createComponent("OnlyOneProfileDialog.qml");
+                        onlyOneProfileDialog.createObject(applicationWindow);
+                    } else {
+                        var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");
+                        loadProfileDialog.createObject(applicationWindow,
+                            {"currentProfile": currentProfile,
+                             "profiles": profiles.sort(),
+                             "loadRequest": loadProfileRequest});
+                    }
                 }
             }
 
@@ -541,76 +548,115 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Settings")
 
-            ExclusiveGroup {
-                id: menuSortGroup
-                objectName: "menuSortGroup"
+            Menu {
+                id: menuChangeLanguage
+                objectName: "menuChangeLanguage"
+
+                title: qsTr("Language")
+
+                signal changeLanguage(string langcode)
+
+                ExclusiveGroup {
+                    id: menuLanguageGroup
+                    objectName: "menuLanguageGroup"
+                }
+
+                MenuItem {
+                    text: qsTr("System locale")
+                    checked: currentLocale === null
+                    checkable: true
+                    exclusiveGroup: menuLanguageGroup
+                    onTriggered: menuChangeLanguage.changeLanguage(null)
+                }
+
+                MenuSeparator {}
+
+                Instantiator {
+                    model: Object.keys(locales).sort()
+                    onObjectAdded: menuChangeLanguage.insertItem(index, object)
+                    onObjectRemoved: menuChangeLanguage.removeItem(object)
+                    delegate: MenuItem {
+                        text: modelData
+                        checked: currentLocale !== null && currentLocale.nativeLanguageName == modelData
+                        checkable: true
+                        exclusiveGroup: menuLanguageGroup
+                        onTriggered: menuChangeLanguage.changeLanguage(locales[modelData])
+                    }
+                }
             }
 
-            MenuItem {
-                objectName: "menuSortModule"
-                text: qsTr("Sort by module choice")
-                checkable: true
-                exclusiveGroup: menuSortGroup
+            Menu {
+                title: qsTr("Sorting style")
+
+                ExclusiveGroup {
+                    id: menuSortGroup
+                    objectName: "menuSortGroup"
+                }
+
+                MenuItem {
+                    objectName: "menuSortModule"
+                    text: qsTr("Sort by module choice")
+                    checkable: true
+                    exclusiveGroup: menuSortGroup
+                }
+
+                MenuItem {
+                    objectName: "menuSortAscending"
+                    text: qsTr("Sort ascending")
+                    checkable: true
+                    exclusiveGroup: menuSortGroup
+                }
+
+                MenuItem {
+                    objectName: "menuSortDescending"
+                    text: qsTr("Sort descending")
+                    checkable: true
+                    exclusiveGroup: menuSortGroup
+                }
             }
 
-            MenuItem {
-                objectName: "menuSortAscending"
-                text: qsTr("Sort ascending")
-                checkable: true
-                exclusiveGroup: menuSortGroup
+            Menu {
+                title: qsTr("Minimizing behaviour")
+
+                ExclusiveGroup {
+                    id: menuMinimizeGroup
+                    objectName: "menuMinimizeGroup"
+                }
+
+                MenuItem {
+                    objectName: "menuMinimizeNormally"
+                    text: qsTr("Minimize normally")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
+
+                MenuItem {
+                    objectName: "menuMinimizeToTray"
+                    text: qsTr("Minimize to tray")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
+
+                MenuItem {
+                    objectName: "menuMinimizeNormallyManually"
+                    text: qsTr("Manual only: Minimize normally")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
+
+                MenuItem {
+                    objectName: "menuMinimizeToTrayManually"
+                    text: qsTr("Manual only: Minimize to tray")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
             }
-
-            MenuItem {
-                objectName: "menuSortDescending"
-                text: qsTr("Sort descending")
-                checkable: true
-                exclusiveGroup: menuSortGroup
-            }
-
-            MenuSeparator { }
-
-            ExclusiveGroup {
-                id: menuMinimizeGroup
-                objectName: "menuMinimizeGroup"
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeNormally"
-                text: qsTr("Minimize normally")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeToTray"
-                text: qsTr("Minimize to tray")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeNormallyManually"
-                text: qsTr("Manual only: Minimize normally")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeToTrayManually"
-                text: qsTr("Manual only: Minimize to tray")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuSeparator { }
 
             MenuItem {
                 objectName: "menuShowTrayIcon"
                 text: qsTr("Show tray icon")
                 checkable: true
             }
-
-            MenuSeparator { }
 
             MenuItem {
                 objectName: "menuEnableUpdateCheck"

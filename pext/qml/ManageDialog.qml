@@ -23,12 +23,13 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: type == "modules" ? qsTr("Manage modules") : qsTr("Manage themes")
     standardButtons: StandardButton.Ok
 
     property var manageableObjects
     property var updateRequest
     property var uninstallRequest
+    property var type
 
     height: 250
     width: 400
