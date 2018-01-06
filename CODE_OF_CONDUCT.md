@@ -98,6 +98,8 @@ organizers may take any action they deem appropriate, subject to correction
 and reversal by the lead organizer. These include, but are not limited to:
 
 * A verbal warning (either in private or in public).
+* Eviction from an event with no refund (if applicable), with conditional 
+  right of return or without right of return.
 * A temporary ban of any length, with or without right of appeal, from any or
   all community spaces.
 * A permanent ban, with or without right of appeal, from any or all community
