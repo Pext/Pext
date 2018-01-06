@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Use argparse for argument parsing instead of getopt
 - Update checking now happens if the last check was over 24 hours, instead of each app launch
 - Combine all menu groups in settings for organizational purposes
+- Relicensed documentation under CC BY-SA 4.0
 
 ### Fixed
 - Pext crash when module tries to empty context_menu_base
