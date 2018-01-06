@@ -123,7 +123,7 @@ When reporting, please include the following information, to the best of your
 knowledge and ability:
 
 * When and where the unacceptable behaviour occurred.
-* Who engages in unacceptable behaviour.
+* Who engaged in unacceptable behaviour.
 * Which unacceptable behaviour(s) happened.
 * Any evidence for your report (such as screencaps, logs, etc)
 * Who (besides yourself) was affected by this behaviour.
