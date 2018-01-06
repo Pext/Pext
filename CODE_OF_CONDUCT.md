@@ -77,8 +77,15 @@ our community:
   advances. If you do not have someone's prior consent, then any kind of sexual
   attention is unwelcome.
 * Deliberate intimidation or stalking (online or in person).
+* Sustained disruption of community spaces or events. This includes brining
+  weaponry into community spaces; see below for a more precise definition.
+* Intentional violation of local laws or regulations at in-person events.
 * Advocating for, encouraging, or assisting in any of the above behaviour.
-* Sustained disruption of community spaces or events.
+
+'Weapons' include, but are not limited to, guns, explosives (including 
+fireworks without prior approval by a community organizer), and large knives 
+such as those used for hunting or display, as well as any other item used for 
+the purpose of causing injury and harm to others. 
 
 ## Consequences of unacceptable behaviour
 
@@ -103,21 +110,6 @@ and reversal by the lead organizer. These include, but are not limited to:
   or without right of appeal.
 * Notification of law enforcement, or other appropriate authorities, along with
   any evidence of wrongdoing provided to the community organizers.
-
-## Weapons policy
-
-No weapons are allowed at Pext community events, community spaces, or in other
-spaces covered by the scope of this Code of Conduct. Weapons include, but are
-not limited to, guns, explosives (including fireworks without prior approval by
-a community organizer), and large knives such as those used for hunting or
-display, as well as any other item used for the purpose of causing injury and
-harm to others. Anyone seen in the possession of these items will be asked to
-leave immediately, and will only be allowed to return without the weapon.
-Community members are further required to comply with all local laws and
-regulations on this matter.
-
-Repeated violations of this policy are grounds for enforcement actions as if
-against unacceptable behaviour.
 
 ## Reporting guidelines
 
