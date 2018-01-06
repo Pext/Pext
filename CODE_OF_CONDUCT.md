@@ -26,7 +26,7 @@ exist in societies everywhere.
 As such, Pext is committed to the goal of open culture. Specifically, our
 community ensures that:
 
-* All source code is available under an open-source license.
+* All source code is available under an open source license.
 * All documentation, including artwork and logos, are available under an open
   culture license.
 * Copyleft licenses are employed throughout to guarantee independence from
