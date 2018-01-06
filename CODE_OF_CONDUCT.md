@@ -87,9 +87,8 @@ decision-making authority, will not be tolerated. Anyone asked to stop
 unacceptable behaviour is expected to comply immediately.
 
 If a community member engages in unacceptable behaviour, the community
-organizers may take any action they deem appropriate, by agreement with, and
-subject to correction and reversal by, the lead organizer. These include, but 
-are not limited to:
+organizers may take any action they deem appropriate, subject to correction 
+and reversal by the lead organizer. These include, but are not limited to:
 
 * A verbal warning (either in private or in public).
 * A temporary ban of any length, with or without right of appeal, from any or
