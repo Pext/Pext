@@ -170,11 +170,11 @@ information:
 
 ## Modifications
 
-The community organizers reserve the right to modify this Code of Conduct to 
-take into account future situations that could not have been foreseen
-at the time of its writing, or to address lack of clarity or inconsistencies
-that become apparent with practice. Additionally, we must update this document
-with any changes in the community organizer team when appropriate.
+This Code of Conduct is a living document, designed to serve the needs of our
+community at the present time, but also in the future. To ensure that it remains
+relevant, to address future situations that cannot be foreseen at the time of
+its writing, and to update the community organizer list, this document will
+occasionally receive updates.
 
 We will notify the community when any changes are made, along with a description
 of the content of these changes. These, along with previous versions, will be
