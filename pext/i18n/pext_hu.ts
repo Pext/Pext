@@ -59,7 +59,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="24"/>
         <source>Unsupported repository format</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem támogatott tároló formátum</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
@@ -72,7 +72,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modul telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
@@ -85,7 +85,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="24"/>
         <source>No modules found</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található modul</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
@@ -98,7 +98,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modul telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
@@ -146,7 +146,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modul telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
@@ -164,7 +164,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Téma telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
@@ -177,7 +177,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="24"/>
         <source>No themes available</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elérhető téma</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
@@ -190,7 +190,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Téma telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
@@ -228,7 +228,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Téma telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
@@ -241,7 +241,7 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="26"/>
         <source>Load module</source>
-        <translation type="unfinished">Modul betöltése</translation>
+        <translation>Modul betöltése</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
@@ -254,22 +254,22 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Profil betöltése</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation type="unfinished"></translation>
+        <translation>Válassza ki a profilt, amelyre váltani szeretne:</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation type="unfinished"></translation>
+        <translation>Megnyitás új ablakban</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Megjegyzés: A Pext újraindul a profilváltás végett.</translation>
     </message>
 </context>
 <context>
@@ -277,7 +277,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="26"/>
         <source>Switch theme</source>
-        <translation type="unfinished">Téma váltása</translation>
+        <translation>Téma váltása</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
@@ -300,12 +300,12 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage modules</source>
-        <translation type="unfinished">Modulok kezelése</translation>
+        <translation>Modulok kezelése</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage themes</source>
-        <translation type="unfinished">Témák kezelése</translation>
+        <translation>Témák kezelése</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="63"/>
@@ -353,22 +353,22 @@
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="26"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Profilok kezelése</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="43"/>
         <source>Enter profile name</source>
-        <translation type="unfinished"></translation>
+        <translation>Adja meg a profil nevét</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="47"/>
         <source>Create</source>
-        <translation type="unfinished"></translation>
+        <translation>Létrehozás</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="79"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltávolítás</translation>
     </message>
 </context>
 <context>
@@ -376,7 +376,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="24"/>
         <source>No modules installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs telepített modul</translation>
     </message>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
@@ -389,7 +389,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="24"/>
         <source>No themes installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs telepített téma</translation>
     </message>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
@@ -402,12 +402,12 @@
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation type="unfinished"></translation>
+        <translation>Csak egy profil elérhető</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation type="unfinished"></translation>
+        <translation>Csak egy profil elérhető. Kérjük, először hozzon létre egy második profilt.</translation>
     </message>
 </context>
 <context>
@@ -415,7 +415,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="24"/>
         <source>New version available</source>
-        <translation type="unfinished"></translation>
+        <translation>Új verzió érhető el</translation>
     </message>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
@@ -428,7 +428,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Frissítéskezelő</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
@@ -517,17 +517,17 @@
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>&amp;Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Profil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>Switch profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Profilváltás</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="533"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Profilok kezelése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="549"/>
@@ -537,17 +537,17 @@
     <message>
         <location filename="../qml/main.qml" line="555"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyelv</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="565"/>
         <source>System locale</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendszer nyelve</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="589"/>
         <source>Sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>Rendezés szempontja</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="598"/>
@@ -567,7 +567,7 @@
     <message>
         <location filename="../qml/main.qml" line="619"/>
         <source>Minimizing behaviour</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimalizálás típusa</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="628"/>
