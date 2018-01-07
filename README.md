@@ -2,10 +2,6 @@
 
 ![Pext logo](/logo.png)
 
-*Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
-[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
-donated by [vaeringjar](https://notabug.org/vaeringjar).*
-
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 
@@ -160,4 +156,4 @@ Under artwork and documentation fall:
 - All Markdown files in the root directory.
 - logo.png
 
-When attributing the artwork, it should be attributed as the Pext Logo by White Paper Fox. Please link to Pext with https://github.com/Pext/Pext or https://pext.hackerchick.me/ and to White Paper Fox with http://www.whitepaperfox.com/ where possible.
+When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as the Pext Logo by White Paper Fox. Please link to Pext with https://github.com/Pext/Pext or https://pext.hackerchick.me/ and to White Paper Fox with http://www.whitepaperfox.com/ where possible.
