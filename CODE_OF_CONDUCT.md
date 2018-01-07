@@ -127,7 +127,7 @@ knowledge and ability:
 * When and where the unacceptable behaviour occurred.
 * Who engaged in unacceptable behaviour.
 * Which unacceptable behaviour(s) happened.
-* Any evidence for your report (such as screencaps, logs, etc)
+* Any evidence for your report (such as screencaps, logs, etc).
 * Who (besides yourself) was affected by this behaviour.
 * Whether you want any additional actions taken by the community organizers to 
   ensure that your safety and well-being remain intact.
