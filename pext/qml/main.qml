@@ -737,7 +737,7 @@ ApplicationWindow {
         }
 
         GridLayout {
-            flow: applicationWindow.width > 700 ? GridLayout.LeftToRight : GridLayout.TopToBottom
+            flow: applicationWindow.width > applicationWindow.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
             visible: tabs.count == 0
 
             TextEdit {
@@ -756,7 +756,12 @@ ApplicationWindow {
             }
 
             Image {
-                visible: applicationWindow.width > 900
+                id: logo
+                visible: if (parent.flow == GridLayout.LeftToRight) {
+                    return applicationWindow.width > 3 * sourceSize.width
+                } else {
+                    return applicationWindow.height > 4 * sourceSize.height
+                }
                 asynchronous: true
                 source: "../images/scalable/logo.svg"
                 fillMode: Image.Pad
@@ -764,9 +769,13 @@ ApplicationWindow {
                 verticalAlignment: Image.AlignVCenter
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                Layout.minimumHeight: sourceSize.height + 50
                 Layout.minimumWidth: sourceSize.width + 50
-                anchors.leftMargin: 30
-                anchors.rightMargin: 30
+            }
+
+            Rectangle {
+                visible: !logo.visible
+                width: 50
             }
 
             TextEdit {
