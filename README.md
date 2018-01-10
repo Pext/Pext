@@ -4,6 +4,8 @@
 
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
+[![Twitter](https://img.shields.io/badge/Twitter-%40PextTool-blue.svg?logo=twitter)](https://twitter.com/PextTool)
+[![IRC](https://img.shields.io/badge/chat-on%20OFTC%20IRC-green.svg)](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1)
 
 ## Contents
 - [Introduction](#introduction)
