@@ -201,22 +201,29 @@ class Logger():
     as a desktop notification.
     """
 
-    def __init__(self, window: 'Window') -> None:
-        """Initialize the logger and add a status bar to the main window."""
-        self.window = window
-        self.queued_messages = []  # type: List[Dict[str, str]]
+    queued_messages = []  # type: List[Dict[str, str]]
+    last_update = None  # type: Optional[float]
 
-        self.last_update = None  # type: Optional[float]
-        self.status_text = self.window.window.findChild(QObject, "statusText")
-        self.status_queue = self.window.window.findChild(QObject, "statusQueue")
+    window = None
+    status_text = None  # type: QObject
+    status_queue = None  # type: QObject
 
-    def _queue_message(self, module_name: str, message: str, type_name: str) -> None:
+    @staticmethod
+    def bind_window(window: 'Window') -> None:
+        """Give the logger the ability to log info to the main window."""
+        Logger.window = window
+        Logger.status_text = window.window.findChild(QObject, "statusText")
+        Logger.status_queue = window.window.findChild(QObject, "statusQueue")
+
+    @staticmethod
+    def _queue_message(module_name: str, message: str, type_name: str) -> None:
         """Queue a message for display."""
-        for formatted_message in self._format_message(module_name, message):
-            self.queued_messages.append(
+        for formatted_message in Logger._format_message(module_name, message):
+            Logger.queued_messages.append(
                 {'message': formatted_message, 'type': type_name})
 
-    def _format_message(self, module_name: str, message: str) -> List[str]:
+    @staticmethod
+    def _format_message(module_name: str, message: str) -> List[str]:
         """Format message for display, including splitting multiline messages."""
         message_lines = []
         for line in message.splitlines():
@@ -231,38 +238,48 @@ class Logger():
         return message_lines
 
     @staticmethod
-    def _log(message: str, logger=None) -> None:
+    def log(module_name: Optional[str], message: str) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
-        if logger:
-            logger.add_message("", message)
+        if Logger.window:
+            if not module_name:
+                module_name = ""
+
+            Logger._queue_message(module_name, message, 'message')
         else:
             print(message)
 
     @staticmethod
-    def _log_error(message: str, logger=None) -> None:
+    def log_error(module_name: Optional[str], message: str) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
-        if logger:
-            logger.add_error("", message)
+        if Logger.window:
+            if not module_name:
+                module_name = ""
+
+            Logger._queue_message(module_name, message, 'error')
         else:
             print(message)
 
-    def show_next_message(self) -> None:
+    @staticmethod
+    def show_next_message() -> None:
         """Show next statusbar message.
 
         If the status bar has not been updated for 1 second, display the next
         message. If no messages are available, clear the status bar after it
         has been displayed for 5 seconds.
         """
-        current_time = time.time()
-        time_diff = 5 if len(self.queued_messages) < 1 else 1
-        if self.last_update and current_time - time_diff < self.last_update:
+        if not Logger.window:
             return
 
-        if len(self.queued_messages) == 0:
-            QQmlProperty.write(self.status_text, "text", "")
-            self.last_update = None
+        current_time = time.time()
+        time_diff = 5 if len(Logger.queued_messages) < 1 else 1
+        if Logger.last_update and current_time - time_diff < Logger.last_update:
+            return
+
+        if len(Logger.queued_messages) == 0:
+            QQmlProperty.write(Logger.status_text, "text", "")
+            Logger.last_update = None
         else:
-            message = self.queued_messages.pop(0)
+            message = Logger.queued_messages.pop(0)
 
             if message['type'] == 'error':
                 statusbar_message = "<font color='red'>⚠ {}</color>".format(
@@ -272,9 +289,9 @@ class Logger():
                 statusbar_message = message['message']
                 notification_message = message['message']
 
-            QQmlProperty.write(self.status_text, "text", statusbar_message)
+            QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            if self.window.window.windowState() == Qt.WindowMinimized or not self.window.window.isVisible():
+            if Logger.window.window.windowState() == Qt.WindowMinimized or not Logger.window.window.isVisible():
                 try:
                     Popen(['notify-send', 'Pext', notification_message])
                 except Exception as e:
@@ -282,20 +299,14 @@ class Logger():
                     traceback.print_exc()
                     print(notification_message)
 
-            self.last_update = current_time
+            Logger.last_update = current_time
 
-    def add_error(self, module_name: str, message: str) -> None:
-        """Add an error message to the queue."""
-        self._queue_message(module_name, message, 'error')
-
-    def add_message(self, module_name: str, message: str) -> None:
-        """Add a regular message to the queue."""
-        self._queue_message(module_name, message, 'message')
-
-    def set_queue_count(self, count: List[int]) -> None:
+    @staticmethod
+    def set_queue_count(count: List[int]) -> None:
         """Show the queue size on screen."""
-        QQmlProperty.write(self.status_queue, "entriesLeftForeground", count[0])
-        QQmlProperty.write(self.status_queue, "entriesLeftBackground", count[1])
+        if Logger.status_queue:
+            QQmlProperty.write(Logger.status_queue, "entriesLeftForeground", count[0])
+            QQmlProperty.write(Logger.status_queue, "entriesLeftBackground", count[1])
 
 
 class MainLoop():
@@ -305,25 +316,24 @@ class MainLoop():
     ensures these events get managed without locking up the UI.
     """
 
-    def __init__(self, app: QApplication, window: 'Window', logger: Logger) -> None:
+    def __init__(self, app: QApplication, window: 'Window') -> None:
         """Initialize the main loop."""
         self.app = app
         self.window = window
-        self.logger = logger
 
     def _process_tab_action(self, tab: Dict, active_tab: int) -> None:
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            self.logger.add_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['module_name'], str(action[1]))
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 
         elif action[0] == Action.add_message:
-            self.logger.add_message(tab['module_name'], str(action[1]))
+            Logger.log(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_error:
-            self.logger.add_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
             tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
@@ -570,7 +580,7 @@ class MainLoop():
         while True:
             self.app.sendPostedEvents()
             self.app.processEvents()
-            self.logger.show_next_message()
+            Logger.show_next_message()
 
             current_tab = QQmlProperty.read(self.window.tabs, "currentIndex")
             queue_size = [0, 0]
@@ -602,7 +612,7 @@ class MainLoop():
                     print('WARN: Module {} caused exception {}'.format(tab['module_name'], e))
                     traceback.print_exc()
 
-            self.logger.set_queue_count(queue_size)
+            Logger.set_queue_count(queue_size)
 
             if all_empty:
                 if self.window.window.isVisible():
@@ -873,7 +883,6 @@ class ModuleManager():
                                        'modules')
         self.module_dependencies_dir = os.path.join(self.config_retriever.get_setting('config_path'),
                                                     'module_dependencies')
-        self.logger = None  # type: Optional[Logger]
 
     @staticmethod
     def add_prefix(module_name: str) -> str:
@@ -941,14 +950,6 @@ class ModuleManager():
 
         return returncode
 
-    def bind_logger(self, logger: Logger) -> None:
-        """Connect a logger to the module manager.
-
-        If a logger is connected, the module manager will log all
-        messages directly to the logger.
-        """
-        self.logger = logger
-
     def load_module(self, window: 'Window', module: Dict, locale: str) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
@@ -991,9 +992,7 @@ class ModuleManager():
         try:
             module_import = __import__(module_dir, fromlist=['Module'])
         except ImportError as e1:
-            Logger._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e1),
-                self.logger)
+            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_name, module_dir, e1))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1013,9 +1012,8 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e2:
-            Logger._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e2),
-                self.logger)
+            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
+
             return False
 
         # Check if the required functions have enough parameters
@@ -1037,10 +1035,11 @@ class ModuleManager():
                     print("WARN: Module {} uses old process_response signature and will not be able to receive an "
                           "identifier if requested".format(module_name))
                 else:
-                    Logger._log_error(
+                    Logger.log_error(
+                        None,
                         "Failed to load module {} from {}: {} function has {} parameters (excluding self), expected {}"
-                        .format(module_name, module_dir, name, param_length, required_param_length),
-                        self.logger)
+                        .format(module_name, module_dir, name, param_length, required_param_length))
+
                     return False
 
         # Prefill API version and locale
@@ -1152,18 +1151,18 @@ class ModuleManager():
 
         if os.path.exists(os.path.join(self.module_dir, dir_name)):
             if verbose:
-                Logger._log('✔⇩ {}'.format(module_name), self.logger)
+                Logger.log(None, '✔⇩ {}'.format(module_name))
 
             return False
 
         if verbose:
-            Logger._log('⇩ {} ({})'.format(module_name, url), self.logger)
+            Logger.log(None, '⇩ {} ({})'.format(module_name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.module_dir, dir_name))
         except Exception as e:
             if verbose:
-                Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(module_name, e))
 
             traceback.print_exc()
 
@@ -1175,12 +1174,12 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩⇩ {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                Logger._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code), self.logger)
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(module_name, pip_exit_code))
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -1195,7 +1194,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔⇩⇩ {}'.format(module_name))
 
         return True
 
@@ -1205,15 +1204,13 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            Logger._log('♻ {}'.format(module_name), self.logger)
+            Logger.log(None, '♻ {}'.format(module_name))
 
         try:
             rmtree(os.path.join(self.module_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                Logger._log(
-                    '✔♻ {}'.format(module_name),
-                    self.logger)
+                Logger.log(None, '✔♻ {}'.format(module_name))
 
             return False
 
@@ -1223,7 +1220,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger._log('✔♻ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔♻ {}'.format(module_name))
 
         return True
 
@@ -1233,38 +1230,35 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            Logger._log('⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩ {}'.format(module_name))
 
         try:
             if not UpdateManager.update(os.path.join(self.module_dir, dir_name)):
                 if verbose:
-                    Logger._log('⏩{}'.format(module_name), self.logger)
+                    Logger.log(None, '⏩{}'.format(module_name))
+
                 return False
 
         except Exception as e:
             if verbose:
-                Logger._log_error(
-                    '⇩ {}: {}'.format(module_name, e),
-                    self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(module_name, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩⇩ {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                Logger._log_error(
-                    '⇩⇩ {}: {}'.format(module_name, pip_exit_code),
-                    self.logger)
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(module_name, pip_exit_code))
 
             return False
 
         if verbose:
-            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔⇩⇩ {}'.format(module_name))
 
         return True
 
@@ -2092,6 +2086,22 @@ class Window(QMainWindow):
 
                 permission_requests.updatePermissionRequest.emit()
 
+        # Start binding the modules
+        if len(Settings.get('modules')) > 0:
+            for module in Settings.get('modules'):
+                self.module_manager.load_module(self, module, Settings.get('locale'))
+        else:
+            for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
+                self.module_manager.load_module(self, module, Settings.get('locale'))
+
+        # If there's only one module passed through the command line, enforce
+        # loading it now. Otherwise, switch back to the first module in the
+        # list
+        if len(self.tab_bindings) == 1:
+            self.tabs.currentIndexChanged.emit()
+        elif len(self.tab_bindings) > 1:
+            QQmlProperty.write(self.tabs, "currentIndex", "0")
+
     def _bind_context(self) -> None:
         """Bind the context for the module."""
         current_tab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -2465,13 +2475,14 @@ class Window(QMainWindow):
 
     def _menu_check_updates_actually_check(self, verbose=True) -> None:
         if verbose:
-            Logger._log('⇩ Pext', self.logger)
+            Logger.log(None, '⇩ Pext')
 
         try:
             new_version = UpdateManager().check_core_update()
         except Exception as e:
-            Logger._log_error('⇩ Pext: {}'.format(e), self.logger)
+            Logger.log_error(None, '⇩ Pext: {}'.format(e))
             traceback.print_exc()
+
             return
 
         if new_version:
@@ -2479,7 +2490,7 @@ class Window(QMainWindow):
             self.update_available_requests.showUpdateAvailableDialog.emit()
         else:
             if verbose:
-                Logger._log('✔⇩ Pext', self.logger)
+                Logger.log(None, '✔⇩ Pext')
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
         # Set a timer to run this function again in an hour
@@ -2499,30 +2510,6 @@ class Window(QMainWindow):
 
     def _show_download_page(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/download')
-
-    def bind_logger(self, logger: 'Logger') -> None:
-        """Bind the logger to the window and further initialize the module."""
-        self.logger = logger
-
-        self.module_manager.bind_logger(logger)
-        self.theme_manager.bind_logger(logger)
-
-        # Now that the logger is bound, we can show messages in the window, so
-        # start binding the modules
-        if len(Settings.get('modules')) > 0:
-            for module in Settings.get('modules'):
-                self.module_manager.load_module(self, module, Settings.get('locale'))
-        else:
-            for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
-                self.module_manager.load_module(self, module, Settings.get('locale'))
-
-        # If there's only one module passed through the command line, enforce
-        # loading it now. Otherwise, switch back to the first module in the
-        # list
-        if len(self.tab_bindings) == 1:
-            self.tabs.currentIndexChanged.emit()
-        elif len(self.tab_bindings) > 1:
-            QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""
@@ -2588,7 +2575,6 @@ class ThemeManager():
         """Initialize the module manager."""
         self.config_retriever = config_retriever
         self.theme_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
-        self.logger = None  # type: Optional[Logger]
 
     @staticmethod
     def add_prefix(theme_name: str) -> str:
@@ -2605,14 +2591,6 @@ class ThemeManager():
             return theme_name[len('pext_theme_'):]
 
         return theme_name
-
-    def bind_logger(self, logger: Logger) -> None:
-        """Connect a logger to the module manager.
-
-        If a logger is connected, the module manager will log all
-        messages directly to the logger.
-        """
-        self.logger = logger
 
     def _get_palette_mappings(self) -> Dict[str, int]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
@@ -2668,18 +2646,18 @@ class ThemeManager():
 
         if os.path.exists(os.path.join(self.theme_dir, dir_name)):
             if verbose:
-                Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+                Logger.log(None, '✔⇩ {}'.format(theme_name))
 
             return False
 
         if verbose:
-            Logger._log('⇩ {} ({})'.format(theme_name, url), self.logger)
+            Logger.log(None, '⇩ {} ({})'.format(theme_name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.theme_dir, dir_name))
         except Exception as e:
             if verbose:
-                Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(theme_name, e))
 
             traceback.print_exc()
 
@@ -2691,7 +2669,7 @@ class ThemeManager():
             return False
 
         if verbose:
-            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔⇩ {}'.format(theme_name))
 
         return True
 
@@ -2701,20 +2679,18 @@ class ThemeManager():
         theme_name = ThemeManager.remove_prefix(theme_name)
 
         if verbose:
-            Logger._log('♻ {}'.format(theme_name), self.logger)
+            Logger.log(None, '♻ {}'.format(theme_name))
 
         try:
             rmtree(os.path.join(self.theme_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                Logger._log(
-                    '✔♻ {}'.format(theme_name),
-                    self.logger)
+                Logger.log(None, '✔♻ {}'.format(theme_name))
 
             return False
 
         if verbose:
-            Logger._log('✔♻ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔♻ {}'.format(theme_name))
 
         return True
 
@@ -2724,26 +2700,25 @@ class ThemeManager():
         theme_name = ThemeManager.remove_prefix(theme_name)
 
         if verbose:
-            Logger._log('⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '⇩ {}'.format(theme_name))
 
         try:
             if not UpdateManager.update(os.path.join(self.theme_dir, dir_name)):
                 if verbose:
-                    Logger._log('⏩{}'.format(theme_name), self.logger)
+                    Logger.log(None, '⏩{}'.format(theme_name))
+
                 return False
 
         except Exception as e:
             if verbose:
-                Logger._log_error(
-                    '⇩ {}: {}'.format(theme_name, e),
-                    self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(theme_name, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔⇩ {}'.format(theme_name))
 
         return True
 
@@ -3168,11 +3143,8 @@ def main() -> None:
     # Get a window
     window = Window(config_retriever, locale_manager)
 
-    # Get a logger
-    logger = Logger(window)
-
-    # Give the window a reference to the logger
-    window.bind_logger(logger)
+    # Give the logger a reference to the window
+    Logger.bind_window(window)
 
     # Clean up on exit
     atexit.register(_shut_down, window, config_retriever)
@@ -3183,7 +3155,7 @@ def main() -> None:
         signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
-    main_loop = MainLoop(app, window, logger)
+    main_loop = MainLoop(app, window)
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
