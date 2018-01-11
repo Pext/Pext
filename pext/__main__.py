@@ -2249,12 +2249,13 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_restart_pext(self, extra_args=[]) -> None:
+    def _menu_restart_pext(self, extra_args=None) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
         _shut_down(self, self.config_retriever)
 
         args = sys.argv[:]
-        args.extend(extra_args)
+        if extra_args:
+            args.extend(extra_args)
 
         args.insert(0, sys.executable)
         if sys.platform == 'win32':
