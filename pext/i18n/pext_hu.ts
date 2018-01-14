@@ -9,49 +9,44 @@
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="38"/>
+        <location filename="../qml/AboutDialog.qml" line="46"/>
         <source>Copyright</source>
         <translation>Szerzői jogok</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="70"/>
+        <location filename="../qml/AboutDialog.qml" line="78"/>
         <source>Translators</source>
         <translation>Fordítók</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="77"/>
+        <location filename="../qml/AboutDialog.qml" line="85"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Szeretne segíteni a Pext fordításában? Kérjük kattintson ide!</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="78"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>A Pext csapat szeretné megköszönni a következő felhasználóknak a Pext fordítását:</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Spanish</source>
-        <translation>spanyol</translation>
+        <translation type="vanished">spanyol</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation>magyar</translation>
+        <translation type="vanished">magyar</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="83"/>
         <source>Norwegian Bokmål</source>
-        <translation>norvég (bokmål)</translation>
+        <translation type="vanished">norvég (bokmål)</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Chinese (Traditional)</source>
-        <translation>kínai (hagyományos)</translation>
+        <translation type="vanished">kínai (hagyományos)</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="85"/>
         <source>Dutch</source>
-        <translation>holland</translation>
+        <translation type="vanished">holland</translation>
     </message>
 </context>
 <context>
@@ -515,11 +510,6 @@
         <translation>Összes téma frissítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="509"/>
-        <source>&amp;Profile</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>Switch profile</source>
         <translation type="unfinished"></translation>
@@ -605,27 +595,27 @@
         <translation>&amp;Segítség</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="682"/>
+        <location filename="../qml/main.qml" line="683"/>
         <source>Check for updates</source>
         <translation>Frissítések keresése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="744"/>
+        <location filename="../qml/main.qml" line="745"/>
         <source>Design philosophy</source>
         <translation>Tervezési filozófia</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="745"/>
+        <location filename="../qml/main.qml" line="746"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>A Pext úgy lett tervezve, hogy ne álljon az útjában. Amint egy modul úgy érzi, hogy végzett a használatával, a Pext minimalizálja magát a rendszer tálcájára. Ha újra szüksége van a Pext-re miután elrejtette magát, csak indítsa el újra, vagy nyissa meg a tálcáról!</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="777"/>
+        <location filename="../qml/main.qml" line="787"/>
         <source>Getting started</source>
         <translation>Első lépések</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="778"/>
+        <location filename="../qml/main.qml" line="788"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Nyomja meg a &lt;kbd&gt;%1&lt;/kbd&gt; billentyűt egy új lap létrehozásához! Amikor egy lapon végzett a munkával, nyomja meg a &lt;kbd&gt;%2&lt;/kbd&gt; billentyűt a lap bezárásához! Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
@@ -642,42 +632,47 @@
         <translation>Összes modul frissítése</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="509"/>
+        <source>P&amp;rofile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="673"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="687"/>
+        <location filename="../qml/main.qml" line="688"/>
         <source>Visit homepage</source>
         <translation>Honlap meglátogatása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="707"/>
+        <location filename="../qml/main.qml" line="708"/>
         <source>Clear</source>
         <translation>Törlés</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="707"/>
+        <location filename="../qml/main.qml" line="708"/>
         <source>Back</source>
         <translation>Vissza</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="716"/>
+        <location filename="../qml/main.qml" line="717"/>
         <source>Type to search</source>
         <translation>Gépeljen a kereséshez</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="811"/>
+        <location filename="../qml/main.qml" line="821"/>
         <source>Processing: %1 (%2)</source>
         <translation>Feldolgozás: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="813"/>
+        <location filename="../qml/main.qml" line="823"/>
         <source>Ready</source>
         <translation>Kész</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="813"/>
+        <location filename="../qml/main.qml" line="823"/>
         <source>Waiting</source>
         <translation>Várakozás</translation>
     </message>

@@ -9,49 +9,44 @@
         <translation>Over Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="38"/>
+        <location filename="../qml/AboutDialog.qml" line="46"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="70"/>
+        <location filename="../qml/AboutDialog.qml" line="78"/>
         <source>Translators</source>
         <translation>Vertalers</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="77"/>
+        <location filename="../qml/AboutDialog.qml" line="85"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Wilt u meehelpen met het vertalen van Pext? Klik dan hier.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="78"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Het Pext-team bedankt de volgende gebruikers voor het vertalen van Pext:</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Spanish</source>
-        <translation>Spaans</translation>
+        <translation type="vanished">Spaans</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Hungarian</source>
-        <translation>Hongaars</translation>
+        <translation type="vanished">Hongaars</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="83"/>
         <source>Norwegian Bokmål</source>
-        <translation>Noors (Bokmål)</translation>
+        <translation type="vanished">Noors (Bokmål)</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Chinese (Traditional)</source>
-        <translation>Chinees (Traditioneel)</translation>
+        <translation type="vanished">Chinees (Traditioneel)</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="85"/>
         <source>Dutch</source>
-        <translation>Nederlands</translation>
+        <translation type="vanished">Nederlands</translation>
     </message>
 </context>
 <context>
@@ -515,9 +510,8 @@
         <translation>Alle thema&apos;s bijwerken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="509"/>
         <source>&amp;Profile</source>
-        <translation>&amp;Profiel</translation>
+        <translation type="vanished">&amp;Profiel</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="513"/>
@@ -605,27 +599,27 @@
         <translation>&amp;Hulp</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="682"/>
+        <location filename="../qml/main.qml" line="683"/>
         <source>Check for updates</source>
         <translation>Controleren op updates</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="744"/>
+        <location filename="../qml/main.qml" line="745"/>
         <source>Design philosophy</source>
         <translation>Ontwerpfilosofie</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="745"/>
+        <location filename="../qml/main.qml" line="746"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>Pext is ontwikkeld om uit de weg te blijven. Zodra een module er van overtuigd is dat u klaar bent met het gebruiken ervan, verbergt Pext zichzelf naar het systeemvak. Als u Pext weer nodig hebt, dan kunt u het simpelweg opnieuw starten of vanuit het systeemvak openen.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="777"/>
+        <location filename="../qml/main.qml" line="787"/>
         <source>Getting started</source>
         <translation>Beginnen met Pext</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="778"/>
+        <location filename="../qml/main.qml" line="788"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Om te beginnen met Pext, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n module geïnstalleerd. Je kan modules beheren in het Module menu.</numerusform>
@@ -643,42 +637,47 @@
         <translation>Alle modules bijwerken</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="509"/>
+        <source>P&amp;rofile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="673"/>
         <source>About</source>
         <translation>Over</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="687"/>
+        <location filename="../qml/main.qml" line="688"/>
         <source>Visit homepage</source>
         <translation>Website bezoeken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="707"/>
+        <location filename="../qml/main.qml" line="708"/>
         <source>Clear</source>
         <translation>Wissen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="707"/>
+        <location filename="../qml/main.qml" line="708"/>
         <source>Back</source>
         <translation>Terug</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="716"/>
+        <location filename="../qml/main.qml" line="717"/>
         <source>Type to search</source>
         <translation>Typ om te zoeken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="811"/>
+        <location filename="../qml/main.qml" line="821"/>
         <source>Processing: %1 (%2)</source>
         <translation>Bezig met verwerken: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="813"/>
+        <location filename="../qml/main.qml" line="823"/>
         <source>Ready</source>
         <translation>Klaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="813"/>
+        <location filename="../qml/main.qml" line="823"/>
         <source>Waiting</source>
         <translation>Bezig met wachten</translation>
     </message>
