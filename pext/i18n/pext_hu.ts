@@ -287,7 +287,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>Megjegyzés: A Pext újraindul, hogy alkalmazza az új témát.</translation>
+        <translation>Megjegyzés: A Pext újraindul az új téma alkalmazása végett.</translation>
     </message>
 </context>
 <context>
@@ -547,7 +547,7 @@
     <message>
         <location filename="../qml/main.qml" line="598"/>
         <source>Sort by module choice</source>
-        <translation>Rendezés modul választás szerint</translation>
+        <translation>Rendezés a modul választása szerint</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="605"/>

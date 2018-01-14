@@ -621,15 +621,13 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="788"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>Para comenzar, presione &lt;kbd&gt;%1&lt;/kbd&gt; para abrir una nueva pestaña. Cuando hayas terminado con la pestaña, puedes cerrarla con presionando &lt;kbd&gt;%2&lt;/kbd&gt;. Actualmente tienes %n módulo instalado. Puedes manejar los módulos en el menú de los Módulos.</numerusform>
-            <numerusform>Para comenzar, presione &lt;kbd&gt;%1&lt;/kbd&gt; para abrir una nueva pestaña. Cuando hayas terminado con la pestaña, puedes cerrarla con presionando &lt;kbd&gt;%2&lt;/kbd&gt;. Actualmente tienes %n módulos instalados. Puedes manejar los módulos en el menú de los Módulos.</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Para comenzar, presione &lt;kbd&gt;%1&lt;/kbd&gt; para abrir una nueva pestaña. Cuando hayas terminado con la pestaña, puedes cerrarla con presionando &lt;kbd&gt;%2&lt;/kbd&gt;. Actualmente tienes %n módulo instalado. Puedes administrar los módulos en el menú de los Módulos.</numerusform>
+        <numerusform>Para comenzar, presione &lt;kbd&gt;%1&lt;/kbd&gt; para abrir una nueva pestaña. Cuando hayas terminado con la pestaña, puedes cerrarla con presionando &lt;kbd&gt;%2&lt;/kbd&gt;. Actualmente tienes %n módulos instalados. Puedes administrar los módulos en el menú de los Módulos.</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
-        <translation>Manejar módulos</translation>
+        <translation>Administrar módulos</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="398"/>
@@ -639,7 +637,7 @@
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>P&amp;rofile</source>
-        <translation type="unfinished"></translation>
+        <translation>Pe&amp;rfil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="673"/>
