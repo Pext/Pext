@@ -59,7 +59,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="24"/>
         <source>Unsupported repository format</source>
-        <translation type="unfinished"></translation>
+        <translation>Formato de repositorio incompatible</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
@@ -72,7 +72,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalación de módulo</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
@@ -85,12 +85,12 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="24"/>
         <source>No modules found</source>
-        <translation type="unfinished"></translation>
+        <translation>Ningunos módulos encontrado</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules found in this repository.</source>
-        <translation>Ningún módulo encontrado en este repositorio.</translation>
+        <translation>Ningunos módulos encontrado en este repositorio.</translation>
     </message>
 </context>
 <context>
@@ -98,7 +98,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalación de módulo</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
@@ -118,7 +118,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
         <source>Module information:</source>
-        <translation>Información del Módulo:</translation>
+        <translation>Información del módulo:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="64"/>
@@ -146,7 +146,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalación de módulo</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
@@ -164,7 +164,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalación de tema</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
@@ -177,12 +177,12 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="24"/>
         <source>No themes available</source>
-        <translation type="unfinished"></translation>
+        <translation>Ningunos temas disponible</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation>Ningún temas encontrados en este repositorio.</translation>
+        <translation>Ningunos temas encontrado en este repositorio.</translation>
     </message>
 </context>
 <context>
@@ -190,7 +190,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalación de tema</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
@@ -228,7 +228,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalación de tema</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
@@ -241,12 +241,12 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="26"/>
         <source>Load module</source>
-        <translation type="unfinished">Carga módulo</translation>
+        <translation>Cargar módulo</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
-        <translation>Elije el tema para cargar:</translation>
+        <translation>Elige el tema para cargar:</translation>
     </message>
 </context>
 <context>
@@ -254,22 +254,22 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Cargar perfil</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation type="unfinished"></translation>
+        <translation>Elige el perfil para cambiar a:</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir en una nueva ventana</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nota: Pext se reiniciará para cambiar de perfil.</translation>
     </message>
 </context>
 <context>
@@ -277,17 +277,17 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="26"/>
         <source>Switch theme</source>
-        <translation type="unfinished">Cambia tema</translation>
+        <translation>Cambiar tema</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation>Elije el tema para cambiar a:</translation>
+        <translation>Elige el tema para cambiar a:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
         <source>No theme</source>
-        <translation>Ningun tema</translation>
+        <translation>Ningún tema</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
@@ -300,12 +300,12 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage modules</source>
-        <translation type="unfinished">Manejar módulos</translation>
+        <translation>Administrar módulos</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage themes</source>
-        <translation type="unfinished">Manejar temas</translation>
+        <translation>Administrar temas</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="63"/>
@@ -353,22 +353,22 @@
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="26"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Administrar perfiles</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="43"/>
         <source>Enter profile name</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingrese el nombre del perfil</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="47"/>
         <source>Create</source>
-        <translation type="unfinished"></translation>
+        <translation>Crear</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="79"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Quitar</translation>
     </message>
 </context>
 <context>
@@ -376,12 +376,12 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="24"/>
         <source>No modules installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ningunos módulos instalados</translation>
     </message>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Ningún módulo instalado, por favor instale uno primero.</translation>
+        <translation>Ningunos módulos instalados, por favor instale uno primero.</translation>
     </message>
 </context>
 <context>
@@ -389,12 +389,12 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="24"/>
         <source>No themes installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ningunos temas instalados</translation>
     </message>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Ningún tema instalado, por favor instale uno primero.</translation>
+        <translation>Ningunos temas instalados, por favor instale uno primero.</translation>
     </message>
 </context>
 <context>
@@ -402,12 +402,12 @@
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo un perfil disponible</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation type="unfinished"></translation>
+        <translation>Solo hay un perfil disponible. Por favor crea un segundo perfil primero.</translation>
     </message>
 </context>
 <context>
@@ -415,7 +415,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="24"/>
         <source>New version available</source>
-        <translation type="unfinished"></translation>
+        <translation>Nueva versión disponible</translation>
     </message>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
@@ -428,12 +428,12 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation type="unfinished"></translation>
+        <translation>Administración de actualizaciones</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation>¿Puede Pext buscar actualizaciones automáticamente? Puedes cambiar esto a cualquier momento en el menú de configuración.</translation>
+        <translation>¿Puede Pext buscar actualizaciones automáticamente? Tu puedes cambiar esto a cualquier momento en el menú de ajustes.</translation>
     </message>
 </context>
 <context>
@@ -497,7 +497,7 @@
     <message>
         <location filename="../qml/main.qml" line="437"/>
         <source>Manage themes</source>
-        <translation>Manejar temas</translation>
+        <translation>Administrar temas</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="460"/>
@@ -517,17 +517,17 @@
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>&amp;Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Perfil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>Switch profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambia perfil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="533"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Administrar perfiles</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="549"/>
@@ -537,27 +537,27 @@
     <message>
         <location filename="../qml/main.qml" line="555"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="565"/>
         <source>System locale</source>
-        <translation type="unfinished"></translation>
+        <translation>Ubicación del sistema</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="589"/>
         <source>Sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>Estilo de clasificación</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="598"/>
         <source>Sort by module choice</source>
-        <translation>Ordenar por elección del módulo</translation>
+        <translation>Clasificar por módulo de elección</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="605"/>
         <source>Sort ascending</source>
-        <translation>Orden ascendente</translation>
+        <translation>Orden ascendiente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="612"/>
@@ -567,7 +567,7 @@
     <message>
         <location filename="../qml/main.qml" line="619"/>
         <source>Minimizing behaviour</source>
-        <translation type="unfinished"></translation>
+        <translation>Comportamiento de minimización</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="628"/>
