@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Opening a second instance with another profile from the GUI
 - Basic profile management from the GUI
 - Ability to change language through the UI
+- `--list-locales` argument to show supported languages
 
 ### Changed
 - Profile name is no longer displayed if default

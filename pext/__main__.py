@@ -629,12 +629,16 @@ class LocaleManager():
         self.app = app
         self.locale_dir = os.path.join(AppFile.get_path(), 'i18n')
         self.current_locale = None
-        self.locales = self._get_locales()
         self.translator = QTranslator()
 
-    def _get_locales(self) -> Dict[str, str]:
+    @staticmethod
+    def get_locales() -> Dict[str, str]:
+        """Return the list of supported locales.
+
+        It is return as a dictionary formatted as follows: {nativeLanguageName: languageCode}.
+        """
         locales = {}
-        for locale_file in os.listdir(self.locale_dir):
+        for locale_file in os.listdir(os.path.join(AppFile.get_path(), 'i18n')):
             if not locale_file.endswith('.qm'):
                 continue
 
@@ -643,13 +647,6 @@ class LocaleManager():
             locales[locale_name] = locale_code
 
         return locales
-
-    def get_locales(self) -> Dict[str, str]:
-        """Return the list of supported locales.
-
-        It is return as a dictionary formatted as follows: {nativeLanguageName: languageCode}.
-        """
-        return self.locales
 
     def get_current_locale(self, system_if_unset=True) -> Optional[QLocale]:
         """Get the current locale.
@@ -2858,6 +2855,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     parser.add_argument('-v', '--version', action='version',
                         version='Pext {}'.format(UpdateManager().get_core_version()))
     parser.add_argument('--locale', help='load the given locale.')
+    parser.add_argument('--list-locales', action='store_true',
+                        help='print a list of the available locales.')
     parser.add_argument('--list-styles', action='store_true',
                         help='print a list of loadable Qt system styles and exit.')
     parser.add_argument('--style', help='use the given Qt system style for the UI.')
@@ -2918,6 +2917,13 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     # Then, check for the rest
     if args.locale:
         Settings.set('locale', args.locale)
+
+    if args.list_locales:
+        locales = LocaleManager.get_locales()
+        for locale in locales:
+            print("{} ({})".format(locale, locales[locale]))
+
+        Settings.set('_launch_app', False)
 
     if args.list_styles:
         for style in QStyleFactory().keys():
