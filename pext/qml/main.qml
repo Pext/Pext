@@ -572,7 +572,7 @@ ApplicationWindow {
                 MenuSeparator {}
 
                 Instantiator {
-                    model: Object.keys(locales).sort()
+                    model: Object.keys(locales).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
                     onObjectAdded: menuChangeLanguage.insertItem(index, object)
                     onObjectRemoved: menuChangeLanguage.removeItem(object)
                     delegate: MenuItem {
