@@ -673,7 +673,8 @@ ApplicationWindow {
                 text: qsTr("About")
                 onTriggered: {
                     var aboutDialog = Qt.createComponent("AboutDialog.qml");
-                    aboutDialog.createObject(applicationWindow);
+                    aboutDialog.createObject(applicationWindow,
+                        {"locales": locales});
                 }
             }
 
