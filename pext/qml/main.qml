@@ -702,7 +702,7 @@ ApplicationWindow {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
 
-                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
+                enabled: tabs.count > 0 && tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
 
                 width: 60
                 text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
@@ -732,6 +732,13 @@ ApplicationWindow {
             visible: tabs.count > 0
             id: tabs
             objectName: "tabs"
+
+            signal removeRequest(int index);
+
+            onRemoveRequest: {
+                tabs.getTab(index).sourceComponent = undefined;
+                tabs.removeTab(index);
+            }
 
             Layout.fillHeight: true
             Layout.fillWidth: true
@@ -819,7 +826,7 @@ ApplicationWindow {
 
                 text: entriesLeftForeground || entriesLeftBackground ?
                       qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
-                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.hasEntries ?
+                      tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && !tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.hasEntries ?
                       qsTr("Waiting") : qsTr("Ready")
             }
         }

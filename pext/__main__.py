@@ -1094,8 +1094,8 @@ class ModuleManager():
             else:
                 QQmlProperty.write(window.tabs, "currentIndex", "0")
 
+        window.tabs.removeRequest.emit(tab_id)
         del window.tab_bindings[tab_id]
-        window.tabs.removeTab(tab_id)
 
     def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
