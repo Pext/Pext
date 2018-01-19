@@ -21,7 +21,8 @@ if sys.platform == 'darwin':
         options={'py2app': {
             'iconfile': 'pext/images/scalable/pext.icns',
             'emulate_shell_environment': 1,
-            'site_packages': 1
+            'site_packages': 1,
+            'includes': "readline"  # py2app by default excludes this, but the pass module needs it
         }}
     )
 else:
