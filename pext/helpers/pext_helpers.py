@@ -321,38 +321,38 @@ class Entry():
     @property
     def name(self):
         """Return the name of the entry."""
-        return self.name
+        return self._name
 
     @property
     def type(self):
         """Return the SelectionType of the entry."""
-        return self.type
+        return self._type
 
     @property
     def options(self):
         """Return the list of options of the entry."""
-        return self.options
+        return self._options
 
     @property
     def info_html(self):
         """Return the list of additional HTML-formatted info for the entry."""
-        return self.info_html
+        return self._info_html
 
     @name.setter
     def name(self, value):
-        self.name = value
+        self._name = value
 
     @type.setter
     def type(self, value):
         if not isinstance(value, SelectionType):
             raise ValueError("{} is not part of SelectionType enum".format(value))
 
-        self.type = value
+        self._type = value
 
     @options.setter
     def options(self, value):
-        self.options = value
+        self._options = value
 
     @info_html.setter
     def info_html(self, value):
-        self.info_html = value
+        self._info_html = value
