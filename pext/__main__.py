@@ -336,34 +336,32 @@ class MainLoop():
             Logger.log_error(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
-            tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
+            if action[1].type == SelectionType.entry:
+                tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
+            elif action[1].type == SelectionType.command:
+                tab['vm'].command_list = tab['vm'].command_list + [action[1]]
+            else:
+                raise ValueError('Invalid SelectionType')
 
         elif action[0] == Action.prepend_entry:
-            tab['vm'].entry_list = [action[1]] + tab['vm'].entry_list
+            if action[1].type == SelectionType.entry:
+                tab['vm'].entry_list = [action[1]] + tab['vm'].entry_list
+            elif action[1].type == SelectionType.command:
+                tab['vm'].command_list = [action[1]] + tab['vm'].command_list
+            else:
+                raise ValueError('Invalid SelectionType')
 
         elif action[0] == Action.remove_entry:
-            tab['vm'].entry_list.remove(action[1])
-
-        elif action[0] == Action.replace_entry_list:
-            if len(action) > 1:
-                tab['vm'].entry_list = action[1]
+            if action[1].type == SelectionType.entry:
+                tab['vm'].entry_list.remove(action[1])
+            elif action[1].type == SelectionType.command:
+                tab['vm'].command_list.remove(action[1])
             else:
-                tab['vm'].entry_list = []
+                raise ValueError('Invalid SelectionType')
 
-        elif action[0] == Action.add_command:
-            tab['vm'].command_list = tab['vm'].command_list + [action[1]]
-
-        elif action[0] == Action.prepend_command:
-            tab['vm'].command_list = [action[1]] + tab['vm'].command_list
-
-        elif action[0] == Action.remove_command:
-            tab['vm'].command_list.remove(action[1])
-
-        elif action[0] == Action.replace_command_list:
-            if len(action) > 1:
-                tab['vm'].command_list = action[1]
-            else:
-                tab['vm'].command_list = []
+        elif action[0] == Action.clear_entries:
+            tab['vm'].entry_list = []
+            tab['vm'].command_list = []
 
         elif action[0] == Action.set_header:
             if len(action) > 1:
@@ -485,79 +483,11 @@ class MainLoop():
 
             tab['vm'].module.selection_made(tab['vm'].selection)
 
-        elif action[0] == Action.set_entry_info:
-            if len(action) > 2:
-                tab['vm'].extra_info_entries[str(action[1])] = str(action[2])
-            else:
-                try:
-                    del tab['vm'].extra_info_entries[str(action[1])]
-                except KeyError:
-                    pass
-
-            tab['vm'].update_context_info_panel(request_update=False)
-
-        elif action[0] == Action.replace_entry_info_dict:
-            if len(action) > 1:
-                tab['vm'].extra_info_entries = action[1]
-            else:
-                tab['vm'].extra_info_entries = {}
-
-            tab['vm'].update_context_info_panel(request_update=False)
-
-        elif action[0] == Action.set_command_info:
-            if len(action) > 2:
-                tab['vm'].extra_info_commands[str(action[1])] = str(action[2])
-            else:
-                try:
-                    del tab['vm'].extra_info_commands[str(action[1])]
-                except KeyError:
-                    pass
-
-            tab['vm'].update_context_info_panel(request_update=False)
-
-        elif action[0] == Action.replace_command_info_dict:
-            if len(action) > 1:
-                tab['vm'].extra_info_commands = action[1]
-            else:
-                tab['vm'].extra_info_commands = {}
-
-            tab['vm'].update_context_info_panel(request_update=False)
-
         elif action[0] == Action.set_base_info:
             if len(action) > 1:
                 tab['vm'].update_base_info_panel(action[1])
             else:
                 tab['vm'].update_base_info_panel("")
-
-        elif action[0] == Action.set_entry_context:
-            if len(action) > 2:
-                tab['vm'].context_menu_entries[str(action[1])] = action[2]
-            else:
-                try:
-                    del tab['vm'].context_menu_entries[str(action[1])]
-                except KeyError:
-                    pass
-
-        elif action[0] == Action.replace_entry_context_dict:
-            if len(action) > 1:
-                tab['vm'].context_menu_entries = action[1]
-            else:
-                tab['vm'].context_menu_entries = {}
-
-        elif action[0] == Action.set_command_context:
-            if len(action) > 2:
-                tab['vm'].context_menu_commands[str(action[1])] = action[2]
-            else:
-                try:
-                    del tab['vm'].context_menu_commands[str(action[1])]
-                except KeyError:
-                    pass
-
-        elif action[0] == Action.replace_command_context_dict:
-            if len(action) > 1:
-                tab['vm'].context_menu_commands = action[1]
-            else:
-                tab['vm'].context_menu_commands = {}
 
         elif action[0] == Action.set_base_context:
             if len(action) > 1:
@@ -1040,7 +970,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        module['settings']['_api_version'] = [0, 7, 0]
+        module['settings']['_api_version'] = [0, 8, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1385,15 +1315,15 @@ class ViewModel():
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
-        self.command_list = []  # type: List
-        self.entry_list = []  # type: List
-        self.filtered_entry_list = []  # type: List
+        self.command_list = []  # type: List[Entry]
+        self.entry_list = []  # type: List[Entry]
+        self.filtered_entry_list = []  # type: List[Entry]
         self.filtered_command_list = []  # type: List
         self.result_list_model_list = QStringListModel()
         self.result_list_model_max_index = -1
         self.result_list_model_command_mode = False
         self.result_list_model_command_mode_new = True
-        self.selection = []  # type: List[Dict[SelectionType, str]]
+        self.selection = []  # type: List[Entry]
         self.last_search = ""
         self.context_menu_model_list = QStringListModel()
         self.extra_info_entries = {}  # type: Dict[str, str]
@@ -1403,7 +1333,6 @@ class ViewModel():
         self.context_menu_base = []  # type: List[str]
         self.context_menu_base_open = False
         self.extra_info_last_entry = ""
-        self.extra_info_last_entry_type = None
         self.selection_thread = None  # type: threading.Thread
 
     def make_selection(self) -> None:
@@ -1575,7 +1504,7 @@ class ViewModel():
 
             combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
 
-            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+            self.result_list_model_list.setStringList(str(entry.name) for entry in combined_list)
 
             self.context.setContextProperty(
                 "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
@@ -1633,13 +1562,13 @@ class ViewModel():
 
         if self.result_list_model_command_mode:
             for entry in filter_entry_list:
-                if all(search_string in str(entry).lower() for search_string in search_strings[1:]):
+                if all(search_string in str(entry.name).lower() for search_string in search_strings[1:]):
                     self.filtered_entry_list.append(entry)
 
             combined_list = self.filtered_command_list + self.filtered_entry_list
         else:
             for entry in filter_entry_list:
-                if all(search_string in str(entry).lower() for search_string in search_strings):
+                if all(search_string in str(entry.name).lower() for search_string in search_strings):
                     self.filtered_entry_list.append(entry)
 
             combined_list = self.filtered_entry_list + self.filtered_command_list
@@ -1652,7 +1581,7 @@ class ViewModel():
         self.context.setContextProperty(
             "resultListModelCommandEntries", len(self.filtered_command_list))
 
-        self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+        self.result_list_model_list.setStringList(str(entry.name) for entry in combined_list)
 
         # Keep existing selection, otherwise ensure something is selected
         if manual and self.result_list_model_command_mode and self.result_list_model_command_mode_new:
@@ -1677,12 +1606,10 @@ class ViewModel():
 
             selected_entry = self._get_entry(shorten_command=shorten_command)
 
-            selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
-
             return selected_entry
 
         if self.context.contextProperty("contextMenuEnabled") and self.context_menu_base_open:
-            return {'type': SelectionType.none, 'value': None, 'context_option': None}
+            return {'value': None, 'context_option': None}
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
@@ -1691,7 +1618,7 @@ class ViewModel():
                 selected_command = self.filtered_command_list[current_index]
             except IndexError:
                 entry = self.filtered_entry_list[current_index - len(self.filtered_command_list)]
-                return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
+                return {'value': entry, 'context_option': None}
 
             selected_command_split = selected_command.split(" ", 1)
             command_typed = QQmlProperty.read(self.search_input_model, "text")
@@ -1705,14 +1632,14 @@ class ViewModel():
                 except IndexError:
                     command_typed = selected_command_split[0]
 
-            return {'type': SelectionType.command, 'value': command_typed, 'context_option': None}
+            return {'value': command_typed, 'context_option': None}
 
         if current_index >= len(self.filtered_entry_list):
             entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
-            return {'type': SelectionType.command, 'value': entry, 'context_option': None}
+            return {'value': entry, 'context_option': None}
         else:
             entry = self.filtered_entry_list[current_index]
-            return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
+            return {'value': entry, 'context_option': None}
 
     def select(self) -> None:
         """Notify the module of our selection entry."""
@@ -1729,7 +1656,7 @@ class ViewModel():
         self.context_menu_entries = {}
         self.context_menu_commands = {}
 
-        self.selection.append(self._get_entry(include_context=True))
+        self.selection.append(self._get_entry(include_context=True)['value'])
 
         self.context.setContextProperty(
             "contextMenuEnabled", False)
@@ -1762,12 +1689,12 @@ class ViewModel():
         current_entry = self._get_entry(shorten_command=True)
 
         try:
-            if current_entry['type'] == SelectionType.entry:
+            if current_entry.type == SelectionType.entry:
                 self.context_menu_model_list.setStringList(
-                    str(entry) for entry in self.context_menu_entries[current_entry['value']])
+                    str(entry.info_html) for entry in self.context_menu_entries[current_entry['value']])
             else:
                 self.context_menu_model_list.setStringList(
-                    str(entry) for entry in self.context_menu_commands[current_entry['value']])
+                    str(entry.info_html) for entry in self.context_menu_commands[current_entry['value']])
 
             self.context_menu_base_open = False
             self.context.setContextProperty(
@@ -1785,18 +1712,15 @@ class ViewModel():
         """Update the context info panel with the info panel data of the currently selected entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             QQmlProperty.write(self.context_info_panel, "text", "")
-            self.extra_info_last_entry_type = None
             return
 
         current_entry = self._get_entry(shorten_command=True)
 
         # Prevent updating the list unnecessarily often
-        if (current_entry['value'] == self.extra_info_last_entry
-                and current_entry['type'] == self.extra_info_last_entry_type):
+        if current_entry['value'] == self.extra_info_last_entry:
             return
 
         self.extra_info_last_entry = current_entry['value']
-        self.extra_info_last_entry_type = current_entry['type']
 
         if request_update:
             info_selection = self.selection[:]
@@ -1805,13 +1729,7 @@ class ViewModel():
 
             threading.Thread(target=self.module.extra_info_request, args=(info_selection,)).start()
 
-        try:
-            if current_entry['type'] == SelectionType.entry:
-                QQmlProperty.write(self.context_info_panel, "text", self.extra_info_entries[current_entry['value']])
-            else:
-                QQmlProperty.write(self.context_info_panel, "text", self.extra_info_commands[current_entry['value']])
-        except KeyError:
-            QQmlProperty.write(self.context_info_panel, "text", "")
+        QQmlProperty.write(self.context_info_panel, "text", current_entry['value'].info_html)
 
     def update_base_info_panel(self, base_info: str) -> None:
         """Update the base info panel based on the current module state."""

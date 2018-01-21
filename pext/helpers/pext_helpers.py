@@ -66,75 +66,40 @@ class Action(Enum):
 
     add_entry
         Introduced in API version 0.1.0.
+        Changed in API version 0.8.0.
 
         Add an entry to the entry list.
 
-        entry -- the entry
+        entry -- an instance of Entry
 
-        Example: self.q.put([Action.add_entry, "Audio settings"])
+        Example: self.q.put([Action.add_entry, entry("Audio settings")])
 
     prepend_entry
         Introduced in API version 0.1.0.
+        Changed in API version 0.8.0.
 
         Prepend an entry to the entry list.
 
-        entry -- the entry
+        entry -- an instance of Entry
 
-        Example: self.q.put([Action.prepend_entry, "Audio settings"])
+        Example: self.q.put([Action.prepend_entry, entry("volume", type=SelectionType.command)])
 
     remove_entry
         Introduced in API version 0.1.0.
+        Changed in API version 0.8.0.
 
         Remove an entry from the entry list.
 
-        entry -- the entry
+        entry -- an instance of Entry
 
-        Example: self.q.put([Action.remove_entry, "Audio settings"])
+        Example: self.q.put([Action.remove_entry, entry])
 
-    replace_entry_list
-        Introduced in API version 0.1.0.
+    clear_entries
+        Introduced in API version 0.8.0.
 
-        Replace the list of entries with the given list.
+        Clear the list of enries.
 
-        list -- the new list of entries
-
-        Example: self.q.put([Action.replace_entry_list, ["Audio settings", "Video settings"]])
-
-    add_command
-        Introduced in API version 0.1.0.
-
-        Add an entry to the command list.
-
-        entry -- the entry
-
-        Example: self.q.put([Action.add_command, "download"])
-
-    prepend_command
-        Introduced in API version 0.1.0.
-
-        Prepend an entry to the command list.
-
-        entry -- the entry
-
-        Example: self.q.put([Action.prepend_command, "download"])
-
-    remove_command
-        Introduced in API version 0.1.0.
-
-        Remove a command from the entry list.
-
-        entry -- the entry
-
-        Example: self.q.put([Action.remove_command, "download"])
-
-    replace_command_list
-        Introduced in API version 0.1.0.
-
-        Replace the list of commands with the given list.
-
-        list -- the new list of entries
-
-        Example: self.q.put([Action.replace_command_list, ["download", "upload"]])
+        Example: self.q.put([Action.clear_entry_list])
 
     set_header
         Introduced in API version 0.1.0.
@@ -227,10 +192,8 @@ class Action(Enum):
 
         Change the internal Pext selection for this module.
 
-        The internal Pext selection contains a list of all options and commands
-        the user chose and typed since the last time the window was closed and
-        looks something like this:
-        [{type: SelectionType.entry, value: "Audio settings"}, {type: SelectionType.command, value: "volume 50"}].
+        The internal Pext selection contains a list of all entries the user
+        chose since the last time the window was closed.
 
         To go a single level up, simply remove the last entry from this list.
         To reset to the main screen, use an empty list.
@@ -240,7 +203,7 @@ class Action(Enum):
 
         list -- the selection list
 
-        Example: self.q.put([Action.set_selection, [{type: SelectionType.entry, value: "Audio settings"}])
+        Example: self.q.put([Action.set_selection, [entry1, entry2])
 
     close:
         Introduced in API version 0.1.0.
@@ -252,90 +215,12 @@ class Action(Enum):
 
         Example: self.q.put([Action.close])
 
-    set_entry_info:
-        Introduced in API version 0.3.1.
-
-        Set additional info for a certain entry, either in plain text or HTML.
-
-        key -- the entry to set it for
-        value -- the value to set it to
-
-        Example: self.q.put([Action.set_entry_info, "Audio settings", "Change the audio settings")
-
-    replace_entry_info_dict:
-        Introduced in API version 0.5.
-
-        Set all entry info at once by passing a dictionary.
-
-        Example: self.q.put([Action.set_entry_info,
-                             {"Audio settings": "Change the audio settings",
-                              "Video settings": "Change the video settings"}])
-
-    set_command_info:
-        Introduced in API version 0.3.1.
-
-        Set additional info for a certain command, either in plain text or HTML.
-
-        key -- the command to set it for
-        value -- the value to set it to
-
-        Example: self.q.put([Action.set_command_info, "volume", "Set the volume to the desired percentage (0 - 100)")
-
-    replace_command_info_dict:
-        Introduced in API version 0.5.
-
-        Set all command info at once by passing a dictionary.
-
-        Example: self.q.put([Action.set_entry_info,
-                             {"volume": "Set the volume to the desired percentage (0 - 100)",
-                              "video": "Turn video on or off"}])
-
     set_base_info:
         Introduced in API version 0.6.
 
         Set an info block to always show regardless of the active selection.
 
         Example: self.q.put([Action.set_base_info, "Type stop to stop listening to radio"])
-
-    set_entry_context:
-        Introduced in API version 0.4.
-
-        Add a context menu to a certain entry.
-
-        key -- the entry to set it for
-        value -- the list of context entries
-
-        Example: self.q.put([Action.set_entry_context,
-                             "Audio settings",
-                             ["Disable", "Decrease volume", "Increase volume"])
-
-    replace_entry_context_dict:
-        Introduced in API version 0.5.
-
-        Set all entry context menu entries at once by passing a dictionary.
-
-        Example: self.q.put([Action.replace_entry_context,
-                             {"Audio settings": ["Disable"],
-                              "Video quality": ["High", "Low"]}
-
-    set_command_context:
-        Introduced in API version 0.4.
-
-        Add a context menu to a certain command.
-
-        key -- the command to set it for
-        value -- the value to set it to
-
-        Example: self.q.put([Action.set_command_context, "volume", ["0%", "20%", "40%", "60%", "80%", "100%"])
-
-    replace_command_context_dict:
-        Introduced in API version 0.5.
-
-        Set all command context menu entries at once by passing a dictionary.
-
-        Example: self.q.put([Action.replace_command_context_dict,
-                             {"volume": ["0%", "20%", "40%", "60%", "80%", "100%"],
-                              "video": ["on", "off"]}])
 
     set_base_context:
         Introduced in API version 0.6.
@@ -352,31 +237,19 @@ class Action(Enum):
     add_entry = 3
     prepend_entry = 4
     remove_entry = 5
-    replace_entry_list = 6
-    add_command = 7
-    prepend_command = 8
-    remove_command = 9
-    replace_command_list = 10
-    set_header = 11
-    set_filter = 12
-    ask_question_default_yes = 13
-    ask_question_default_no = 14
-    ask_input = 15
-    ask_input_password = 16
-    ask_input_multi_line = 17
-    copy_to_clipboard = 18
-    set_selection = 19
-    close = 20
-    set_entry_info = 21
-    replace_entry_info_dict = 22
-    set_command_info = 23
-    replace_command_info_dict = 24
-    set_base_info = 25
-    set_entry_context = 26
-    replace_entry_context_dict = 27
-    set_command_context = 28
-    replace_command_context_dict = 29
-    set_base_context = 30
+    clear_entries = 6
+    set_header = 7
+    set_filter = 8
+    ask_question_default_yes = 9
+    ask_question_default_no = 10
+    ask_input = 11
+    ask_input_password = 12
+    ask_input_multi_line = 13
+    copy_to_clipboard = 14
+    set_selection = 15
+    close = 16
+    set_base_info = 17
+    set_base_context = 18
 
 
 class SelectionType(Enum):
@@ -404,3 +277,82 @@ class SelectionType(Enum):
     entry = 0
     command = 1
     none = 2
+
+
+class Entry():
+    """Introduced in API version 0.8.0.
+
+    name
+        Introduced in API version 0.8.0.
+
+        The string name of the entry.
+
+    type
+        Introduced in API version 0.8.0.
+
+        The type of an entry. Can be either SelectionType.entry or SelectionType.command.
+
+        If not given, defaults to SelectionType.entry.
+
+        This value is underscored to not conflict with the internal keyword type
+
+    options
+        Introduced in API version 0.8.0.
+
+        The list of options available for an entry.
+
+        If not given, defaults to an empty list.
+
+    info_html
+        Introduced in API version 0.8.0.
+
+        The extra info for an entry, formatted as HTML.
+
+        If not given, defaults to an entry string.
+    """
+
+    def __init__(self, name, type=SelectionType.entry, options=[], info_html="") -> None:
+        """Create a new entry, with name and optional other settings."""
+        self.name = name
+        self.type = type
+        self.options = options
+        self.info_html = info_html
+
+    @property
+    def name(self):
+        """Return the name of the entry."""
+        return self.name
+
+    @property
+    def type(self):
+        """Return the SelectionType of the entry."""
+        return self.type
+
+    @property
+    def options(self):
+        """Return the list of options of the entry."""
+        return self.options
+
+    @property
+    def info_html(self):
+        """Return the list of additional HTML-formatted info for the entry."""
+        return self.info_html
+
+    @name.setter
+    def name(self, value):
+        self.name = value
+
+    @type.setter
+    def type(self, value):
+        if not isinstance(value, SelectionType):
+            raise ValueError("{} is not part of SelectionType enum".format(value))
+
+        self.type = value
+
+    @options.setter
+    def options(self, value):
+        self.options = value
+
+    @info_html.setter
+    def info_html(self, value):
+        self.info_html = value

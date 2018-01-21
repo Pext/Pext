@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
+- Bump API version to 0.8.0
+- Entries are no longer dicts but instances of the Entry class
+- Remove replace_entry_list
+- Remove all *_command Actions (these are merged with the entry ones by making an entry that has a command type)
+- Remove setting an entry's extra info and context, from now on, edit the entry itself
+- Add clear_entries Action
+
 ### Added
 - Support renaming profiles
 - Switching profile from the GUI
