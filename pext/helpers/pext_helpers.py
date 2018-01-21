@@ -309,14 +309,24 @@ class Entry():
         The extra info for an entry, formatted as HTML.
 
         If not given, defaults to an entry string.
+
+    module_internal
+        Introduced in API version 0.8.0.
+
+        This field can contain any info a module wishes, Pext will never touch it.
+
+        Useful for storing extra (hidden) data.
+
+        If not given, defaults to none.
     """
 
-    def __init__(self, name, type=SelectionType.entry, options=[], info_html="") -> None:
+    def __init__(self, name, type=SelectionType.entry, options=[], info_html="", module_internal=None) -> None:
         """Create a new entry, with name and optional other settings."""
         self.name = name
         self.type = type
         self.options = options
         self.info_html = info_html
+        self.module_internal = module_internal
 
     @property
     def name(self):
@@ -338,6 +348,11 @@ class Entry():
         """Return the list of additional HTML-formatted info for the entry."""
         return self._info_html
 
+    @property
+    def module_internal(self):
+        """Return the hidden data the module added."""
+        return self._module_internal
+
     @name.setter
     def name(self, value):
         self._name = value
@@ -356,3 +371,7 @@ class Entry():
     @info_html.setter
     def info_html(self, value):
         self._info_html = value
+
+    @module_internal.setter
+    def module_internal(self, value):
+        self._module_internal = value
