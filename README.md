@@ -4,11 +4,10 @@
 
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
-[![Code Health](https://landscape.io/github/Pext/Pext/master/landscape.svg?style=flat)](https://landscape.io/github/Pext/Pext/master)  
-[![Twitter](https://img.shields.io/badge/Twitter-%40PextTool-blue.svg?logo=twitter)](https://twitter.com/PextTool)
-[![IRC](https://img.shields.io/badge/chat-on%20OFTC%20IRC-green.svg)](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1)
+[![Code Health](https://landscape.io/github/Pext/Pext/master/landscape.svg?style=flat)](https://landscape.io/github/Pext/Pext/master)
 
 ## Contents
+- [Community](#community)
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
 - [Installation](#installation)
@@ -22,6 +21,17 @@
   - [macOS](#macos-1)
   - [Windows](#windows)
 - [License](#license)
+
+## Community
+If you need support or just want to chat with our community, we have the following options:
+
+- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
+- Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
+- Telegram: [@PextTool](https://t.me/PextTool)
+
+All these channels are linked to each other, so there is no need to worry about missing out.
+
+We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using Python 3 and Qt5 QML and has its behaviour decided by modules. Pext provides a simple window with a search bar, allowing modules to define what data is shown and how it is manipulated.
