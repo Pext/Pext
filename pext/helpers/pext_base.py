@@ -25,7 +25,7 @@ from abc import ABC  # type: ignore
 from queue import Queue
 from typing import Any, Dict, List, Union
 
-from pext_helpers import SelectionType
+from pext_helpers import Entry
 
 
 class ModuleBase(ABC):
@@ -71,20 +71,12 @@ class ModuleBase(ABC):
         """
         pass
 
-    def selection_made(self, selection: List[Dict[SelectionType, str]]) -> None:
+    def selection_made(self, selection: List[Entry]) -> None:
         """Introduced in API version 0.1.0.
 
         Called when the user makes a selection.
 
-        The selection variable contains a list of the selection tree and the
-        type, which can be either entry or command.
-
-        For example, if the user chooses the entry "Audio settings" in the main
-        screen, the value of selection is
-        [{type: SelectionType.entry, value: "Audio settings"}]. If the user
-        then runs the command "volume 50", this function is called again, with
-        the value of selection being
-        [{type: SelectionType.entry, value: "Audio settings"}, {type: SelectionType.command, value: "volume 50"}].
+        The selection variable contains a list of the selected entries.
         """
         pass
 
@@ -99,17 +91,5 @@ class ModuleBase(ABC):
         When no specific identifier was given in a queue request, identifier
         is called with None. Otherwise, it is called with the identifier
         previously put in the queue.
-        """
-        pass
-
-    def extra_info_request(self, selection: List[Dict[SelectionType, str]]) -> None:
-        """Introduced in API version 0.3.0.
-
-        Called when the user selects a different entry.
-
-        The syntax of selection is the same as in selection_made.
-
-        If desired, this function could be used to update the current entry by
-        putting a new set_info request in the queue.
         """
         pass
