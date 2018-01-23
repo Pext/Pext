@@ -245,38 +245,89 @@ class Action(Enum):
     ask_input = 11
     ask_input_password = 12
     ask_input_multi_line = 13
-    copy_to_clipboard = 14
-    set_selection = 15
-    close = 16
-    set_base_info = 17
-    set_base_context = 18
+    set_selection = 14
+    close = 15
+    set_base_info = 16
+    set_base_context = 17
 
 
-class SelectionType(Enum):
-    """Introduced in API version 0.1.0.
+class ModuleGlobal():
+    """Introduced in API version 0.8.0.
+
+    header
+        Introduced in API version 0.8.0.
+
+        The header that will be shown when no entry in the history overwrites it.
+
+        If not given, defaults to None.
+
+    options
+        Introduced in API version 0.8.0.
+
+        The list of options available.
+
+        If not given, defaults to an empty list.
+
+    info_html
+        Introduced in API version 0.8.0.
+
+        The extra info to display, formatted as HTML.
+
+        If not given, defaults to an entry string.
+    """
+
+    def __init__(self, header=None, options=[], info_html="") -> None:
+        """Create a new instance of ModuleGlobal."""
+        self.header = header
+        self.options = options
+        self.info_html = info_html
+
+    @property
+    def header(self):
+        """Return the header to display."""
+        return self._header
+
+    @property
+    def options(self):
+        """Return the list of options."""
+        return self._options
+
+    @header.setter
+    def header(self, value):
+        self._header = value
+
+    @property
+    def info_html(self):
+        """Return the list of additional HTML-formatted info."""
+        return self._info_html
+
+    @options.setter
+    def options(self, value):
+        self._options = value
+
+    @info_html.setter
+    def info_html(self, value):
+        self._info_html = value
+
+
+class EntryType(Enum):
+    """Introduced in API version 0.8.0.
 
     A list of possible selection types.
 
     entry
-        Introduced in API version 0.1.0.
+        Introduced in API version 0.8.0.
 
-        An entry in the entry list was chosen.
+        An entry which will cause selection_made to be called when selected.
 
-    command
-        Introduced in API version 0.1.0.
+    copyable
+        Introduced in API version 0.8.0.
 
-        A valid command was typed (valid commands start with an entry in the
-        command list).
-
-    none
-        Introduced in API version 0.6.
-
-        The selection is not relevant to any entry or command.
+        An entry which will be copied to the clipboard when selected.
     """
 
     entry = 0
-    command = 1
-    none = 2
+    copyable = 1
 
 
 class Entry():
@@ -287,14 +338,20 @@ class Entry():
 
         The string name of the entry.
 
+    copyname
+        Introduced in API version 0.8.0.
+
+        If not None, the string that will be copied to the clipboard if the entry is of type copyable.
+        If None, but the entry type is copyable, the name will be copied instead.
+
+        If not given, defaults to None
+
     type
         Introduced in API version 0.8.0.
 
-        The type of an entry. Can be either SelectionType.entry or SelectionType.command.
+        An instance of EntryType.
 
-        If not given, defaults to SelectionType.entry.
-
-        This value is underscored to not conflict with the internal keyword type
+        If not given, defaults to EntryType.entry.
 
     options
         Introduced in API version 0.8.0.
@@ -310,6 +367,17 @@ class Entry():
 
         If not given, defaults to an entry string.
 
+    header
+        Introduced in API version 0.8.0.
+
+        The header that will be shown when this entry is in the history.
+
+        If None, will bubble up until an entry with a header is found.
+
+        Set to an empty string to explicitly overwrite any previous header with emptiness.
+
+        If not given, defaults to None.
+
     module_internal
         Introduced in API version 0.8.0.
 
@@ -320,12 +388,15 @@ class Entry():
         If not given, defaults to none.
     """
 
-    def __init__(self, name, type=SelectionType.entry, options=[], info_html="", module_internal=None) -> None:
+    def __init__(self, name, copyname=None, type=EntryType.entry, options=[], info_html="", header=None,
+                 module_internal=None) -> None:
         """Create a new entry, with name and optional other settings."""
         self.name = name
+        self.copyname = copyname
         self.type = type
         self.options = options
         self.info_html = info_html
+        self.header = header
         self.module_internal = module_internal
 
     @property
@@ -334,8 +405,13 @@ class Entry():
         return self._name
 
     @property
+    def copyname(self):
+        """Return the name that will be copied to the clipboard if copyable of the entry."""
+        return self._copyname
+
+    @property
     def type(self):
-        """Return the SelectionType of the entry."""
+        """Return the EntryType of the entry."""
         return self._type
 
     @property
@@ -349,6 +425,11 @@ class Entry():
         return self._info_html
 
     @property
+    def header(self):
+        """Return the header to display."""
+        return self._header
+
+    @property
     def module_internal(self):
         """Return the hidden data the module added."""
         return self._module_internal
@@ -357,10 +438,14 @@ class Entry():
     def name(self, value):
         self._name = value
 
+    @copyname.setter
+    def copyname(self, value):
+        self._copyname = value
+
     @type.setter
     def type(self, value):
-        if not isinstance(value, SelectionType):
-            raise ValueError("{} is not part of SelectionType enum".format(value))
+        if not isinstance(value, EntryType):
+            raise ValueError("{} is not part of EntryType enum".format(value))
 
         self._type = value
 
@@ -372,6 +457,51 @@ class Entry():
     def info_html(self, value):
         self._info_html = value
 
+    @header.setter
+    def header(self, value):
+        self._header = value
+
     @module_internal.setter
     def module_internal(self, value):
         self._module_internal = value
+
+
+class Selection():
+    """Introduced in API version 0.8.0.
+
+    entry
+        Introduced in API version 0.8.0.
+
+        An entry if the selection relates to any specific entry, otherwise None.
+
+    option
+        Introduced in API version 0.8.0.
+
+        An option if selected, otherwise None.
+    """
+
+    def __init__(self, entry=None, option=None) -> None:
+        """Create a new instance of Selection."""
+        self.entry = entry
+        self.option = option
+
+    @property
+    def entry(self):
+        """Return the selected entry, if any."""
+        return self._entry
+
+    @property
+    def option(self):
+        """Return the selected option, if any."""
+        return self._option
+
+    @entry.setter
+    def entry(self, value):
+        if not isinstance(value, Entry):
+            raise ValueError("{} is not of the type Entry".format(value))
+
+        self._entry = value
+
+    @option.setter
+    def option(self, value):
+        self._option = value
