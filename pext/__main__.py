@@ -84,7 +84,7 @@ sys.path.append(os.path.join(AppFile.get_path(), 'helpers'))
 sys.path.append(os.path.join(AppFile.get_path()))
 
 from pext_base import ModuleBase  # noqa: E402
-from pext_helpers import Action  # noqa: E402
+from pext_helpers import Action, EntryType, Selection  # noqa: E402
 
 
 class MinimizeMode(IntEnum):
@@ -437,15 +437,6 @@ class MainLoop():
             else:
                 tab['vm'].module.process_response(
                     answer if ok else None)
-
-        elif action[0] == Action.copy_to_clipboard:
-            # Copy the given data to the user-chosen clipboard
-            if Settings.get('clipboard') == 'selection':
-                mode = QClipboard.Selection
-            else:
-                mode = QClipboard.Clipboard
-
-            self.app.clipboard().setText(str(action[1]), mode)
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
@@ -1316,6 +1307,20 @@ class ViewModel():
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
+        if self.selection[-1].entry.type == EntryType.copyable:
+            entry = self.selection[-1].entry
+            # Copy the given data to the user-chosen clipboard
+            if Settings.get('clipboard') == 'selection':
+                mode = QClipboard.Selection
+            else:
+                mode = QClipboard.Clipboard
+
+            QApplication.instance().clipboard().setText(
+                str(entry.copyname) if entry.copyname else str(entry.name), mode)
+
+            self.queue.put([Action.close])
+            return
+
         self.selection_thread = threading.Thread(target=self.module.selection_made, args=(self.selection,))
         self.selection_thread.start()
 
@@ -1513,22 +1518,19 @@ class ViewModel():
 
         self.update_context_info_panel()
 
-    def _get_entry(self, include_context=False) -> Dict:
+    def _get_selection(self) -> Selection:
         """Get info on the entry that's currently focused."""
-        if include_context and self.context.contextProperty("contextMenuEnabled"):
-            current_index = QQmlProperty.read(self.context_menu_model, "currentIndex")
-
-            selected_entry = self._get_entry()
-
-            return selected_entry
-
         if self.context.contextProperty("contextMenuEnabled") and self.context_menu_base_open:
-            return {'value': None, 'context_option': None}
+            return Selection(option=self.context_menu_base[QQmlProperty.read(self.context_menu_model, "currentIndex")])
 
-        current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
+        entry = self.filtered_entry_list[QQmlProperty.read(self.result_list_model, "currentIndex")]
 
-        entry = self.filtered_entry_list[current_index]
-        return {'value': entry, 'context_option': None}
+        if self.context.contextProperty("contextMenuEnabled"):
+            option = entry.options[QQmlProperty.read(self.context_menu_model, "currentIndex")]
+
+            return Selection(entry=entry, option=option)
+
+        return Selection(entry=entry)
 
     def select(self) -> None:
         """Notify the module of our selection entry."""
@@ -1542,7 +1544,7 @@ class ViewModel():
         self.extra_info_entries = {}
         self.context_menu_entries = {}
 
-        self.selection.append(self._get_entry(include_context=True)['value'])
+        self.selection.append(self._get_selection())
 
         self.context.setContextProperty(
             "contextMenuEnabled", False)
@@ -1572,17 +1574,14 @@ class ViewModel():
         if len(self.filtered_entry_list) == 0:
             return
 
-        current_entry = self._get_entry()
+        current_entry = self._get_selection().entry
 
-        try:
-            self.context_menu_model_list.setStringList(
-                str(entry.info_html) for entry in self.filtered_entry_list[current_entry['value']])
+        if current_entry.options:
+            self.context_menu_model_list.setStringList(str(option) for option in current_entry.options)
 
             self.context_menu_base_open = False
             self.context.setContextProperty(
                 "contextMenuEnabled", True)
-        except KeyError:
-            pass  # No menu available, do nothing
 
     def hide_context(self) -> None:
         """Hide the context menu."""
@@ -1596,15 +1595,15 @@ class ViewModel():
             QQmlProperty.write(self.context_info_panel, "text", "")
             return
 
-        current_entry = self._get_entry()
+        current_entry = self._get_selection().entry
 
         # Prevent updating the list unnecessarily often
-        if current_entry['value'] == self.extra_info_last_entry:
+        if current_entry == self.extra_info_last_entry:
             return
 
-        self.extra_info_last_entry = current_entry['value']
+        self.extra_info_last_entry = current_entry
 
-        QQmlProperty.write(self.context_info_panel, "text", current_entry['value'].info_html)
+        QQmlProperty.write(self.context_info_panel, "text", current_entry.info_html)
 
     def update_base_info_panel(self, base_info: str) -> None:
         """Update the base info panel based on the current module state."""
