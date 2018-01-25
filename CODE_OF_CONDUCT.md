@@ -157,8 +157,8 @@ caused the ban will be ignored.
 
 ## Scope
 
-We expect all community participants (contributors, paid or otherwise; sponsors;
-and other guests) to abide by this Code of Conduct in all 
+We expect all community participants (contributors, sponsors, and other guests) 
+to abide by this Code of Conduct in all 
 community venues, as well as in one-to-one communications pertaining to community 
 business. This Code of Conduct also applies to unacceptable behaviour occuring 
 outside the scope of community activities when such behaviour has the 
