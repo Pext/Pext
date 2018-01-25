@@ -77,7 +77,7 @@ our community:
   advances. If you do not have someone's prior consent, then any kind of sexual
   attention is unwelcome.
 * Deliberate intimidation or stalking (online or in person).
-* Sustained disruption of community spaces or events. This includes brining
+* Sustained disruption of community spaces or events. This includes bringing
   weaponry into community spaces; see below for a more precise definition.
 * Intentional violation of local laws or regulations at in-person events.
 * Advocating for, encouraging, or assisting in any of the above behaviour.
@@ -115,9 +115,10 @@ and reversal by the lead organizer. These include, but are not limited to:
 
 ## Reporting guidelines
 
-If you are subject to, or witness, unacceptable behaviour, or have any other
+If you are subject to unacceptable behaviour, witness unacceptable behaviour in
+progress, or have any other
 concerns, please notify a community organizer as soon as possible. The current
-list of community organizers is:
+community organizers are:
 
 * Sylvia van Os (sylvia@hackerchick.me) (lead organizer)
 
