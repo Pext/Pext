@@ -179,7 +179,7 @@ relevant, to address future situations that cannot be foreseen at the time of
 its writing, and to update the community organizer list, this document will
 occasionally receive updates.
 
-We will notify the community when any changes are made, along with a description
+We will do our best to notify the community when any changes are made, along with a description
 of the content of these changes. These, along with previous versions, will be
 available in a publically accessible repository for the purpose of comparison.
 The most current version of this Code of Conduct is considered to be
