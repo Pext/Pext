@@ -121,6 +121,7 @@ concerns, please notify a community organizer as soon as possible. The current
 community organizers are:
 
 * Sylvia van Os (sylvia@hackerchick.me) (lead organizer)
+* Emily Lau (fuchslein@hackerchick.me)
 
 When reporting, please include the following information, to the best of your
 knowledge and ability:
@@ -170,6 +171,7 @@ This is the current list of community organizers, with appropriate contact
 information:
 
 * Sylvia van Os (sylvia@hackerchick.me) (lead organizer)
+* Emily Lau (fuchslein@hackerchick.me)
 
 ## Modifications
 
