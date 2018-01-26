@@ -134,8 +134,8 @@ knowledge and ability:
 * Whether you want any additional actions taken by the community organizers to 
   ensure that your safety and well-being remain intact.
 
-Community organizers can assist local authorities and connect you
-with help or providing a safe environment provided they are able. In the 
+Provided they are able to, community organizers can assist local authorities,
+connect you with help, and provide a safe environment. In the 
 context of in-person events, organizers can also provide escorts as desired by 
 the person experiencing distress.
 
