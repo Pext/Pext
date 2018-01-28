@@ -54,7 +54,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="24"/>
         <source>Unsupported repository format</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustøttet pakkebrønnsformat</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
@@ -67,7 +67,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulinstallasjon</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
@@ -80,7 +80,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="24"/>
         <source>No modules found</source>
-        <translation type="unfinished"></translation>
+        <translation>Fant ingen moduler</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
@@ -93,7 +93,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulinstallasjon</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
@@ -141,7 +141,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulinstallasjon</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
@@ -159,7 +159,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Draktinstallasjon</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
@@ -172,7 +172,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="24"/>
         <source>No themes available</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen drakter tilgjengelig</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
@@ -185,7 +185,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Draktinstallasjon</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
@@ -223,7 +223,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Draktinstallasjon</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
@@ -249,22 +249,22 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Last inn profil</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation type="unfinished"></translation>
+        <translation>Velg profil å bytte til:</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation type="unfinished"></translation>
+        <translation>Åpne i nytt vindu</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Merk: Pext må starte på nytt for å bytte profil.</translation>
     </message>
 </context>
 <context>
@@ -348,22 +348,22 @@
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="26"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Behandle profiler</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="43"/>
         <source>Enter profile name</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv inn profilnavn</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="47"/>
         <source>Create</source>
-        <translation type="unfinished"></translation>
+        <translation>Opprett</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="79"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Fjern</translation>
     </message>
 </context>
 <context>
@@ -371,7 +371,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="24"/>
         <source>No modules installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen moduler installert</translation>
     </message>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
@@ -384,7 +384,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="24"/>
         <source>No themes installed</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen drakter installert</translation>
     </message>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
@@ -397,12 +397,12 @@
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation type="unfinished"></translation>
+        <translation>Kun én profil tilgjengelig</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation type="unfinished"></translation>
+        <translation>Det er kun én profil tilgjengelig. Opprett en annen profil først.</translation>
     </message>
 </context>
 <context>
@@ -410,7 +410,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="24"/>
         <source>New version available</source>
-        <translation type="unfinished"></translation>
+        <translation>Ny versjon tilgjengelig</translation>
     </message>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
@@ -512,12 +512,12 @@
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>Switch profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Bytt profil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="533"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>Behandle profiler</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="549"/>
@@ -527,17 +527,17 @@
     <message>
         <location filename="../qml/main.qml" line="555"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Språk</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="565"/>
         <source>System locale</source>
-        <translation type="unfinished"></translation>
+        <translation>Systemlokalitet</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="589"/>
         <source>Sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorteringsstil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="598"/>
@@ -557,7 +557,7 @@
     <message>
         <location filename="../qml/main.qml" line="619"/>
         <source>Minimizing behaviour</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimeringsoppførsel</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="628"/>
@@ -635,7 +635,7 @@
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>P&amp;rofile</source>
-        <translation type="unfinished"></translation>
+        <translation>P&amp;rofil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="673"/>
