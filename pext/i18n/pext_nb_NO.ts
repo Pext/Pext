@@ -423,7 +423,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oppgradingsbehandler</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
