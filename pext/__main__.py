@@ -664,12 +664,15 @@ class LocaleManager():
 
     def load_locale(self, locale=None) -> None:
         """Load the given locale into the application."""
-        chosen_locale = QLocale(locale)
+        system_locale = QLocale()
         if locale:
+            chosen_locale = QLocale(locale)
             self.current_locale = chosen_locale
+        else:
+            chosen_locale = system_locale
 
         print('Using locale: {} {}'
-              .format(chosen_locale.name(), "(manually set)" if locale else ""))
+              .format(chosen_locale.name(), "(system locale)" if chosen_locale == system_locale else ""))
         print('Localization loaded:',
               self.translator.load(chosen_locale, 'pext', '_', self.locale_dir, '.qm'))
 
@@ -2086,10 +2089,10 @@ class Window(QMainWindow):
         # Start binding the modules
         if len(Settings.get('modules')) > 0:
             for module in Settings.get('modules'):
-                self.module_manager.load_module(self, module, Settings.get('locale'))
+                self.module_manager.load_module(self, module, Settings.get('locale', default=QLocale().name()))
         else:
             for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
-                self.module_manager.load_module(self, module, Settings.get('locale'))
+                self.module_manager.load_module(self, module, Settings.get('locale', default=QLocale().name()))
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the
