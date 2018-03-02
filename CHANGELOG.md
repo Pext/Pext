@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Inconsistent font sizing
 - Improved main screen resizing and logo showing
 - Pext passing None as locale to modules in some cases
+- --background stealing focus on macOS
 
 ### Removed
 - Removed manpage

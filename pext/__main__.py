@@ -2072,7 +2072,19 @@ class Window(QMainWindow):
         self.tabs.currentIndexChanged.connect(self._bind_context)
 
         # Show the window if not --background
-        if not Settings.get('background'):
+        if platform.system() == 'Darwin' and Settings.get('background'):
+            # workaround for https://github.com/Pext/Pext/issues/20
+            # First, we showMinimized to prevent Pext from being unrestorable
+            self.window.showMinimized()
+            # Then, we tell macOS to give the focus back to the last app
+            applescript_command = ['tell application "System Events"',
+                                   'tell process "Finder"',
+                                   'activate',
+                                   'keystroke tab using {command down}',
+                                   'end tell',
+                                   'end tell']
+            Popen(['osascript', '-e', '\n'.join(applescript_command)])
+        elif not Settings.get('background'):
             self.show()
 
             if Settings.get('update_check') is None:
