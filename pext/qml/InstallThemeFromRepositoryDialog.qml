@@ -89,7 +89,7 @@ Dialog {
                             var installThemeFromRepositorySelectThemeDialog = Qt.createComponent("InstallThemeFromRepositorySelectThemeDialog.qml");
                             installThemeFromRepositorySelectThemeDialog.createObject(applicationWindow,
                                 {"installRequest": installRequest,
-                                 "themes": themesData});
+                                 "themes": themesData.sort(function(a, b) { return a.name.localeCompare(b.name); } )});
                         };
                     });
                 };

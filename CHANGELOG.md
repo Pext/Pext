@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Improved main screen resizing and logo showing
 - Pext passing None as locale to modules in some cases
 - --background stealing focus on macOS
+- Modules and themes are now sorted correctly in the install from repository lists
 
 ### Removed
 - Removed manpage

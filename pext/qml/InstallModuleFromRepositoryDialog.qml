@@ -89,7 +89,7 @@ Dialog {
                             var installModuleFromRepositorySelectModuleDialog = Qt.createComponent("InstallModuleFromRepositorySelectModuleDialog.qml");
                             installModuleFromRepositorySelectModuleDialog.createObject(applicationWindow,
                                 {"installRequest": installRequest,
-                                 "modules": modulesData});
+                                 "modules": modulesData.sort(function(a, b) { return a.name.localeCompare(b.name); } )});
                         };
                     });
                 };
