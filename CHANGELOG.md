@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Basic profile management from the GUI
 - Ability to change language through the UI
 - `--list-locales` argument to show supported languages
+- The installation screens now tell you if you already have a module or theme installed
 
 ### Changed
 - Profile name is no longer displayed if default

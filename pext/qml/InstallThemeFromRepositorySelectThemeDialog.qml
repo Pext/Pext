@@ -26,6 +26,7 @@ Dialog {
     title: qsTr("Theme installation")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    property var installedThemes
     property var themes
     property var installRequest
 
@@ -48,6 +49,12 @@ Dialog {
             id: urlSelectionBox
             model: themes[combobox.currentIndex].git_urls
             Layout.fillWidth: true
+        }
+
+        Label {
+            text: qsTr("You already have this theme installed.")
+            font.bold: true
+            visible: Object.keys(installedThemes).indexOf(themes[combobox.currentIndex].name) != -1
         }
 
         Label {

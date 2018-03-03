@@ -27,6 +27,7 @@ Dialog {
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var applicationWindow
+    property var installedThemes
     property var installRequest
     property var repositories
 
@@ -89,6 +90,7 @@ Dialog {
                             var installThemeFromRepositorySelectThemeDialog = Qt.createComponent("InstallThemeFromRepositorySelectThemeDialog.qml");
                             installThemeFromRepositorySelectThemeDialog.createObject(applicationWindow,
                                 {"installRequest": installRequest,
+                                 "installedThemes": installedThemes,
                                  "themes": themesData.sort(function(a, b) { return a.name.localeCompare(b.name); } )});
                         };
                     });

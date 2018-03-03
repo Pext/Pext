@@ -377,6 +377,7 @@ ApplicationWindow {
                         var installModuleFromRepositoryDialog = Qt.createComponent("InstallModuleFromRepositoryDialog.qml");
                         installModuleFromRepositoryDialog.createObject(applicationWindow,
                             {"applicationWindow": applicationWindow,
+                             "installedModules": modules,
                              "installRequest": menuInstallModule.installModuleRequest,
                              "repositories": repositories})
                     }
@@ -477,6 +478,7 @@ ApplicationWindow {
                         var installThemeFromRepositoryDialog = Qt.createComponent("InstallThemeFromRepositoryDialog.qml");
                         installThemeFromRepositoryDialog.createObject(applicationWindow,
                             {"applicationWindow": applicationWindow,
+                             "installedThemes": themes,
                              "installRequest": menuInstallTheme.installThemeRequest,
                              "repositories": repositories})
                     }
