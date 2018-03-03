@@ -164,7 +164,7 @@ class RunConseq():
         """Run the given function consecutively."""
         for function in functions:
             if len(function['args']) > 0:
-                function['name'](function['args'], **function['kwargs'])
+                function['name'](*function['args'], **function['kwargs'])
             else:
                 function['name'](**function['kwargs'])
 
@@ -2013,6 +2013,7 @@ class Window(QMainWindow):
 
         menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
         menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
+        menu_manage_profiles_shortcut.renameProfileRequest.connect(self._menu_rename_profile)
         menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
 
         menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
@@ -2219,7 +2220,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.module_manager.install_module,
-                'args': (module_url),
+                'args': (module_url,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2233,7 +2234,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.module_manager.uninstall_module,
-                'args': (module_name),
+                'args': (module_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2247,7 +2248,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.module_manager.update_module,
-                'args': (module_name),
+                'args': (module_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2306,7 +2307,21 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.profile_manager.create_profile,
-                'args': (profile_name),
+                'args': (profile_name,),
+                'kwargs': {}
+            }, {
+                'name': self._update_profiles_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_rename_profile(self, old_profile_name: str, new_profile_name: str) -> None:
+        functions = [
+            {
+                'name': self.profile_manager.rename_profile,
+                'args': (old_profile_name, new_profile_name),
                 'kwargs': {}
             }, {
                 'name': self._update_profiles_info_qml,
@@ -2320,7 +2335,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.profile_manager.remove_profile,
-                'args': (profile_name),
+                'args': (profile_name,),
                 'kwargs': {}
             }, {
                 'name': self._update_profiles_info_qml,
@@ -2334,7 +2349,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.theme_manager.install_theme,
-                'args': (theme_url),
+                'args': (theme_url,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2348,7 +2363,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.theme_manager.uninstall_theme,
-                'args': (theme_name),
+                'args': (theme_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2362,7 +2377,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.theme_manager.update_theme,
-                'args': (theme_name),
+                'args': (theme_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,

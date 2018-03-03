@@ -533,6 +533,7 @@ ApplicationWindow {
                 text: qsTr("Manage profiles")
 
                 signal createProfileRequest(string name)
+                signal renameProfileRequest(string oldName, string newName)
                 signal removeProfileRequest(string name)
 
                 onTriggered: {
@@ -540,6 +541,7 @@ ApplicationWindow {
                     manageProfilesDialog.createObject(applicationWindow,
                         {"profiles": profiles.sort(),
                          "createRequest": createProfileRequest,
+                         "renameRequest": renameProfileRequest,
                          "removeRequest": removeProfileRequest});
                 }
             }
@@ -695,7 +697,6 @@ ApplicationWindow {
         anchors.margins: margin
 
         GridLayout {
-            Layout.minimumHeight: 30
             Layout.fillHeight: true
 
             Button {
