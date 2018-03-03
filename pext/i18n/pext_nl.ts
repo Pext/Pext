@@ -70,7 +70,7 @@
         <translation>Module-installatie</translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="35"/>
+        <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="36"/>
         <source>Where do you want to get modules from?</source>
         <translation>Waar wilt u modules vandaan halen?</translation>
     </message>
@@ -96,42 +96,47 @@
         <translation>Module-installatie</translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="34"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="35"/>
         <source>Choose the module to install:</source>
         <translation>Kies de te installeren module:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="44"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
         <translation>Kies de gewenste downloadbron:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="54"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
+        <source>You already have this module installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
         <source>This module does not seem to support %1.</source>
         <translation>Deze module lijkt %1 niet te ondersteunen.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="60"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
         <source>Module information:</source>
         <translation>Module-informatie:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="64"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
         <translation>Ontwikkelaar: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="68"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
         <source>Description: </source>
         <translation>Omschrijving: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="72"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
         <source>License: </source>
         <translation>Licentie: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="76"/>
+        <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
     </message>
@@ -162,7 +167,7 @@
         <translation>Thema-installatie</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="35"/>
+        <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="36"/>
         <source>Where do you want to get themes from?</source>
         <translation>Waar wilt u thema&apos;s vandaan halen?</translation>
     </message>
@@ -188,32 +193,37 @@
         <translation>Thema-installatie</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="34"/>
+        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="35"/>
         <source>Choose the theme to install:</source>
         <translation>Kies het te installeren thema:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="44"/>
+        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
         <translation>Kies de gewenste downloadbron:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="54"/>
+        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="55"/>
+        <source>You already have this theme installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="61"/>
         <source>Theme information:</source>
         <translation>Thema-informatie:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="58"/>
+        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="65"/>
         <source>Developer: </source>
         <translation>Ontwikkelaar: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="62"/>
+        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="69"/>
         <source>Description: </source>
         <translation>Omschrijving: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="66"/>
+        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="73"/>
         <source>License: </source>
         <translation>Licentie: </translation>
     </message>
@@ -351,17 +361,22 @@
         <translation>Profielen beheren</translation>
     </message>
     <message>
-        <location filename="../qml/ManageProfilesDialog.qml" line="43"/>
+        <location filename="../qml/ManageProfilesDialog.qml" line="44"/>
         <source>Enter profile name</source>
         <translation>Voer een profielnaam in</translation>
     </message>
     <message>
-        <location filename="../qml/ManageProfilesDialog.qml" line="47"/>
+        <location filename="../qml/ManageProfilesDialog.qml" line="48"/>
         <source>Create</source>
         <translation>Creëren</translation>
     </message>
     <message>
-        <location filename="../qml/ManageProfilesDialog.qml" line="79"/>
+        <location filename="../qml/ManageProfilesDialog.qml" line="80"/>
+        <source>Rename</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageProfilesDialog.qml" line="90"/>
         <source>Remove</source>
         <translation>Verwijderen</translation>
     </message>
@@ -403,6 +418,19 @@
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
         <translation>Er is slechts één profiel beschikbaar. Creëer een tweede profiel.</translation>
+    </message>
+</context>
+<context>
+    <name>RenameProfileDialog</name>
+    <message>
+        <location filename="../qml/RenameProfileDialog.qml" line="26"/>
+        <source>Rename profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/RenameProfileDialog.qml" line="37"/>
+        <source>Please choose a new name for this profile.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -474,38 +502,38 @@
         <translation>Uit online modulelijst</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="386"/>
-        <location filename="../qml/main.qml" line="486"/>
+        <location filename="../qml/main.qml" line="387"/>
+        <location filename="../qml/main.qml" line="488"/>
         <source>From URL</source>
         <translation>Van URL</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="409"/>
+        <location filename="../qml/main.qml" line="410"/>
         <source>&amp;Theme</source>
         <translation>&amp;Thema</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="417"/>
+        <location filename="../qml/main.qml" line="418"/>
         <source>Switch theme</source>
         <translation>Thema wisselen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="437"/>
+        <location filename="../qml/main.qml" line="438"/>
         <source>Manage themes</source>
         <translation>Thema&apos;s beheren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="460"/>
+        <location filename="../qml/main.qml" line="461"/>
         <source>Install theme</source>
         <translation>Thema installeren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="465"/>
+        <location filename="../qml/main.qml" line="466"/>
         <source>From online theme list</source>
         <translation>Uit online themalijst</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="498"/>
+        <location filename="../qml/main.qml" line="500"/>
         <source>Update all themes</source>
         <translation>Alle thema&apos;s bijwerken</translation>
     </message>
@@ -514,112 +542,112 @@
         <translation type="vanished">&amp;Profiel</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="513"/>
+        <location filename="../qml/main.qml" line="515"/>
         <source>Switch profile</source>
         <translation>Van profiel wisselen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="533"/>
+        <location filename="../qml/main.qml" line="535"/>
         <source>Manage profiles</source>
         <translation>Profielen beheren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="549"/>
+        <location filename="../qml/main.qml" line="553"/>
         <source>&amp;Settings</source>
         <translation>&amp;Instellingen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="555"/>
+        <location filename="../qml/main.qml" line="559"/>
         <source>Language</source>
         <translation>Taal</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="565"/>
+        <location filename="../qml/main.qml" line="569"/>
         <source>System locale</source>
         <translation>Systeemtaal</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="589"/>
+        <location filename="../qml/main.qml" line="593"/>
         <source>Sorting style</source>
         <translation>Sorteerstijl</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="598"/>
+        <location filename="../qml/main.qml" line="602"/>
         <source>Sort by module choice</source>
         <translation>Sorteren op modulekeuze</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="605"/>
+        <location filename="../qml/main.qml" line="609"/>
         <source>Sort ascending</source>
         <translation>Oplopend sorteren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="612"/>
+        <location filename="../qml/main.qml" line="616"/>
         <source>Sort descending</source>
         <translation>Aflopend sorteren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="619"/>
+        <location filename="../qml/main.qml" line="623"/>
         <source>Minimizing behaviour</source>
         <translation>Gedrag bij minimaliseren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="628"/>
+        <location filename="../qml/main.qml" line="632"/>
         <source>Minimize normally</source>
         <translation>Normaal minimaliseren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="635"/>
+        <location filename="../qml/main.qml" line="639"/>
         <source>Minimize to tray</source>
         <translation>Minimaliseren naar systeemvak</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="642"/>
+        <location filename="../qml/main.qml" line="646"/>
         <source>Manual only: Minimize normally</source>
         <translation>Alleen handmatig: normaal minimaliseren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="649"/>
+        <location filename="../qml/main.qml" line="653"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Alleen handmatig: minimaliseren naar systeemvak</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="657"/>
+        <location filename="../qml/main.qml" line="661"/>
         <source>Show tray icon</source>
         <translation>Systeemvakpictogram weergeven</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="663"/>
+        <location filename="../qml/main.qml" line="667"/>
         <source>Automatically check for updates</source>
         <translation>Automatisch controleren op updates</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="669"/>
+        <location filename="../qml/main.qml" line="673"/>
         <source>&amp;Help</source>
         <translation>&amp;Hulp</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="683"/>
+        <location filename="../qml/main.qml" line="687"/>
         <source>Check for updates</source>
         <translation>Controleren op updates</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="745"/>
+        <location filename="../qml/main.qml" line="755"/>
         <source>Design philosophy</source>
         <translation>Ontwerpfilosofie</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="746"/>
+        <location filename="../qml/main.qml" line="756"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>Pext is ontwikkeld om uit de weg te blijven. Zodra een module er van overtuigd is dat u klaar bent met het gebruiken ervan, verbergt Pext zichzelf naar het systeemvak. Als u Pext weer nodig hebt, dan kunt u het simpelweg opnieuw starten of vanuit het systeemvak openen.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="787"/>
+        <location filename="../qml/main.qml" line="797"/>
         <source>Getting started</source>
         <translation>Beginnen met Pext</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="788"/>
+        <location filename="../qml/main.qml" line="798"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Om te beginnen met Pext, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n module geïnstalleerd. Je kan modules beheren in het Module menu.</numerusform>
@@ -632,52 +660,52 @@
         <translation>Modules beheren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="398"/>
+        <location filename="../qml/main.qml" line="399"/>
         <source>Update all modules</source>
         <translation>Alle modules bijwerken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="509"/>
+        <location filename="../qml/main.qml" line="511"/>
         <source>P&amp;rofile</source>
         <translation>P&amp;rofiel</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="673"/>
+        <location filename="../qml/main.qml" line="677"/>
         <source>About</source>
         <translation>Over</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="688"/>
+        <location filename="../qml/main.qml" line="692"/>
         <source>Visit homepage</source>
         <translation>Website bezoeken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="708"/>
+        <location filename="../qml/main.qml" line="711"/>
         <source>Clear</source>
         <translation>Wissen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="708"/>
+        <location filename="../qml/main.qml" line="711"/>
         <source>Back</source>
         <translation>Terug</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="717"/>
+        <location filename="../qml/main.qml" line="720"/>
         <source>Type to search</source>
         <translation>Typ om te zoeken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="821"/>
+        <location filename="../qml/main.qml" line="831"/>
         <source>Processing: %1 (%2)</source>
         <translation>Bezig met verwerken: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="823"/>
+        <location filename="../qml/main.qml" line="833"/>
         <source>Ready</source>
         <translation>Klaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="823"/>
+        <location filename="../qml/main.qml" line="833"/>
         <source>Waiting</source>
         <translation>Bezig met wachten</translation>
     </message>
