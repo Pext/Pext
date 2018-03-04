@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Ability to change language through the UI
 - `--list-locales` argument to show supported languages
 - The installation screens now tell you if you already have a module or theme installed
+- Russian translation (thanks, Ivan Semkin)
 
 ### Changed
 - Profile name is no longer displayed if default
@@ -36,7 +37,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Removed manpage
 
 ## [0.11.1] - 2017-12-19
-### Packaging
+### Packaging changes
 - Fix missing translation files
 
 ## [0.11] - 2017-12-19
