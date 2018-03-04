@@ -34,6 +34,7 @@ Dialog {
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
+                               "ru": [{"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
                                "zh_Hant": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
 
     TabView {
