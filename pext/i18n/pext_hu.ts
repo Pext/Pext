@@ -21,7 +21,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="85"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation>Szeretne segíteni a Pext fordításában? Kérjük kattintson ide!</translation>
+        <translation>Szeretne segíteni a Pext fordításában? Kérjük, kattintson ide.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
@@ -113,7 +113,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
         <source>This module does not seem to support %1.</source>
-        <translation>Úgy tűnik, ez a modul nem támogatott a(z) %1 által.</translation>
+        <translation>Úgy tűnik, ez a modul nem támogatja ezt a platformot (%1).</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
@@ -138,7 +138,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt!</translation>
+        <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
     </message>
 </context>
 <context>
@@ -156,7 +156,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt!</translation>
+        <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
     </message>
 </context>
 <context>
@@ -287,7 +287,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation>Válassza ki a témát, amire váltani szeretne:</translation>
+        <translation>Válassza ki a témát, amelyre váltani szeretne:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
@@ -391,7 +391,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Nincs telepítve modul, kérjük először telepítsen egyet!</translation>
+        <translation>Nincs telepítve modul. Kérjük, először telepítsen egyet.</translation>
     </message>
 </context>
 <context>
@@ -404,7 +404,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Nincs telepítve téma, kérjük először telepítsen egyet!</translation>
+        <translation>Nincs telepítve téma. Kérjük, először telepítsen egyet.</translation>
     </message>
 </context>
 <context>
@@ -639,7 +639,7 @@
     <message>
         <location filename="../qml/main.qml" line="756"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
-        <translation>A Pext úgy lett tervezve, hogy ne álljon az útjában. Amint egy modul úgy érzi, hogy végzett a használatával, a Pext minimalizálja magát a rendszer tálcájára. Ha újra szüksége van a Pext-re miután elrejtette magát, csak indítsa el újra, vagy nyissa meg a tálcáról!</translation>
+        <translation>A Pextet úgy terveztük, hogy ne álljon az útjában. Amint egy modul úgy gondolja, hogy Ön végzett a használatával, a Pext minimalizálja magát a rendszer tálcájára. Ha újra szüksége lesz a Pextre miután elrejtette magát, indítsa el újra, vagy nyissa meg a tálcáról.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="797"/>
@@ -649,10 +649,9 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="798"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>Nyomja meg a &lt;kbd&gt;%1&lt;/kbd&gt; billentyűt egy új lap létrehozásához! Amikor egy lapon végzett a munkával, nyomja meg a &lt;kbd&gt;%2&lt;/kbd&gt; billentyűt a lap bezárásához! Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Nyomja le a &lt;kbd&gt;%1&lt;/kbd&gt; billentyű(kombináció)t egy új lap létrehozásához. Amikor egy lapon végzett a munkával, nyomja le a &lt;kbd&gt;%2&lt;/kbd&gt; billentyű(kombináció)t a lap bezárásához. Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
+        <numerusform></numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
