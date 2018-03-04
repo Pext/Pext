@@ -108,7 +108,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
         <source>You already have this module installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ya tienes este módulo instalado.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
@@ -205,7 +205,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="55"/>
         <source>You already have this theme installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ya tienes este tema instalado.</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="61"/>
@@ -373,7 +373,7 @@
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="80"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar el nombre</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="90"/>
@@ -425,12 +425,12 @@
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="26"/>
         <source>Rename profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar el nombre del perfil</translation>
     </message>
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="37"/>
         <source>Please choose a new name for this profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>Por favor elige un nuevo nombre para este perfil.</translation>
     </message>
 </context>
 <context>
