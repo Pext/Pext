@@ -3167,6 +3167,12 @@ def main() -> None:
 
     theme_name = Settings.get('theme')
     if theme_name is not None:
+        # Qt5's default style for Windows, windowsvista, does not support palettes properly
+        # If the user doesn't explicitly chose a style, but wants theming, we force
+        # it to use Fusion, which gets themed properly
+        if platform.system() == 'Windows' and Settings.get('style') is None:
+            app.setStyle(QStyleFactory().create('Fusion'))
+
         theme_manager = ThemeManager(config_retriever)
         theme = theme_manager.load_theme(theme_name)
         theme_manager.apply_theme_to_app(theme, app)
