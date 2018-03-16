@@ -4,7 +4,7 @@ os:
 
 before_install:
   - brew update
-  - brew install libnotify python3
+  - brew upgrade python
   - pip3 install dulwich pyqt5 urllib3
 
 install:
