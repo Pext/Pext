@@ -23,7 +23,7 @@ if sys.platform == 'darwin':
             'iconfile': 'pext/images/scalable/pext.icns',
             'emulate_shell_environment': 1,
             'site_packages': 1,
-            'includes': ["pty"]
+            'includes': ["readline", "pty"]
         }}
     )
 else:
