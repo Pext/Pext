@@ -5,7 +5,7 @@ os:
 before_install:
   - brew update
   - brew upgrade python
-  - pip3 install dulwich pyqt5 urllib3
+  - pip3 install certify dulwich pyqt5 urllib3
 
 install:
   - ./build_mac_app.sh
