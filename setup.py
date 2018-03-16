@@ -19,10 +19,11 @@ if sys.platform == 'darwin':
         setup_requires=['py2app'],
         app=['pext/__main__.py'],
         options={'py2app': {
+            'argv_emulation': True,
             'iconfile': 'pext/images/scalable/pext.icns',
             'emulate_shell_environment': 1,
             'site_packages': 1,
-            'includes': "readline"  # py2app by default excludes this, but the pass module needs it
+            'includes': ["pty"]
         }}
     )
 else:
