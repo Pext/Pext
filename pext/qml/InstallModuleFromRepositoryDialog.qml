@@ -23,10 +23,11 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: qsTr("Module installation")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var applicationWindow
+    property var installedModules
     property var installRequest
     property var repositories
 
@@ -89,7 +90,8 @@ Dialog {
                             var installModuleFromRepositorySelectModuleDialog = Qt.createComponent("InstallModuleFromRepositorySelectModuleDialog.qml");
                             installModuleFromRepositorySelectModuleDialog.createObject(applicationWindow,
                                 {"installRequest": installRequest,
-                                 "modules": modulesData});
+                                 "installedModules": installedModules,
+                                 "modules": modulesData.sort(function(a, b) { return a.name.localeCompare(b.name); } )});
                         };
                     });
                 };

@@ -21,7 +21,7 @@ import QtQuick 2.3
 import QtQuick.Dialogs 1.2
 
 MessageDialog {
-    title: "Pext"
+    title: qsTr("No themes available")
     icon: StandardIcon.Information
 
     text: qsTr("No themes found in this repository.")

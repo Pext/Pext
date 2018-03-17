@@ -28,6 +28,7 @@ Dialog {
 
     property var profiles 
     property var createRequest
+    property var renameRequest
     property var removeRequest
 
     height: 250
@@ -75,6 +76,16 @@ Dialog {
                 }
 
                 GridLayout {
+                    Button {
+                        text: qsTr("Rename")
+                        onClicked: {
+                            var renameProfileDialog = Qt.createComponent("RenameProfileDialog.qml");
+                            renameProfileDialog.createObject(applicationWindow,
+                                {"profileName": modelData,
+                                 "renameRequest": renameRequest});
+                            close()
+                        }
+                    }
                     Button {
                         text: qsTr("Remove")
                         onClicked: {

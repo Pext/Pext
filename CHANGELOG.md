@@ -6,11 +6,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Fixed
+- Themes now apply properly on Windows (forcing Fusion styling)
+
+## [0.12] - 2018-03-04
 ### Added
 - Support renaming profiles
 - Switching profile from the GUI
 - Opening a second instance with another profile from the GUI
 - Basic profile management from the GUI
+- Ability to change language through the UI
+- `--list-locales` argument to show supported languages
+- The installation screens now tell you if you already have a module or theme installed
+- Russian translation (thanks, Ivan Semkin)
 
 ### Changed
 - Profile name is no longer displayed if default
@@ -18,16 +26,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Trying to delete a profile that is currently in use throws an error
 - Use argparse for argument parsing instead of getopt
 - Update checking now happens if the last check was over 24 hours, instead of each app launch
+- Combine all menu groups in settings for organizational purposes
+- Relicensed documentation under CC BY-SA 4.0
 
 ### Fixed
 - Pext crash when module tries to empty context_menu_base
 - Inconsistent font sizing
+- Improved main screen resizing and logo showing
+- Pext passing None as locale to modules in some cases
+- --background stealing focus on macOS
+- Modules and themes are now sorted correctly in the install from repository lists
 
 ### Removed
 - Removed manpage
 
 ## [0.11.1] - 2017-12-19
-### Packaging
+### Packaging changes
 - Fix missing translation files
 
 ## [0.11] - 2017-12-19

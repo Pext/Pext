@@ -2,14 +2,12 @@
 
 ![Pext logo](/logo.png)
 
-*Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
-[Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
-graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
-
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
+[![Code Health](https://landscape.io/github/Pext/Pext/master/landscape.svg?style=flat)](https://landscape.io/github/Pext/Pext/master)
 
 ## Contents
+- [Community](#community)
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
 - [Installation](#installation)
@@ -23,6 +21,17 @@ graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
   - [macOS](#macos-1)
   - [Windows](#windows)
 - [License](#license)
+
+## Community
+If you need support or just want to chat with our community, we have the following options:
+
+- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
+- Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
+- Telegram: [@PextTool](https://t.me/PextTool)
+
+All these channels are linked to each other, so there is no need to worry about missing out.
+
+We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using Python 3 and Qt5 QML and has its behaviour decided by modules. Pext provides a simple window with a search bar, allowing modules to define what data is shown and how it is manipulated.
@@ -64,9 +73,13 @@ For the git version:
     $ pacaur -S pext-git
 
 #### Other distros
-You can install the stable version of Pext from pip:
+For the stable version:
 
     $ pip3 install pext --user
+
+For the git version:
+
+    $ pip3 install git+https://github.com/Pext/Pext.git --user
 
 On some systems, you may need to use pip instead of pip3.
 
@@ -145,4 +158,15 @@ cmd.exe:
 - The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows)
 
 ## License
-GPLv3+.
+Pext is licensed under the [GNU GPLv3+](LICENSE), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSE-CCBYSA).
+
+Under artwork and documentation fall:
+- All files in the following directories:
+  - docs/
+  - pext/images/
+  - screenshots/
+  - .github/
+- All Markdown files in the root directory.
+- logo.png
+
+When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as the Pext Logo by White Paper Fox. Please link to Pext with https://github.com/Pext/Pext or https://pext.hackerchick.me/ and to White Paper Fox with http://www.whitepaperfox.com/ where possible.

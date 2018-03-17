@@ -164,7 +164,7 @@ class RunConseq():
         """Run the given function consecutively."""
         for function in functions:
             if len(function['args']) > 0:
-                function['name'](function['args'], **function['kwargs'])
+                function['name'](*function['args'], **function['kwargs'])
             else:
                 function['name'](**function['kwargs'])
 
@@ -201,22 +201,29 @@ class Logger():
     as a desktop notification.
     """
 
-    def __init__(self, window: 'Window') -> None:
-        """Initialize the logger and add a status bar to the main window."""
-        self.window = window
-        self.queued_messages = []  # type: List[Dict[str, str]]
+    queued_messages = []  # type: List[Dict[str, str]]
+    last_update = None  # type: Optional[float]
 
-        self.last_update = None  # type: Optional[float]
-        self.status_text = self.window.window.findChild(QObject, "statusText")
-        self.status_queue = self.window.window.findChild(QObject, "statusQueue")
+    window = None
+    status_text = None  # type: QObject
+    status_queue = None  # type: QObject
 
-    def _queue_message(self, module_name: str, message: str, type_name: str) -> None:
+    @staticmethod
+    def bind_window(window: 'Window') -> None:
+        """Give the logger the ability to log info to the main window."""
+        Logger.window = window
+        Logger.status_text = window.window.findChild(QObject, "statusText")
+        Logger.status_queue = window.window.findChild(QObject, "statusQueue")
+
+    @staticmethod
+    def _queue_message(module_name: str, message: str, type_name: str) -> None:
         """Queue a message for display."""
-        for formatted_message in self._format_message(module_name, message):
-            self.queued_messages.append(
+        for formatted_message in Logger._format_message(module_name, message):
+            Logger.queued_messages.append(
                 {'message': formatted_message, 'type': type_name})
 
-    def _format_message(self, module_name: str, message: str) -> List[str]:
+    @staticmethod
+    def _format_message(module_name: str, message: str) -> List[str]:
         """Format message for display, including splitting multiline messages."""
         message_lines = []
         for line in message.splitlines():
@@ -231,38 +238,48 @@ class Logger():
         return message_lines
 
     @staticmethod
-    def _log(message: str, logger=None) -> None:
+    def log(module_name: Optional[str], message: str) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
-        if logger:
-            logger.add_message("", message)
+        if Logger.window:
+            if not module_name:
+                module_name = ""
+
+            Logger._queue_message(module_name, message, 'message')
         else:
             print(message)
 
     @staticmethod
-    def _log_error(message: str, logger=None) -> None:
+    def log_error(module_name: Optional[str], message: str) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
-        if logger:
-            logger.add_error("", message)
+        if Logger.window:
+            if not module_name:
+                module_name = ""
+
+            Logger._queue_message(module_name, message, 'error')
         else:
             print(message)
 
-    def show_next_message(self) -> None:
+    @staticmethod
+    def show_next_message() -> None:
         """Show next statusbar message.
 
         If the status bar has not been updated for 1 second, display the next
         message. If no messages are available, clear the status bar after it
         has been displayed for 5 seconds.
         """
-        current_time = time.time()
-        time_diff = 5 if len(self.queued_messages) < 1 else 1
-        if self.last_update and current_time - time_diff < self.last_update:
+        if not Logger.window:
             return
 
-        if len(self.queued_messages) == 0:
-            QQmlProperty.write(self.status_text, "text", "")
-            self.last_update = None
+        current_time = time.time()
+        time_diff = 5 if len(Logger.queued_messages) < 1 else 1
+        if Logger.last_update and current_time - time_diff < Logger.last_update:
+            return
+
+        if len(Logger.queued_messages) == 0:
+            QQmlProperty.write(Logger.status_text, "text", "")
+            Logger.last_update = None
         else:
-            message = self.queued_messages.pop(0)
+            message = Logger.queued_messages.pop(0)
 
             if message['type'] == 'error':
                 statusbar_message = "<font color='red'>⚠ {}</color>".format(
@@ -272,9 +289,9 @@ class Logger():
                 statusbar_message = message['message']
                 notification_message = message['message']
 
-            QQmlProperty.write(self.status_text, "text", statusbar_message)
+            QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            if self.window.window.windowState() == Qt.WindowMinimized or not self.window.window.isVisible():
+            if Logger.window.window.windowState() == Qt.WindowMinimized or not Logger.window.window.isVisible():
                 try:
                     Popen(['notify-send', 'Pext', notification_message])
                 except Exception as e:
@@ -282,20 +299,14 @@ class Logger():
                     traceback.print_exc()
                     print(notification_message)
 
-            self.last_update = current_time
+            Logger.last_update = current_time
 
-    def add_error(self, module_name: str, message: str) -> None:
-        """Add an error message to the queue."""
-        self._queue_message(module_name, message, 'error')
-
-    def add_message(self, module_name: str, message: str) -> None:
-        """Add a regular message to the queue."""
-        self._queue_message(module_name, message, 'message')
-
-    def set_queue_count(self, count: List[int]) -> None:
+    @staticmethod
+    def set_queue_count(count: List[int]) -> None:
         """Show the queue size on screen."""
-        QQmlProperty.write(self.status_queue, "entriesLeftForeground", count[0])
-        QQmlProperty.write(self.status_queue, "entriesLeftBackground", count[1])
+        if Logger.status_queue:
+            QQmlProperty.write(Logger.status_queue, "entriesLeftForeground", count[0])
+            QQmlProperty.write(Logger.status_queue, "entriesLeftBackground", count[1])
 
 
 class MainLoop():
@@ -305,25 +316,24 @@ class MainLoop():
     ensures these events get managed without locking up the UI.
     """
 
-    def __init__(self, app: QApplication, window: 'Window', logger: Logger) -> None:
+    def __init__(self, app: QApplication, window: 'Window') -> None:
         """Initialize the main loop."""
         self.app = app
         self.window = window
-        self.logger = logger
 
     def _process_tab_action(self, tab: Dict, active_tab: int) -> None:
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            self.logger.add_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['module_name'], str(action[1]))
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 
         elif action[0] == Action.add_message:
-            self.logger.add_message(tab['module_name'], str(action[1]))
+            Logger.log(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_error:
-            self.logger.add_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
             tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
@@ -570,7 +580,7 @@ class MainLoop():
         while True:
             self.app.sendPostedEvents()
             self.app.processEvents()
-            self.logger.show_next_message()
+            Logger.show_next_message()
 
             current_tab = QQmlProperty.read(self.window.tabs, "currentIndex")
             queue_size = [0, 0]
@@ -602,13 +612,71 @@ class MainLoop():
                     print('WARN: Module {} caused exception {}'.format(tab['module_name'], e))
                     traceback.print_exc()
 
-            self.logger.set_queue_count(queue_size)
+            Logger.set_queue_count(queue_size)
 
             if all_empty:
                 if self.window.window.isVisible():
                     time.sleep(0.01)
                 else:
                     time.sleep(0.1)
+
+
+class LocaleManager():
+    """Load and switch locales."""
+
+    def __init__(self, app: QApplication) -> None:
+        """Initialize the locale manager."""
+        self.app = app
+        self.locale_dir = os.path.join(AppFile.get_path(), 'i18n')
+        self.current_locale = None
+        self.translator = QTranslator()
+
+    @staticmethod
+    def get_locales() -> Dict[str, str]:
+        """Return the list of supported locales.
+
+        It is return as a dictionary formatted as follows: {nativeLanguageName: languageCode}.
+        """
+        locales = {}
+        for locale_file in os.listdir(os.path.join(AppFile.get_path(), 'i18n')):
+            if not locale_file.endswith('.qm'):
+                continue
+
+            locale_code = os.path.splitext(locale_file)[0][len('pext_'):]
+            locale_name = QLocale(locale_code).nativeLanguageName()
+            locales[locale_name] = locale_code
+
+        return locales
+
+    def get_current_locale(self, system_if_unset=True) -> Optional[QLocale]:
+        """Get the current locale.
+
+        If no locale is explicitly set, it will return the current system locale, unless system_if_unset is set to
+        False, in which case it will return None.
+        """
+        if self.current_locale:
+            return self.current_locale
+
+        if system_if_unset:
+            return QLocale()
+
+        return None
+
+    def load_locale(self, locale=None) -> None:
+        """Load the given locale into the application."""
+        system_locale = QLocale()
+        if locale:
+            chosen_locale = QLocale(locale)
+            self.current_locale = chosen_locale
+        else:
+            chosen_locale = system_locale
+
+        print('Using locale: {} {}'
+              .format(chosen_locale.name(), "(system locale)" if chosen_locale == system_locale else ""))
+        print('Localization loaded:',
+              self.translator.load(chosen_locale, 'pext', '_', self.locale_dir, '.qm'))
+
+        self.app.installTranslator(self.translator)
 
 
 class ProfileManager():
@@ -688,7 +756,7 @@ class ProfileManager():
         rmtree(os.path.join(self.profile_dir, profile))
         return True
 
-    def list_profiles(self) -> List:
+    def list_profiles(self) -> List[str]:
         """List the existing profiles."""
         return os.listdir(self.profile_dir)
 
@@ -815,7 +883,6 @@ class ModuleManager():
                                        'modules')
         self.module_dependencies_dir = os.path.join(self.config_retriever.get_setting('config_path'),
                                                     'module_dependencies')
-        self.logger = None  # type: Optional[Logger]
 
     @staticmethod
     def add_prefix(module_name: str) -> str:
@@ -883,14 +950,6 @@ class ModuleManager():
 
         return returncode
 
-    def bind_logger(self, logger: Logger) -> None:
-        """Connect a logger to the module manager.
-
-        If a logger is connected, the module manager will log all
-        messages directly to the logger.
-        """
-        self.logger = logger
-
     def load_module(self, window: 'Window', module: Dict, locale: str) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
@@ -933,9 +992,7 @@ class ModuleManager():
         try:
             module_import = __import__(module_dir, fromlist=['Module'])
         except ImportError as e1:
-            Logger._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e1),
-                self.logger)
+            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_name, module_dir, e1))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -955,9 +1012,8 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e2:
-            Logger._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e2),
-                self.logger)
+            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
+
             return False
 
         # Check if the required functions have enough parameters
@@ -979,10 +1035,11 @@ class ModuleManager():
                     print("WARN: Module {} uses old process_response signature and will not be able to receive an "
                           "identifier if requested".format(module_name))
                 else:
-                    Logger._log_error(
+                    Logger.log_error(
+                        None,
                         "Failed to load module {} from {}: {} function has {} parameters (excluding self), expected {}"
-                        .format(module_name, module_dir, name, param_length, required_param_length),
-                        self.logger)
+                        .format(module_name, module_dir, name, param_length, required_param_length))
+
                     return False
 
         # Prefill API version and locale
@@ -1040,8 +1097,8 @@ class ModuleManager():
             else:
                 QQmlProperty.write(window.tabs, "currentIndex", "0")
 
+        window.tabs.removeRequest.emit(tab_id)
         del window.tab_bindings[tab_id]
-        window.tabs.removeTab(tab_id)
 
     def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
@@ -1094,18 +1151,18 @@ class ModuleManager():
 
         if os.path.exists(os.path.join(self.module_dir, dir_name)):
             if verbose:
-                Logger._log('✔⇩ {}'.format(module_name), self.logger)
+                Logger.log(None, '✔⇩ {}'.format(module_name))
 
             return False
 
         if verbose:
-            Logger._log('⇩ {} ({})'.format(module_name, url), self.logger)
+            Logger.log(None, '⇩ {} ({})'.format(module_name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.module_dir, dir_name))
         except Exception as e:
             if verbose:
-                Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(module_name, e))
 
             traceback.print_exc()
 
@@ -1117,12 +1174,12 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩⇩ {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                Logger._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code), self.logger)
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(module_name, pip_exit_code))
 
             try:
                 rmtree(os.path.join(self.module_dir, dir_name))
@@ -1137,7 +1194,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔⇩⇩ {}'.format(module_name))
 
         return True
 
@@ -1147,15 +1204,13 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            Logger._log('♻ {}'.format(module_name), self.logger)
+            Logger.log(None, '♻ {}'.format(module_name))
 
         try:
             rmtree(os.path.join(self.module_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                Logger._log(
-                    '✔♻ {}'.format(module_name),
-                    self.logger)
+                Logger.log(None, '✔♻ {}'.format(module_name))
 
             return False
 
@@ -1165,7 +1220,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger._log('✔♻ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔♻ {}'.format(module_name))
 
         return True
 
@@ -1175,38 +1230,35 @@ class ModuleManager():
         module_name = ModuleManager.remove_prefix(module_name)
 
         if verbose:
-            Logger._log('⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩ {}'.format(module_name))
 
         try:
             if not UpdateManager.update(os.path.join(self.module_dir, dir_name)):
                 if verbose:
-                    Logger._log('⏩{}'.format(module_name), self.logger)
+                    Logger.log(None, '⏩{}'.format(module_name))
+
                 return False
 
         except Exception as e:
             if verbose:
-                Logger._log_error(
-                    '⇩ {}: {}'.format(module_name, e),
-                    self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(module_name, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩⇩ {}'.format(module_name))
 
         pip_exit_code = self._pip_install(dir_name)
         if pip_exit_code != 0:
             if verbose:
-                Logger._log_error(
-                    '⇩⇩ {}: {}'.format(module_name, pip_exit_code),
-                    self.logger)
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(module_name, pip_exit_code))
 
             return False
 
         if verbose:
-            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔⇩⇩ {}'.format(module_name))
 
         return True
 
@@ -1812,12 +1864,13 @@ class ViewModel():
 class Window(QMainWindow):
     """The main Pext window."""
 
-    def __init__(self, config_retriever: ConfigRetriever, parent=None) -> None:
+    def __init__(self, config_retriever: ConfigRetriever, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
 
         # Save settings
         self.config_retriever = config_retriever
+        self.locale_manager = locale_manager
 
         self.tab_bindings = []  # type: List[Dict]
 
@@ -1837,6 +1890,8 @@ class Window(QMainWindow):
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
+        self.context.setContextProperty("currentLocale", self.locale_manager.get_current_locale(system_if_unset=False))
+        self.context.setContextProperty("locales", self.locale_manager.get_locales())
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
@@ -1905,6 +1960,9 @@ class Window(QMainWindow):
         menu_manage_profiles_shortcut = self.window.findChild(
             QObject, "menuManageProfiles")
 
+        menu_change_language_shortcut = self.window.findChild(
+            QObject, "menuChangeLanguage")
+
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
         menu_sort_ascending_shortcut = self.window.findChild(
@@ -1955,7 +2013,10 @@ class Window(QMainWindow):
 
         menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
         menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
+        menu_manage_profiles_shortcut.renameProfileRequest.connect(self._menu_rename_profile)
         menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
+
+        menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2012,7 +2073,19 @@ class Window(QMainWindow):
         self.tabs.currentIndexChanged.connect(self._bind_context)
 
         # Show the window if not --background
-        if not Settings.get('background'):
+        if platform.system() == 'Darwin' and Settings.get('background'):
+            # workaround for https://github.com/Pext/Pext/issues/20
+            # First, we showMinimized to prevent Pext from being unrestorable
+            self.window.showMinimized()
+            # Then, we tell macOS to give the focus back to the last app
+            applescript_command = ['tell application "System Events"',
+                                   'tell process "Finder"',
+                                   'activate',
+                                   'keystroke tab using {command down}',
+                                   'end tell',
+                                   'end tell']
+            Popen(['osascript', '-e', '\n'.join(applescript_command)])
+        elif not Settings.get('background'):
             self.show()
 
             if Settings.get('update_check') is None:
@@ -2025,6 +2098,22 @@ class Window(QMainWindow):
                     lambda: self._menu_toggle_update_check(False))
 
                 permission_requests.updatePermissionRequest.emit()
+
+        # Start binding the modules
+        if len(Settings.get('modules')) > 0:
+            for module in Settings.get('modules'):
+                self.module_manager.load_module(self, module, Settings.get('locale', default=QLocale().name()))
+        else:
+            for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
+                self.module_manager.load_module(self, module, Settings.get('locale', default=QLocale().name()))
+
+        # If there's only one module passed through the command line, enforce
+        # loading it now. Otherwise, switch back to the first module in the
+        # list
+        if len(self.tab_bindings) == 1:
+            self.tabs.currentIndexChanged.emit()
+        elif len(self.tab_bindings) > 1:
+            QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2131,7 +2220,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.module_manager.install_module,
-                'args': (module_url),
+                'args': (module_url,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2145,7 +2234,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.module_manager.uninstall_module,
-                'args': (module_name),
+                'args': (module_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2159,7 +2248,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.module_manager.update_module,
-                'args': (module_name),
+                'args': (module_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2183,13 +2272,13 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_restart_pext(self, extra_args=[]) -> None:
+    def _menu_restart_pext(self, extra_args=None) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
-        _shut_down(self,
-                   self.config_retriever)
+        _shut_down(self, self.config_retriever)
 
         args = sys.argv[:]
-        args.extend(extra_args)
+        if extra_args:
+            args.extend(extra_args)
 
         args.insert(0, sys.executable)
         if sys.platform == 'win32':
@@ -2218,7 +2307,21 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.profile_manager.create_profile,
-                'args': (profile_name),
+                'args': (profile_name,),
+                'kwargs': {}
+            }, {
+                'name': self._update_profiles_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_rename_profile(self, old_profile_name: str, new_profile_name: str) -> None:
+        functions = [
+            {
+                'name': self.profile_manager.rename_profile,
+                'args': (old_profile_name, new_profile_name),
                 'kwargs': {}
             }, {
                 'name': self._update_profiles_info_qml,
@@ -2232,7 +2335,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.profile_manager.remove_profile,
-                'args': (profile_name),
+                'args': (profile_name,),
                 'kwargs': {}
             }, {
                 'name': self._update_profiles_info_qml,
@@ -2246,7 +2349,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.theme_manager.install_theme,
-                'args': (theme_url),
+                'args': (theme_url,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2260,7 +2363,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.theme_manager.uninstall_theme,
-                'args': (theme_name),
+                'args': (theme_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2274,7 +2377,7 @@ class Window(QMainWindow):
         functions = [
             {
                 'name': self.theme_manager.update_theme,
-                'args': (theme_name),
+                'args': (theme_name,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2297,6 +2400,10 @@ class Window(QMainWindow):
             }
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_change_language(self, lang_code: str) -> None:
+        Settings.set('locale', lang_code)
+        self._menu_restart_pext()
 
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
@@ -2395,13 +2502,14 @@ class Window(QMainWindow):
 
     def _menu_check_updates_actually_check(self, verbose=True) -> None:
         if verbose:
-            Logger._log('⇩ Pext', self.logger)
+            Logger.log(None, '⇩ Pext')
 
         try:
             new_version = UpdateManager().check_core_update()
         except Exception as e:
-            Logger._log_error('⇩ Pext: {}'.format(e), self.logger)
+            Logger.log_error(None, '⇩ Pext: {}'.format(e))
             traceback.print_exc()
+
             return
 
         if new_version:
@@ -2409,7 +2517,7 @@ class Window(QMainWindow):
             self.update_available_requests.showUpdateAvailableDialog.emit()
         else:
             if verbose:
-                Logger._log('✔⇩ Pext', self.logger)
+                Logger.log(None, '✔⇩ Pext')
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
         # Set a timer to run this function again in an hour
@@ -2429,30 +2537,6 @@ class Window(QMainWindow):
 
     def _show_download_page(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/download')
-
-    def bind_logger(self, logger: 'Logger') -> None:
-        """Bind the logger to the window and further initialize the module."""
-        self.logger = logger
-
-        self.module_manager.bind_logger(logger)
-        self.theme_manager.bind_logger(logger)
-
-        # Now that the logger is bound, we can show messages in the window, so
-        # start binding the modules
-        if len(Settings.get('modules')) > 0:
-            for module in Settings.get('modules'):
-                self.module_manager.load_module(self, module, Settings.get('locale'))
-        else:
-            for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
-                self.module_manager.load_module(self, module, Settings.get('locale'))
-
-        # If there's only one module passed through the command line, enforce
-        # loading it now. Otherwise, switch back to the first module in the
-        # list
-        if len(self.tab_bindings) == 1:
-            self.tabs.currentIndexChanged.emit()
-        elif len(self.tab_bindings) > 1:
-            QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""
@@ -2518,7 +2602,6 @@ class ThemeManager():
         """Initialize the module manager."""
         self.config_retriever = config_retriever
         self.theme_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
-        self.logger = None  # type: Optional[Logger]
 
     @staticmethod
     def add_prefix(theme_name: str) -> str:
@@ -2535,14 +2618,6 @@ class ThemeManager():
             return theme_name[len('pext_theme_'):]
 
         return theme_name
-
-    def bind_logger(self, logger: Logger) -> None:
-        """Connect a logger to the module manager.
-
-        If a logger is connected, the module manager will log all
-        messages directly to the logger.
-        """
-        self.logger = logger
 
     def _get_palette_mappings(self) -> Dict[str, int]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
@@ -2598,18 +2673,18 @@ class ThemeManager():
 
         if os.path.exists(os.path.join(self.theme_dir, dir_name)):
             if verbose:
-                Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+                Logger.log(None, '✔⇩ {}'.format(theme_name))
 
             return False
 
         if verbose:
-            Logger._log('⇩ {} ({})'.format(theme_name, url), self.logger)
+            Logger.log(None, '⇩ {} ({})'.format(theme_name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.theme_dir, dir_name))
         except Exception as e:
             if verbose:
-                Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(theme_name, e))
 
             traceback.print_exc()
 
@@ -2621,7 +2696,7 @@ class ThemeManager():
             return False
 
         if verbose:
-            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔⇩ {}'.format(theme_name))
 
         return True
 
@@ -2631,20 +2706,18 @@ class ThemeManager():
         theme_name = ThemeManager.remove_prefix(theme_name)
 
         if verbose:
-            Logger._log('♻ {}'.format(theme_name), self.logger)
+            Logger.log(None, '♻ {}'.format(theme_name))
 
         try:
             rmtree(os.path.join(self.theme_dir, dir_name))
         except FileNotFoundError:
             if verbose:
-                Logger._log(
-                    '✔♻ {}'.format(theme_name),
-                    self.logger)
+                Logger.log(None, '✔♻ {}'.format(theme_name))
 
             return False
 
         if verbose:
-            Logger._log('✔♻ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔♻ {}'.format(theme_name))
 
         return True
 
@@ -2654,26 +2727,25 @@ class ThemeManager():
         theme_name = ThemeManager.remove_prefix(theme_name)
 
         if verbose:
-            Logger._log('⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '⇩ {}'.format(theme_name))
 
         try:
             if not UpdateManager.update(os.path.join(self.theme_dir, dir_name)):
                 if verbose:
-                    Logger._log('⏩{}'.format(theme_name), self.logger)
+                    Logger.log(None, '⏩{}'.format(theme_name))
+
                 return False
 
         except Exception as e:
             if verbose:
-                Logger._log_error(
-                    '⇩ {}: {}'.format(theme_name, e),
-                    self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(theme_name, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔⇩ {}'.format(theme_name))
 
         return True
 
@@ -2725,7 +2797,7 @@ class Settings():
         '_launch_app': True,  # Keep track if launching is normal
         'background': False,
         'clipboard': 'clipboard',
-        'locale': QLocale.system().name(),
+        'locale': None,
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
@@ -2813,6 +2885,8 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     parser.add_argument('-v', '--version', action='version',
                         version='Pext {}'.format(UpdateManager().get_core_version()))
     parser.add_argument('--locale', help='load the given locale.')
+    parser.add_argument('--list-locales', action='store_true',
+                        help='print a list of the available locales.')
     parser.add_argument('--list-styles', action='store_true',
                         help='print a list of loadable Qt system styles and exit.')
     parser.add_argument('--style', help='use the given Qt system style for the UI.')
@@ -2883,6 +2957,13 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
     # Then, check for the rest
     if args.locale:
         Settings.set('locale', args.locale)
+
+    if args.list_locales:
+        locales = LocaleManager.get_locales()
+        for locale in locales:
+            print("{} ({})".format(locale, locales[locale]))
+
+        Settings.set('_launch_app', False)
 
     if args.list_styles:
         for style in QStyleFactory().keys():
@@ -3074,17 +3155,12 @@ def main() -> None:
         appname = 'Pext'
     else:
         appname = 'Pext ({})'.format(Settings.get('profile'))
+
     app = QApplication([appname])
 
-    translator = QTranslator()
-    locale_to_use = Settings.get('locale')
-    print('Using locale: {} {}'
-          .format(QLocale(locale_to_use).name(),
-                  "(manually set)" if Settings.get('locale') != QLocale.system().name() else ""))
-    print('Localization loaded:',
-          translator.load(QLocale(locale_to_use), 'pext', '_', os.path.join(AppFile.get_path(), 'i18n'), '.qm'))
-
-    app.installTranslator(translator)
+    # Load the locale
+    locale_manager = LocaleManager(app)
+    locale_manager.load_locale(Settings.get('locale'))
 
     # Load the app icon
     # KDE doesn't support svg in the system tray and macOS makes the png in
@@ -3101,6 +3177,12 @@ def main() -> None:
 
     theme_name = Settings.get('theme')
     if theme_name is not None:
+        # Qt5's default style for Windows, windowsvista, does not support palettes properly
+        # If the user doesn't explicitly chose a style, but wants theming, we force
+        # it to use Fusion, which gets themed properly
+        if platform.system() == 'Windows' and Settings.get('style') is None:
+            app.setStyle(QStyleFactory().create('Fusion'))
+
         theme_manager = ThemeManager(config_retriever)
         theme = theme_manager.load_theme(theme_name)
         theme_manager.apply_theme_to_app(theme, app)
@@ -3111,13 +3193,10 @@ def main() -> None:
         sys.exit(3)
 
     # Get a window
-    window = Window(config_retriever)
+    window = Window(config_retriever, locale_manager)
 
-    # Get a logger
-    logger = Logger(window)
-
-    # Give the window a reference to the logger
-    window.bind_logger(logger)
+    # Give the logger a reference to the window
+    Logger.bind_window(window)
 
     # Clean up on exit
     atexit.register(_shut_down, window, config_retriever)
@@ -3128,7 +3207,7 @@ def main() -> None:
         signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
-    main_loop = MainLoop(app, window, logger)
+    main_loop = MainLoop(app, window)
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray

@@ -28,6 +28,15 @@ Dialog {
     height: 350
     width: 500
 
+    property var translators: {"en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
+                               "es": [{"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
+                               "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
+                               "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
+                               "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
+                                      {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
+                               "ru": [{"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
+                               "zh_Hant": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
+
     TabView {
         width: parent.width
         height: parent.height
@@ -73,21 +82,21 @@ Dialog {
                     color: palette.text
                     width: parent.parent.width
                     wrapMode: Text.Wrap
-                    text:
-                        "<a href='https://hosted.weblate.org/engage/pext/'>" + qsTr("Want to help translate Pext? Please click here.") + "</a><br>" +
-                        "<h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:") + "</h3><br>" +
-                        "<b>" + qsTr("Spanish") + "</b><br>" +
-                        "Emily Lau &lt;<a href='mailto:fuchslein@hackerchick.me'>fuchslein@hackerchick.me</a>&gt;<br><br>" +
-                        "<b>" + qsTr("Hungarian") + "</b><br>" +
-                        "Szöllősi Attila &lt;<a href='mailto:ata2001@airmail.cc'>ata2001@airmail.cc</a>&gt;<br><br>" +
-                        "<b>" + qsTr("Norwegian Bokmål") + "</b><br>" +
-                        "Allan Nordhøy &lt;<a href='mailto:epost@anotheragency.no'>epost@anotheragency.no</a>&gt;<br><br>" +
-                        "<b>" + qsTr("Dutch") + "</b><br>" +
-                        "Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br>" +
-                        "Heimen Stoffels &lt;<a href='mailto:vistausss@outlook.com'>vistausss@outlook.com</a>&gt;<br><br>" +
-                        "<b>" + qsTr("Chinese (Traditional)") + "</b><br>" +
-                        "Jeff Huang &lt;<a href='mailto:s8321414@gmail.com'>s8321414@gmail.com</a>&gt;"
+                    text: "<a href='https://hosted.weblate.org/engage/pext/'>"
+                          + qsTr("Want to help translate Pext? Please click here.")
+                          + "</a><br><h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:")
+                          + "</h3><br>";
     
+                    Component.onCompleted: {
+                          for (var lang in translators) {
+                              text += "<b>" + Object.keys(locales).filter(function(key) { return locales[key] === lang })[0] + "</b><br>";
+                              for (var translatorData in translators[lang]) {
+                                  text += translators[lang][translatorData]["name"] + " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;<br>";
+                              }
+                              text += "<br>";
+                          }
+                    }
+
                     onLinkActivated: Qt.openUrlExternally(link)
                 }
             }

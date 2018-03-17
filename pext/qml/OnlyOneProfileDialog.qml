@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2016 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -21,10 +21,10 @@ import QtQuick 2.3
 import QtQuick.Dialogs 1.2
 
 MessageDialog {
-    title: qsTr("No themes installed")
+    title: qsTr("Only one profile available")
     icon: StandardIcon.Information
 
-    text: qsTr("No themes installed, please install one first.")
+    text: qsTr("There is only one profile available. Please create a second profile first.")
 
     Component.onCompleted: visible = true;
 }
