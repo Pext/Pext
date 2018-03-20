@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Themes now apply properly on Windows (forcing Fusion styling)
+- Properly fix i18n handling and giving i18n to modules
 
 ## [0.12] - 2018-03-04
 ### Added

@@ -624,12 +624,10 @@ class MainLoop():
 class LocaleManager():
     """Load and switch locales."""
 
-    def __init__(self, app: QApplication) -> None:
+    def __init__(self) -> None:
         """Initialize the locale manager."""
-        self.app = app
         self.locale_dir = os.path.join(AppFile.get_path(), 'i18n')
         self.current_locale = None
-        self.translator = QTranslator()
 
     @staticmethod
     def get_locales() -> Dict[str, str]:
@@ -662,21 +660,24 @@ class LocaleManager():
 
         return None
 
-    def load_locale(self, locale=None) -> None:
+    def find_best_locale(self, locale=None) -> QLocale:
+        """Find the best locale to use, defaulting to system locale."""
+        return QLocale(locale) if locale else QLocale()
+
+    def load_locale(self, app: QApplication, locale: QLocale) -> None:
         """Load the given locale into the application."""
+        translator = QTranslator()
         system_locale = QLocale()
-        if locale:
-            chosen_locale = QLocale(locale)
-            self.current_locale = chosen_locale
-        else:
-            chosen_locale = system_locale
+
+        if locale != system_locale:
+            self.current_locale = locale
 
         print('Using locale: {} {}'
-              .format(chosen_locale.name(), "(system locale)" if chosen_locale == system_locale else ""))
+              .format(locale.name(), "(system locale)" if locale == system_locale else ""))
         print('Localization loaded:',
-              self.translator.load(chosen_locale, 'pext', '_', self.locale_dir, '.qm'))
+              translator.load(locale, 'pext', '_', self.locale_dir, '.qm'))
 
-        self.app.installTranslator(self.translator)
+        app.installTranslator(translator)
 
 
 class ProfileManager():
@@ -950,7 +951,7 @@ class ModuleManager():
 
         return returncode
 
-    def load_module(self, window: 'Window', module: Dict, locale: str) -> bool:
+    def load_module(self, window: 'Window', module: Dict) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
         module_path = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
@@ -1043,6 +1044,9 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
+        locale_manager = LocaleManager()
+        locale = locale_manager.find_best_locale(Settings.get('locale')).name()
+
         module['settings']['_api_version'] = [0, 7, 0]
         module['settings']['_locale'] = locale
 
@@ -1123,7 +1127,7 @@ class ModuleManager():
         reload(module_data['module_import'])
 
         # Load it into the UI
-        if not self.load_module(window, module, module_data['settings']['_locale']):
+        if not self.load_module(window, module):
             return False
 
         # Get new position
@@ -2103,10 +2107,10 @@ class Window(QMainWindow):
         # Start binding the modules
         if len(Settings.get('modules')) > 0:
             for module in Settings.get('modules'):
-                self.module_manager.load_module(self, module, Settings.get('locale', default=QLocale().name()))
+                self.module_manager.load_module(self, module)
         else:
             for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
-                self.module_manager.load_module(self, module, Settings.get('locale', default=QLocale().name()))
+                self.module_manager.load_module(self, module)
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the
@@ -2200,7 +2204,7 @@ class Window(QMainWindow):
             module_settings[key] = value
 
         module = {'name': name, 'settings': module_settings}
-        self.module_manager.load_module(self, module, Settings.get('locale'))
+        self.module_manager.load_module(self, module)
         # First module? Enforce load
         if len(self.tab_bindings) == 1:
             self.tabs.currentIndexChanged.emit()
@@ -3164,8 +3168,8 @@ def main() -> None:
     app = QApplication([appname])
 
     # Load the locale
-    locale_manager = LocaleManager(app)
-    locale_manager.load_locale(Settings.get('locale'))
+    locale_manager = LocaleManager()
+    locale_manager.load_locale(app, locale_manager.find_best_locale(Settings.get('locale')))
 
     # Load the app icon
     # KDE doesn't support svg in the system tray and macOS makes the png in
