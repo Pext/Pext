@@ -1873,6 +1873,7 @@ class Window(QMainWindow):
         self.locale_manager = locale_manager
 
         self.tab_bindings = []  # type: List[Dict]
+        self.tray = None  # type: Optional[Tray]
 
         self.engine = QQmlApplicationEngine(self)
 
@@ -2172,7 +2173,7 @@ class Window(QMainWindow):
     def _process_window_state(self, event) -> None:
         if event & Qt.WindowMinimized:
             if Settings.get('minimize_mode') in [MinimizeMode.Tray, MinimizeMode.TrayManualOnly]:
-                self.window.hide()
+                self.close(manual=True, force_tray=True)
 
     def _get_current_element(self) -> Optional[Dict]:
         current_tab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -2547,17 +2548,21 @@ class Window(QMainWindow):
 
     def close(self, manual=False, force_tray=False) -> None:
         """Close the window."""
-        if force_tray:
-            self.window.hide()
-        elif (Settings.get('minimize_mode') == MinimizeMode.Normal
-                or (manual and Settings.get('minimize_mode') == MinimizeMode.NormalManualOnly)):
-            self.window.showMinimized()
-        elif (Settings.get('minimize_mode') == MinimizeMode.Tray
+        if (force_tray
+                or Settings.get('minimize_mode') == MinimizeMode.Tray
                 or (manual and Settings.get('minimize_mode') == MinimizeMode.TrayManualOnly)):
+            if self.tray:
+                self.tray.show()
+
             self.window.hide()
+        else:
+            self.window.showMinimized()
 
     def show(self) -> None:
         """Show the window."""
+        if self.tray:
+            self.tray.show() if Settings.get('tray') else self.tray.hide()
+
         if self.window.windowState() == Qt.WindowMinimized:
             self.window.showNormal()
         else:

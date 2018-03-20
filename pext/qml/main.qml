@@ -658,7 +658,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuShowTrayIcon"
-                text: qsTr("Show tray icon")
+                text: qsTr("Always show tray icon")
                 checkable: true
             }
 

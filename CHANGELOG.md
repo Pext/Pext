@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Tray icon is now always shown when the application is minimized to tray
+
 ### Fixed
 - Themes now apply properly on Windows (forcing Fusion styling)
 

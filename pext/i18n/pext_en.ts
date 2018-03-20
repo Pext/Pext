@@ -9,22 +9,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="46"/>
+        <location filename="../qml/AboutDialog.qml" line="47"/>
         <source>Copyright</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="78"/>
+        <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Translators</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="85"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation type="unfinished"></translation>
     </message>
@@ -588,11 +588,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="661"/>
-        <source>Show tray icon</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="667"/>
         <source>Automatically check for updates</source>
         <translation type="unfinished"></translation>
@@ -643,6 +638,11 @@
     <message>
         <location filename="../qml/main.qml" line="511"/>
         <source>P&amp;rofile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="661"/>
+        <source>Always show tray icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

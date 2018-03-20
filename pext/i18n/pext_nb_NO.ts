@@ -9,22 +9,22 @@
         <translation>Om Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="46"/>
+        <location filename="../qml/AboutDialog.qml" line="47"/>
         <source>Copyright</source>
         <translation>Kopirett</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="78"/>
+        <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Translators</source>
         <translation>Oversettere</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="85"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Ønsker du å oversette Pext? Klikk her.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Pext-laget ønsker å takket følgende for oversettelsen av Pext:</translation>
     </message>
@@ -608,9 +608,8 @@
         <translation>Kun manuelt: Minimer til systemkurv</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="661"/>
         <source>Show tray icon</source>
-        <translation>Vis systemkurvsikon</translation>
+        <translation type="vanished">Vis systemkurvsikon</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="667"/>
@@ -664,6 +663,11 @@
         <location filename="../qml/main.qml" line="511"/>
         <source>P&amp;rofile</source>
         <translation>P&amp;rofil</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="661"/>
+        <source>Always show tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="677"/>

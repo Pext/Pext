@@ -9,22 +9,22 @@
         <translation>關於 Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="46"/>
+        <location filename="../qml/AboutDialog.qml" line="47"/>
         <source>Copyright</source>
         <translation>版權</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="78"/>
+        <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Translators</source>
         <translation>翻譯者</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="85"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>想要協助翻譯 Pext？請點選這裡。</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Pext 想要感謝下列這些翻譯 Pext 的使用者：</translation>
     </message>
@@ -612,9 +612,8 @@
         <translation>僅手動：最小化至系統匣</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="661"/>
         <source>Show tray icon</source>
-        <translation>顯示系統匣圖示</translation>
+        <translation type="vanished">顯示系統匣圖示</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="667"/>
@@ -667,6 +666,11 @@
         <location filename="../qml/main.qml" line="511"/>
         <source>P&amp;rofile</source>
         <translation>設定檔(&amp;R)</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="661"/>
+        <source>Always show tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="677"/>

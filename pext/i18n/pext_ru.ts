@@ -9,22 +9,22 @@
         <translation>О Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="46"/>
+        <location filename="../qml/AboutDialog.qml" line="47"/>
         <source>Copyright</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="78"/>
+        <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Translators</source>
         <translation>Переводчики</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="85"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Хотите помочь перевести Pext? Нажмите здесь.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Команда Pext хотела бы поблагодарить следующих пользователей за помощь с переводом Pext:</translation>
     </message>
@@ -588,9 +588,8 @@
         <translation>Только вручную: Сворачивать в трей</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="661"/>
         <source>Show tray icon</source>
-        <translation>Отображать иконку в трее</translation>
+        <translation type="vanished">Отображать иконку в трее</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="667"/>
@@ -625,10 +624,12 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="798"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation><numerusform>Для начала, нажмите &lt;kbd&gt;%1&lt;/kbd&gt;, чтобы открыть новую вкладку. Когда вы закончите работать с вкладкой, вы можете закрыть её, нажав &lt;kbd&gt;%2&lt;/kbd&gt;. У вас сейчас установлено %n модуль. Вы можете управлять модулями из меню Модулей.</numerusform>
-        <numerusform>Для начала, нажмите &lt;kbd&gt;%1&lt;/kbd&gt;, чтобы открыть новую вкладку. Когда вы закончите работать с вкладкой, вы можете закрыть её, нажав &lt;kbd&gt;%2&lt;/kbd&gt;. У вас сейчас установлено %n модуля. Вы можете управлять модулями из меню Модулей.</numerusform>
-        <numerusform>Для начала, нажмите &lt;kbd&gt;%1&lt;/kbd&gt;, чтобы открыть новую вкладку. Когда вы закончите работать с вкладкой, вы можете закрыть её, нажав &lt;kbd&gt;%2&lt;/kbd&gt;. У вас сейчас установлено %n модулей. Вы можете управлять модулями из меню Модулей.</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>Для начала, нажмите &lt;kbd&gt;%1&lt;/kbd&gt;, чтобы открыть новую вкладку. Когда вы закончите работать с вкладкой, вы можете закрыть её, нажав &lt;kbd&gt;%2&lt;/kbd&gt;. У вас сейчас установлено %n модуль. Вы можете управлять модулями из меню Модулей.</numerusform>
+            <numerusform>Для начала, нажмите &lt;kbd&gt;%1&lt;/kbd&gt;, чтобы открыть новую вкладку. Когда вы закончите работать с вкладкой, вы можете закрыть её, нажав &lt;kbd&gt;%2&lt;/kbd&gt;. У вас сейчас установлено %n модуля. Вы можете управлять модулями из меню Модулей.</numerusform>
+            <numerusform>Для начала, нажмите &lt;kbd&gt;%1&lt;/kbd&gt;, чтобы открыть новую вкладку. Когда вы закончите работать с вкладкой, вы можете закрыть её, нажав &lt;kbd&gt;%2&lt;/kbd&gt;. У вас сейчас установлено %n модулей. Вы можете управлять модулями из меню Модулей.</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/main.qml" line="337"/>
         <source>Manage modules</source>
@@ -643,6 +644,11 @@
         <location filename="../qml/main.qml" line="511"/>
         <source>P&amp;rofile</source>
         <translation>П&amp;рофиль</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="661"/>
+        <source>Always show tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="677"/>

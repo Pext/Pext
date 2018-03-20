@@ -9,22 +9,22 @@
         <translation>Over Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="46"/>
+        <location filename="../qml/AboutDialog.qml" line="47"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="78"/>
+        <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Translators</source>
         <translation>Vertalers</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="85"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Wilt u meehelpen met het vertalen van Pext? Klik dan hier.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Het Pext-team bedankt de volgende gebruikers voor het vertalen van Pext:</translation>
     </message>
@@ -612,9 +612,8 @@
         <translation>Alleen handmatig: minimaliseren naar systeemvak</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="661"/>
         <source>Show tray icon</source>
-        <translation>Systeemvakpictogram weergeven</translation>
+        <translation type="vanished">Systeemvakpictogram weergeven</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="667"/>
@@ -668,6 +667,11 @@
         <location filename="../qml/main.qml" line="511"/>
         <source>P&amp;rofile</source>
         <translation>P&amp;rofiel</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="661"/>
+        <source>Always show tray icon</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="677"/>
