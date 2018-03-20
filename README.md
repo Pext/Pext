@@ -86,7 +86,7 @@ On some systems, you may need to use pip instead of pip3.
 Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md)
 
 ### macOS
-A macOS .app file is available in the releases section on GitHub. This is still experimental, please report any issues.
+A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). This is still experimental, please report any issues.
 
 Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md)
 
