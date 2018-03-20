@@ -108,7 +108,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
         <source>You already have this module installed.</source>
-        <translation type="unfinished">Modul allerede installert.</translation>
+        <translation>Modul allerede installert.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
@@ -205,7 +205,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="55"/>
         <source>You already have this theme installed.</source>
-        <translation type="unfinished">Drakt allerede installert.</translation>
+        <translation>Drakt allerede installert.</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="61"/>
