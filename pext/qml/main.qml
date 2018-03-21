@@ -28,6 +28,8 @@ ApplicationWindow {
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
+    minimumWidth: 500
+    minimumHeight: 300
     width: Screen.width
     height: 300
 

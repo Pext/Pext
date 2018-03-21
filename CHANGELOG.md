@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Tray icon is now always shown when the application is minimized to tray
 - Hide minimize to tray on macOS (too broken, can cause crashes)
+- The main window now has a minimal size of 500x300
 
 ### Fixed
 - Themes now apply properly on Windows (forcing Fusion styling)
