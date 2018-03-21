@@ -22,3 +22,5 @@ branches:
   except:
     - # Do not build tags that we create when we upload to GitHub Releases
     - /^(?i:continuous)$/
+    - # Also, don't build i18n, the only changes are uncompiled translation files
+    - i18n
