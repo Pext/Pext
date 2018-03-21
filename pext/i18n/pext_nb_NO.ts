@@ -246,7 +246,7 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="26"/>
         <source>Load module</source>
-        <translation type="unfinished">Last inn modul</translation>
+        <translation>Last inn modul</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
@@ -282,7 +282,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="26"/>
         <source>Switch theme</source>
-        <translation type="unfinished">Bytt drakt</translation>
+        <translation>Bytt drakt</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
@@ -305,12 +305,12 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage modules</source>
-        <translation type="unfinished">Behandle moduler</translation>
+        <translation>Behandle moduler</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage themes</source>
-        <translation type="unfinished">Behandle drakter</translation>
+        <translation>Behandle drakter</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="63"/>
@@ -451,7 +451,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation type="unfinished">Oppgradingsbehandler</translation>
+        <translation>Oppgradingsbehandler</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
@@ -667,7 +667,7 @@
     <message>
         <location filename="../qml/main.qml" line="661"/>
         <source>Always show tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Alltid vis systemkurvsikon</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="677"/>
