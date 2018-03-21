@@ -635,6 +635,7 @@ ApplicationWindow {
                 }
 
                 MenuItem {
+                    visible: platform != 'Darwin'
                     objectName: "menuMinimizeToTray"
                     text: qsTr("Minimize to tray")
                     checkable: true
@@ -649,6 +650,7 @@ ApplicationWindow {
                 }
 
                 MenuItem {
+                    visible: platform != 'Darwin'
                     objectName: "menuMinimizeToTrayManually"
                     text: qsTr("Manual only: Minimize to tray")
                     checkable: true
