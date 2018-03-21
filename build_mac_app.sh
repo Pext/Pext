@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 # Run py2app
 python3 setup.py py2app
