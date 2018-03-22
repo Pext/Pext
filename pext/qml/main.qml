@@ -313,7 +313,7 @@ ApplicationWindow {
                 id: menuLoadModule
                 objectName: "menuLoadModule"
 
-                signal loadModuleRequest(string name, string settings)
+                signal loadModuleRequest(string identifier, string name, string settings)
 
                 text: qsTr("Load module")
 
@@ -326,7 +326,7 @@ ApplicationWindow {
                     } else {
                         var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
                         loadModuleDialog.createObject(applicationWindow,
-                            {"modules": Object.keys(modules).sort(),
+                            {"modules": modules,
                              "loadRequest": loadModuleRequest,
                              "modulesPath": modulesPath});
                     }
@@ -427,7 +427,7 @@ ApplicationWindow {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
                             {"currentTheme": currentTheme,
-                             "themes": Object.keys(themes).sort(),
+                             "themes": themes,
                              "loadRequest": loadThemeRequest,
                              "themesPath": themesPath});
                     }

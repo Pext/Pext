@@ -44,7 +44,7 @@ Dialog {
 
         ComboBox {
             id: combobox
-            model: modules
+            model: Object.keys(modules).map(function(module) { return modules[module].name })
             Layout.fillWidth: true
             onCurrentIndexChanged: getModuleSettings();
         }
@@ -95,20 +95,7 @@ Dialog {
         for (var key in moduleChosenSettings)
             settingString += key + "=" + moduleChosenSettings[key] + " ";
 
-        loadRequest(combobox.currentText, settingString)
-    }
-
-    function getData(url, callback) {
-        var xmlhttp = new XMLHttpRequest();
-
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
-                callback(xmlhttp.response);
-            }
-        }
-
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
+        loadRequest(Object.keys(modules)[combobox.currentIndex], combobox.currentText, settingString)
     }
 
     function getModuleSettings() {
@@ -116,10 +103,7 @@ Dialog {
         moduleSettings = []
         moduleChosenSettings = {}
 
-        var path = modulesPath + "/pext_module_" + combobox.currentText + "/metadata.json";
-        getData(path, function(response) {
-            moduleSettings = JSON.parse(response)["settings"];
-        });
+        moduleSettings = modules[Object.keys(modules)[combobox.currentIndex]].metadata.settings;
     }
 }
 

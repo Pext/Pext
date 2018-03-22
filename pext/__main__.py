@@ -686,6 +686,7 @@ class ProfileManager():
     def __init__(self, config_retriever: ConfigRetriever) -> None:
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
+        self.module_dir = os.path.join(config_retriever.get_setting('config_path'), 'modules')
         self.config_retriever = config_retriever
         self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
         self.enum_settings = ['minimize_mode', 'sort_mode']
@@ -765,14 +766,14 @@ class ProfileManager():
         """Save the list of open modules and their settings to the profile."""
         config = configparser.ConfigParser()
         for number, module in enumerate(modules):
-            name = ModuleManager.add_prefix(module['module_name'])
+            identifier = ModuleManager.add_prefix(module['module_identifier'])
             settings = {}
             for setting in module['settings']:
                 # Only save non-internal variables
                 if setting[0] != "_":
                     settings[setting] = module['settings'][setting]
 
-            config['{}_{}'.format(number, name)] = settings
+            config['{}_{}'.format(number, identifier)] = settings
 
         with open(os.path.join(self.profile_dir, profile, 'modules'), 'w') as configfile:
             config.write(configfile)
@@ -785,13 +786,16 @@ class ProfileManager():
         config.read(os.path.join(self.profile_dir, profile, 'modules'))
 
         for module in config.sections():
+            identifier = module.split('_', 1)[1]
+            name = ObjectManager.list_object(
+                       os.path.join(self.module_dir, ModuleManager.add_prefix(identifier)))['name']
             settings = {}
 
             for key in config[module]:
                 settings[key] = config[module][key]
 
             modules.append(
-                {'name': module.split('_', 1)[1], 'settings': settings})
+                {'identifier': identifier, 'name': name, 'settings': settings})
 
         return modules
 
@@ -831,45 +835,54 @@ class ObjectManager():
     """Shared management for modules and themes."""
 
     @staticmethod
+    def list_object(full_path: str) -> Optional[Dict[str, Dict[str, str]]]:
+        """Return the identifier, name, source and metadata of an object."""
+        if not os.path.isdir(full_path):
+            return None
+
+        identifier = os.path.basename(full_path)
+        identifier = ModuleManager.remove_prefix(identifier)
+        identifier = ThemeManager.remove_prefix(identifier)
+
+        try:
+            source = UpdateManager.get_remote_url(full_path)
+        except Exception:
+            source = None
+
+        try:
+            with open(os.path.join(full_path, "metadata.json"), 'r') as metadata_json:
+                metadata = json.load(metadata_json)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            print("Object {} lacks a metadata.json file".format(identifier))
+            metadata = {}
+
+        # Add revision last updated time
+        if source:
+            try:
+                version = UpdateManager.get_version(full_path)
+                metadata['version'] = version
+            except Exception:
+                pass
+
+            try:
+                last_updated = UpdateManager.get_last_updated(full_path)
+                metadata['last_updated'] = str(last_updated)
+            except Exception:
+                pass
+
+        name = metadata['name'] if 'name' in metadata else identifier
+
+        return {"identifier": identifier, "name": name, "source": source, "metadata": metadata}
+
+    @staticmethod
     def list_objects(core_directory: str) -> Dict[str, Dict[str, Dict[str, str]]]:
-        """Return a list of objects together with their source."""
+        """Return a list of objects together with their identifier, name, source and metadata."""
         objects = {}
 
         for directory in os.listdir(core_directory):
-            if not os.path.isdir(os.path.join(core_directory, directory)):
-                continue
-
-            name = directory
-            name = ModuleManager.remove_prefix(name)
-            name = ThemeManager.remove_prefix(name)
-
-            try:
-                source = UpdateManager.get_remote_url(os.path.join(core_directory, directory))
-            except Exception:
-                source = None
-
-            try:
-                with open(os.path.join(core_directory, directory, "metadata.json"), 'r') as metadata_json:
-                    metadata = json.load(metadata_json)
-            except (FileNotFoundError, json.decoder.JSONDecodeError):
-                print("Object {} lacks a metadata.json file".format(name))
-                metadata = {}
-
-            # Add revision last updated time
-            if source:
-                try:
-                    version = UpdateManager.get_version(os.path.join(core_directory, directory))
-                    metadata['version'] = version
-                except Exception:
-                    pass
-
-                try:
-                    last_updated = UpdateManager.get_last_updated(os.path.join(core_directory, directory))
-                    metadata['last_updated'] = str(last_updated)
-                except Exception:
-                    pass
-
-            objects[name] = {"source": source, "metadata": metadata}
+            dir_object = ObjectManager.list_object(os.path.join(core_directory, directory))
+            if dir_object:
+                objects[dir_object['identifier']] = dir_object
 
         return objects
 
@@ -958,9 +971,10 @@ class ModuleManager():
         if module_path not in sys.path:
             sys.path.append(module_path)
 
-        # Remove pext_module_ from the module name
-        module_dir = ModuleManager.add_prefix(module['name']).replace('.', '_')
-        module_name = ModuleManager.remove_prefix(module['name'])
+        # Remove pext_module_ from the module identifier
+        module_dir = ModuleManager.add_prefix(module['identifier']).replace('.', '_')
+        module_identifier = ModuleManager.remove_prefix(module['identifier'])
+        module_name = module['name']
 
         # Append module dependencies path if not yet appended
         module_dependencies_path = os.path.join(self.config_retriever.get_setting('config_path'),
@@ -993,7 +1007,7 @@ class ModuleManager():
         try:
             module_import = __import__(module_dir, fromlist=['Module'])
         except ImportError as e1:
-            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_name, module_dir, e1))
+            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_identifier, module_dir, e1))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1013,7 +1027,7 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e2:
-            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_name, module_dir, e2))
+            Logger.log_error(None, "Failed to load module {} from {}: {}".format(module_identifier, module_dir, e2))
 
             return False
 
@@ -1034,12 +1048,12 @@ class ModuleManager():
             if param_length != required_param_length:
                 if name == 'process_response' and param_length == 1:
                     print("WARN: Module {} uses old process_response signature and will not be able to receive an "
-                          "identifier if requested".format(module_name))
+                          "identifier if requested".format(module_identifier))
                 else:
                     Logger.log_error(
                         None,
                         "Failed to load module {} from {}: {} function has {} parameters (excluding self), expected {}"
-                        .format(module_name, module_dir, name, param_length, required_param_length))
+                        .format(module_identifier, module_dir, name, param_length, required_param_length))
 
                     return False
 
@@ -1052,7 +1066,7 @@ class ModuleManager():
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
-            module_name,
+            module_identifier,
             q,
             target=module_code.init,
             args=(module['settings'], q))
@@ -1074,6 +1088,7 @@ class ModuleManager():
                                     'module': module_code,
                                     'module_context': module_context,
                                     'module_import': module_import,
+                                    'module_identifier': module_identifier,
                                     'module_name': module_name,
                                     'tab_data': tab_data,
                                     'settings': module['settings'],
@@ -1091,7 +1106,7 @@ class ModuleManager():
             window.tab_bindings[tab_id]['module'].stop()
         except Exception as e:
             print('WARN: Module {} caused exception {} on unload'
-                  .format(window.tab_bindings[tab_id]['module_name'], e))
+                  .format(window.tab_bindings[tab_id]['module_identifier'], e))
             traceback.print_exc()
 
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
@@ -1116,6 +1131,7 @@ class ModuleManager():
         # Get the needed info to load the module
         module_data = window.tab_bindings[tab_id]
         module = {
+            'identifier': module_data['module_identifier'],
             'name': module_data['module_name'],
             'settings': module_data['settings']
         }
@@ -2193,7 +2209,7 @@ class Window(QMainWindow):
         except TypeError:
             pass
 
-    def _open_tab(self, name: str, settings: str) -> None:
+    def _open_tab(self, identifier: str, name: str, settings: str) -> None:
         module_settings = {}
         for setting in settings.split(" "):
             try:
@@ -2203,7 +2219,7 @@ class Window(QMainWindow):
 
             module_settings[key] = value
 
-        module = {'name': name, 'settings': module_settings}
+        module = {'identifier': identifier, 'name': name, 'settings': module_settings}
         self.module_manager.load_module(self, module)
         # First module? Enforce load
         if len(self.tab_bindings) == 1:

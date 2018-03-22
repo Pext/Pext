@@ -44,7 +44,7 @@ Dialog {
 
         ComboBox {
             id: combobox
-            model: [qsTr("No theme")].concat(themes)
+            model: [qsTr("No theme")].concat(Object.keys(themes).map(function(theme) { return themes[theme].name }))
             Layout.fillWidth: true
         }
 
@@ -57,7 +57,7 @@ Dialog {
         if (currentTheme === null) {
             combobox.currentIndex = 0;
         } else {
-            combobox.currentIndex = themes.indexOf(currentTheme) + 1;
+            combobox.currentIndex = Object.keys(themes).indexOf(currentTheme) + 1;
         }
         visible = true;
         combobox.focus = true;
@@ -67,7 +67,7 @@ Dialog {
         if (combobox.currentIndex == 0) {
             loadRequest(null);
         } else {
-            loadRequest(combobox.currentText);
+            loadRequest(Object.keys(themes)[combobox.currentIndex - 1]);
         }
     }
 }

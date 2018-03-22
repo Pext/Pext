@@ -52,7 +52,7 @@ Dialog {
                 width: parent.width
 
                 Label {
-                    text: manageableObjects[modelData].metadata.name + "\n"
+                    text: manageableObjects[modelData].name + "\n"
                     wrapMode: Text.Wrap 
                     font.bold: true
                 }
