@@ -23,7 +23,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: qsTr("Module installation")
+    title: qsTr("Module Installation")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var installedModules
@@ -32,7 +32,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: qsTr("Choose the module to install:")
+            text: qsTr("Choose the module you would like to install:")
         }
 
         ComboBox {
@@ -64,7 +64,7 @@ Dialog {
         }
 
         Label {
-            text: qsTr("Module information:")
+            text: qsTr("Module Information:")
         }
 
         Label {
