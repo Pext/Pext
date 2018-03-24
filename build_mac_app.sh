@@ -20,7 +20,3 @@ sed -i.bak 's/site/site_mac/g' "$RESOURCEDIR/__boot__.py"
 rm "$RESOURCEDIR/__boot__.py.bak"
 { echo 'import sys,os\nsys.path.append(os.environ["RESOURCEPATH"])'; cat "$RESOURCEDIR/__boot__.py"; } >boot.new
 mv "boot.new" "$RESOURCEDIR/__boot__.py"
-
-# Fix "pip is a package and cannot be directly executed"
-#zip -d "$RESOURCEDIR/lib/python36.zip" "pip/__init__.pyc"
-#touch "__main__.pyc" && zip "$RESOURCEDIR/lib/python36.zip" "__main__.pyc" && rm "__main__.pyc"
