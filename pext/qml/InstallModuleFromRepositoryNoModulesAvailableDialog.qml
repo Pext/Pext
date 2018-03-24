@@ -24,7 +24,7 @@ MessageDialog {
     title: qsTr("No modules found")
     icon: StandardIcon.Information
 
-    text: qsTr("No modules found in this repository.")
+    text: qsTr("No modules were found in this repository.")
 
     Component.onCompleted: visible = true;
 }
