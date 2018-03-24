@@ -22,9 +22,8 @@ if sys.platform == 'darwin':
             'argv_emulation': True,
             'iconfile': 'pext/images/scalable/pext.icns',
             'emulate_shell_environment': 1,
-            'site_packages': 1,
-            'includes': ['readline', 'pty', 'pip'],
-            'packages': ['certifi']
+            'includes': ['pty', 'readline'],
+            'packages': ['certifi', 'distutils', 'pip']
         }}
     )
 else:
