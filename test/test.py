@@ -25,7 +25,7 @@ class TestConfig(unittest.TestCase):
 
     def test_get_last_update_check_time(self):
         self.assertEqual(self.config_retriever.get_last_update_check_time(),
-                         datetime.datetime(2018, 3, 25, 15, 29, 55))
+                         datetime.datetime(2018, 3, 25, 13, 29, 55))
 
 
 if __name__ == '__main__':
