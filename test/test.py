@@ -30,7 +30,7 @@ class TestConfig(unittest.TestCase):
         # Remove tzinfo attribute
         date = date.replace(tzinfo=None)
 
-        #Calculate local time
+        # Convert to local time
         date += utc_offset
 
         self.assertEqual(self.config_retriever.get_last_update_check_time(), date)
