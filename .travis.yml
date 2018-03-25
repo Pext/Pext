@@ -8,6 +8,7 @@ before_install:
   - pip3 install certifi dulwich pyqt5 urllib3
 
 install:
+  - pip3 install -e .
   - ./build_mac_app.sh
 
 script:
