@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Hide minimize to tray on macOS (too broken, can cause crashes)
 - The main window now has a minimal size of 500x300
 - Versioning now complies with PEP440
+- Merge module and theme repo and object selection into a single screen to save a click
 
 ### Fixed
 - Themes now apply properly on Windows (forcing Fusion styling)

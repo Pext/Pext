@@ -376,12 +376,12 @@ ApplicationWindow {
                         }]
 
                     onTriggered: {
-                        var installModuleFromRepositoryDialog = Qt.createComponent("InstallModuleFromRepositoryDialog.qml");
+                        var installModuleFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installModuleFromRepositoryDialog.createObject(applicationWindow,
-                            {"applicationWindow": applicationWindow,
-                             "installedModules": modules,
+                            {"installedModules": modules,
                              "installRequest": menuInstallModule.installModuleRequest,
-                             "repositories": repositories})
+                             "repositories": repositories,
+                             "type": "modules"})
                     }
                 }
 
@@ -477,12 +477,12 @@ ApplicationWindow {
                         }]
 
                     onTriggered: {
-                        var installThemeFromRepositoryDialog = Qt.createComponent("InstallThemeFromRepositoryDialog.qml");
+                        var installThemeFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installThemeFromRepositoryDialog.createObject(applicationWindow,
-                            {"applicationWindow": applicationWindow,
-                             "installedThemes": themes,
+                            {"installedThemes": themes,
                              "installRequest": menuInstallTheme.installThemeRequest,
-                             "repositories": repositories})
+                             "repositories": repositories,
+                             "type": "themes"})
                     }
                 }
 
