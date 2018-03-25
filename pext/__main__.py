@@ -2979,7 +2979,6 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
 
 def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) -> None:
     """Load the settings from the command line and set defaults."""
-
     # First, check for profile
     if args.profile:
         Settings.set('profile', args.profile)
@@ -3156,6 +3155,10 @@ def main() -> None:
     # Parse arguments
     args = _parse_args(sys.argv[1:])
 
+    # Lock profile or call existing profile if running
+    _init_persist(args.profile if args.profile else ProfileManager.default_profile_name(),
+                  args.background if args.background else False)
+
     # Load configuration
     config_retriever = ConfigRetriever(args.config)
 
@@ -3189,9 +3192,6 @@ def main() -> None:
     if warn_no_openGL_linux:
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. "
               "See https://github.com/Pext/Pext/issues/11.")
-
-    # Set up persistence
-    _init_persist(Settings.get('profile'), Settings.get('background'))
 
     # Set up the app
     if Settings.get('profile') == ProfileManager.default_profile_name():
