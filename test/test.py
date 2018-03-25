@@ -24,8 +24,16 @@ class TestConfig(unittest.TestCase):
         self.assertTrue(self.config_retriever.get_updatecheck_permission())
 
     def test_get_last_update_check_time(self):
-        self.assertEqual(self.config_retriever.get_last_update_check_time(),
-                         datetime.datetime(2018, 3, 25, 13, 29, 55))
+        date = datetime.datetime(2018, 3, 25, 13, 29, 55, tzinfo=datetime.timezone.utc)
+        utc_offset = date.astimezone().utcoffset()
+
+        # Remove tzinfo attribute
+        date = date.replace(tzinfo=None)
+
+        #Calculate local time
+        date += utc_offset
+
+        self.assertEqual(self.config_retriever.get_last_update_check_time(), date)
 
 
 if __name__ == '__main__':
