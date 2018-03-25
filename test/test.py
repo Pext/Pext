@@ -1,11 +1,17 @@
 import os
 import datetime
+import shutil
+import tempfile
 import unittest
 
 from pext.__main__ import ConfigRetriever
 
-# Directory holding test data
-test_data = os.path.join(os.path.dirname(__file__), 'testdata')
+test_src = os.path.dirname(__file__)
+
+# Copy test data to temporary directory
+temp_dir = tempfile.mkdtemp()
+test_data = shutil.copytree(os.path.join(test_src, 'testdata'),
+                            os.path.join(temp_dir, 'testdata'))
 
 
 class TestConfig(unittest.TestCase):
