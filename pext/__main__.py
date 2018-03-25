@@ -2979,7 +2979,6 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
 
 def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) -> None:
     """Load the settings from the command line and set defaults."""
-
     # First, check for profile
     if args.profile:
         Settings.set('profile', args.profile)

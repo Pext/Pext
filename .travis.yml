@@ -5,14 +5,14 @@ os:
 before_install:
   - brew update
   - brew upgrade python
-  - pip3 install certifi dulwich pyqt5 urllib3
+  - pip3 install certifi dulwich pyqt5 tox urllib3
 
 install:
   - pip3 install -e .
   - ./build_mac_app.sh
 
 script:
-  - ./run_tests.sh
+  - tox
 
 after_success:
   - git clone https://github.com/andreyvit/yoursway-create-dmg.git
