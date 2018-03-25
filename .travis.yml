@@ -10,6 +10,9 @@ before_install:
 install:
   - ./build_mac_app.sh
 
+script:
+  - ./.travis_script.sh
+
 after_success:
   - git clone https://github.com/andreyvit/yoursway-create-dmg.git
   - pushd yoursway-create-dmg
