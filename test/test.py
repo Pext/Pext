@@ -8,16 +8,20 @@ from pext.__main__ import ConfigRetriever
 
 test_src = os.path.dirname(__file__)
 
-# Copy test data to temporary directory
-temp_dir = tempfile.mkdtemp()
-test_data = shutil.copytree(os.path.join(test_src, 'testdata'),
-                            os.path.join(temp_dir, 'testdata'))
-
 
 class TestConfig(unittest.TestCase):
     def setUp(self):
+        # Copy test data to a temporary directory
+        self.temp_dir = tempfile.TemporaryDirectory()
+        test_data = shutil.copytree(os.path.join(test_src, 'testdata'),
+                                    os.path.join(self.temp_dir.name, 'testdata'))
+
         self.test_config = os.path.join(test_data, "config")
         self.config_retriever = ConfigRetriever(self.test_config)
+
+    def tearDown(self):
+        # Delete the temporary directory
+        self.temp_dir.cleanup()
 
     def test_get_setting(self):
         self.assertEqual(self.config_retriever.get_setting('config_path'),
