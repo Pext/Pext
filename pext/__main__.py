@@ -2917,7 +2917,7 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='The Python-based extendable tool.')
     parser.add_argument('-v', '--version', action='version',
                         version='Pext {}'.format(UpdateManager().get_core_version()))
-    parser.add_argument('--config', help='load configuration from the given directory.')
+    parser.add_argument('--config', help='use given directory to store settings and data.')
     parser.add_argument('--locale', help='load the given locale.')
     parser.add_argument('--list-locales', action='store_true',
                         help='print a list of the available locales.')
