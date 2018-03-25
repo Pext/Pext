@@ -107,15 +107,23 @@ class SortMode(IntEnum):
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
-    def __init__(self) -> None:
+    def __init__(self, path: str) -> None:
         """Initialize the configuration location."""
-        # Initialze defaults
-        try:
-            config_home = os.environ['XDG_CONFIG_HOME']
-        except Exception:
-            config_home = os.path.join(os.path.expanduser('~'), '.config')
+        config_home = path
+        if config_home:
+            config_home = os.path.expanduser(config_home)
+            if os.path.isdir(config_home):
+                self.config = {'config_path': config_home}
+            else:
+                raise NotADirectoryError('{} is not a directory.'.format(config_home))
+        else:
+            # Fall back to default config location
+            try:
+                config_home = os.environ['XDG_CONFIG_HOME']
+            except Exception:
+                config_home = os.path.join(os.path.expanduser('~'), '.config')
 
-        self.config = {'config_path': os.path.join(config_home, 'pext')}
+            self.config = {'config_path': os.path.join(config_home, 'pext')}
 
     def get_setting(self, variable: str) -> str:
         """Get a specific configuration setting."""
@@ -2904,11 +2912,12 @@ def _init_persist(profile: str, background: bool) -> None:
     ProfileManager.lock_profile(profile)
 
 
-def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
-    """Load the settings from the command line and set defaults."""
+def _parse_args(argv: List[str]) -> argparse.Namespace:
+    """Parse command line arguments."""
     parser = argparse.ArgumentParser(description='The Python-based extendable tool.')
     parser.add_argument('-v', '--version', action='version',
                         version='Pext {}'.format(UpdateManager().get_core_version()))
+    parser.add_argument('--config', help='use given directory to store settings and data.')
     parser.add_argument('--locale', help='load the given locale.')
     parser.add_argument('--list-locales', action='store_true',
                         help='print a list of the available locales.')
@@ -2965,6 +2974,11 @@ def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> None:
                 pass
 
     args = parser.parse_args()
+    return args
+
+
+def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) -> None:
+    """Load the settings from the command line and set defaults."""
 
     # First, check for profile
     if args.profile:
@@ -3139,8 +3153,11 @@ def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
 
 def main() -> None:
     """Start the application."""
+    # Parse arguments
+    args = _parse_args(sys.argv[1:])
+
     # Load configuration
-    config_retriever = ConfigRetriever()
+    config_retriever = ConfigRetriever(args.config)
 
     # Ensure our necessary directories exist
     for directory in ['modules',
@@ -3162,7 +3179,8 @@ def main() -> None:
         # Probably already deleted
         pass
 
-    _load_settings(sys.argv[1:], config_retriever)
+    _load_settings(args, config_retriever)
+    del args
 
     if not Settings.get('_launch_app'):
         sys.exit(0)
