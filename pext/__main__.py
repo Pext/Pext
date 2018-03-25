@@ -628,6 +628,7 @@ class LocaleManager():
         """Initialize the locale manager."""
         self.locale_dir = os.path.join(AppFile.get_path(), 'i18n')
         self.current_locale = None
+        self.translator = QTranslator()  # prevent Python from garbage collecting it after load_locale function
 
     @staticmethod
     def get_locales() -> Dict[str, str]:
@@ -666,7 +667,6 @@ class LocaleManager():
 
     def load_locale(self, app: QApplication, locale: QLocale) -> None:
         """Load the given locale into the application."""
-        translator = QTranslator()
         system_locale = QLocale()
 
         if locale != system_locale:
@@ -675,9 +675,9 @@ class LocaleManager():
         print('Using locale: {} {}'
               .format(locale.name(), "(system locale)" if locale == system_locale else ""))
         print('Localization loaded:',
-              translator.load(locale, 'pext', '_', self.locale_dir, '.qm'))
+              self.translator.load(locale, 'pext', '_', self.locale_dir, '.qm'))
 
-        app.installTranslator(translator)
+        app.installTranslator(self.translator)
 
 
 class ProfileManager():
