@@ -254,7 +254,7 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation>नोट: पैक्स्ट प्रोफ़ाइल स्विच करने के लिए पुनरारंभ होगा ।</translation>
+        <translation>नोट: पैक्स्ट प्रोफ़ाइल स्विच करने के लिए पुनरारंभ होगा।</translation>
     </message>
 </context>
 <context>
@@ -277,7 +277,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>नोट: पैक्स्ट नई थीम लागू करने के लिए पुनरारंभ होगा ।.</translation>
+        <translation>नोट: पैक्स्ट नई थीम लागू करने के लिए पुनरारंभ होगा।</translation>
     </message>
 </context>
 <context>
@@ -285,52 +285,52 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage modules</source>
-        <translation></translation>
+        <translation>मॉड्यूल प्रबंधित करें</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage themes</source>
-        <translation></translation>
+        <translation>थीम प्रबंधित करें</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="63"/>
         <source>Version: %1 (%2)</source>
-        <translation></translation>
+        <translation>संस्करण: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="71"/>
         <source>Developer: %1</source>
-        <translation></translation>
+        <translation>डेवलपर: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="79"/>
         <source>Description: %1</source>
-        <translation></translation>
+        <translation>विवरण: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="87"/>
         <source>License: %1</source>
-        <translation></translation>
+        <translation>लायसेंस: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="95"/>
         <source>Homepage: %1</source>
-        <translation></translation>
+        <translation>मुखपृष्ठ: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="112"/>
         <source>Download source: %1</source>
-        <translation></translation>
+        <translation>डाउनलोड स्रोत: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="130"/>
         <source>Update</source>
-        <translation></translation>
+        <translation>अपडेट</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="140"/>
         <source>Uninstall</source>
-        <translation></translation>
+        <translation>स्थापना रद्द करें</translation>
     </message>
 </context>
 <context>
@@ -338,27 +338,27 @@
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="26"/>
         <source>Manage profiles</source>
-        <translation></translation>
+        <translation>प्रोफ़ाइल प्रबंधित करें</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="44"/>
         <source>Enter profile name</source>
-        <translation></translation>
+        <translation>प्रोफ़ाइल नाम दर्ज करें</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="48"/>
         <source>Create</source>
-        <translation></translation>
+        <translation>बनाएँ</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="80"/>
         <source>Rename</source>
-        <translation></translation>
+        <translation>नाम बदलें</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="90"/>
         <source>Remove</source>
-        <translation></translation>
+        <translation>हटाएँ</translation>
     </message>
 </context>
 <context>
@@ -366,12 +366,12 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="24"/>
         <source>No modules installed</source>
-        <translation></translation>
+        <translation>कोई मॉड्यूल इंस्टॉल नहीं है</translation>
     </message>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation></translation>
+        <translation>कोई मॉड्यूल स्थापित नहीं, पहले एक स्थापित करें।</translation>
     </message>
 </context>
 <context>
@@ -379,12 +379,12 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="24"/>
         <source>No themes installed</source>
-        <translation></translation>
+        <translation>कोई थीम संस्थापित नहीं है</translation>
     </message>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation></translation>
+        <translation>कोई थीम संस्थापित नहीं, पहले एक स्थापित करें।</translation>
     </message>
 </context>
 <context>
@@ -392,12 +392,12 @@
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation></translation>
+        <translation>केवल एक प्रोफ़ाइल उपलब्ध</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation></translation>
+        <translation>वहां केवल एक प्रोफ़ाइल उपलब्ध है । कृपया पहले एक दूसरी प्रोफ़ाइल बनाएं ।</translation>
     </message>
 </context>
 <context>
@@ -405,12 +405,12 @@
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="26"/>
         <source>Rename profile</source>
-        <translation></translation>
+        <translation>प्रोफ़ाइल का नाम बदलें</translation>
     </message>
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="37"/>
         <source>Please choose a new name for this profile.</source>
-        <translation></translation>
+        <translation>कृपया इस प्रोफ़ाईल के लिए कोई नया नाम चुनें ।</translation>
     </message>
 </context>
 <context>
@@ -418,12 +418,12 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="24"/>
         <source>New version available</source>
-        <translation></translation>
+        <translation>नया संस्करण उपलब्ध है</translation>
     </message>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation></translation>
+        <translation>पैक्स्ट का एक नया संस्करण उपलब्ध है । क्या आप डाउनलोड पृष्ठ खोलना चाहते हैं?</translation>
     </message>
 </context>
 <context>
