@@ -144,7 +144,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation>विषयवस्तु स्थापना</translation>
+        <translation>थीम स्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="36"/>
@@ -157,12 +157,12 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="24"/>
         <source>No themes available</source>
-        <translation></translation>
+        <translation>कोई थीम उपलब्ध नहीं है</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation></translation>
+        <translation>इस भंडार में कोई थीम नहीं मिला</translation>
     </message>
 </context>
 <context>
@@ -170,27 +170,27 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation></translation>
+        <translation>थीम संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="35"/>
         <source>Choose the theme to install:</source>
-        <translation></translation>
+        <translation>स्थापित करने के लिए थीम चुनें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation></translation>
+        <translation>पसंदीदा डाउनलोड स्रोत चुनें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="55"/>
         <source>You already have this theme installed.</source>
-        <translation></translation>
+        <translation>आपके पास पहले से ही यह थीम स्थापित है।</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="61"/>
         <source>Theme information:</source>
-        <translation></translation>
+        <translation>Theme installation</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="65"/>
