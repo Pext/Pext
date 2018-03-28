@@ -6,27 +6,27 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation></translation>
+        <translation>पैक्स्ट के बारे में</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="47"/>
         <source>Copyright</source>
-        <translation></translation>
+        <translation>कॉपीराइट</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="79"/>
         <source>Translators</source>
-        <translation></translation>
+        <translation>अनुवादकों</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation></translation>
+        <translation>पैक्स्ट के अनुवाद करने में सहायता करना चाहते है? कृपया यहाँ क्लिक करें।</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation></translation>
+        <translation>पैक्स्ट टीम पैक्स्ट के अनुवाद के लिए निम्नलिखित उपयोगकर्ताओं को धन्यवाद देना चाहती है:</translation>
     </message>
 </context>
 <context>
@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="24"/>
         <source>Unsupported repository format</source>
-        <translation></translation>
+        <translation>असमर्थित भण्डार फार्मेट</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation></translation>
+        <translation>भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)</translation>
     </message>
 </context>
 <context>
@@ -47,12 +47,12 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation></translation>
+        <translation>मॉड्यूल संस्थापन</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="36"/>
         <source>Where do you want to get modules from?</source>
-        <translation></translation>
+        <translation>आप कहाँ से मॉड्यूल प्राप्त करना चाहते हैं?</translation>
     </message>
 </context>
 <context>
@@ -60,12 +60,12 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="24"/>
         <source>No modules found</source>
-        <translation></translation>
+        <translation>कोई मॉड्यूल नहीं मिला</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules found in this repository.</source>
-        <translation></translation>
+        <translation>इस भण्डार में कोई मॉड्यूल नहीं मिला।</translation>
     </message>
 </context>
 <context>
@@ -73,7 +73,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation></translation>
+        <translation>मॉड्यूल संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="35"/>
