@@ -600,7 +600,7 @@
     <message>
         <location filename="../qml/main.qml" line="687"/>
         <source>Check for updates</source>
-        <translation>अपडेट्स के लिए जाँच करें.</translation>
+        <translation>अपडेट्स के लिए जाँच करें।</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="755"/>
