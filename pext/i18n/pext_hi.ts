@@ -47,7 +47,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation>मॉड्यूल संस्थापन</translation>
+        <translation>मॉड्यूल संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="36"/>
@@ -78,17 +78,17 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="35"/>
         <source>Choose the module to install:</source>
-        <translation></translation>
+        <translation>स्थापित करने के लिए मॉड्यूल चुनें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation></translation>
+        <translation>पसंदीदा डाउनलोड स्रोत चुनें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
         <source>You already have this module installed.</source>
-        <translation></translation>
+        <translation>आपके पास पहले से ही यह  मॉड्यूल स्थापित है।</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
