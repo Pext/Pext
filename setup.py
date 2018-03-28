@@ -68,7 +68,7 @@ setup(
         'pext/helpers',
         'pext_dev'
     ],
-    package_data={'pext': ['i18n/*.qm', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
+    package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
                   'pext_dev': ['LICENSE', 'module/*', 'theme/*', '*.py']},
     zip_safe=False,
     entry_points={
