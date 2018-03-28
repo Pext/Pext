@@ -190,22 +190,22 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="61"/>
         <source>Theme information:</source>
-        <translation>Theme installation</translation>
+        <translation>थीम संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="65"/>
         <source>Developer: </source>
-        <translation></translation>
+        <translation>डेवलपर: </translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="69"/>
         <source>Description: </source>
-        <translation></translation>
+        <translation>विवरण: </translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="73"/>
         <source>License: </source>
-        <translation></translation>
+        <translation>लाइसेंस: </translation>
     </message>
 </context>
 <context>
@@ -213,12 +213,12 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation></translation>
+        <translation>थीम संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
-        <translation></translation>
+        <translation>स्थापित करने के लिए थीम का गिट यूआरएल दर्ज करें:</translation>
     </message>
 </context>
 <context>
@@ -226,12 +226,12 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="26"/>
         <source>Load module</source>
-        <translation></translation>
+        <translation>लोड मॉड्यूल</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
-        <translation></translation>
+        <translation>लोड करने के लिए मॉड्यूल चुनें:</translation>
     </message>
 </context>
 <context>
@@ -239,22 +239,22 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation></translation>
+        <translation>प्रोफ़ाइल लोड</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation></translation>
+        <translation>स्विच करने के लिए प्रोफ़ाइल चुनें:</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation></translation>
+        <translation>नई विंडो में खोलें</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation></translation>
+        <translation>नोट: पैक्स्ट प्रोफ़ाइल स्विच करने के लिए पुनरारंभ होगा ।</translation>
     </message>
 </context>
 <context>
@@ -262,22 +262,22 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="26"/>
         <source>Switch theme</source>
-        <translation></translation>
+        <translation>थीम स्विच करें</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation></translation>
+        <translation>स्विच करने के लिए थीम चुनें:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
         <source>No theme</source>
-        <translation></translation>
+        <translation>कोई थीम नहीं</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation></translation>
+        <translation>नोट: पैक्स्ट नई थीम लागू करने के लिए पुनरारंभ होगा ।.</translation>
     </message>
 </context>
 <context>
