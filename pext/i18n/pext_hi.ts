@@ -93,7 +93,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
         <source>This module does not seem to support %1.</source>
-        <translation>यह मॉड्यूल %1 का समर्थन नहीं करता</translation>
+        <translation>यह मॉड्यूल %1 का समर्थन नहीं करता।</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
@@ -162,7 +162,7 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation>इस भंडार में कोई थीम नहीं मिला</translation>
+        <translation>इस भंडार में कोई थीम नहीं मिला।</translation>
     </message>
 </context>
 <context>
@@ -500,7 +500,7 @@
     <message>
         <location filename="../qml/main.qml" line="438"/>
         <source>Manage themes</source>
-        <translation>थीम का प्रबंधन करें.</translation>
+        <translation>थीम का प्रबंधन करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="461"/>
@@ -600,7 +600,7 @@
     <message>
         <location filename="../qml/main.qml" line="687"/>
         <source>Check for updates</source>
-        <translation>अपडेट्स के लिए जाँच करें।</translation>
+        <translation>अपडेट्स के लिए जाँच करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="755"/>
