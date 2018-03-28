@@ -88,37 +88,37 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
         <source>You already have this module installed.</source>
-        <translation>आपके पास पहले से ही यह  मॉड्यूल स्थापित है।</translation>
+        <translation>आपके पास पहले से ही यह मॉड्यूल स्थापित है।</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
         <source>This module does not seem to support %1.</source>
-        <translation></translation>
+        <translation>यह मॉड्यूल %1 का समर्थन नहीं करता</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
         <source>Module information:</source>
-        <translation></translation>
+        <translation>मॉड्यूल की जानकारी:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
-        <translation></translation>
+        <translation>डेवलपर: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
         <source>Description: </source>
-        <translation></translation>
+        <translation>विवरण: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
         <source>License: </source>
-        <translation></translation>
+        <translation>लाइसेंस: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation></translation>
+        <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
     </message>
 </context>
 <context>
@@ -126,17 +126,17 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation></translation>
+        <translation>मॉड्यूल संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the module to install:</source>
-        <translation></translation>
+        <translation>स्थापित करने के लिए मॉड्यूल का git url दर्ज करें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation></translation>
+        <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
     </message>
 </context>
 <context>
@@ -144,12 +144,12 @@
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation></translation>
+        <translation>विषयवस्तु स्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="36"/>
         <source>Where do you want to get themes from?</source>
-        <translation></translation>
+        <translation>आप कहां से थीम प्राप्त करना चाहते हैं?</translation>
     </message>
 </context>
 <context>
