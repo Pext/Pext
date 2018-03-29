@@ -54,42 +54,42 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Module-installatie</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema-installatie</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulebron:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source</source>
-        <translation type="unfinished"></translation>
+        <translation>Themabron</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Er zijn geen modules beschikbaar in deze bron.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Er zijn geen thema&apos;s beschikbaar in deze bron.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="unfinished">Bronformaat wordt niet ondersteund (verwachte versie %1, kreeg versie %2).</translation>
+        <translation>Bronformaat wordt niet ondersteund (verwachte versie: %1, verkregen versie: %2 ).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Module:</source>
-        <translation type="unfinished"></translation>
+        <translation>Module</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="77"/>
