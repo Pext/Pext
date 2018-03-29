@@ -54,77 +54,77 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modul Telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Téma Telepítése</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modul forrás:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source</source>
-        <translation type="unfinished"></translation>
+        <translation>Téma forrás</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem érhető el modul ebből a forrásból.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem érhető el téma ebből a forrásból.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="unfinished">Tároló formátum nem támogatott (várt verzió %1 helyett verzió %2).</translation>
+        <translation>Tároló formátum nem támogatott (várt verzió %1 helyett verzió %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Module:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modul:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="77"/>
         <source>Download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Letöltési forrás:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished">Úgy tűnik, ez a modul nem támogatja ezt a platformot (%1).</translation>
+        <translation>Úgy tűnik, ez a modul nem támogatja ezt a platformot (%1).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>Részletek:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>Creator: </source>
-        <translation type="unfinished"></translation>
+        <translation>Szerző: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>Description: </source>
-        <translation type="unfinished">Leírás: </translation>
+        <translation>Leírás: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="111"/>
         <source>License: </source>
-        <translation type="unfinished">Licenc: </translation>
+        <translation>Licenc: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="116"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation type="unfinished">Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
+        <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
     </message>
 </context>
 <context>
@@ -159,7 +159,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem található modul ebben a tárolóban.</translation>
     </message>
     <message>
         <source>No modules found in this repository.</source>
