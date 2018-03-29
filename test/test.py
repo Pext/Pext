@@ -4,7 +4,8 @@ import shutil
 import tempfile
 import unittest
 
-from pext.__main__ import ConfigRetriever
+from PyQt5.QtWidgets import QApplication
+from pext.__main__ import ConfigRetriever, LocaleManager
 
 test_src = os.path.dirname(__file__)
 
@@ -44,6 +45,31 @@ class TestConfig(unittest.TestCase):
         date += utc_offset
 
         self.assertEqual(self.config_retriever.get_last_update_check_time(), date)
+
+
+class TestLocaleManager(unittest.TestCase):
+    def setUp(self):
+        # Create QApplication without creating a GUI
+        self.app = QApplication.__new__(QApplication)
+
+        # Replace method with dummy function, so we can run tests without
+        # properly initializing the class
+        self.app.installTranslator = lambda translationFile: None
+
+        self.locale_manager = LocaleManager()
+
+    def test_get_locales(self):
+        locales = self.locale_manager.get_locales()
+        self.assertIn('American English', locales)
+        self.assertIn('Nederlands', locales)
+        self.assertEqual(locales['magyar'], 'hu')
+
+    def test_get_current_locale(self):
+        # Load English locale
+        locale = self.locale_manager.find_best_locale('en')
+        self.locale_manager.load_locale(self.app, locale)
+
+        self.assertEqual(self.locale_manager.get_current_locale(), locale)
 
 
 if __name__ == '__main__':
