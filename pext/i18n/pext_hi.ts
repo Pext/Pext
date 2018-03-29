@@ -9,50 +9,124 @@
         <translation>पैक्स्ट के बारे में</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="47"/>
+        <location filename="../qml/AboutDialog.qml" line="48"/>
         <source>Copyright</source>
         <translation>कॉपीराइट</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="79"/>
+        <location filename="../qml/AboutDialog.qml" line="80"/>
         <source>Translators</source>
         <translation>अनुवादकों</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>पैक्स्ट के अनुवाद करने में सहायता करना चाहते है? कृपया यहाँ क्लिक करें।</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>पैक्स्ट टीम पैक्स्ट के अनुवाद के लिए निम्नलिखित उपयोगकर्ताओं को धन्यवाद देना चाहती है:</translation>
     </message>
 </context>
 <context>
-    <name>InstallFromRepositoryUnsupportedDialog</name>
+    <name>InstallFromRepositoryDialog</name>
     <message>
-        <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="24"/>
-        <source>Unsupported repository format</source>
-        <translation>असमर्थित भण्डार फार्मेट</translation>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
+        <source>Module Installation</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryUnsupportedDialog.qml" line="30"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
+        <source>Theme Installation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
+        <source>Module source:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
+        <source>Theme source</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
+        <source>No modules available from this source.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
+        <source>No themes available from this source.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)</translation>
+        <translation type="unfinished">भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)</translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <source>Module:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="77"/>
+        <source>Download source:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <source>This module does not seem to support %1.</source>
+        <translation type="unfinished">यह मॉड्यूल %1 का समर्थन नहीं करता।</translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <source>Details:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <source>Creator: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
+        <source>Description: </source>
+        <translation type="unfinished">विवरण: </translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="111"/>
+        <source>License: </source>
+        <translation type="unfinished">लाइसेंस: </translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="116"/>
+        <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
+        <translation type="unfinished">पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
+    </message>
+</context>
+<context>
+    <name>InstallFromRepositoryUnsupportedDialog</name>
+    <message>
+        <source>Unsupported repository format</source>
+        <translation type="vanished">असमर्थित भण्डार फार्मेट</translation>
+    </message>
+    <message>
+        <source>Repository format not supported (expected version %1, got version %2).</source>
+        <translation type="vanished">भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)</translation>
     </message>
 </context>
 <context>
     <name>InstallModuleFromRepositoryDialog</name>
     <message>
-        <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation>मॉड्यूल संस्थापना</translation>
+        <translation type="vanished">मॉड्यूल संस्थापना</translation>
     </message>
     <message>
-        <location filename="../qml/InstallModuleFromRepositoryDialog.qml" line="36"/>
         <source>Where do you want to get modules from?</source>
-        <translation>आप कहाँ से मॉड्यूल प्राप्त करना चाहते हैं?</translation>
+        <translation type="vanished">आप कहाँ से मॉड्यूल प्राप्त करना चाहते हैं?</translation>
     </message>
 </context>
 <context>
@@ -64,8 +138,12 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
+        <source>No modules were found in this repository.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>No modules found in this repository.</source>
-        <translation>इस भण्डार में कोई मॉड्यूल नहीं मिला।</translation>
+        <translation type="vanished">इस भण्डार में कोई मॉड्यूल नहीं मिला।</translation>
     </message>
 </context>
 <context>
@@ -142,70 +220,58 @@
 <context>
     <name>InstallThemeFromRepositoryDialog</name>
     <message>
-        <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation>थीम स्थापना</translation>
+        <translation type="vanished">थीम स्थापना</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositoryDialog.qml" line="36"/>
         <source>Where do you want to get themes from?</source>
-        <translation>आप कहां से थीम प्राप्त करना चाहते हैं?</translation>
+        <translation type="vanished">आप कहां से थीम प्राप्त करना चाहते हैं?</translation>
     </message>
 </context>
 <context>
     <name>InstallThemeFromRepositoryNoThemesAvailableDialog</name>
     <message>
-        <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="24"/>
         <source>No themes available</source>
-        <translation>कोई थीम उपलब्ध नहीं है</translation>
+        <translation type="vanished">कोई थीम उपलब्ध नहीं है</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositoryNoThemesAvailableDialog.qml" line="27"/>
         <source>No themes found in this repository.</source>
-        <translation>इस भंडार में कोई थीम नहीं मिला।</translation>
+        <translation type="vanished">इस भंडार में कोई थीम नहीं मिला।</translation>
     </message>
 </context>
 <context>
     <name>InstallThemeFromRepositorySelectThemeDialog</name>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation>थीम संस्थापना</translation>
+        <translation type="vanished">थीम संस्थापना</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="35"/>
         <source>Choose the theme to install:</source>
-        <translation>स्थापित करने के लिए थीम चुनें:</translation>
+        <translation type="vanished">स्थापित करने के लिए थीम चुनें:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation>पसंदीदा डाउनलोड स्रोत चुनें:</translation>
+        <translation type="vanished">पसंदीदा डाउनलोड स्रोत चुनें:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="55"/>
         <source>You already have this theme installed.</source>
-        <translation>आपके पास पहले से ही यह थीम स्थापित है।</translation>
+        <translation type="vanished">आपके पास पहले से ही यह थीम स्थापित है।</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="61"/>
         <source>Theme information:</source>
-        <translation>थीम संस्थापना:</translation>
+        <translation type="vanished">थीम संस्थापना:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="65"/>
         <source>Developer: </source>
-        <translation>डेवलपर: </translation>
+        <translation type="vanished">डेवलपर: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="69"/>
         <source>Description: </source>
-        <translation>विवरण: </translation>
+        <translation type="vanished">विवरण: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallThemeFromRepositorySelectThemeDialog.qml" line="73"/>
         <source>License: </source>
-        <translation>लाइसेंस: </translation>
+        <translation type="vanished">लाइसेंस: </translation>
     </message>
 </context>
 <context>
@@ -442,245 +508,247 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="282"/>
+        <location filename="../qml/main.qml" line="284"/>
         <source>Quit</source>
         <translation>छोड़ें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="288"/>
+        <location filename="../qml/main.qml" line="290"/>
         <source>Quit without saving</source>
         <translation>सहेजे बिना बाहर निकलें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="293"/>
+        <location filename="../qml/main.qml" line="295"/>
         <source>&amp;Module</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="297"/>
+        <location filename="../qml/main.qml" line="299"/>
         <source>Reload active module</source>
         <translation>सक्रिय मॉड्यूल पुनः लोड करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="304"/>
+        <location filename="../qml/main.qml" line="306"/>
         <source>Close active module</source>
         <translation>सक्रिय मॉड्यूल बंद करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="316"/>
+        <location filename="../qml/main.qml" line="318"/>
         <source>Load module</source>
         <translation>लोड मॉड्यूल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="360"/>
+        <location filename="../qml/main.qml" line="362"/>
         <source>Install module</source>
         <translation>मॉड्यूल स्थापित करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="365"/>
+        <location filename="../qml/main.qml" line="367"/>
         <source>From online module list</source>
         <translation>ऑनलाइन मॉड्यूल सूची से</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="387"/>
-        <location filename="../qml/main.qml" line="488"/>
+        <location filename="../qml/main.qml" line="389"/>
+        <location filename="../qml/main.qml" line="490"/>
         <source>From URL</source>
         <translation>यूआरएल से</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="410"/>
+        <location filename="../qml/main.qml" line="412"/>
         <source>&amp;Theme</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="418"/>
+        <location filename="../qml/main.qml" line="420"/>
         <source>Switch theme</source>
         <translation>थीम स्विच करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="438"/>
+        <location filename="../qml/main.qml" line="440"/>
         <source>Manage themes</source>
         <translation>थीम का प्रबंधन करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="461"/>
+        <location filename="../qml/main.qml" line="463"/>
         <source>Install theme</source>
         <translation>थीम स्थापित करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="466"/>
+        <location filename="../qml/main.qml" line="468"/>
         <source>From online theme list</source>
         <translation>ऑनलाइन थीम सूची से</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="500"/>
+        <location filename="../qml/main.qml" line="502"/>
         <source>Update all themes</source>
         <translation>सभी थीम अपडेट करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="515"/>
+        <location filename="../qml/main.qml" line="517"/>
         <source>Switch profile</source>
         <translation>प्रोफ़ाइल स्विच करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="535"/>
+        <location filename="../qml/main.qml" line="537"/>
         <source>Manage profiles</source>
         <translation>प्रोफ़ाइल प्रबंधित करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="553"/>
+        <location filename="../qml/main.qml" line="555"/>
         <source>&amp;Settings</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="559"/>
+        <location filename="../qml/main.qml" line="561"/>
         <source>Language</source>
         <translation>भाषा</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="569"/>
+        <location filename="../qml/main.qml" line="571"/>
         <source>System locale</source>
         <translation>स्थानीय सिस्टम</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="593"/>
+        <location filename="../qml/main.qml" line="595"/>
         <source>Sorting style</source>
         <translation>सॉर्टिंग शैली</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="602"/>
+        <location filename="../qml/main.qml" line="604"/>
         <source>Sort by module choice</source>
         <translation>मॉड्यूल पसंद द्वारा क्रमबद्ध करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="609"/>
+        <location filename="../qml/main.qml" line="611"/>
         <source>Sort ascending</source>
         <translation>आरोही क्रम में सॉर्ट करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="616"/>
+        <location filename="../qml/main.qml" line="618"/>
         <source>Sort descending</source>
         <translation>अवरोही क्रम में सॉर्ट करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="623"/>
+        <location filename="../qml/main.qml" line="625"/>
         <source>Minimizing behaviour</source>
         <translation>मिनिमाइज़िंग व्यवहार</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="632"/>
+        <location filename="../qml/main.qml" line="634"/>
         <source>Minimize normally</source>
         <translation>सामान्य रूप से छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="639"/>
+        <location filename="../qml/main.qml" line="642"/>
         <source>Minimize to tray</source>
         <translation>ट्रे में छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="646"/>
+        <location filename="../qml/main.qml" line="649"/>
         <source>Manual only: Minimize normally</source>
         <translation>केवल मैनुअल: सामान्य रूप से छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="653"/>
+        <location filename="../qml/main.qml" line="657"/>
         <source>Manual only: Minimize to tray</source>
         <translation>केवल मैनुअल: ट्रे में छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="667"/>
+        <location filename="../qml/main.qml" line="671"/>
         <source>Automatically check for updates</source>
         <translation>स्वचालित रूप से अद्यतनों की जांच करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="673"/>
+        <location filename="../qml/main.qml" line="677"/>
         <source>&amp;Help</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="687"/>
+        <location filename="../qml/main.qml" line="691"/>
         <source>Check for updates</source>
         <translation>अपडेट्स के लिए जाँच करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="755"/>
+        <location filename="../qml/main.qml" line="759"/>
         <source>Design philosophy</source>
         <translation>डिज़ाइन दर्शन</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="756"/>
+        <location filename="../qml/main.qml" line="760"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>पैक्स्ट आपके रास्ते से बाहर रहने के लिए डिज़ाइन किया गया है। जैसे ही एक मॉड्यूल समझा की आप इसका उपयोग कर चुके, पैक्स्ट सिस्टम ट्रे में छिप जायेगा। यदि आप पैक्स्ट
 के छिप जाने के बाद फिर उसे खोलना चाहते है तो, बस इसे फिर से शुरू या सिस्टम ट्रे से इसे खोलने की जरूरत है।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="797"/>
+        <location filename="../qml/main.qml" line="801"/>
         <source>Getting started</source>
         <translation>प्रारंभ करना</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="798"/>
+        <location filename="../qml/main.qml" line="802"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation><numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
-        <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
+            <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
+        </translation>
+    </message>
     <message>
-        <location filename="../qml/main.qml" line="337"/>
+        <location filename="../qml/main.qml" line="339"/>
         <source>Manage modules</source>
         <translation>मॉड्यूल प्रबंधित करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="399"/>
+        <location filename="../qml/main.qml" line="401"/>
         <source>Update all modules</source>
         <translation>सभी मॉड्यूल अपडेट करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="511"/>
+        <location filename="../qml/main.qml" line="513"/>
         <source>P&amp;rofile</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="661"/>
+        <location filename="../qml/main.qml" line="665"/>
         <source>Always show tray icon</source>
         <translation>हमेशा ट्रे चिह्न दिखाएं</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="677"/>
+        <location filename="../qml/main.qml" line="681"/>
         <source>About</source>
         <translation>परिचय</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="692"/>
+        <location filename="../qml/main.qml" line="696"/>
         <source>Visit homepage</source>
         <translation>मुखपृष्ठ पर जाऐँ</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="711"/>
+        <location filename="../qml/main.qml" line="715"/>
         <source>Clear</source>
         <translation>मिटाएं</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="711"/>
+        <location filename="../qml/main.qml" line="715"/>
         <source>Back</source>
         <translation>पीछे</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="720"/>
+        <location filename="../qml/main.qml" line="724"/>
         <source>Type to search</source>
         <translation>खोजने के लिए लिखें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="831"/>
+        <location filename="../qml/main.qml" line="835"/>
         <source>Processing: %1 (%2)</source>
         <translation>प्रोसेस किया जा रहा है : %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="833"/>
+        <location filename="../qml/main.qml" line="837"/>
         <source>Ready</source>
         <translation>तैयार</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="833"/>
+        <location filename="../qml/main.qml" line="837"/>
         <source>Waiting</source>
         <translation>इंतजार</translation>
     </message>

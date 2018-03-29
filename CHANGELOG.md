@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Hindi translation (thanks, Satyam Singh!)
+
 ### Changed
 - Tray icon is now always shown when the application is minimized to tray
 - Hide minimize to tray on macOS (too broken, can cause crashes)

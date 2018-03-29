@@ -32,6 +32,7 @@ Dialog {
                                "es": [{"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
+                               "hi": [{"name": "Satyam Singh", "email": "trueleo@protonmail.com"}],
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
                                "ru": [{"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
