@@ -670,7 +670,7 @@
     <message>
         <location filename="../qml/main.qml" line="661"/>
         <source>Always show tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Mindig mutassa a tálca ikont</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="677"/>
