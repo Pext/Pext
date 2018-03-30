@@ -596,7 +596,7 @@
     <message>
         <location filename="../qml/main.qml" line="555"/>
         <source>&amp;Settings</source>
-        <translation>सेटिंग्स (&amp;S)</translation>
+        <translation>&amp;सेटिंग्स</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="561"/>
@@ -661,7 +661,7 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>&amp;Help</source>
-        <translation></translation>
+        <translation type="unfinished">मदद (&amp;H)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="691"/>
