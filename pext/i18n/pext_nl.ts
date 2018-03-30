@@ -73,7 +73,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Themabron:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
