@@ -89,7 +89,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>Creator: </source>
-        <translation>निर्माता </translation>
+        <translation>निर्माता: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
@@ -139,7 +139,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>इस भण्डार में कोई मॉड्यूल नहीं मिला।</translation>
     </message>
     <message>
         <source>No modules found in this repository.</source>
