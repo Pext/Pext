@@ -520,7 +520,7 @@
     <message>
         <location filename="../qml/main.qml" line="295"/>
         <source>&amp;Module</source>
-        <translation>&amp;मॉड्यूल</translation>
+        <translation>मॉड्यूल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="299"/>
@@ -556,7 +556,7 @@
     <message>
         <location filename="../qml/main.qml" line="412"/>
         <source>&amp;Theme</source>
-        <translation>&amp;थीम</translation>
+        <translation>थीम</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="420"/>
@@ -596,7 +596,7 @@
     <message>
         <location filename="../qml/main.qml" line="555"/>
         <source>&amp;Settings</source>
-        <translation>&amp;सेटिंग्स</translation>
+        <translation>सेटिंग्स</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="561"/>
