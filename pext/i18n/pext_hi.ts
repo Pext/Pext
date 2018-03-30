@@ -520,7 +520,7 @@
     <message>
         <location filename="../qml/main.qml" line="295"/>
         <source>&amp;Module</source>
-        <translation></translation>
+        <translation>&amp;मॉड्यूल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="299"/>
@@ -556,7 +556,7 @@
     <message>
         <location filename="../qml/main.qml" line="412"/>
         <source>&amp;Theme</source>
-        <translation></translation>
+        <translation>&amp;थीम</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="420"/>
@@ -661,7 +661,7 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>&amp;Help</source>
-        <translation>&amp;मदद</translation>
+        <translation>मद&amp;द</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="691"/>
@@ -703,7 +703,7 @@
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>P&amp;rofile</source>
-        <translation>प्रोफ़ाइल (&amp;r)</translation>
+        <translation>प्रोफ़ा&amp;इल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="665"/>
