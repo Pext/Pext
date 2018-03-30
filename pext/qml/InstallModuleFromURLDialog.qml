@@ -39,6 +39,15 @@ Dialog {
         }
 
         Label {
+            text: qsTr("Enter the correct module identifier:")
+        }
+
+        TextField {
+            id: identifierTextfield
+            Layout.fillWidth: true
+        }
+
+        Label {
             text: qsTr("As Pext modules are code, please make sure you trust the developer before continuing.")
             font.bold: true
         }
@@ -50,7 +59,7 @@ Dialog {
     }
 
     onAccepted: {
-        installRequest(textfield.text);
+        installRequest(textfield.text, identifierTextfield.text);
     }
 }
 

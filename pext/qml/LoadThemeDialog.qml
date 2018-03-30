@@ -44,7 +44,7 @@ Dialog {
 
         ComboBox {
             id: combobox
-            model: [qsTr("No theme")].concat(Object.keys(themes).map(function(theme) { return themes[theme].name }))
+            model: [qsTr("No theme")].concat(Object.keys(themes).map(function(theme) { return themes[theme].metadata.name }))
             Layout.fillWidth: true
         }
 
@@ -67,7 +67,7 @@ Dialog {
         if (combobox.currentIndex == 0) {
             loadRequest(null);
         } else {
-            loadRequest(Object.keys(themes)[combobox.currentIndex - 1]);
+            loadRequest(themes[Object.keys(themes)[combobox.currentIndex - 1]].metadata.id);
         }
     }
 }

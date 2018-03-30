@@ -52,9 +52,15 @@ Dialog {
                 width: parent.width
 
                 Label {
-                    text: manageableObjects[modelData].name + "\n"
+                    text: manageableObjects[modelData].metadata.name + "\n"
                     wrapMode: Text.Wrap 
                     font.bold: true
+                }
+
+                Label {
+                    text: qsTr("Identifier: %1").arg(manageableObjects[modelData].metadata.id)
+                    width: root.width
+                    wrapMode: Text.Wrap
                 }
 
                 Label {

@@ -39,7 +39,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: type == "modules" ? qsTr("Module source:") : qsTr("Theme source")
+            text: type == "modules" ? qsTr("Module source:") : qsTr("Theme source:")
         }
 
         ComboBox {
@@ -67,7 +67,7 @@ Dialog {
         }
 
         ComboBox {
-            id: objectCombobox
+            id: objectComboBox
             model: objects.map(function(obj) { return obj.name; })
             Layout.fillWidth: true
             visible: objects.length >= 1
@@ -80,15 +80,21 @@ Dialog {
 
         ComboBox {
             id: urlSelectionBox
-            model: objects[objectCombobox.currentIndex] ? objects[objectCombobox.currentIndex].git_urls : [""]
+            model: objects[objectComboBox.currentIndex] ? objects[objectComboBox.currentIndex].git_urls : [""]
             Layout.fillWidth: true
             visible: objects.length >= 1
         }
 
         Label {
+            text: type == "modules" ? qsTr("This module is already installed.") : qsTr("This theme is already installed.")
+            font.bold: true
+            visible: objects.length >= 1 && Object.keys(installedObjects).indexOf(objects[objectComboBox.currentIndex].id) != -1
+        }
+
+        Label {
             text: qsTr("This module does not seem to support %1.").arg(platform)
             font.bold: true
-            visible: type == "modules" && objects.length >= 1 && (objects[objectCombobox.currentIndex].platforms == null || objects[objectCombobox.currentIndex].platforms.indexOf(platform) == -1)
+            visible: type == "modules" && objects.length >= 1 && (objects[objectComboBox.currentIndex].platforms == null || objects[objectComboBox.currentIndex].platforms.indexOf(platform) == -1)
         }
 
         Label {
@@ -98,17 +104,17 @@ Dialog {
         }
 
         Label {
-            text: objects[objectCombobox.currentIndex] ? qsTr("Creator: ") + objects[objectCombobox.currentIndex].developer : ""
+            text: objects[objectComboBox.currentIndex] ? qsTr("Creator: ") + objects[objectComboBox.currentIndex].developer : ""
             visible: objects.length >= 1
         }
 
         Label {
-            text: objects[objectCombobox.currentIndex] ? qsTr("Description: ") + objects[objectCombobox.currentIndex].description : ""
+            text: objects[objectComboBox.currentIndex] ? qsTr("Description: ") + objects[objectComboBox.currentIndex].description : ""
             visible: objects.length >= 1
         }
 
         Label {
-            text: objects[objectCombobox.currentIndex] ? qsTr("License: ") + objects[objectCombobox.currentIndex].license : ""
+            text: objects[objectComboBox.currentIndex] ? qsTr("License: ") + objects[objectComboBox.currentIndex].license : ""
             visible: objects.length >= 1
         }
 
@@ -125,8 +131,8 @@ Dialog {
     }
 
     onAccepted: {
-        if (urlSelectionBox.currentText) {
-            installRequest(urlSelectionBox.currentText);
+        if (urlSelectionBox.currentText && objects[objectComboBox.currentIndex].id) {
+            installRequest(urlSelectionBox.currentText, objects[objectComboBox.currentIndex].id);
         }
     }
 

@@ -338,8 +338,8 @@ ApplicationWindow {
                 objectName: "menuManageModules"
                 text: qsTr("Manage modules")
 
-                signal updateModuleRequest(string name)
-                signal uninstallModuleRequest(string name)
+                signal updateModuleRequest(string identifier)
+                signal uninstallModuleRequest(string identifier)
 
                 onTriggered: {
                     if (Object.keys(modules).length == 0) {
@@ -361,7 +361,7 @@ ApplicationWindow {
                 objectName: "menuInstallModule"
                 title: qsTr("Install module")
 
-                signal installModuleRequest(string url)
+                signal installModuleRequest(string url, string identifier)
 
                 MenuItem {
                     text: qsTr("From online module list")
@@ -378,7 +378,7 @@ ApplicationWindow {
                     onTriggered: {
                         var installModuleFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installModuleFromRepositoryDialog.createObject(applicationWindow,
-                            {"installedModules": modules,
+                            {"installedObjects": modules,
                              "installRequest": menuInstallModule.installModuleRequest,
                              "repositories": repositories,
                              "type": "modules"})
@@ -415,7 +415,7 @@ ApplicationWindow {
                 id: menuLoadTheme
                 objectName: "menuLoadTheme"
 
-                signal loadThemeRequest(string name)
+                signal loadThemeRequest(string identifier)
 
                 text: qsTr("Switch theme")
 
@@ -439,8 +439,8 @@ ApplicationWindow {
                 objectName: "menuManageThemes"
                 text: qsTr("Manage themes")
 
-                signal updateThemeRequest(string name)
-                signal uninstallThemeRequest(string name)
+                signal updateThemeRequest(string identifier)
+                signal uninstallThemeRequest(string identifier)
 
                 onTriggered: {
                     if (Object.keys(themes).length == 0) {
@@ -462,7 +462,7 @@ ApplicationWindow {
                 objectName: "menuInstallTheme"
                 title: qsTr("Install theme")
 
-                signal installThemeRequest(string url)
+                signal installThemeRequest(string url, string identifier)
 
                 MenuItem {
                     text: qsTr("From online theme list")
@@ -479,7 +479,7 @@ ApplicationWindow {
                     onTriggered: {
                         var installThemeFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installThemeFromRepositoryDialog.createObject(applicationWindow,
-                            {"installedThemes": themes,
+                            {"installedObjects": themes,
                              "installRequest": menuInstallTheme.installThemeRequest,
                              "repositories": repositories,
                              "type": "themes"})

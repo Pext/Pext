@@ -44,7 +44,7 @@ Dialog {
 
         ComboBox {
             id: combobox
-            model: Object.keys(modules).map(function(module) { return modules[module].name })
+            model: Object.keys(modules).map(function(module) { return modules[module].metadata.name })
             Layout.fillWidth: true
             onCurrentIndexChanged: getModuleSettings();
         }
@@ -95,7 +95,8 @@ Dialog {
         for (var key in moduleChosenSettings)
             settingString += key + "=" + moduleChosenSettings[key] + " ";
 
-        loadRequest(Object.keys(modules)[combobox.currentIndex], combobox.currentText, settingString)
+        var metadata = modules[Object.keys(modules)[combobox.currentIndex]].metadata 
+        loadRequest(metadata.id, metadata.name, settingString)
     }
 
     function getModuleSettings() {

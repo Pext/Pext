@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The main window now has a minimal size of 500x300
 - Versioning now complies with PEP440
 - Merge module and theme repo and object selection into a single screen to save a click
+- Modules and themes are now saved based on the location of their ID
+- Modules and themes being in an incorrect location for their ID are automatically removed
 
 ### Fixed
 - Themes now apply properly on Windows (forcing Fusion styling)
