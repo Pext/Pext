@@ -103,12 +103,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This module is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Deze module is al geïnstalleerd.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dit thema is al geïnstalleerd.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
@@ -248,7 +248,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer de juiste module-identificatie in:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
@@ -328,7 +328,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
         <source>Enter the correct theme identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer de juiste thema-identificatie in:</translation>
     </message>
 </context>
 <context>
@@ -405,7 +405,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Identificatie: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
@@ -756,7 +756,7 @@
     <message>
         <location filename="../qml/main.qml" line="280"/>
         <source>&amp;Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>
