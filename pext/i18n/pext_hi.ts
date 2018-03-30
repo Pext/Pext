@@ -661,7 +661,7 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">मदद (&amp;H)</translation>
+        <translation>&amp;मदद</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="691"/>
