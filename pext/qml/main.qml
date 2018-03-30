@@ -277,7 +277,7 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: "&Pext"
+            title: qsTr("&Pext")
 
             MenuItem {
                 objectName: "menuQuit"
