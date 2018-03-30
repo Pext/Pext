@@ -34,77 +34,77 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम संस्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल स्रोत:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम स्रोत</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>इस स्रोत से कोई मॉड्यूल उपलब्ध नहीं है ।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>इस स्रोत से कोई थीम उपलब्ध नहीं है ।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="unfinished">भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)</translation>
+        <translation>भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Module:</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="77"/>
         <source>Download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>डाउनलोड स्रोत:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished">यह मॉड्यूल %1 का समर्थन नहीं करता।</translation>
+        <translation>यह मॉड्यूल %1 का समर्थन नहीं करता।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>विवरण:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>Creator: </source>
-        <translation type="unfinished"></translation>
+        <translation>निर्माता: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>Description: </source>
-        <translation type="unfinished">विवरण: </translation>
+        <translation>विवरण: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="111"/>
         <source>License: </source>
-        <translation type="unfinished">लाइसेंस: </translation>
+        <translation>लाइसेंस: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="116"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation type="unfinished">पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
+        <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
     </message>
 </context>
 <context>
@@ -115,7 +115,7 @@
     </message>
     <message>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)</translation>
+        <translation>भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
     </message>
 </context>
 <context>
@@ -139,7 +139,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>इस भण्डार में कोई मॉड्यूल नहीं मिला।</translation>
     </message>
     <message>
         <source>No modules found in this repository.</source>
@@ -520,7 +520,7 @@
     <message>
         <location filename="../qml/main.qml" line="295"/>
         <source>&amp;Module</source>
-        <translation></translation>
+        <translation>मॉड्यूल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="299"/>
@@ -556,7 +556,7 @@
     <message>
         <location filename="../qml/main.qml" line="412"/>
         <source>&amp;Theme</source>
-        <translation></translation>
+        <translation>थीम</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="420"/>
@@ -596,7 +596,7 @@
     <message>
         <location filename="../qml/main.qml" line="555"/>
         <source>&amp;Settings</source>
-        <translation></translation>
+        <translation>सेटिंग्स</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="561"/>
@@ -661,7 +661,7 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>&amp;Help</source>
-        <translation></translation>
+        <translation>मदद</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="691"/>
@@ -687,11 +687,9 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="802"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
-            <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
+        <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूलस इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="339"/>
         <source>Manage modules</source>
@@ -705,7 +703,7 @@
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>P&amp;rofile</source>
-        <translation></translation>
+        <translation>प्रोफ़ाइल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="665"/>

@@ -54,77 +54,77 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Module-installatie</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Thema-installatie</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulebron:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source</source>
-        <translation type="unfinished"></translation>
+        <translation>Themabron</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Er zijn geen modules beschikbaar in deze bron.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Er zijn geen thema&apos;s beschikbaar in deze bron.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="unfinished">Bronformaat wordt niet ondersteund (verwachte versie %1, kreeg versie %2).</translation>
+        <translation>Bronformaat wordt niet ondersteund (verwachte versie: %1, verkregen versie: %2 ).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Module:</source>
-        <translation type="unfinished"></translation>
+        <translation>Module:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="77"/>
         <source>Download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Downloadbron:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished">Deze module lijkt %1 niet te ondersteunen.</translation>
+        <translation>Deze module lijkt %1 niet te ondersteunen.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>Details:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>Creator: </source>
-        <translation type="unfinished"></translation>
+        <translation>Maker: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>Description: </source>
-        <translation type="unfinished">Omschrijving: </translation>
+        <translation>Omschrijving: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="111"/>
         <source>License: </source>
-        <translation type="unfinished">Licentie: </translation>
+        <translation>Licentie: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="116"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation type="unfinished">Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
+        <translation>Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
     </message>
 </context>
 <context>
@@ -159,7 +159,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>Er zijn geen modules gevonden in deze pakketbron.</translation>
     </message>
     <message>
         <source>No modules found in this repository.</source>
