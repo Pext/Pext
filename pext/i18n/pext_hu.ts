@@ -67,9 +67,13 @@
         <translation>Modul forrás:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source</source>
-        <translation>Téma forrás</translation>
+        <translation type="vanished">Téma forrás</translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
+        <source>Theme source:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
@@ -98,31 +102,41 @@
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <source>This module is already installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <source>This theme is already installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This module does not seem to support %1.</source>
         <translation>Úgy tűnik, ez a modul nem támogatja ezt a platformot (%1).</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>Details:</source>
         <translation>Részletek:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>Creator: </source>
         <translation>Szerző: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="112"/>
         <source>Description: </source>
         <translation>Leírás: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="111"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="117"/>
         <source>License: </source>
         <translation>Licenc: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="116"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
     </message>
@@ -233,6 +247,11 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
+        <source>Enter the correct module identifier:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
     </message>
@@ -305,6 +324,11 @@
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
         <translation>Adja meg a telepítendő téma git URL-jét:</translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
+        <source>Enter the correct theme identifier:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -379,42 +403,47 @@
         <translation>Témák kezelése</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="63"/>
+        <location filename="../qml/ManageDialog.qml" line="61"/>
+        <source>Identifier: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageDialog.qml" line="69"/>
         <source>Version: %1 (%2)</source>
         <translation>Verzió: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="71"/>
+        <location filename="../qml/ManageDialog.qml" line="77"/>
         <source>Developer: %1</source>
         <translation>Fejlesztő: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="79"/>
+        <location filename="../qml/ManageDialog.qml" line="85"/>
         <source>Description: %1</source>
         <translation>Leírás: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="87"/>
+        <location filename="../qml/ManageDialog.qml" line="93"/>
         <source>License: %1</source>
         <translation>Licenc: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="95"/>
+        <location filename="../qml/ManageDialog.qml" line="101"/>
         <source>Homepage: %1</source>
         <translation>Honlap: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="112"/>
+        <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
         <translation>Letöltési forrás: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="130"/>
+        <location filename="../qml/ManageDialog.qml" line="136"/>
         <source>Update</source>
         <translation>Frissítés</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="140"/>
+        <location filename="../qml/ManageDialog.qml" line="146"/>
         <source>Uninstall</source>
         <translation>Eltávolítás</translation>
     </message>
@@ -722,6 +751,11 @@
         <location filename="../qml/main.qml" line="339"/>
         <source>Manage modules</source>
         <translation>Modulok kezelése</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="280"/>
+        <source>&amp;Pext</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>

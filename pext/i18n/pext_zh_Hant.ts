@@ -68,7 +68,7 @@
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
-        <source>Theme source</source>
+        <source>Theme source:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -98,31 +98,41 @@
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <source>This module is already installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <source>This theme is already installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This module does not seem to support %1.</source>
         <translation type="unfinished">此模組似乎不支援 %1。</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>Details:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>Creator: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="112"/>
         <source>Description: </source>
         <translation type="unfinished">描述： </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="111"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="117"/>
         <source>License: </source>
         <translation type="unfinished">授權條款： </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="116"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation type="unfinished">因為 Pext 模組就是原始碼，所以請在繼續前確保您信任開發者。</translation>
     </message>
@@ -233,6 +243,11 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
+        <source>Enter the correct module identifier:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>因為 Pext 模組就是原始碼，所以請在繼續前確保您信任開發者。</translation>
     </message>
@@ -305,6 +320,11 @@
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
         <translation>輸入要安裝的佈景主題的 git URL：</translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
+        <source>Enter the correct theme identifier:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -379,42 +399,47 @@
         <translation>管理佈景主題</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="63"/>
+        <location filename="../qml/ManageDialog.qml" line="61"/>
+        <source>Identifier: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageDialog.qml" line="69"/>
         <source>Version: %1 (%2)</source>
         <translation>版本：%1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="71"/>
+        <location filename="../qml/ManageDialog.qml" line="77"/>
         <source>Developer: %1</source>
         <translation>開發者：%1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="79"/>
+        <location filename="../qml/ManageDialog.qml" line="85"/>
         <source>Description: %1</source>
         <translation>描述：%1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="87"/>
+        <location filename="../qml/ManageDialog.qml" line="93"/>
         <source>License: %1</source>
         <translation>授權條款：%1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="95"/>
+        <location filename="../qml/ManageDialog.qml" line="101"/>
         <source>Homepage: %1</source>
         <translation>首頁：%1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="112"/>
+        <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
         <translation>下載來源：%1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="130"/>
+        <location filename="../qml/ManageDialog.qml" line="136"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="140"/>
+        <location filename="../qml/ManageDialog.qml" line="146"/>
         <source>Uninstall</source>
         <translation>解除安裝</translation>
     </message>
@@ -722,6 +747,11 @@
         <location filename="../qml/main.qml" line="339"/>
         <source>Manage modules</source>
         <translation>管理模組</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="280"/>
+        <source>&amp;Pext</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>

@@ -47,9 +47,13 @@
         <translation>मॉड्यूल स्रोत:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source</source>
-        <translation>थीम स्रोत</translation>
+        <translation type="vanished">थीम स्रोत</translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
+        <source>Theme source:</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
@@ -78,31 +82,41 @@
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <source>This module is already installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <source>This theme is already installed.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This module does not seem to support %1.</source>
         <translation>यह मॉड्यूल %1 का समर्थन नहीं करता।</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>Details:</source>
         <translation>विवरण:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>Creator: </source>
         <translation>निर्माता: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="112"/>
         <source>Description: </source>
         <translation>विवरण: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="111"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="117"/>
         <source>License: </source>
         <translation>लाइसेंस: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="116"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
     </message>
@@ -115,7 +129,7 @@
     </message>
     <message>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
+        <translation type="vanished">भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
     </message>
 </context>
 <context>
@@ -213,6 +227,11 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
+        <source>Enter the correct module identifier:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
     </message>
@@ -285,6 +304,11 @@
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the git URL of the theme to install:</source>
         <translation>स्थापित करने के लिए थीम का गिट यूआरएल दर्ज करें:</translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
+        <source>Enter the correct theme identifier:</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -359,42 +383,47 @@
         <translation>थीम प्रबंधित करें</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="63"/>
+        <location filename="../qml/ManageDialog.qml" line="61"/>
+        <source>Identifier: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/ManageDialog.qml" line="69"/>
         <source>Version: %1 (%2)</source>
         <translation>संस्करण: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="71"/>
+        <location filename="../qml/ManageDialog.qml" line="77"/>
         <source>Developer: %1</source>
         <translation>डेवलपर: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="79"/>
+        <location filename="../qml/ManageDialog.qml" line="85"/>
         <source>Description: %1</source>
         <translation>विवरण: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="87"/>
+        <location filename="../qml/ManageDialog.qml" line="93"/>
         <source>License: %1</source>
         <translation>लायसेंस: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="95"/>
+        <location filename="../qml/ManageDialog.qml" line="101"/>
         <source>Homepage: %1</source>
         <translation>मुखपृष्ठ: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="112"/>
+        <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
         <translation>डाउनलोड स्रोत: %1</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="130"/>
+        <location filename="../qml/ManageDialog.qml" line="136"/>
         <source>Update</source>
         <translation>अपडेट</translation>
     </message>
     <message>
-        <location filename="../qml/ManageDialog.qml" line="140"/>
+        <location filename="../qml/ManageDialog.qml" line="146"/>
         <source>Uninstall</source>
         <translation>स्थापना रद्द करें</translation>
     </message>
@@ -687,13 +716,20 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="802"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation><numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
-        <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूलस इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
-        </translation></message>
+        <translation>
+            <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
+            <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूलस इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../qml/main.qml" line="339"/>
         <source>Manage modules</source>
         <translation>मॉड्यूल प्रबंधित करें</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="280"/>
+        <source>&amp;Pext</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>
