@@ -661,7 +661,7 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>&amp;Help</source>
-        <translation>मद&amp;द</translation>
+        <translation>मदद</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="691"/>
@@ -703,7 +703,7 @@
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>P&amp;rofile</source>
-        <translation>प्रोफ़ा&amp;इल</translation>
+        <translation>प्रोफ़ाइल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="665"/>
