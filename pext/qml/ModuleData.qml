@@ -71,7 +71,6 @@ Item {
                                 objectName: "text"
                                 text: display
                                 textFormat: Text.PlainText
-                                font.pointSize: 12
                                 color: contextMenu.currentIndex === index ? palette.highlightedText : palette.text
                                 Behavior on color { PropertyAnimation {} }
                             }
@@ -136,7 +135,6 @@ Item {
                         id: headerText
                         color: palette.highlight
                         objectName: "headerText"
-                        font.pointSize: 12
 
                         textFormat: Text.PlainText
                     }
@@ -189,7 +187,6 @@ Item {
                                 objectName: "text"
                                 text: display
                                 textFormat: Text.PlainText
-                                font.pointSize: 12
                                 font.italic:
                                     if (!resultListModelCommandMode) {
                                         index >= resultListModelNormalEntries

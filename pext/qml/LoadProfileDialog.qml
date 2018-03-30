@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2017 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -23,57 +23,48 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: qsTr("Load profile")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
-    property var themes
-    property var installRequest
+    property var currentProfile
+    property var profiles
+    property var loadRequest
 
     ColumnLayout {
+        id: columnLayout
+        width: parent.width
+
+        anchors.fill: parent
+
         Label {
-            text: qsTr("Choose the theme to install:")
+            text: qsTr("Choose the profile to switch to:")
         }
 
         ComboBox {
             id: combobox
-            model: themes.map(function(theme) { return theme.name; })
+            model: profiles
             Layout.fillWidth: true
         }
 
-        Label {
-            text: qsTr("Choose the preferred download source:")
-        }
-
-        ComboBox {
-            id: urlSelectionBox
-            model: themes[combobox.currentIndex].git_urls
-            Layout.fillWidth: true
+        CheckBox {
+            id: newInstance
+            text: qsTr("Open in a new window")
         }
 
         Label {
-            text: qsTr("Theme information:")
-        }
-
-        Label {
-            text: qsTr("Developer: ") + themes[combobox.currentIndex].developer
-        }
-
-        Label {
-            text: qsTr("Description: ") + themes[combobox.currentIndex].description
-        }
-
-        Label {
-            text: qsTr("License: ") + themes[combobox.currentIndex].license
+            opacity: newInstance.checked ? 0 : 1
+            text: qsTr("Note: Pext will restart to switch profile.")
         }
     }
 
     Component.onCompleted: {
+        combobox.currentIndex = profiles.indexOf(currentProfile);
         visible = true;
         combobox.focus = true;
     }
 
     onAccepted: {
-        installRequest(urlSelectionBox.currentText);
+        loadRequest(combobox.currentText, newInstance.checked);
     }
 }
 

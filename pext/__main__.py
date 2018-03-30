@@ -23,9 +23,9 @@ This is the main Pext file. It will initialize, run and manage the whole of
 Pext.
 """
 
+import argparse
 import atexit
 import configparser
-import getopt
 import json
 import os
 import platform
@@ -45,9 +45,9 @@ from pkg_resources import parse_version
 from shutil import rmtree
 from subprocess import check_call, CalledProcessError, Popen
 try:
-    from typing import Dict, List, Optional, Tuple
+    from typing import Any, Dict, List, Optional, Tuple
 except ImportError:
-    from backports.typing import Dict, List, Optional, Tuple  # type: ignore
+    from backports.typing import Any, Dict, List, Optional, Tuple  # type: ignore
 from urllib.request import urlopen
 from queue import Queue, Empty
 
@@ -107,15 +107,23 @@ class SortMode(IntEnum):
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
-    def __init__(self) -> None:
+    def __init__(self, path: str) -> None:
         """Initialize the configuration location."""
-        # Initialze defaults
-        try:
-            config_home = os.environ['XDG_CONFIG_HOME']
-        except Exception:
-            config_home = os.path.join(os.path.expanduser('~'), '.config')
+        config_home = path
+        if config_home:
+            config_home = os.path.expanduser(config_home)
+            if os.path.isdir(config_home):
+                self.config = {'config_path': config_home}
+            else:
+                raise NotADirectoryError('{} is not a directory.'.format(config_home))
+        else:
+            # Fall back to default config location
+            try:
+                config_home = os.environ['XDG_CONFIG_HOME']
+            except Exception:
+                config_home = os.path.join(os.path.expanduser('~'), '.config')
 
-        self.config = {'config_path': os.path.join(config_home, 'pext')}
+            self.config = {'config_path': os.path.join(config_home, 'pext')}
 
     def get_setting(self, variable: str) -> str:
         """Get a specific configuration setting."""
@@ -143,6 +151,19 @@ class ConfigRetriever():
         with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'w') as update_check_file:
             update_check_file.write(str(int(granted)))
 
+    def get_last_update_check_time(self) -> Optional[datetime]:
+        """Get the time of the last update check, returns None if there was never a check."""
+        try:
+            with open(os.path.join(self.get_setting('config_path'), 'update_check_time'), 'r') as update_check_file:
+                return datetime.fromtimestamp(int(float(update_check_file.readline())))
+        except (FileNotFoundError):
+            return None
+
+    def set_last_update_check_time(self, dt: datetime) -> None:
+        """Set the last update check time to the given time."""
+        with open(os.path.join(self.get_setting('config_path'), 'update_check_time'), 'w') as update_check_file:
+            update_check_file.write(str(dt.timestamp()))
+
 
 class RunConseq():
     """A simple helper to run several functions consecutively."""
@@ -151,7 +172,7 @@ class RunConseq():
         """Run the given function consecutively."""
         for function in functions:
             if len(function['args']) > 0:
-                function['name'](function['args'], **function['kwargs'])
+                function['name'](*function['args'], **function['kwargs'])
             else:
                 function['name'](**function['kwargs'])
 
@@ -188,22 +209,29 @@ class Logger():
     as a desktop notification.
     """
 
-    def __init__(self, window: 'Window') -> None:
-        """Initialize the logger and add a status bar to the main window."""
-        self.window = window
-        self.queued_messages = []  # type: List[Dict[str, str]]
+    queued_messages = []  # type: List[Dict[str, str]]
+    last_update = None  # type: Optional[float]
 
-        self.last_update = None  # type: Optional[float]
-        self.status_text = self.window.window.findChild(QObject, "statusText")
-        self.status_queue = self.window.window.findChild(QObject, "statusQueue")
+    window = None
+    status_text = None  # type: QObject
+    status_queue = None  # type: QObject
 
-    def _queue_message(self, module_name: str, message: str, type_name: str) -> None:
+    @staticmethod
+    def bind_window(window: 'Window') -> None:
+        """Give the logger the ability to log info to the main window."""
+        Logger.window = window
+        Logger.status_text = window.window.findChild(QObject, "statusText")
+        Logger.status_queue = window.window.findChild(QObject, "statusQueue")
+
+    @staticmethod
+    def _queue_message(module_name: str, message: str, type_name: str) -> None:
         """Queue a message for display."""
-        for formatted_message in self._format_message(module_name, message):
-            self.queued_messages.append(
+        for formatted_message in Logger._format_message(module_name, message):
+            Logger.queued_messages.append(
                 {'message': formatted_message, 'type': type_name})
 
-    def _format_message(self, module_name: str, message: str) -> List[str]:
+    @staticmethod
+    def _format_message(module_name: str, message: str) -> List[str]:
         """Format message for display, including splitting multiline messages."""
         message_lines = []
         for line in message.splitlines():
@@ -218,38 +246,48 @@ class Logger():
         return message_lines
 
     @staticmethod
-    def _log(message: str, logger=None) -> None:
+    def log(module_name: Optional[str], message: str) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
-        if logger:
-            logger.add_message("", message)
+        if Logger.window:
+            if not module_name:
+                module_name = ""
+
+            Logger._queue_message(module_name, message, 'message')
         else:
             print(message)
 
     @staticmethod
-    def _log_error(message: str, logger=None) -> None:
+    def log_error(module_name: Optional[str], message: str) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
-        if logger:
-            logger.add_error("", message)
+        if Logger.window:
+            if not module_name:
+                module_name = ""
+
+            Logger._queue_message(module_name, message, 'error')
         else:
             print(message)
 
-    def show_next_message(self) -> None:
+    @staticmethod
+    def show_next_message() -> None:
         """Show next statusbar message.
 
         If the status bar has not been updated for 1 second, display the next
         message. If no messages are available, clear the status bar after it
         has been displayed for 5 seconds.
         """
-        current_time = time.time()
-        time_diff = 5 if len(self.queued_messages) < 1 else 1
-        if self.last_update and current_time - time_diff < self.last_update:
+        if not Logger.window:
             return
 
-        if len(self.queued_messages) == 0:
-            QQmlProperty.write(self.status_text, "text", "")
-            self.last_update = None
+        current_time = time.time()
+        time_diff = 5 if len(Logger.queued_messages) < 1 else 1
+        if Logger.last_update and current_time - time_diff < Logger.last_update:
+            return
+
+        if len(Logger.queued_messages) == 0:
+            QQmlProperty.write(Logger.status_text, "text", "")
+            Logger.last_update = None
         else:
-            message = self.queued_messages.pop(0)
+            message = Logger.queued_messages.pop(0)
 
             if message['type'] == 'error':
                 statusbar_message = "<font color='red'>⚠ {}</color>".format(
@@ -259,9 +297,9 @@ class Logger():
                 statusbar_message = message['message']
                 notification_message = message['message']
 
-            QQmlProperty.write(self.status_text, "text", statusbar_message)
+            QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            if self.window.window.windowState() == Qt.WindowMinimized or not self.window.window.isVisible():
+            if Logger.window.window.windowState() == Qt.WindowMinimized or not Logger.window.window.isVisible():
                 try:
                     Popen(['notify-send', 'Pext', notification_message])
                 except Exception as e:
@@ -269,20 +307,14 @@ class Logger():
                     traceback.print_exc()
                     print(notification_message)
 
-            self.last_update = current_time
+            Logger.last_update = current_time
 
-    def add_error(self, module_name: str, message: str) -> None:
-        """Add an error message to the queue."""
-        self._queue_message(module_name, message, 'error')
-
-    def add_message(self, module_name: str, message: str) -> None:
-        """Add a regular message to the queue."""
-        self._queue_message(module_name, message, 'message')
-
-    def set_queue_count(self, count: List[int]) -> None:
+    @staticmethod
+    def set_queue_count(count: List[int]) -> None:
         """Show the queue size on screen."""
-        QQmlProperty.write(self.status_queue, "entriesLeftForeground", count[0])
-        QQmlProperty.write(self.status_queue, "entriesLeftBackground", count[1])
+        if Logger.status_queue:
+            QQmlProperty.write(Logger.status_queue, "entriesLeftForeground", count[0])
+            QQmlProperty.write(Logger.status_queue, "entriesLeftBackground", count[1])
 
 
 class MainLoop():
@@ -292,26 +324,24 @@ class MainLoop():
     ensures these events get managed without locking up the UI.
     """
 
-    def __init__(self, app: QApplication, window: 'Window', settings: Dict, logger: Logger) -> None:
+    def __init__(self, app: QApplication, window: 'Window') -> None:
         """Initialize the main loop."""
         self.app = app
         self.window = window
-        self.settings = settings
-        self.logger = logger
 
     def _process_tab_action(self, tab: Dict, active_tab: int) -> None:
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            self.logger.add_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['module_name'], str(action[1]))
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 
         elif action[0] == Action.add_message:
-            self.logger.add_message(tab['module_name'], str(action[1]))
+            Logger.log(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_error:
-            self.logger.add_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['module_name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
             tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
@@ -436,7 +466,7 @@ class MainLoop():
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
-            if self.settings['clipboard'] == 'selection':
+            if Settings.get('clipboard') == 'selection':
                 mode = QClipboard.Selection
             else:
                 mode = QClipboard.Clipboard
@@ -538,7 +568,7 @@ class MainLoop():
                 tab['vm'].context_menu_commands = {}
 
         elif action[0] == Action.set_base_context:
-            if len(action) > 0:
+            if len(action) > 1:
                 tab['vm'].context_menu_base = action[1]
             else:
                 tab['vm'].context_menu_base = []
@@ -558,7 +588,7 @@ class MainLoop():
         while True:
             self.app.sendPostedEvents()
             self.app.processEvents()
-            self.logger.show_next_message()
+            Logger.show_next_message()
 
             current_tab = QQmlProperty.read(self.window.tabs, "currentIndex")
             queue_size = [0, 0]
@@ -590,7 +620,7 @@ class MainLoop():
                     print('WARN: Module {} caused exception {}'.format(tab['module_name'], e))
                     traceback.print_exc()
 
-            self.logger.set_queue_count(queue_size)
+            Logger.set_queue_count(queue_size)
 
             if all_empty:
                 if self.window.window.isVisible():
@@ -599,25 +629,144 @@ class MainLoop():
                     time.sleep(0.1)
 
 
+class LocaleManager():
+    """Load and switch locales."""
+
+    def __init__(self) -> None:
+        """Initialize the locale manager."""
+        self.locale_dir = os.path.join(AppFile.get_path(), 'i18n')
+        self.current_locale = None
+        self.translator = QTranslator()  # prevent Python from garbage collecting it after load_locale function
+
+    @staticmethod
+    def get_locales() -> Dict[str, str]:
+        """Return the list of supported locales.
+
+        It is return as a dictionary formatted as follows: {nativeLanguageName: languageCode}.
+        """
+        locales = {}
+        for locale_file in os.listdir(os.path.join(AppFile.get_path(), 'i18n')):
+            if not locale_file.endswith('.qm'):
+                continue
+
+            locale_code = os.path.splitext(locale_file)[0][len('pext_'):]
+            locale_name = QLocale(locale_code).nativeLanguageName()
+            locales[locale_name] = locale_code
+
+        return locales
+
+    def get_current_locale(self, system_if_unset=True) -> Optional[QLocale]:
+        """Get the current locale.
+
+        If no locale is explicitly set, it will return the current system locale, unless system_if_unset is set to
+        False, in which case it will return None.
+        """
+        if self.current_locale:
+            return self.current_locale
+
+        if system_if_unset:
+            return QLocale()
+
+        return None
+
+    def find_best_locale(self, locale=None) -> QLocale:
+        """Find the best locale to use, defaulting to system locale."""
+        return QLocale(locale) if locale else QLocale()
+
+    def load_locale(self, app: QApplication, locale: QLocale) -> None:
+        """Load the given locale into the application."""
+        system_locale = QLocale()
+
+        if locale != system_locale:
+            self.current_locale = locale
+
+        print('Using locale: {} {}'
+              .format(locale.name(), "(system locale)" if locale == system_locale else ""))
+        print('Localization loaded:',
+              self.translator.load(locale, 'pext', '_', self.locale_dir, '.qm'))
+
+        app.installTranslator(self.translator)
+
+
 class ProfileManager():
     """Create, remove, list, load and save to a profile."""
 
     def __init__(self, config_retriever: ConfigRetriever) -> None:
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
+        self.module_dir = os.path.join(config_retriever.get_setting('config_path'), 'modules')
         self.config_retriever = config_retriever
-        self.saved_settings = ['clipboard', 'tray', 'minimize_mode', 'locale', 'sort_mode']
+        self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
         self.enum_settings = ['minimize_mode', 'sort_mode']
 
-    def create_profile(self, profile: str) -> None:
-        """Create a new empty profile."""
-        os.mkdir(os.path.join(self.profile_dir, profile))
+    @staticmethod
+    def _get_pid_path(profile: str) -> str:
+        return os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(profile))
 
-    def remove_profile(self, profile: str) -> None:
-        """Remove a profile and all associated data."""
+    @staticmethod
+    def lock_profile(profile: str) -> None:
+        """Claim the profile as in-use."""
+        pidfile = ProfileManager._get_pid_path(profile)
+        pid = str(os.getpid())
+        open(pidfile, 'w').write(pid)
+
+    @staticmethod
+    def get_lock_instance(profile: str) -> Optional[int]:
+        """Get the pid of the current process having a lock, if any."""
+        pidfile = ProfileManager._get_pid_path(profile)
+        if os.path.isfile(pidfile):
+            pid = int(open(pidfile, 'r').read())
+            if platform.system() == 'Windows':
+                return True
+
+            try:
+                os.kill(pid, 0)
+            except ProcessLookupError:
+                return None
+
+            return pid
+
+    @staticmethod
+    def unlock_profile(profile: str) -> None:
+        """Remove the status of the profile currently being in use."""
+        pidfile = ProfileManager._get_pid_path(profile)
+        os.unlink(pidfile)
+
+    @staticmethod
+    def default_profile_name() -> str:
+        """Return the default profile name."""
+        return "default"
+
+    def create_profile(self, profile: str) -> bool:
+        """Create a new empty profile if name not in use already."""
+        try:
+            os.mkdir(os.path.join(self.profile_dir, profile))
+        except OSError:
+            return False
+
+        return True
+
+    def rename_profile(self, old_name: str, new_name: str) -> bool:
+        """Rename a profile that's currently not in use, if the new name doesn't already exist."""
+        if ProfileManager.get_lock_instance(old_name):
+            return False
+
+        try:
+            os.rename(os.path.join(self.profile_dir, old_name), os.path.join(self.profile_dir, new_name))
+        except OSError:
+            return False
+
+        return True
+
+    def remove_profile(self, profile: str) -> bool:
+        """Remove a profile and all associated data if not in use."""
+        if ProfileManager.get_lock_instance(profile):
+            return False
+
         rmtree(os.path.join(self.profile_dir, profile))
+        return True
 
-    def list_profiles(self) -> List:
+    def list_profiles(self) -> List[str]:
         """List the existing profiles."""
         return os.listdir(self.profile_dir)
 
@@ -625,14 +774,13 @@ class ProfileManager():
         """Save the list of open modules and their settings to the profile."""
         config = configparser.ConfigParser()
         for number, module in enumerate(modules):
-            name = ModuleManager.add_prefix(module['module_name'])
             settings = {}
             for setting in module['settings']:
                 # Only save non-internal variables
                 if setting[0] != "_":
                     settings[setting] = module['settings'][setting]
 
-            config['{}_{}'.format(number, name)] = settings
+            config['{}_{}'.format(number, module['metadata']['id'])] = settings
 
         with open(os.path.join(self.profile_dir, profile, 'modules'), 'w') as configfile:
             config.write(configfile)
@@ -645,38 +793,28 @@ class ProfileManager():
         config.read(os.path.join(self.profile_dir, profile, 'modules'))
 
         for module in config.sections():
+            identifier = module.split('_', 1)[1]
+            data = ObjectManager.list_object(os.path.join(self.module_dir, identifier))
+            if not data:
+                # Module no longer seems to exist, skip
+                continue
+
             settings = {}
 
             for key in config[module]:
                 settings[key] = config[module][key]
 
-            modules.append(
-                {'name': module.split('_', 1)[1], 'settings': settings})
+            modules.append({'metadata': data.metadata, 'settings': settings})
 
         return modules
 
-    def save_theme(self, profile: str, theme_name: str) -> None:
-        """Save the currently in use theme to load it next launch."""
-        theme_file = os.path.join(self.profile_dir, profile, 'theme')
-
-        with open(theme_file, 'w') as configfile:
-            configfile.write(theme_name)
-
-    def retrieve_theme(self, profile: str) -> str:
-        """Retrieve the theme to load."""
-        try:
-            with open(os.path.join(self.profile_dir, profile, 'theme'), 'r') as configfile:
-                return configfile.readline()
-        except (FileNotFoundError):
-            return ThemeManager.get_system_theme_name()  # Default theme
-
-    def save_settings(self, profile: str, settings: Dict) -> None:
+    def save_settings(self, profile: str) -> None:
         """Save the current settings to the profile."""
         config = configparser.ConfigParser()
         settings_to_store = {}
-        for setting in settings:
+        for setting in Settings.get_all():
             if setting in self.saved_settings:
-                setting_data = settings[setting].value if setting in self.enum_settings else settings[setting]
+                setting_data = Settings.get(setting).value if setting in self.enum_settings else Settings.get(setting)
                 if setting_data is not None:
                     settings_to_store[setting] = setting_data
 
@@ -688,14 +826,14 @@ class ProfileManager():
     def retrieve_settings(self, profile: str) -> Dict:
         """Retrieve the settings from the profile."""
         config = configparser.ConfigParser()
-        settings = {}
+        settings = {}  # type: Dict[str, Any]
 
         config.read(os.path.join(self.profile_dir, profile, 'settings'))
 
         try:
             for setting in config['settings']:
                 if setting in self.saved_settings:
-                    settings[setting] = config['settings'][setting]
+                    Settings.set(setting, config['settings'][setting])
         except KeyError:
             pass
 
@@ -706,45 +844,71 @@ class ObjectManager():
     """Shared management for modules and themes."""
 
     @staticmethod
+    def list_object(full_path: str) -> Optional[Dict[str, Dict[str, str]]]:
+        """Return the identifier, name, source and metadata of an object."""
+        if not os.path.isdir(full_path):
+            return None
+
+        location = os.path.basename(full_path)
+
+        try:
+            source = UpdateManager.get_remote_url(full_path)
+        except Exception:
+            source = None
+
+        try:
+            with open(os.path.join(full_path, "metadata.json"), 'r') as metadata_json:
+                metadata = json.load(metadata_json)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            print("Object {} lacks a correctly formatted metadata.json file".format(location))
+            return None
+
+        # Ensure the required metadata is set
+        if 'id' not in metadata:
+            print("Object {} lacks required field id".format(location))
+            return None
+
+        if 'name' not in metadata:
+            print("Object {} lacks required field name".format(location))
+            return None
+
+        # Ensure the location makes sense
+        if location != metadata['id'].replace('.', '_'):
+            print("Object {}'s location is not correct for identifier {}".format(location, metadata['id']))
+            return None
+
+        # Add revision last updated time
+        if source:
+            try:
+                version = UpdateManager.get_version(full_path)
+                metadata['version'] = version
+            except Exception:
+                pass
+
+            try:
+                last_updated = UpdateManager.get_last_updated(full_path)
+                metadata['last_updated'] = str(last_updated)
+            except Exception:
+                pass
+
+        return {"source": source, "metadata": metadata}
+
+    @staticmethod
     def list_objects(core_directory: str) -> Dict[str, Dict[str, Dict[str, str]]]:
-        """Return a list of objects together with their source."""
+        """Return a list of objects together with their identifier, name, source and metadata."""
         objects = {}
 
         for directory in os.listdir(core_directory):
-            if not os.path.isdir(os.path.join(core_directory, directory)):
-                continue
-
-            name = directory
-            name = ModuleManager.remove_prefix(name)
-            name = ThemeManager.remove_prefix(name)
-
-            try:
-                source = UpdateManager.get_remote_url(os.path.join(core_directory, directory))
-            except Exception:
-                source = None
-
-            try:
-                with open(os.path.join(core_directory, directory, "metadata.json"), 'r') as metadata_json:
-                    metadata = json.load(metadata_json)
-            except (FileNotFoundError, json.decoder.JSONDecodeError):
-                print("Object {} lacks a metadata.json file".format(name))
-                metadata = {}
-
-            # Add revision last updated time
-            if source:
+            dir_object = ObjectManager.list_object(os.path.join(core_directory, directory))
+            if dir_object:
+                objects[dir_object['metadata']['id']] = dir_object
+            else:
+                # Remove corrupted entry (FIXME: Temporary?)
+                print("Removing corrupted object at {}".format(os.path.join(core_directory, directory)))
                 try:
-                    version = UpdateManager.get_version(os.path.join(core_directory, directory))
-                    metadata['version'] = version
-                except Exception:
+                    rmtree(os.path.join(core_directory, directory))
+                except Exception as e:
                     pass
-
-                try:
-                    last_updated = UpdateManager.get_last_updated(os.path.join(core_directory, directory))
-                    metadata['last_updated'] = str(last_updated)
-                except Exception:
-                    pass
-
-            objects[name] = {"source": source, "metadata": metadata}
 
         return objects
 
@@ -759,28 +923,11 @@ class ModuleManager():
                                        'modules')
         self.module_dependencies_dir = os.path.join(self.config_retriever.get_setting('config_path'),
                                                     'module_dependencies')
-        self.logger = None  # type: Optional[Logger]
 
-    @staticmethod
-    def add_prefix(module_name: str) -> str:
-        """Ensure the string starts with pext_module_."""
-        if not module_name.startswith('pext_module_'):
-            return 'pext_module_{}'.format(module_name)
-
-        return module_name
-
-    @staticmethod
-    def remove_prefix(module_name: str) -> str:
-        """Remove pext_module_ from the start of the string."""
-        if module_name.startswith('pext_module_'):
-            return module_name[len('pext_module_'):]
-
-        return module_name
-
-    def _pip_install(self, module_dir_name: str) -> int:
+    def _pip_install(self, identifier: str) -> int:
         """Install module dependencies using pip."""
-        module_requirements_path = os.path.join(self.module_dir, module_dir_name, 'requirements.txt')
-        module_dependencies_path = os.path.join(self.module_dependencies_dir, module_dir_name)
+        module_requirements_path = os.path.join(self.module_dir, identifier.replace('.', '_'), 'requirements.txt')
+        module_dependencies_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
 
         if not os.path.isfile(module_requirements_path):
             return 0
@@ -827,29 +974,17 @@ class ModuleManager():
 
         return returncode
 
-    def bind_logger(self, logger: Logger) -> None:
-        """Connect a logger to the module manager.
-
-        If a logger is connected, the module manager will log all
-        messages directly to the logger.
-        """
-        self.logger = logger
-
-    def load_module(self, window: 'Window', module: Dict, locale: str) -> bool:
+    def load_module(self, window: 'Window', module: Dict[str, Any]) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
         module_path = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
         if module_path not in sys.path:
             sys.path.append(module_path)
 
-        # Remove pext_module_ from the module name
-        module_dir = ModuleManager.add_prefix(module['name']).replace('.', '_')
-        module_name = ModuleManager.remove_prefix(module['name'])
-
         # Append module dependencies path if not yet appended
         module_dependencies_path = os.path.join(self.config_retriever.get_setting('config_path'),
                                                 'module_dependencies',
-                                                module_dir)
+                                                module['metadata']['id'].replace('.', '_'))
         if module_dependencies_path not in sys.path:
             sys.path.append(module_dependencies_path)
 
@@ -875,11 +1010,9 @@ class ModuleManager():
 
         # Prepare module
         try:
-            module_import = __import__(module_dir, fromlist=['Module'])
+            module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
         except ImportError as e1:
-            Logger._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e1),
-                self.logger)
+            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['id'], e1))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -899,9 +1032,8 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e2:
-            Logger._log_error(
-                "Failed to load module {} from {}: {}".format(module_name, module_dir, e2),
-                self.logger)
+            Logger.log_error(None, "Failed to load module {}: {}".format(module.metadata.id, e2))
+
             return False
 
         # Check if the required functions have enough parameters
@@ -921,21 +1053,25 @@ class ModuleManager():
             if param_length != required_param_length:
                 if name == 'process_response' and param_length == 1:
                     print("WARN: Module {} uses old process_response signature and will not be able to receive an "
-                          "identifier if requested".format(module_name))
+                          "identifier if requested".format(module['metadata']['id']))
                 else:
-                    Logger._log_error(
-                        "Failed to load module {} from {}: {} function has {} parameters (excluding self), expected {}"
-                        .format(module_name, module_dir, name, param_length, required_param_length),
-                        self.logger)
+                    Logger.log_error(
+                        None,
+                        "Failed to load module {}: {} function has {} parameters (excluding self), expected {}"
+                        .format(module['metadata']['id'], name, param_length, required_param_length))
+
                     return False
 
         # Prefill API version and locale
+        locale_manager = LocaleManager()
+        locale = locale_manager.find_best_locale(Settings.get('locale')).name()
+
         module['settings']['_api_version'] = [0, 7, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
-            module_name,
+            module['metadata']['id'],
             q,
             target=module_code.init,
             args=(module['settings'], q))
@@ -946,7 +1082,7 @@ class ModuleManager():
         tab_data.loadUrl(
             QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'ModuleData.qml')))
         window.engine.setContextForObject(tab_data, module_context)
-        window.tabs.addTab(module_name, tab_data)
+        window.tabs.addTab(module['metadata']['name'], tab_data)
 
         # Store tab/viewModel combination
         # tabData is not used but stored to prevent segfaults caused by
@@ -957,7 +1093,7 @@ class ModuleManager():
                                     'module': module_code,
                                     'module_context': module_context,
                                     'module_import': module_import,
-                                    'module_name': module_name,
+                                    'metadata': module['metadata'],
                                     'tab_data': tab_data,
                                     'settings': module['settings'],
                                     'entries_processed': 0})
@@ -971,10 +1107,10 @@ class ModuleManager():
     def unload_module(self, window: 'Window', tab_id: int) -> None:
         """Unload a module by tab ID."""
         try:
-            window.tab_bindings[tab_id]['module'].stop()
+            window.tab_bindings[tab_id].module.stop()
         except Exception as e:
             print('WARN: Module {} caused exception {} on unload'
-                  .format(window.tab_bindings[tab_id]['module_name'], e))
+                  .format(window.tab_bindings[tab_id].metadata.id, e))
             traceback.print_exc()
 
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
@@ -984,8 +1120,8 @@ class ModuleManager():
             else:
                 QQmlProperty.write(window.tabs, "currentIndex", "0")
 
+        window.tabs.removeRequest.emit(tab_id)
         del window.tab_bindings[tab_id]
-        window.tabs.removeTab(tab_id)
 
     def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
@@ -999,18 +1135,18 @@ class ModuleManager():
         # Get the needed info to load the module
         module_data = window.tab_bindings[tab_id]
         module = {
-            'name': module_data['module_name'],
-            'settings': module_data['settings']
+            'metadata': module_data.metadata,
+            'settings': module_data.settings
         }
 
         # Unload the module
         self.unload_module(window, tab_id)
 
         # Force a reload to make code changes happen
-        reload(module_data['module_import'])
+        reload(module_data.module_import)
 
         # Load it into the UI
-        if not self.load_module(window, module, module_data['settings']['_locale']):
+        if not self.load_module(window, module):
             return False
 
         # Get new position
@@ -1029,128 +1165,120 @@ class ModuleManager():
 
         return True
 
-    def install_module(self, url: str, verbose=False, interactive=True) -> bool:
+    def install_module(self, url: str, identifier: str, verbose=False, interactive=True) -> bool:
         """Install a module."""
-        module_name = url.rstrip("/").split("/")[-1]
+        module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
+        dep_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
 
-        dir_name = ModuleManager.add_prefix(module_name).replace('.', '_')
-        module_name = ModuleManager.remove_prefix(module_name)
-
-        if os.path.exists(os.path.join(self.module_dir, dir_name)):
+        if os.path.exists(module_path):
             if verbose:
-                Logger._log('✔⇩ {}'.format(module_name), self.logger)
+                Logger.log(None, '✔⇩ {}'.format(identifier))
 
             return False
 
         if verbose:
-            Logger._log('⇩ {} ({})'.format(module_name, url), self.logger)
+            Logger.log(None, '⇩ {} ({})'.format(identifier, url))
 
         try:
-            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.module_dir, dir_name))
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
         except Exception as e:
             if verbose:
-                Logger._log_error('⇩ {}: {}'.format(module_name, e), self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
 
             traceback.print_exc()
 
             try:
-                rmtree(os.path.join(self.module_dir, dir_name))
+                rmtree(module_path)
             except FileNotFoundError:
                 pass
 
             return False
 
         if verbose:
-            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩⇩ {}'.format(identifier))
 
-        pip_exit_code = self._pip_install(dir_name)
+        pip_exit_code = self._pip_install(identifier)
         if pip_exit_code != 0:
             if verbose:
-                Logger._log_error('⇩⇩ {}: {}'.format(module_name, pip_exit_code), self.logger)
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(identifier, pip_exit_code))
 
             try:
-                rmtree(os.path.join(self.module_dir, dir_name))
+                rmtree(module_path)
             except FileNotFoundError:
                 pass
 
             try:
-                rmtree(os.path.join(self.module_dependencies_dir, dir_name))
+                rmtree(dep_path)
             except FileNotFoundError:
                 pass
 
             return False
 
         if verbose:
-            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔⇩⇩ {}'.format(identifier))
 
         return True
 
-    def uninstall_module(self, module_name: str, verbose=False) -> bool:
+    def uninstall_module(self, identifier: str, verbose=False) -> bool:
         """Uninstall a module."""
-        dir_name = ModuleManager.add_prefix(module_name)
-        module_name = ModuleManager.remove_prefix(module_name)
+        module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
+        dep_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
 
         if verbose:
-            Logger._log('♻ {}'.format(module_name), self.logger)
+            Logger.log(None, '♻ {}'.format(identifier))
 
         try:
-            rmtree(os.path.join(self.module_dir, dir_name))
+            rmtree(module_path)
         except FileNotFoundError:
             if verbose:
-                Logger._log(
-                    '✔♻ {}'.format(module_name),
-                    self.logger)
+                Logger.log(None, '✔♻ {}'.format(identifier))
 
             return False
 
         try:
-            rmtree(os.path.join(self.module_dependencies_dir, dir_name))
+            rmtree(dep_path)
         except FileNotFoundError:
             pass
 
         if verbose:
-            Logger._log('✔♻ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔♻ {}'.format(identifier))
 
         return True
 
-    def update_module(self, module_name: str, verbose=False) -> bool:
+    def update_module(self, identifier: str, verbose=False) -> bool:
         """Update a module."""
-        dir_name = ModuleManager.add_prefix(module_name)
-        module_name = ModuleManager.remove_prefix(module_name)
+        module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
 
         if verbose:
-            Logger._log('⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩ {}'.format(identifier))
 
         try:
-            if not UpdateManager.update(os.path.join(self.module_dir, dir_name)):
+            if not UpdateManager.update(module_path):
                 if verbose:
-                    Logger._log('⏩{}'.format(module_name), self.logger)
+                    Logger.log(None, '⏩{}'.format(identifier))
+
                 return False
 
         except Exception as e:
             if verbose:
-                Logger._log_error(
-                    '⇩ {}: {}'.format(module_name, e),
-                    self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger._log('⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '⇩⇩ {}'.format(identifier))
 
-        pip_exit_code = self._pip_install(dir_name)
+        pip_exit_code = self._pip_install(identifier)
         if pip_exit_code != 0:
             if verbose:
-                Logger._log_error(
-                    '⇩⇩ {}: {}'.format(module_name, pip_exit_code),
-                    self.logger)
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(identifier, pip_exit_code))
 
             return False
 
         if verbose:
-            Logger._log('✔⇩⇩ {}'.format(module_name), self.logger)
+            Logger.log(None, '✔⇩⇩ {}'.format(identifier))
 
         return True
 
@@ -1442,8 +1570,8 @@ class ViewModel():
                 "contextMenuEnabled", False)
 
         # Sort if sorting is enabled
-        if self.window.settings['sort_mode'] != SortMode.Module:
-            reverse = self.window.settings['sort_mode'] == SortMode.Descending
+        if Settings.get('sort_mode') != SortMode.Module:
+            reverse = Settings.get('sort_mode') == SortMode.Descending
             self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
             self.sorted_command_list = sorted(self.command_list, reverse=reverse)
             self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
@@ -1756,18 +1884,20 @@ class ViewModel():
 class Window(QMainWindow):
     """The main Pext window."""
 
-    def __init__(self, settings: Dict, config_retriever: ConfigRetriever, parent=None) -> None:
+    def __init__(self, config_retriever: ConfigRetriever, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
 
         # Save settings
-        self.settings = settings
         self.config_retriever = config_retriever
+        self.locale_manager = locale_manager
 
         self.tab_bindings = []  # type: List[Dict]
+        self.tray = None  # type: Optional[Tray]
 
         self.engine = QQmlApplicationEngine(self)
 
+        # Set QML variables
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
             "applicationVersion", UpdateManager().get_core_version())
@@ -1779,7 +1909,10 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
 
-        self.context.setContextProperty("currentTheme", settings['theme'])
+        self.context.setContextProperty("currentTheme", Settings.get('theme'))
+        self.context.setContextProperty("currentProfile", Settings.get('profile'))
+        self.context.setContextProperty("currentLocale", self.locale_manager.get_current_locale(system_if_unset=False))
+        self.context.setContextProperty("locales", self.locale_manager.get_locales())
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
@@ -1798,6 +1931,10 @@ class Window(QMainWindow):
         # Give QML the theme info
         self.theme_manager = ThemeManager(self.config_retriever)
         self._update_themes_info_qml()
+
+        # Give QML the profile info
+        self.profile_manager = ProfileManager(self.config_retriever)
+        self._update_profiles_info_qml()
 
         # Bind update dialog
         self.update_available_requests = self.window.findChild(QObject, "updateAvailableRequests")
@@ -1838,6 +1975,14 @@ class Window(QMainWindow):
             QObject, "menuManageThemes")
         menu_update_all_themes_shortcut = self.window.findChild(
             QObject, "menuUpdateAllThemes")
+
+        menu_load_profile_shortcut = self.window.findChild(
+            QObject, "menuLoadProfile")
+        menu_manage_profiles_shortcut = self.window.findChild(
+            QObject, "menuManageProfiles")
+
+        menu_change_language_shortcut = self.window.findChild(
+            QObject, "menuChangeLanguage")
 
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
@@ -1887,6 +2032,13 @@ class Window(QMainWindow):
         menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
             self._menu_update_all_themes)
 
+        menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
+        menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
+        menu_manage_profiles_shortcut.renameProfileRequest.connect(self._menu_rename_profile)
+        menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
+
+        menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
+
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
         menu_sort_descending_shortcut.toggled.connect(self._menu_sort_descending)
@@ -1907,33 +2059,33 @@ class Window(QMainWindow):
         # Set entry states
         QQmlProperty.write(menu_sort_module_shortcut,
                            "checked",
-                           int(self.settings['sort_mode']) == SortMode.Module)
+                           int(Settings.get('sort_mode')) == SortMode.Module)
         QQmlProperty.write(menu_sort_ascending_shortcut,
                            "checked",
-                           int(self.settings['sort_mode']) == SortMode.Ascending)
+                           int(Settings.get('sort_mode')) == SortMode.Ascending)
         QQmlProperty.write(menu_sort_descending_shortcut,
                            "checked",
-                           int(self.settings['sort_mode']) == SortMode.Descending)
+                           int(Settings.get('sort_mode')) == SortMode.Descending)
 
         QQmlProperty.write(menu_minimize_normally_shortcut,
                            "checked",
-                           int(self.settings['minimize_mode']) == MinimizeMode.Normal)
+                           int(Settings.get('minimize_mode')) == MinimizeMode.Normal)
         QQmlProperty.write(menu_minimize_to_tray_shortcut,
                            "checked",
-                           int(self.settings['minimize_mode']) == MinimizeMode.Tray)
+                           int(Settings.get('minimize_mode')) == MinimizeMode.Tray)
         QQmlProperty.write(menu_minimize_normally_manually_shortcut,
                            "checked",
-                           int(self.settings['minimize_mode']) == MinimizeMode.NormalManualOnly)
+                           int(Settings.get('minimize_mode')) == MinimizeMode.NormalManualOnly)
         QQmlProperty.write(menu_minimize_to_tray_manually_shortcut,
                            "checked",
-                           int(self.settings['minimize_mode']) == MinimizeMode.TrayManualOnly)
+                           int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
 
         QQmlProperty.write(menu_show_tray_icon_shortcut,
                            "checked",
-                           self.settings['tray'])
+                           Settings.get('tray'))
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
-                           self.settings['update_check'])
+                           Settings.get('update_check'))
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -1942,10 +2094,22 @@ class Window(QMainWindow):
         self.tabs.currentIndexChanged.connect(self._bind_context)
 
         # Show the window if not --background
-        if not settings['background']:
+        if platform.system() == 'Darwin' and Settings.get('background'):
+            # workaround for https://github.com/Pext/Pext/issues/20
+            # First, we showMinimized to prevent Pext from being unrestorable
+            self.window.showMinimized()
+            # Then, we tell macOS to give the focus back to the last app
+            applescript_command = ['tell application "System Events"',
+                                   'tell process "Finder"',
+                                   'activate',
+                                   'keystroke tab using {command down}',
+                                   'end tell',
+                                   'end tell']
+            Popen(['osascript', '-e', '\n'.join(applescript_command)])
+        elif not Settings.get('background'):
             self.show()
 
-            if self.settings['update_check'] is None:
+            if Settings.get('update_check') is None:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
@@ -1955,6 +2119,22 @@ class Window(QMainWindow):
                     lambda: self._menu_toggle_update_check(False))
 
                 permission_requests.updatePermissionRequest.emit()
+
+        # Start binding the modules
+        if len(Settings.get('modules')) > 0:
+            for module in Settings.get('modules'):
+                self.module_manager.load_module(self, module)
+        else:
+            for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
+                self.module_manager.load_module(self, module)
+
+        # If there's only one module passed through the command line, enforce
+        # loading it now. Otherwise, switch back to the first module in the
+        # list
+        if len(self.tab_bindings) == 1:
+            self.tabs.currentIndexChanged.emit()
+        elif len(self.tab_bindings) > 1:
+            QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2012,8 +2192,8 @@ class Window(QMainWindow):
 
     def _process_window_state(self, event) -> None:
         if event & Qt.WindowMinimized:
-            if self.settings['minimize_mode'] in [MinimizeMode.Tray, MinimizeMode.TrayManualOnly]:
-                self.window.hide()
+            if Settings.get('minimize_mode') in [MinimizeMode.Tray, MinimizeMode.TrayManualOnly]:
+                self.close(manual=True, force_tray=True)
 
     def _get_current_element(self) -> Optional[Dict]:
         current_tab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -2029,7 +2209,7 @@ class Window(QMainWindow):
         except TypeError:
             pass
 
-    def _open_tab(self, name: str, settings: str) -> None:
+    def _open_tab(self, identifier: str, name: str, settings: str) -> None:
         module_settings = {}
         for setting in settings.split(" "):
             try:
@@ -2039,8 +2219,8 @@ class Window(QMainWindow):
 
             module_settings[key] = value
 
-        module = {'name': name, 'settings': module_settings}
-        self.module_manager.load_module(self, module, self.settings['locale'])
+        module = {'metadata': {'id': identifier, 'name': name}, 'settings': module_settings}
+        self.module_manager.load_module(self, module)
         # First module? Enforce load
         if len(self.tab_bindings) == 1:
             self.tabs.currentIndexChanged.emit()
@@ -2057,11 +2237,11 @@ class Window(QMainWindow):
                 self,
                 QQmlProperty.read(self.tabs, "currentIndex"))
 
-    def _menu_install_module(self, module_url: str) -> None:
+    def _menu_install_module(self, module_url: str, identifier: str) -> None:
         functions = [
             {
                 'name': self.module_manager.install_module,
-                'args': (module_url),
+                'args': (module_url, identifier),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2071,11 +2251,11 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_uninstall_module(self, module_name: str) -> None:
+    def _menu_uninstall_module(self, identifier: str) -> None:
         functions = [
             {
                 'name': self.module_manager.uninstall_module,
-                'args': (module_name),
+                'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2085,11 +2265,11 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_module(self, module_name: str) -> None:
+    def _menu_update_module(self, identifier: str) -> None:
         functions = [
             {
                 'name': self.module_manager.update_module,
-                'args': (module_name),
+                'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2113,15 +2293,13 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_restart_pext(self) -> None:
+    def _menu_restart_pext(self, extra_args=None) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
-        _shut_down(os.path.join(tempfile.gettempdir(),
-                   'pext_{}.pid'.format(self.settings['profile'])),
-                   self.settings['profile'],
-                   self,
-                   self.config_retriever)
+        _shut_down(self, self.config_retriever)
 
         args = sys.argv[:]
+        if extra_args:
+            args.extend(extra_args)
 
         args.insert(0, sys.executable)
         if sys.platform == 'win32':
@@ -2130,18 +2308,69 @@ class Window(QMainWindow):
         os.chdir(os.getcwd())
         os.execv(sys.executable, args)
 
-    def _menu_switch_theme(self, theme_name: str) -> None:
-        self.settings['theme'] = theme_name
-        self.context.setContextProperty("currentTheme", self.settings['theme'])
+    def _menu_switch_theme(self, theme_identifier: Optional[str]) -> None:
+        Settings.set('theme', theme_identifier)
 
         self._menu_restart_pext()
 
-        """Restart Pext after switching theme."""
-    def _menu_install_theme(self, theme_url: str) -> None:
+    def _menu_switch_profile(self, profile_name: str, new_instance=bool) -> None:
+        extra_args = ['--profile={}'.format(profile_name)]
+        if not new_instance:
+            self._menu_restart_pext(extra_args)
+        else:
+            args = sys.argv[:]
+            args.extend(extra_args)
+            args.insert(0, sys.executable)
+
+            Popen(args)
+
+    def _menu_create_profile(self, profile_name: str) -> None:
+        functions = [
+            {
+                'name': self.profile_manager.create_profile,
+                'args': (profile_name,),
+                'kwargs': {}
+            }, {
+                'name': self._update_profiles_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_rename_profile(self, old_profile_name: str, new_profile_name: str) -> None:
+        functions = [
+            {
+                'name': self.profile_manager.rename_profile,
+                'args': (old_profile_name, new_profile_name),
+                'kwargs': {}
+            }, {
+                'name': self._update_profiles_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_remove_profile(self, profile_name: str) -> None:
+        functions = [
+            {
+                'name': self.profile_manager.remove_profile,
+                'args': (profile_name,),
+                'kwargs': {}
+            }, {
+                'name': self._update_profiles_info_qml,
+                'args': (),
+                'kwargs': {}
+            }
+        ]
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_install_theme(self, theme_url: str, identifier: str) -> None:
         functions = [
             {
                 'name': self.theme_manager.install_theme,
-                'args': (theme_url),
+                'args': (theme_url, identifier,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2151,11 +2380,11 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_uninstall_theme(self, theme_name: str) -> None:
+    def _menu_uninstall_theme(self, identifier: str) -> None:
         functions = [
             {
                 'name': self.theme_manager.uninstall_theme,
-                'args': (theme_name),
+                'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2165,11 +2394,11 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_theme(self, theme_name: str) -> None:
+    def _menu_update_theme(self, identifier: str) -> None:
         functions = [
             {
                 'name': self.theme_manager.update_theme,
-                'args': (theme_name),
+                'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2193,55 +2422,59 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
+    def _menu_change_language(self, lang_code: str) -> None:
+        Settings.set('locale', lang_code)
+        self._menu_restart_pext()
+
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
-            self.settings['sort_mode'] = SortMode.Module
+            Settings.set('sort_mode', SortMode.Module)
             for tab in self.tab_bindings:
                 tab['vm'].search(new_entries=True)
 
     def _menu_sort_ascending(self, enabled: bool) -> None:
         if enabled:
-            self.settings['sort_mode'] = SortMode.Ascending
+            Settings.set('sort_mode', SortMode.Ascending)
             for tab in self.tab_bindings:
                 tab['vm'].search(new_entries=True)
 
     def _menu_sort_descending(self, enabled: bool) -> None:
         if enabled:
-            self.settings['sort_mode'] = SortMode.Descending
+            Settings.set('sort_mode', SortMode.Descending)
             for tab in self.tab_bindings:
                 tab['vm'].search(new_entries=True)
 
     def _menu_minimize_normally(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = MinimizeMode.Normal
+            Settings.set('minimize_mode', MinimizeMode.Normal)
 
     def _menu_minimize_to_tray(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = MinimizeMode.Tray
+            Settings.set('minimize_mode', MinimizeMode.Tray)
 
     def _menu_minimize_normally_manually(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = MinimizeMode.NormalManualOnly
+            Settings.set('minimize_mode', MinimizeMode.NormalManualOnly)
 
     def _menu_minimize_to_tray_manually(self, enabled: bool) -> None:
         if enabled:
-            self.settings['minimize_mode'] = MinimizeMode.TrayManualOnly
+            Settings.set('minimize_mode', MinimizeMode.TrayManualOnly)
 
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
-        self.settings['tray'] = enabled
+        Settings.set('tray', enabled)
         try:
             self.tray.show() if enabled else self.tray.hide()  # type: ignore
         except AttributeError:
             pass
 
     def _menu_toggle_update_check(self, enabled: bool, after_permission_request=False) -> None:
-        self.settings['update_check'] = enabled
+        Settings.set('update_check', enabled)
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
-                           self.settings['update_check'])
+                           Settings.get('update_check'))
 
         # Immediately save update status to file
-        self.config_retriever.save_updatecheck_permission(self.settings['update_check'])
+        self.config_retriever.save_updatecheck_permission(Settings.get('update_check'))
 
         # macOS breaks if we show the update dialog immediately after accepting
         # checking for updates so we need this workaround
@@ -2250,8 +2483,8 @@ class Window(QMainWindow):
 
         # Check for updates immediately after toggling true
         # This is also toggled on app launch because we bind before we toggle
-        if self.settings['update_check']:
-            self._menu_check_updates(verbose=False)
+        if Settings.get('update_check'):
+            self._menu_check_updates(verbose=False, manual=False)
 
     def _search(self) -> None:
         try:
@@ -2283,15 +2516,21 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "themes", themes)
 
+    def _update_profiles_info_qml(self) -> None:
+        profiles = self.profile_manager.list_profiles()
+        self.context.setContextProperty(
+            "profiles", profiles)
+
     def _menu_check_updates_actually_check(self, verbose=True) -> None:
         if verbose:
-            Logger._log('⇩ Pext', self.logger)
+            Logger.log(None, '⇩ Pext')
 
         try:
             new_version = UpdateManager().check_core_update()
         except Exception as e:
-            Logger._log_error('⇩ Pext: {}'.format(e), self.logger)
+            Logger.log_error(None, '⇩ Pext: {}'.format(e))
             traceback.print_exc()
+
             return
 
         if new_version:
@@ -2299,10 +2538,20 @@ class Window(QMainWindow):
             self.update_available_requests.showUpdateAvailableDialog.emit()
         else:
             if verbose:
-                Logger._log('✔⇩ Pext', self.logger)
+                Logger.log(None, '✔⇩ Pext')
 
-    def _menu_check_updates(self, verbose=True) -> None:
-        threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
+    def _menu_check_updates(self, verbose=True, manual=True) -> None:
+        # Set a timer to run this function again in an hour
+        if not manual:
+            t = threading.Timer(3600, self._menu_check_updates, None, {'verbose': False, 'manual': False})
+            t.daemon = True
+            t.start()
+
+        # Check if it's been over 24 hours or this is a manual check
+        last_update_check = self.config_retriever.get_last_update_check_time()
+        if manual or last_update_check is None or (datetime.now() - last_update_check).total_seconds() > (86400):
+            threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
+            self.config_retriever.set_last_update_check_time(datetime.now())
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -2310,50 +2559,30 @@ class Window(QMainWindow):
     def _show_download_page(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/download')
 
-    def bind_logger(self, logger: 'Logger') -> None:
-        """Bind the logger to the window and further initialize the module."""
-        self.logger = logger
-
-        self.module_manager.bind_logger(logger)
-        self.theme_manager.bind_logger(logger)
-
-        # Now that the logger is bound, we can show messages in the window, so
-        # start binding the modules
-        if len(self.settings['modules']) > 0:
-            for module in self.settings['modules']:
-                self.module_manager.load_module(self, module, self.settings['locale'])
-        else:
-            for module in ProfileManager(self.config_retriever).retrieve_modules(self.settings['profile']):
-                self.module_manager.load_module(self, module, self.settings['locale'])
-
-        # If there's only one module passed through the command line, enforce
-        # loading it now. Otherwise, switch back to the first module in the
-        # list
-        if len(self.tab_bindings) == 1:
-            self.tabs.currentIndexChanged.emit()
-        elif len(self.tab_bindings) > 1:
-            QQmlProperty.write(self.tabs, "currentIndex", "0")
-
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""
         self.tray = tray
 
-        if self.settings['tray']:
+        if Settings.get('tray'):
             tray.show()
 
     def close(self, manual=False, force_tray=False) -> None:
         """Close the window."""
-        if force_tray:
+        if (force_tray
+                or Settings.get('minimize_mode') == MinimizeMode.Tray
+                or (manual and Settings.get('minimize_mode') == MinimizeMode.TrayManualOnly)):
+            if self.tray:
+                self.tray.show()
+
             self.window.hide()
-        elif (self.settings['minimize_mode'] == MinimizeMode.Normal
-                or (manual and self.settings['minimize_mode'] == MinimizeMode.NormalManualOnly)):
+        else:
             self.window.showMinimized()
-        elif (self.settings['minimize_mode'] == MinimizeMode.Tray
-                or (manual and self.settings['minimize_mode'] == MinimizeMode.TrayManualOnly)):
-            self.window.hide()
 
     def show(self) -> None:
         """Show the window."""
+        if self.tray:
+            self.tray.show() if Settings.get('tray') else self.tray.hide()
+
         if self.window.windowState() == Qt.WindowMinimized:
             self.window.showNormal()
         else:
@@ -2375,7 +2604,7 @@ class Window(QMainWindow):
 
     def quit_without_saving(self) -> None:
         """Quit without saving."""
-        self.settings['save_settings'] = False
+        Settings.set('save_settings', False)
         self.quit()
 
 
@@ -2398,48 +2627,6 @@ class ThemeManager():
         """Initialize the module manager."""
         self.config_retriever = config_retriever
         self.theme_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
-        self.logger = None  # type: Optional[Logger]
-
-        # Create an empty system theme
-        system_theme_path = os.path.join(config_retriever.get_setting('config_path'),
-                                         'themes',
-                                         ThemeManager.add_prefix(ThemeManager.get_system_theme_name()))
-
-        open(os.path.join(system_theme_path, 'theme.conf'), 'w').close()
-        with open(os.path.join(system_theme_path, 'metadata.json'), 'w') as system_theme_metadata:
-            system_theme_metadata.write(json.dumps(
-                {'name': ThemeManager.get_system_theme_name(),
-                 'developer': 'Sylvia van Os',
-                 'description': "Use the system's default Qt5 theme"}))
-
-    @staticmethod
-    def add_prefix(theme_name: str) -> str:
-        """Ensure the string starts with pext_theme_."""
-        if not theme_name.startswith('pext_theme_'):
-            return 'pext_theme_{}'.format(theme_name)
-
-        return theme_name
-
-    @staticmethod
-    def remove_prefix(theme_name: str) -> str:
-        """Remove pext_theme_ from the start of the string."""
-        if theme_name.startswith('pext_theme_'):
-            return theme_name[len('pext_theme_'):]
-
-        return theme_name
-
-    @staticmethod
-    def get_system_theme_name() -> str:
-        """Return the name of the system theme, which is used to refer to no theme (OS theming)."""
-        return "system"
-
-    def bind_logger(self, logger: Logger) -> None:
-        """Connect a logger to the module manager.
-
-        If a logger is connected, the module manager will log all
-        messages directly to the logger.
-        """
-        self.logger = logger
 
     def _get_palette_mappings(self) -> Dict[str, int]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
@@ -2458,16 +2645,14 @@ class ThemeManager():
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.theme_dir)
 
-    def load_theme(self, theme_name: str) -> QPalette:
+    def load_theme(self, identifier: str) -> QPalette:
         """Return the parsed palette."""
-        theme_name = ThemeManager.add_prefix(theme_name)
-
         palette = QPalette()
         palette_mappings = self._get_palette_mappings()
 
         config = configparser.ConfigParser()
         config.optionxform = lambda option: option  # type: ignore  # No lowercase
-        config.read(os.path.join(self.theme_dir, theme_name, 'theme.conf'))
+        config.read(os.path.join(self.theme_dir, identifier.replace('.', '_'), 'theme.conf'))
 
         for colour_group in config.sections():
             for colour_role in config[colour_group]:
@@ -2486,101 +2671,83 @@ class ThemeManager():
         """Apply the palette to the app (use this before creating a window)."""
         app.setPalette(palette)
 
-    def install_theme(self, url: str, verbose=False, interactive=True) -> bool:
+    def install_theme(self, url: str, identifier: str, verbose=False, interactive=True) -> bool:
         """Install a theme."""
-        theme_name = url.rstrip("/").split("/")[-1]
+        theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
-        dir_name = ThemeManager.add_prefix(theme_name).replace('.', '_')
-        theme_name = ThemeManager.remove_prefix(theme_name)
-
-        if os.path.exists(os.path.join(self.theme_dir, dir_name)):
+        if os.path.exists(theme_path):
             if verbose:
-                Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+                Logger.log(None, '✔⇩ {}'.format(identifier))
 
             return False
 
         if verbose:
-            Logger._log('⇩ {} ({})'.format(theme_name, url), self.logger)
+            Logger.log(None, '⇩ {} ({})'.format(identifier, url))
 
         try:
-            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), os.path.join(self.theme_dir, dir_name))
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
         except Exception as e:
             if verbose:
-                Logger._log_error('⇩ {}: {}'.format(theme_name, e), self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
 
             traceback.print_exc()
 
             try:
-                rmtree(os.path.join(self.theme_dir, dir_name))
+                rmtree(os.path.join(self.theme_dir, identifier))
             except FileNotFoundError:
                 pass
 
             return False
 
         if verbose:
-            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔⇩ {}'.format(identifier))
 
         return True
 
-    def uninstall_theme(self, theme_name: str, verbose=False) -> bool:
+    def uninstall_theme(self, identifier: str, verbose=False) -> bool:
         """Uninstall a theme."""
-        dir_name = ThemeManager.add_prefix(theme_name)
-        theme_name = ThemeManager.remove_prefix(theme_name)
-
-        if theme_name == ThemeManager.get_system_theme_name():
-            if verbose:
-                Logger._log('⏩{}'.format(theme_name), self.logger)
-            return False
+        theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
         if verbose:
-            Logger._log('♻ {}'.format(theme_name), self.logger)
+            Logger.log(None, '♻ {}'.format(identifier))
 
         try:
-            rmtree(os.path.join(self.theme_dir, dir_name))
+            rmtree(theme_path)
         except FileNotFoundError:
             if verbose:
-                Logger._log(
-                    '✔♻ {}'.format(theme_name),
-                    self.logger)
+                Logger.log(None, '✔♻ {}'.format(identifier))
 
             return False
 
         if verbose:
-            Logger._log('✔♻ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔♻ {}'.format(identifier))
 
         return True
 
-    def update_theme(self, theme_name: str, verbose=False) -> bool:
+    def update_theme(self, identifier: str, verbose=False) -> bool:
         """Update a theme."""
-        dir_name = ThemeManager.add_prefix(theme_name)
-        theme_name = ThemeManager.remove_prefix(theme_name)
-
-        if theme_name == ThemeManager.get_system_theme_name():
-            if verbose:
-                Logger._log('⏩{}'.format(theme_name), self.logger)
-            return False
+        theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
         if verbose:
-            Logger._log('⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '⇩ {}'.format(identifier))
 
         try:
-            if not UpdateManager.update(os.path.join(self.theme_dir, dir_name)):
+            if not UpdateManager.update(theme_path):
                 if verbose:
-                    Logger._log('⏩{}'.format(theme_name), self.logger)
+                    Logger.log(None, '⏩{}'.format(identifier))
+
                 return False
 
         except Exception as e:
             if verbose:
-                Logger._log_error(
-                    '⇩ {}: {}'.format(theme_name, e),
-                    self.logger)
+                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger._log('✔⇩ {}'.format(theme_name), self.logger)
+            Logger.log(None, '✔⇩ {}'.format(identifier))
 
         return True
 
@@ -2589,9 +2756,6 @@ class ThemeManager():
         success = True
 
         for theme in self.list_themes().keys():
-            if theme == ThemeManager.get_system_theme_name():
-                continue
-
             if not self.update_theme(theme, verbose=verbose):
                 success = False
 
@@ -2601,14 +2765,18 @@ class ThemeManager():
 class Tray():
     """Handle the system tray."""
 
-    def __init__(self, window: Window, app_icon: str, profile: str) -> None:
+    def __init__(self, window: Window, app_icon: str) -> None:
         """Initialize the system tray."""
         self.window = window
 
         self.tray = QSystemTrayIcon(app_icon)
 
         self.tray.activated.connect(self.icon_clicked)
-        self.tray.setToolTip('Pext ({})'.format(profile))
+
+        if Settings.get('profile') == ProfileManager.default_profile_name():
+            self.tray.setToolTip('Pext')
+        else:
+            self.tray.setToolTip('Pext ({})'.format(Settings.get('profile')))
 
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
@@ -2624,241 +2792,319 @@ class Tray():
         self.tray.hide()
 
 
-def _init_persist(profile: str, background: bool) -> str:
+class Settings():
+    """A globally accessible class that stores all Pext's settings."""
+
+    __settings = {
+        '_launch_app': True,  # Keep track if launching is normal
+        'background': False,
+        'clipboard': 'clipboard',
+        'locale': None,
+        'modules': [],
+        'minimize_mode': MinimizeMode.Normal,
+        'profile': ProfileManager.default_profile_name(),
+        'save_settings': True,
+        'sort_mode': SortMode.Module,
+        'style': None,
+        'theme': None,
+        'tray': True,
+        'update_check': None  # None = not asked, True/False = permission
+    }
+
+    @staticmethod
+    def get(name, default=None):
+        """Return the value of a single setting, falling back to default if None."""
+        value = Settings.__settings[name]
+        if value is None:
+            return default
+
+        return value
+
+    @staticmethod
+    def get_all():
+        """Return all settings."""
+        return Settings.__settings
+
+    @staticmethod
+    def set(name, value):
+        """Set a single setting if this setting is known."""
+        if name in Settings.__settings:
+            Settings.__settings[name] = value
+        else:
+            raise NameError('{} is not a key of Settings'.format(name))
+
+    @staticmethod
+    def update(value):
+        """Update the dictionary with new values if any changed."""
+        Settings.__settings.update(value)
+
+
+class ModuleOptionParser(argparse.Action):
+    """Parse module options from the command line."""
+
+    def __call__(self, parser, namespace, value, option_string=None):
+        """Save the module and appropriate module options in the correct order."""
+        if '_modules' not in namespace:
+            setattr(namespace, '_modules', [])
+
+        modules = namespace._modules
+
+        if self.dest == 'module':
+            modules.append({'name': value, 'settings': {}})
+            setattr(namespace, '_modules', modules)
+        else:
+            modules[-1]['settings'][self.dest[len('module-'):]] = value
+            setattr(namespace, '_modules', modules)
+
+
+def _init_persist(profile: str, background: bool) -> None:
     """Open Pext if an instance is already running.
 
     Checks if Pext is already running and if so, send it SIGUSR1 to bring it
     to the foreground. If Pext is not already running, saves a PIDfile so that
     another Pext instance can find us.
     """
-    pidfile = os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(profile))
-
-    if os.path.isfile(pidfile):
-        try:
-            # Notify the main process if we are not using --background
-            if not background:
-                if platform.system() == 'Windows':
-                    print("Pext is already running and foregrounding the running instance is currently not supported "
-                          "on Windows. Doing nothing...")
-                else:
-                    os.kill(int(open(pidfile, 'r').read()), signal.SIGUSR1)
+    lock = ProfileManager.get_lock_instance(profile)
+    if lock:
+        # Notify the main process if we are not using --background
+        if not background:
+            if platform.system() == 'Windows':
+                print("Pext is already running and foregrounding the running instance is currently not supported "
+                      "on Windows. Doing nothing...")
             else:
-                print("Pext is already running, but --background was given. Doing nothing...")
+                os.kill(lock, signal.SIGUSR1)
+        else:
+            print("Pext is already running, but --background was given. Doing nothing...")
 
-            sys.exit(0)
-        except ProcessLookupError:
-            # Pext closed, but did not clean up its pidfile
-            pass
+        sys.exit(0)
 
-    # We are the only instance, claim our pidfile
-    pid = str(os.getpid())
-    open(pidfile, 'w').write(pid)
-
-    # Return the filename to delete it later
-    return pidfile
+    ProfileManager.lock_profile(profile)
 
 
-def _load_settings(argv: List[str], config_retriever: ConfigRetriever) -> Dict:
-    """Load the settings from the command line and set defaults."""
-    # Default options
-    settings = {'_launch_app': True,  # Keep track if launching is normal
-                'background': False,
-                'clipboard': 'clipboard',
-                'locale': QLocale.system().name(),
-                'modules': [],
-                'minimize_mode': MinimizeMode.Normal,
-                'profile': 'default',
-                'save_settings': True,
-                'sort_mode': SortMode.Module,
-                'tray': True,
-                'update_check': None}  # None = not asked, True/False = permission
+def _parse_args(argv: List[str]) -> argparse.Namespace:
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description='The Python-based extendable tool.')
+    parser.add_argument('-v', '--version', action='version',
+                        version='Pext {}'.format(UpdateManager().get_core_version()))
+    parser.add_argument('--config', help='use given directory to store settings and data.')
+    parser.add_argument('--locale', help='load the given locale.')
+    parser.add_argument('--list-locales', action='store_true',
+                        help='print a list of the available locales.')
+    parser.add_argument('--list-styles', action='store_true',
+                        help='print a list of loadable Qt system styles and exit.')
+    parser.add_argument('--style', help='use the given Qt system style for the UI.')
+    parser.add_argument('--background', action='store_true', help='do not open the user interface this invocation.')
+    parser.add_argument('--clipboard', '-c', choices=['clipboard', 'selection'],
+                        help='choose the clipboard to copy entries to.')
+    parser.add_argument('--module', '-m', action=ModuleOptionParser,
+                        help='name the module to use. This option may be given multiple times. '
+                        'When this option is given, the profile module list will be overwritten.')
+    parser.add_argument('--install-module', action='append',
+                        help='download and install a module from the given git URL.')
+    parser.add_argument('--uninstall-module', action='append', help='uninstall the given module.')
+    parser.add_argument('--update-module', action='append', help='update the given module.')
+    parser.add_argument('--update-modules', action='store_true', help='update all modules.')
+    parser.add_argument('--list-modules', action='store_true', help='list all installed modules.')
+    parser.add_argument('--theme', help='use the chosen theme.')
+    parser.add_argument('--install-theme', action='append',
+                        help='download and install a theme from the given git URL.')
+    parser.add_argument('--uninstall-theme', action='append', help='uninstall a theme by name.')
+    parser.add_argument('--update-theme', action='append', help='update the chosen theme.')
+    parser.add_argument('--update-themes', action='store_true', help='update all themes.')
+    parser.add_argument('--list-themes', action='store_true', help='list all installed themes.')
+    parser.add_argument('--profile', '-p',
+                        help='use the chosen profile, creating it if it doesn\'t exist yet. '
+                        'Defaults to "default", use "none" to not save the application state between runs.')
+    parser.add_argument('--create-profile', action='append', help='create a new profile with the given name.')
+    parser.add_argument('--remove-profile', action='append', help='remove the chosen profile.')
+    parser.add_argument('--rename-profile', nargs=2, action='append', help='rename the chosen profile.')
+    parser.add_argument('--list-profiles', action='store_true', help='list all profiles.')
+    parser.add_argument('--tray', action='store_true', dest='tray', help='create a tray icon (this is the default).')
+    parser.add_argument('--no-tray', action='store_false', dest='tray', help='do not create a tray icon.')
 
-    # getopt requires all possible options to be listed, but we do not know
-    # more about module-specific options in advance than that they start with
-    # module-. Therefore, we go through the argument list and create a new
-    # list filled with every entry that starts with module- so that getopt
-    # doesn't raise getoptError for these entries.
-    module_opts = []
+    # Remove weird macOS-added parameter
+    # https://stackoverflow.com/questions/10242115/os-x-strange-psn-command-line-parameter-when-launched-from-finder
+    if platform.system() == "Darwin":
+        proper_argv = []
+        for arg in argv:
+            if not arg.startswith("-psn_0_"):
+                proper_argv.append(arg)
+
+        argv = proper_argv
+
+    # Ensure module options get parsed
     for arg in argv:
         arg = arg.split("=")[0]
         if arg.startswith("--module-"):
-            module_opts.append(arg[2:] + "=")
+            try:
+                parser.add_argument(arg, action=ModuleOptionParser)
+            except argparse.ArgumentError:
+                # Probably already added
+                pass
 
-    try:
-        opts, _ = getopt.getopt(argv, "hc:m:p:", ["help",
-                                                  "version",
-                                                  "exit",
-                                                  "locale=",
-                                                  "list-styles",
-                                                  "style=",
-                                                  "background",
-                                                  "clipboard=",
-                                                  "module=",
-                                                  "install-module=",
-                                                  "uninstall-module=",
-                                                  "update-module=",
-                                                  "update-modules",
-                                                  "list-modules",
-                                                  "theme=",
-                                                  "install-theme=",
-                                                  "uninstall-theme=",
-                                                  "update-theme=",
-                                                  "updates-themes",
-                                                  "list-themes",
-                                                  "profile=",
-                                                  "create-profile=",
-                                                  "remove-profile=",
-                                                  "list-profiles",
-                                                  "tray",
-                                                  "no-tray"] + module_opts)
+    args = parser.parse_args()
+    return args
 
-    except getopt.GetoptError as err:
-        print("{}\n".format(err))
-        usage()
-        sys.exit(1)
 
+def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) -> None:
+    """Load the settings from the command line and set defaults."""
     # First, check for profile
-    for opt, arg in opts:
-        if opt == "--profile":
-            settings['profile'] = arg
+    if args.profile:
+        Settings.set('profile', args.profile)
 
     # Create directory for profile if not existant
     try:
-        ProfileManager(config_retriever).create_profile(str(settings['profile']))
+        ProfileManager(config_retriever).create_profile(str(Settings.get('profile')))
     except OSError:
         pass
 
     # Load all from profile
-    settings.update(ProfileManager(config_retriever).retrieve_settings(str(settings['profile'])))
+    Settings.update(ProfileManager(config_retriever).retrieve_settings(str(Settings.get('profile'))))
 
     # Then, check for the rest
-    for opt, arg in opts:
-        if opt in ("-h", "--help"):
-            usage()
+    if args.locale:
+        Settings.set('locale', args.locale)
 
-            settings['_launch_app'] = False
-        elif opt == "--version":
-            print("Pext {}".format(UpdateManager().get_core_version()))
-            print()
-            print("Copyright (C) 2016 - 2017 Sylvia van Os")
-            print("This is free software; see the source for copying conditions. "
-                  "There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.")
-            print()
-            print("Written by Sylvia van Os.")
+    if args.list_locales:
+        locales = LocaleManager.get_locales()
+        for locale in locales:
+            print("{} ({})".format(locale, locales[locale]))
 
-            settings['_launch_app'] = False
+        Settings.set('_launch_app', False)
 
-        elif opt == "--locale":
-            settings['locale'] = arg
+    if args.list_styles:
+        for style in QStyleFactory().keys():
+            print(style)
 
-        elif opt == "--list-styles":
-            for style in QStyleFactory().keys():
-                print(style)
+        Settings.set('_launch_app', False)
 
-            settings['_launch_app'] = False
-        elif opt == "--style":
-            if arg in QStyleFactory().keys():
-                settings['style'] = arg
-            else:
-                # PyQt5 does not have bindings for QQuickStyle yet
-                os.environ["QT_QUICK_CONTROLS_STYLE"] = arg
+    if args.style:
+        if args.style in QStyleFactory().keys():
+            Settings.set('style', args.style)
+        else:
+            # PyQt5 does not have bindings for QQuickStyle yet
+            os.environ["QT_QUICK_CONTROLS_STYLE"] = args.style
 
-        elif opt == "--background":
-            settings['background'] = True
+    if args.background:
+        Settings.set('background', True)
 
-        elif opt in ("-c", "--clipboard"):
-            if arg not in ["clipboard", "selection"]:
-                print("Invalid clipboard requested")
-                sys.exit(2)
+    if args.clipboard:
+        Settings.set('clipboard', args.clipboard)
 
-            settings['clipboard'] = arg
-
-        elif opt in ("-m", "--module"):
-            if not arg.startswith('pext_module_'):
-                arg = 'pext_module_' + arg
-
-            settings['modules'].append({'name': arg, 'settings': {}})  # type: ignore
-        elif opt.startswith("--module-"):
-            settings['modules'][-1]['settings'][opt[9:]] = arg  # type: ignore
-        elif opt == "--install-module":
-            if not ModuleManager(config_retriever).install_module(arg, verbose=True):
+    if args.install_module:
+        for module in args.install_module:
+            url, identifier = module.split("#", 1)
+            if not ModuleManager(config_retriever).install_module(url, identifier, verbose=True):
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--uninstall-module":
-            if not ModuleManager(config_retriever).uninstall_module(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.uninstall_module:
+        for module in args.uninstall_module:
+            if not ModuleManager(config_retriever).uninstall_module(module, verbose=True):
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--update-module":
-            if not ModuleManager(config_retriever).update_module(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_module:
+        for module in args.update_module:
+            if not ModuleManager(config_retriever).update_module(module, verbose=True):
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--update-modules":
-            if not ModuleManager(config_retriever).update_all_modules(verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_modules:
+        if not ModuleManager(config_retriever).update_all_modules(verbose=True):
+            sys.exit(3)
+
+        Settings.set('_launch_app', False)
+
+    if args.list_modules:
+        for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
+            print('{} ({})'.format(module_name, module_data['source']))
+
+        Settings.set('_launch_app', False)
+
+    if args.theme:
+        Settings.set('theme', args.themes)
+
+    if args.install_theme:
+        for theme in args.install_theme:
+            url, identifier = theme.split("#", 1)
+            if not ThemeManager(config_retriever).install_theme(url, identifier, verbose=True):
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--list-modules":
-            for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
-                print('{} ({})'.format(module_name, module_data['source']))
+        Settings.set('_launch_app', False)
 
-            settings['_launch_app'] = False
-
-        elif opt == "--theme":
-            settings['theme'] = arg
-        elif opt == "--install-theme":
-            if not ThemeManager(config_retriever).install_theme(arg, verbose=True):
+    if args.uninstall_theme:
+        for theme in args.uninstall_theme:
+            if not ThemeManager(config_retriever).uninstall_theme(theme, verbose=True):
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--uninstall-theme":
-            if not ThemeManager(config_retriever).uninstall_theme(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_theme:
+        for theme in args.update_theme:
+            if not ThemeManager(config_retriever).update_theme(theme, verbose=True):
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--update-theme":
-            if not ThemeManager(config_retriever).update_theme(arg, verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.update_themes:
+        if not ThemeManager(config_retriever).update_all_themes(verbose=True):
+            sys.exit(3)
+
+        Settings.set('_launch_app', False)
+
+    if args.list_themes:
+        for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
+            print('{} ({})'.format(theme_name, theme_data['source']))
+
+        Settings.set('_launch_app', False)
+
+    if args.create_profile:
+        for profile in args.create_profile:
+            if not ProfileManager(config_retriever).create_profile(profile):
+                print('Could not create profile {}, it already exists.'.format(profile))
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--update-themes":
-            if not ThemeManager(config_retriever).update_all_themes(verbose=True):
+        Settings.set('_launch_app', False)
+
+    if args.remove_profile:
+        for profile in args.remove_profile:
+            if not ProfileManager(config_retriever).remove_profile(profile):
+                print('Could not delete profile {}, it is in use.'.format(profile))
                 sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--list-themes":
-            for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
-                print('{} ({})'.format(theme_name, theme_data['source']))
+        Settings.set('_launch_app', False)
 
-            settings['_launch_app'] = False
-        elif opt == "--create-profile":
-            ProfileManager(config_retriever).create_profile(arg)
+    if args.rename_profile:
+        for old_name, new_name in args.rename_profile:
+            if not ProfileManager(config_retriever).rename_profile(old_name, new_name):
+                print('Could not rename profile {} to {}.'.format(old_name, new_name))
+                sys.exit(3)
 
-            settings['_launch_app'] = False
-        elif opt == "--remove-profile":
-            ProfileManager(config_retriever).remove_profile(arg)
+        Settings.set('_launch_app', False)
 
-            settings['_launch_app'] = False
-        elif opt == "--list-profiles":
-            for profile in ProfileManager(config_retriever).list_profiles():
-                print(profile)
+    if args.list_profiles:
+        for profile in ProfileManager(config_retriever).list_profiles():
+            print(profile)
 
-            settings['_launch_app'] = False
-        elif opt == "--tray":
-            settings['tray'] = True
-        elif opt == "--no-tray":
-            settings['tray'] = False
+        Settings.set('_launch_app', False)
+
+    if args.tray is not None:
+        Settings.set('tray', args.tray)
+
+    # Set up the parsed modules
+    if '_modules' in args:
+        Settings.set('modules', args._modules)
 
     # See if automatic update checks are allowed
     if config_retriever.get_updatecheck_permission_asked():
-        settings['update_check'] = config_retriever.get_updatecheck_permission()
-
-    return settings
+        Settings.set('update_check', config_retriever.get_updatecheck_permission())
 
 
-def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: ConfigRetriever) -> None:
+def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
     """Clean up."""
     for module in window.tab_bindings:
         try:
@@ -2867,119 +3113,50 @@ def _shut_down(pidfile: str, profile: str, window: Window, config_retriever: Con
             print("Failed to cleanly stop module {}: {}".format(module['module_name'], e))
             traceback.print_exc()
 
-    os.unlink(pidfile)
-    if window.settings['save_settings']:
+    profile = Settings.get('profile')
+    ProfileManager.unlock_profile(profile)
+
+    if Settings.get('save_settings'):
         ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
-        ProfileManager(config_retriever).save_theme(profile, window.settings['theme'])
-        ProfileManager(config_retriever).save_settings(profile, window.settings)
-
-
-def usage() -> None:
-    """Print usage information."""
-    print('''Options:
-
-  --background
-    Do not open Pext's user interface this invocation.
-
-  -c, --clipboard[=CLIPBOARD]
-    Choose the clipboard to copy entries to. Acceptable values are "clipboard" for the global system clipboard and "selection" for the global mouse selection.
-
-  --locale[=LOCALE]
-    Load Pext with the given locale.
-
-  --style[=STYLE]
-    Sets the given Qt system style for the UI.
-
-  --list-styles
-    Print a list of loadable Qt system styles and exit. Due to PyQt5 limitations, loadable QtQuick styles cannot currently be listed.
-
-  --module[=NAME]
-    Name the module to use. This option may be given multiple times to use multiple modules. When this option is given, the profile module list will be overwritten.
-
-  --module-*[=VALUE]
-    Set a module setting for the most recently given module. For example, to set a module-specific setting called binary, use --module-binary=value. Check the module documentation for the supported module-specific settings.
-
-  --install-module[=URL]
-    Download and install a module from the given git URL.
-
-  --list-modules
-    List all installed modules.
-
-  --uninstall-module[=NAME]
-    Uninstall a module by name.
-
-  --update-module[=NAME]
-    Update a module by name.
-
-  --update-modules
-    Update all installed modules.
-
-  --theme[=NAME]
-    Use the named theme.
-
-  --install-theme[=URL]
-    Download and install a theme from the given git URL.
-
-  --list-themes
-    List all installed themes.
-
-  --uninstall-theme[=NAME]
-    uninstall a theme by name.
-
-  --update-theme[=NAME]
-    Update a theme by name.
-
-  --update-themes
-    Update all installed themes.
-
-  --profile[=NAME]
-    Use the chosen profile, creating it if it doesn't exist yet. Defaults to "default", use "none" to not save the application state between runs.
-
-  --create-profile[=NAME]
-    Create a new blank profile with the given name for later use.
-
-  --remove-profile[=NAME]
-    Remove a profile by name.
-
-  --list-profiles
-    List all profiles.
-
-  --tray
-    Create a tray icon (this is the default).
-
-  --no-tray
-    Do not create a tray icon.
-
-  -h, --help
-    Display this help.
-
-  --version
-    Show the current version.
-
-Report bugs to https://github.com/Pext/Pext.''')  # NOQA
+        ProfileManager(config_retriever).save_settings(profile)
 
 
 def main() -> None:
     """Start the application."""
+    # Parse arguments
+    args = _parse_args(sys.argv[1:])
+
+    # Lock profile or call existing profile if running
+    _init_persist(args.profile if args.profile else ProfileManager.default_profile_name(),
+                  args.background if args.background else False)
+
     # Load configuration
-    config_retriever = ConfigRetriever()
+    config_retriever = ConfigRetriever(args.config)
 
     # Ensure our necessary directories exist
     for directory in ['modules',
                       'module_dependencies',
                       'themes',
-                      os.path.join('themes', ThemeManager.add_prefix(ThemeManager.get_system_theme_name())),
                       'profiles',
-                      os.path.join('profiles', 'default')]:
+                      os.path.join('profiles', ProfileManager.default_profile_name())]:
         try:
             os.makedirs(os.path.join(config_retriever.get_setting('config_path'), directory))
         except OSError:
             # Probably already exists, that's okay
             pass
 
-    settings = _load_settings(sys.argv[1:], config_retriever)
+    # Delete old system theme hack if exists
+    # TODO: Remove later
+    try:
+        rmtree(os.path.join(config_retriever.get_setting('config_path'), 'themes', "pext_theme_system"))
+    except FileNotFoundError:
+        # Probably already deleted
+        pass
 
-    if not settings['_launch_app']:
+    _load_settings(args, config_retriever)
+    del args
+
+    if not Settings.get('_launch_app'):
         sys.exit(0)
 
     # Warn if we may get UI issues
@@ -2987,21 +3164,17 @@ def main() -> None:
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. "
               "See https://github.com/Pext/Pext/issues/11.")
 
-    # Set up persistence
-    pidfile = _init_persist(settings['profile'], settings['background'])
-
     # Set up the app
-    app = QApplication(['Pext ({})'.format(settings['profile'])])
+    if Settings.get('profile') == ProfileManager.default_profile_name():
+        appname = 'Pext'
+    else:
+        appname = 'Pext ({})'.format(Settings.get('profile'))
 
-    translator = QTranslator()
-    locale_to_use = settings['locale']
-    print('Using locale: {} {}'
-          .format(QLocale(locale_to_use).name(),
-                  "(manually set)" if settings['locale'] != QLocale.system().name() else ""))
-    print('Localization loaded:',
-          translator.load(QLocale(locale_to_use), 'pext', '_', os.path.join(AppFile.get_path(), 'i18n'), '.qm'))
+    app = QApplication([appname])
 
-    app.installTranslator(translator)
+    # Load the locale
+    locale_manager = LocaleManager()
+    locale_manager.load_locale(app, locale_manager.find_best_locale(Settings.get('locale')))
 
     # Load the app icon
     # KDE doesn't support svg in the system tray and macOS makes the png in
@@ -3013,32 +3186,34 @@ def main() -> None:
 
     app.setWindowIcon(app_icon)
 
-    if 'style' in settings:
-        app.setStyle(QStyleFactory().create(settings['style']))
+    if Settings.get('style') is not None:
+        app.setStyle(QStyleFactory().create(Settings.get('style')))
 
-    if 'theme' not in settings:
-        settings['theme'] = ProfileManager(config_retriever).retrieve_theme(settings['profile'])
+    theme_identifier = Settings.get('theme')
+    if theme_identifier is not None:
+        # Qt5's default style for Windows, windowsvista, does not support palettes properly
+        # If the user doesn't explicitly chose a style, but wants theming, we force
+        # it to use Fusion, which gets themed properly
+        if platform.system() == 'Windows' and Settings.get('style') is None:
+            app.setStyle(QStyleFactory().create('Fusion'))
 
-    theme_manager = ThemeManager(config_retriever)
-    theme = theme_manager.load_theme(settings['theme'])
-    theme_manager.apply_theme_to_app(theme, app)
+        theme_manager = ThemeManager(config_retriever)
+        theme = theme_manager.load_theme(theme_identifier)
+        theme_manager.apply_theme_to_app(theme, app)
 
     # Check if clipboard is supported
-    if settings['clipboard'] == 'selection' and not app.clipboard().supportsSelection():
+    if Settings.get('clipboard') == 'selection' and not app.clipboard().supportsSelection():
         print("Requested clipboard type is not supported")
         sys.exit(3)
 
     # Get a window
-    window = Window(settings, config_retriever)
+    window = Window(config_retriever, locale_manager)
 
-    # Get a logger
-    logger = Logger(window)
-
-    # Give the window a reference to the logger
-    window.bind_logger(logger)
+    # Give the logger a reference to the window
+    Logger.bind_window(window)
 
     # Clean up on exit
-    atexit.register(_shut_down, pidfile, settings['profile'], window, config_retriever)
+    atexit.register(_shut_down, window, config_retriever)
 
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)
@@ -3046,11 +3221,11 @@ def main() -> None:
         signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Create a main loop
-    main_loop = MainLoop(app, window, settings, logger)
+    main_loop = MainLoop(app, window)
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
-    tray = Tray(window, app_icon, settings['profile'])  # noqa: F841
+    tray = Tray(window, app_icon)  # noqa: F841
 
     # Give the window a reference to the tray
     window.bind_tray(tray)

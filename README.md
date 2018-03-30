@@ -2,14 +2,12 @@
 
 ![Pext logo](/logo.png)
 
-*Pext Logo by [White Paper Fox](http://whitepaperfox.com/) under
-[Creative Commons Attribution-ShareAlike 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
-graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
-
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
+[![Code Health](https://landscape.io/github/Pext/Pext/master/landscape.svg?style=flat)](https://landscape.io/github/Pext/Pext/master)
 
 ## Contents
+- [Community](#community)
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
 - [Installation](#installation)
@@ -23,6 +21,17 @@ graciously donated by [vaeringjar](https://notabug.org/vaeringjar).*
   - [macOS](#macos-1)
   - [Windows](#windows)
 - [License](#license)
+
+## Community
+If you need support or just want to chat with our community, we have the following options:
+
+- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
+- Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
+- Telegram: [@PextTool](https://t.me/PextTool)
+
+All these channels are linked to each other, so there is no need to worry about missing out.
+
+We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## Introduction
 Pext stands for **P**ython-based **ex**tendable **t**ool. It is built using Python 3 and Qt5 QML and has its behaviour decided by modules. Pext provides a simple window with a search bar, allowing modules to define what data is shown and how it is manipulated.
@@ -52,78 +61,37 @@ Simply put:
 **Note: If you run into any issues, please check out the troubleshooting section near the end of this document before reporting a bug.**
 
 ### GNU/Linux
-#### Preparation
-The following dependencies need to be installed:
+#### Arch
+The Arch packages are maintained by [Ivan Semkin](https://github.com/vanyasem)
 
-##### Arch
+For the stable version:
 
-    sudo pacman -S libnotify python-pip python-pyqt5 qt5-quickcontrols
+    $ pacaur -S pext
 
-You will also need python-dulwich from the AUR.
+For the git version:
 
-##### Debian
+    $ pacaur -S pext-git
 
-    sudo apt-get install libnotify-bin python3-pip python3-dulwich python3-pyqt5.qtquick qml-module-qtquick-controls
+#### Other distros
+For the stable version:
 
-You may also need to install libssl1.0-dev due to what seems like a Debian packaging issue. See https://stackoverflow.com/a/42297296 for more info.
+    $ pip3 install pext --user
 
-##### Fedora
+For the git version:
 
-    sudo dnf install libnotify python3-dulwich python3-pip python3-qt5 qt5-qtquickcontrols
+    $ pip3 install git+https://github.com/Pext/Pext.git --user
 
-##### Nix (any system, not just NixOS)
+On some systems, you may need to use pip instead of pip3.
 
-    nix-shell -p libnotify python3Packages.pip python3Packages.dulwich python3Packages.pyqt5 qt5.qtquickcontrols
-
-##### openSUSE
-
-    sudo zypper install libnotify-tools python3-dulwich python3-pip python3-qt5
-
-#### Starting Pext
-After installing the dependencies, Pext can be ran by running one of the following commands in the place where you saved Pext to:
-- ``python3 pext`` to start Pext itself
-- ``python3 pext_dev`` to start the Pext tools for module and theme development
-
-If desired, it can also be installed using the following command (as root):
-
-    # pip3 install . --upgrade --no-deps
-
-After doing this, you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
+Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md)
 
 ### macOS
-#### Preparation
-The following commands need to be run. If you do not have the brew command, follow the installation instructions on [Homebrew's website](https://brew.sh/).
+A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). This is still experimental, please report any issues.
 
-Before running the Install Certificates command, which is only necessary to be able to retrieve the online module list, please read https://bugs.python.org/msg283984.
-
-    brew install libgit2 libnotify python3 qt5
-    pip3 install certifi dulwich pyqt5 urllib3
-    /Applications/Python\ 3.6/Install\ Certificates.command
-
-#### Starting Pext
-After installing the dependencies, Pext can be ran by running one of the following commands in a terminal window in the place where you saved Pext to:
-- ``python3 pext`` to start Pext itself
-- ``python3 pext_dev`` to start the Pext tools for module and theme development
-
-Optionally, a .app file can be generated using the following command:
-
-    python3 setup.py py2app -A --emulate-shell-environment
-
-The .app file appears in the dist directory and can be dragged to "My Applications". Please note that actual py2app buils do not work yet. This is an aliased build, so it will break if you delete your git clone.
+Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md)
 
 ### Windows (experimental)
-#### Preparation
-Assuming you have no previous python installation, either 
-
-- Use a package manager like [Chocolatey](http://chocolatey.org/) to install Python 3
-- Install Python 3.6 manually from https://www.python.org/downloads/windows/
-
-Then, assuming python and pip are installed, run `pip install dulwich PyQt5` in a command window.
-
-#### Starting Pext
-Pext can be ran by ran from a command window by running one of the following commands in the place where you saved Pext to (type ``cd place_you_saved_pext`` to go there):
-- ``python pext`` to start Pext itself
-- ``python pext_dev`` to start the Pext tools for module and theme development
+See [Installing Pext from source](INSTALL_FROM_SOURCE.md)
 
 ## Usage
 To actually use Pext, you will first have to install one or more modules. Check out the Pext organisation on [GitHub](https://github.com/Pext) or use `Module` -> `Install module` -> `From online module list` in the application for a list of modules.
@@ -192,4 +160,15 @@ cmd.exe:
 - The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows)
 
 ## License
-GPLv3+.
+Pext is licensed under the [GNU GPLv3+](LICENSE), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSE-CCBYSA).
+
+Under artwork and documentation fall:
+- All files in the following directories:
+  - docs/
+  - pext/images/
+  - screenshots/
+  - .github/
+- All Markdown files in the root directory.
+- logo.png
+
+When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as the Pext Logo by White Paper Fox. Please link to Pext with https://github.com/Pext/Pext or https://pext.hackerchick.me/ and to White Paper Fox with http://www.whitepaperfox.com/ where possible.

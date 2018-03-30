@@ -61,7 +61,7 @@ def describe(directory):
 
         # If there are no tags, return the current commit
         if len(sorted_tags) == 0:
-            return repo[repo.head()].id.decode('utf-8')[:7]
+            return "g{}".format(repo[repo.head()].id.decode('utf-8')[:7])
 
         # We're now 0 commits from the top
         commit_count = 0
@@ -81,9 +81,9 @@ def describe(directory):
                     if commit_count == 0:
                         return tag_name
                     else:
-                        return "{}-{}-{}".format(tag_name, commit_count, latest_commit.id.decode('utf-8')[:7])
+                        return "{}-{}-g{}".format(tag_name, commit_count + 1, latest_commit.id.decode('utf-8')[:7])
 
             commit_count += 1
 
         # We couldn't find the latest tag in the history, so return the commit (fallback)
-        return latest_commit.id.decode('utf-8')[:7]
+        return "g{}".format(latest_commit.id.decode('utf-8')[:7])

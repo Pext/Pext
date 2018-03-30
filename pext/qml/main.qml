@@ -28,6 +28,8 @@ ApplicationWindow {
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
+    minimumWidth: 500
+    minimumHeight: 300
     width: Screen.width
     height: 300
 
@@ -275,7 +277,7 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: "&Pext"
+            title: qsTr("&Pext")
 
             MenuItem {
                 objectName: "menuQuit"
@@ -311,7 +313,7 @@ ApplicationWindow {
                 id: menuLoadModule
                 objectName: "menuLoadModule"
 
-                signal loadModuleRequest(string name, string settings)
+                signal loadModuleRequest(string identifier, string name, string settings)
 
                 text: qsTr("Load module")
 
@@ -324,7 +326,7 @@ ApplicationWindow {
                     } else {
                         var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
                         loadModuleDialog.createObject(applicationWindow,
-                            {"modules": Object.keys(modules).sort(),
+                            {"modules": modules,
                              "loadRequest": loadModuleRequest,
                              "modulesPath": modulesPath});
                     }
@@ -336,8 +338,8 @@ ApplicationWindow {
                 objectName: "menuManageModules"
                 text: qsTr("Manage modules")
 
-                signal updateModuleRequest(string name)
-                signal uninstallModuleRequest(string name)
+                signal updateModuleRequest(string identifier)
+                signal uninstallModuleRequest(string identifier)
 
                 onTriggered: {
                     if (Object.keys(modules).length == 0) {
@@ -346,7 +348,8 @@ ApplicationWindow {
                     } else {
                         var manageDialog = Qt.createComponent("ManageDialog.qml");
                         manageDialog.createObject(applicationWindow,
-                            {"manageableObjects": modules,
+                            {"type": "modules",
+                             "manageableObjects": modules,
                              "updateRequest": updateModuleRequest,
                              "uninstallRequest": uninstallModuleRequest});
                     }
@@ -358,7 +361,7 @@ ApplicationWindow {
                 objectName: "menuInstallModule"
                 title: qsTr("Install module")
 
-                signal installModuleRequest(string url)
+                signal installModuleRequest(string url, string identifier)
 
                 MenuItem {
                     text: qsTr("From online module list")
@@ -373,11 +376,12 @@ ApplicationWindow {
                         }]
 
                     onTriggered: {
-                        var installModuleFromRepositoryDialog = Qt.createComponent("InstallModuleFromRepositoryDialog.qml");
+                        var installModuleFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installModuleFromRepositoryDialog.createObject(applicationWindow,
-                            {"applicationWindow": applicationWindow,
+                            {"installedObjects": modules,
                              "installRequest": menuInstallModule.installModuleRequest,
-                             "repositories": repositories})
+                             "repositories": repositories,
+                             "type": "modules"})
                     }
                 }
 
@@ -411,7 +415,7 @@ ApplicationWindow {
                 id: menuLoadTheme
                 objectName: "menuLoadTheme"
 
-                signal loadThemeRequest(string name)
+                signal loadThemeRequest(string identifier)
 
                 text: qsTr("Switch theme")
 
@@ -423,7 +427,7 @@ ApplicationWindow {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
                             {"currentTheme": currentTheme,
-                             "themes": Object.keys(themes).sort(),
+                             "themes": themes,
                              "loadRequest": loadThemeRequest,
                              "themesPath": themesPath});
                     }
@@ -435,8 +439,8 @@ ApplicationWindow {
                 objectName: "menuManageThemes"
                 text: qsTr("Manage themes")
 
-                signal updateThemeRequest(string name)
-                signal uninstallThemeRequest(string name)
+                signal updateThemeRequest(string identifier)
+                signal uninstallThemeRequest(string identifier)
 
                 onTriggered: {
                     if (Object.keys(themes).length == 0) {
@@ -445,7 +449,8 @@ ApplicationWindow {
                     } else {
                         var manageDialog = Qt.createComponent("ManageDialog.qml");
                         manageDialog.createObject(applicationWindow,
-                            {"manageableObjects": themes,
+                            {"type": "themes",
+                             "manageableObjects": themes,
                              "updateRequest": updateThemeRequest,
                              "uninstallRequest": uninstallThemeRequest});
                     }
@@ -457,7 +462,7 @@ ApplicationWindow {
                 objectName: "menuInstallTheme"
                 title: qsTr("Install theme")
 
-                signal installThemeRequest(string url)
+                signal installThemeRequest(string url, string identifier)
 
                 MenuItem {
                     text: qsTr("From online theme list")
@@ -472,11 +477,12 @@ ApplicationWindow {
                         }]
 
                     onTriggered: {
-                        var installThemeFromRepositoryDialog = Qt.createComponent("InstallThemeFromRepositoryDialog.qml");
+                        var installThemeFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installThemeFromRepositoryDialog.createObject(applicationWindow,
-                            {"applicationWindow": applicationWindow,
+                            {"installedObjects": themes,
                              "installRequest": menuInstallTheme.installThemeRequest,
-                             "repositories": repositories})
+                             "repositories": repositories,
+                             "type": "themes"})
                     }
                 }
 
@@ -504,78 +510,161 @@ ApplicationWindow {
         }
 
         Menu {
+            title: qsTr("P&rofile")
+
+            MenuItem {
+                objectName: "menuLoadProfile"
+                text: qsTr("Switch profile")
+
+                signal loadProfileRequest(string name, bool newInstance)
+
+                onTriggered: {
+                    if (profiles.length < 1) {
+                        var onlyOneProfileDialog = Qt.createComponent("OnlyOneProfileDialog.qml");
+                        onlyOneProfileDialog.createObject(applicationWindow);
+                    } else {
+                        var loadProfileDialog = Qt.createComponent("LoadProfileDialog.qml");
+                        loadProfileDialog.createObject(applicationWindow,
+                            {"currentProfile": currentProfile,
+                             "profiles": profiles.sort(),
+                             "loadRequest": loadProfileRequest});
+                    }
+                }
+            }
+
+            MenuItem {
+                objectName: "menuManageProfiles"
+                text: qsTr("Manage profiles")
+
+                signal createProfileRequest(string name)
+                signal renameProfileRequest(string oldName, string newName)
+                signal removeProfileRequest(string name)
+
+                onTriggered: {
+                    var manageProfilesDialog = Qt.createComponent("ManageProfilesDialog.qml");
+                    manageProfilesDialog.createObject(applicationWindow,
+                        {"profiles": profiles.sort(),
+                         "createRequest": createProfileRequest,
+                         "renameRequest": renameProfileRequest,
+                         "removeRequest": removeProfileRequest});
+                }
+            }
+        }
+
+        Menu {
             title: qsTr("&Settings")
 
-            ExclusiveGroup {
-                id: menuSortGroup
-                objectName: "menuSortGroup"
+            Menu {
+                id: menuChangeLanguage
+                objectName: "menuChangeLanguage"
+
+                title: qsTr("Language")
+
+                signal changeLanguage(string langcode)
+
+                ExclusiveGroup {
+                    id: menuLanguageGroup
+                    objectName: "menuLanguageGroup"
+                }
+
+                MenuItem {
+                    text: qsTr("System locale")
+                    checked: currentLocale === null
+                    checkable: true
+                    exclusiveGroup: menuLanguageGroup
+                    onTriggered: menuChangeLanguage.changeLanguage(null)
+                }
+
+                MenuSeparator {}
+
+                Instantiator {
+                    model: Object.keys(locales).sort(function (a, b) { return a.toLowerCase().localeCompare(b.toLowerCase()); });
+                    onObjectAdded: menuChangeLanguage.insertItem(index, object)
+                    onObjectRemoved: menuChangeLanguage.removeItem(object)
+                    delegate: MenuItem {
+                        text: modelData
+                        checked: currentLocale !== null && currentLocale.nativeLanguageName == modelData
+                        checkable: true
+                        exclusiveGroup: menuLanguageGroup
+                        onTriggered: menuChangeLanguage.changeLanguage(locales[modelData])
+                    }
+                }
             }
 
-            MenuItem {
-                objectName: "menuSortModule"
-                text: qsTr("Sort by module choice")
-                checkable: true
-                exclusiveGroup: menuSortGroup
+            Menu {
+                title: qsTr("Sorting style")
+
+                ExclusiveGroup {
+                    id: menuSortGroup
+                    objectName: "menuSortGroup"
+                }
+
+                MenuItem {
+                    objectName: "menuSortModule"
+                    text: qsTr("Sort by module choice")
+                    checkable: true
+                    exclusiveGroup: menuSortGroup
+                }
+
+                MenuItem {
+                    objectName: "menuSortAscending"
+                    text: qsTr("Sort ascending")
+                    checkable: true
+                    exclusiveGroup: menuSortGroup
+                }
+
+                MenuItem {
+                    objectName: "menuSortDescending"
+                    text: qsTr("Sort descending")
+                    checkable: true
+                    exclusiveGroup: menuSortGroup
+                }
             }
 
-            MenuItem {
-                objectName: "menuSortAscending"
-                text: qsTr("Sort ascending")
-                checkable: true
-                exclusiveGroup: menuSortGroup
+            Menu {
+                title: qsTr("Minimizing behaviour")
+
+                ExclusiveGroup {
+                    id: menuMinimizeGroup
+                    objectName: "menuMinimizeGroup"
+                }
+
+                MenuItem {
+                    objectName: "menuMinimizeNormally"
+                    text: qsTr("Minimize normally")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
+
+                MenuItem {
+                    visible: platform != 'Darwin'
+                    objectName: "menuMinimizeToTray"
+                    text: qsTr("Minimize to tray")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
+
+                MenuItem {
+                    objectName: "menuMinimizeNormallyManually"
+                    text: qsTr("Manual only: Minimize normally")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
+
+                MenuItem {
+                    visible: platform != 'Darwin'
+                    objectName: "menuMinimizeToTrayManually"
+                    text: qsTr("Manual only: Minimize to tray")
+                    checkable: true
+                    exclusiveGroup: menuMinimizeGroup
+                }
             }
-
-            MenuItem {
-                objectName: "menuSortDescending"
-                text: qsTr("Sort descending")
-                checkable: true
-                exclusiveGroup: menuSortGroup
-            }
-
-            MenuSeparator { }
-
-            ExclusiveGroup {
-                id: menuMinimizeGroup
-                objectName: "menuMinimizeGroup"
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeNormally"
-                text: qsTr("Minimize normally")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeToTray"
-                text: qsTr("Minimize to tray")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeNormallyManually"
-                text: qsTr("Manual only: Minimize normally")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuItem {
-                objectName: "menuMinimizeToTrayManually"
-                text: qsTr("Manual only: Minimize to tray")
-                checkable: true
-                exclusiveGroup: menuMinimizeGroup
-            }
-
-            MenuSeparator { }
 
             MenuItem {
                 objectName: "menuShowTrayIcon"
-                text: qsTr("Show tray icon")
+                text: qsTr("Always show tray icon")
                 checkable: true
             }
-
-            MenuSeparator { }
 
             MenuItem {
                 objectName: "menuEnableUpdateCheck"
@@ -592,7 +681,8 @@ ApplicationWindow {
                 text: qsTr("About")
                 onTriggered: {
                     var aboutDialog = Qt.createComponent("AboutDialog.qml");
-                    aboutDialog.createObject(applicationWindow);
+                    aboutDialog.createObject(applicationWindow,
+                        {"locales": locales});
                 }
             }
 
@@ -613,14 +703,13 @@ ApplicationWindow {
         anchors.margins: margin
 
         GridLayout {
-            Layout.minimumHeight: 30
             Layout.fillHeight: true
 
             Button {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
 
-                enabled: tabs.getTab(tabs.currentIndex) != null && tabs.count > 0 && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
+                enabled: tabs.count > 0 && tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
 
                 width: 60
                 text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
@@ -651,12 +740,19 @@ ApplicationWindow {
             id: tabs
             objectName: "tabs"
 
+            signal removeRequest(int index);
+
+            onRemoveRequest: {
+                tabs.getTab(index).sourceComponent = undefined;
+                tabs.removeTab(index);
+            }
+
             Layout.fillHeight: true
             Layout.fillWidth: true
         }
 
         GridLayout {
-            flow: applicationWindow.width > 700 ? GridLayout.LeftToRight : GridLayout.TopToBottom
+            flow: applicationWindow.width > applicationWindow.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
             visible: tabs.count == 0
 
             TextEdit {
@@ -675,7 +771,12 @@ ApplicationWindow {
             }
 
             Image {
-                visible: applicationWindow.width > 900
+                id: logo
+                visible: if (parent.flow == GridLayout.LeftToRight) {
+                    return applicationWindow.width > 3 * sourceSize.width
+                } else {
+                    return applicationWindow.height > 4 * sourceSize.height
+                }
                 asynchronous: true
                 source: "../images/scalable/logo.svg"
                 fillMode: Image.Pad
@@ -683,9 +784,13 @@ ApplicationWindow {
                 verticalAlignment: Image.AlignVCenter
                 Layout.fillHeight: true
                 Layout.fillWidth: true
+                Layout.minimumHeight: sourceSize.height + 50
                 Layout.minimumWidth: sourceSize.width + 50
-                anchors.leftMargin: 30
-                anchors.rightMargin: 30
+            }
+
+            Rectangle {
+                visible: !logo.visible
+                width: 50
             }
 
             TextEdit {
@@ -728,7 +833,7 @@ ApplicationWindow {
 
                 text: entriesLeftForeground || entriesLeftBackground ?
                       qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
-                      tabs.getTab(tabs.currentIndex) != null && !tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.hasEntries ?
+                      tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && !tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.hasEntries ?
                       qsTr("Waiting") : qsTr("Ready")
             }
         }

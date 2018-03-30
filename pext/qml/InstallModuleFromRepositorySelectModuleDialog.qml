@@ -23,9 +23,10 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: qsTr("Module installation")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    property var installedModules
     property var modules
     property var installRequest
 
@@ -48,6 +49,12 @@ Dialog {
             id: urlSelectionBox
             model: modules[combobox.currentIndex].git_urls
             Layout.fillWidth: true
+        }
+
+        Label {
+            text: qsTr("You already have this module installed.")
+            font.bold: true
+            visible: Object.keys(installedModules).indexOf(modules[combobox.currentIndex].name) != -1
         }
 
         Label {

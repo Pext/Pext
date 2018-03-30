@@ -1,43 +1,63 @@
 sudo: required
-language: python
-python:
-  - "3.5"
-  - "3.6"
+language: generic
 
 install:
   - pip install tox-travis
 
-before_script:
-  - bash -xe travis/bootstrap-container.sh
+os:
+  - osx
+  - linux
 
-# for test stage
-script:
-  - tox -v
+before_install:
+  - [ "$TRAVIS_OS_NAME" == "osx" ] && then brew update
+  - [ "$TRAVIS_OS_NAME" == "osx" ] && brew upgrade python
+  - [ "$TRAVIS_OS_NAME" == "osx" ] && pip3 install certifi dulwich pyqt5 tox-travis urllib3
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && bash -xe travis/bootstrap-container.sh
+
+install:
+  - [ "$TRAVIS_OS_NAME" == "osx" ]; ./build_mac_app.sh
 
 jobs:
   include:
+    # default stage script (stage named "test")
+    - script: tox -v
     - stage: packaging
       sudo: required
       before_script:
         - bash -xe travis/bootstrap-container.sh
       script:
-        # build AppImage
-        - mkdir -p build
-        - cd build
-        - bash -xe ../travis/build-appimage.sh
-        # test AppImage
-        - export PEXTHOME=$(mktemp -d)
-        - chmod +x Pext*.AppImage
-        # temporary solution for
-        # $ ./Pext*.AppImage --version
-        # QXcbConnection: Could not connect to display
-        - "export DISPLAY=:99.0"
-        - "sh -e /etc/init.d/xvfb start"
-        - sleep 3 # give xvfb some time to start
-        - env HOME="$PEXTHOME" ./Pext*.AppImage --version
-        # check for _pygit2.GitError: user cancelled certificate check by installing a demo module
-        - env HOME="$PEXTHOME" ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji
-      after_success:
-        # pretend PR to upload to transfer.sh -- TODO: remove this line after merging
-        - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
-        - env TRAVIS_EVENT_TYPE=pull_request bash upload.sh Pext*.AppImage*
+
+# replacement for packaging stage used before
+after_script:
+  # build dmg for macOS
+  - [ "$TRAVIS_OS_NAME" == "osx" ] && git clone https://github.com/andreyvit/yoursway-create-dmg.git
+  - [ "$TRAVIS_OS_NAME" == "osx" ] && pushd yoursway-create-dmg
+  - [ "$TRAVIS_OS_NAME" == "osx" ] && bash ./create-dmg --volname "Pext" --volicon "../pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg ../dist
+  # build AppImage
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && mkdir -p build
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && cd build
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && bash -xe ../travis/build-appimage.sh
+  # test AppImage
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && export PEXTHOME=$(mktemp -d)
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && chmod +x Pext*.AppImage
+  # temporary solution for
+  # $ ./Pext*.AppImage --version
+  # QXcbConnection: Could not connect to display
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && "export DISPLAY=:99.0"
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && "sh -e /etc/init.d/xvfb start"
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && sleep 3 # give xvfb some time to start
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && env HOME="$PEXTHOME" ./Pext*.AppImage --version
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && env HOME="$PEXTHOME" SSL_CERT_DIR="/etc/ssl/certs" ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji
+
+after_success:
+  - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
+  - [ "$TRAVIS_BRANCH" != "master" ] && export TRAVIS_EVENT_TYPE=pull_request
+  - [ "$TRAVIS_OS_NAME" == "osx" ] && bash upload.sh Pext.dmg
+  - [ "$TRAVIS_OS_NAME" == "linux" ] && Pext*.AppImage*
+
+branches:
+  except:
+    - # Do not build tags that we create when we upload to GitHub Releases
+    - /^(?i:continuous)$/
+    - # Also, don't build i18n, the only changes are uncompiled translation files
+    - i18n

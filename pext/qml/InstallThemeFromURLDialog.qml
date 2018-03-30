@@ -23,7 +23,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: qsTr("Theme installation")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var installRequest
@@ -37,6 +37,16 @@ Dialog {
             id: textfield
             Layout.fillWidth: true
         }
+
+        Label {
+            text: qsTr("Enter the correct theme identifier:")
+        }
+
+        TextField {
+            id: identifierTextfield
+            Layout.fillWidth: true
+        }
+
     }
 
     Component.onCompleted: {
@@ -45,7 +55,7 @@ Dialog {
     }
 
     onAccepted: {
-        installRequest(textfield.text);
+        installRequest(textfield.text, identifierTextfield.text);
     }
 }
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2016 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -18,17 +18,38 @@
 */
 
 import QtQuick 2.3
+import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.0
 
-MessageDialog {
-    title: "Pext"
-    icon: StandardIcon.Information
+Dialog {
+    title: qsTr("Rename profile")
+    standardButtons: StandardButton.Ok | StandardButton.Cancel
 
-    property var expectedVersion
-    property var version
+    property var profileName
+    property var renameRequest
 
-    text: qsTr("Repository format not supported (expected version %1, got version %2).").arg(expectedVersion).arg(version)
+    Column {
+        id: root
+        width: parent.width
+
+        Label {
+            text: qsTr("Please choose a new name for this profile.")
+            width: root.width
+            wrapMode: Text.Wrap
+        }
+
+        TextField {
+            id: newProfileName
+            placeholderText: profileName
+            width: root.width
+        }
+    }
 
     Component.onCompleted: visible = true;
+
+    onAccepted: {
+        renameRequest(profileName, newProfileName.text)
+    }
 }
 

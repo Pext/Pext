@@ -6,6 +6,60 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Hindi translation (thanks, Satyam Singh!)
+
+### Changed
+- Tray icon is now always shown when the application is minimized to tray
+- Hide minimize to tray on macOS (too broken, can cause crashes)
+- The main window now has a minimal size of 500x300
+- Versioning now complies with PEP440
+- Merge module and theme repo and object selection into a single screen to save a click
+- Modules and themes are now saved based on the location of their ID
+- Modules and themes being in an incorrect location for their ID are automatically removed
+
+### Fixed
+- Themes now apply properly on Windows (forcing Fusion styling)
+- Properly fix i18n handling and giving i18n to modules
+- The name setting in metadata.json is now consistently respected
+- Make &Pext translatable
+
+## [0.12] - 2018-03-04
+### Added
+- Support renaming profiles
+- Switching profile from the GUI
+- Opening a second instance with another profile from the GUI
+- Basic profile management from the GUI
+- Ability to change language through the UI
+- `--list-locales` argument to show supported languages
+- The installation screens now tell you if you already have a module or theme installed
+- Russian translation (thanks, Ivan Semkin)
+
+### Changed
+- Profile name is no longer displayed if default
+- Trying to create a profile that already exists throws an error
+- Trying to delete a profile that is currently in use throws an error
+- Use argparse for argument parsing instead of getopt
+- Update checking now happens if the last check was over 24 hours, instead of each app launch
+- Combine all menu groups in settings for organizational purposes
+- Relicensed documentation under CC BY-SA 4.0
+
+### Fixed
+- Pext crash when module tries to empty context_menu_base
+- Inconsistent font sizing
+- Improved main screen resizing and logo showing
+- Pext passing None as locale to modules in some cases
+- --background stealing focus on macOS
+- Modules and themes are now sorted correctly in the install from repository lists
+
+### Removed
+- Removed manpage
+
+## [0.11.1] - 2017-12-19
+### Packaging changes
+- Fix missing translation files
+
+## [0.11] - 2017-12-19
 ### Packaging changes
 - Pext now depends on dulwich
 - Pext no longer depends on pygit2
@@ -13,11 +67,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Translation updates
 - Added Norwegian Bokmål (thanks, Allan Nordhøy!)
 - Update Chinese (Traditional) translation
+- Update Spanish translation
+- Update Hungarian translation
+- Update Dutch translation
 
 ### Fixed
 - Ubuntu/Debian compatibility for git operations over HTTPS
 - Install module from URL screen not working (regression from adding theming support for 0.9)
 - Theme selector now correctly displays current theme before switching
+- Pext no longer creates an empty theme file for the system theme and doesn't show it in the list of themes
 
 ## [0.10] - 2017-11-11
 ### Packaging changes

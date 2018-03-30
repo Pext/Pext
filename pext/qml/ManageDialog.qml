@@ -23,12 +23,13 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: type == "modules" ? qsTr("Manage modules") : qsTr("Manage themes")
     standardButtons: StandardButton.Ok
 
     property var manageableObjects
     property var updateRequest
     property var uninstallRequest
+    property var type
 
     height: 250
     width: 400
@@ -54,6 +55,12 @@ Dialog {
                     text: manageableObjects[modelData].metadata.name + "\n"
                     wrapMode: Text.Wrap 
                     font.bold: true
+                }
+
+                Label {
+                    text: qsTr("Identifier: %1").arg(manageableObjects[modelData].metadata.id)
+                    width: root.width
+                    wrapMode: Text.Wrap
                 }
 
                 Label {

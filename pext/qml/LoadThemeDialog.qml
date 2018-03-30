@@ -23,7 +23,7 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: "Pext"
+    title: qsTr("Switch theme")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
     property var currentTheme
@@ -44,7 +44,7 @@ Dialog {
 
         ComboBox {
             id: combobox
-            model: themes
+            model: [qsTr("No theme")].concat(Object.keys(themes).map(function(theme) { return themes[theme].metadata.name }))
             Layout.fillWidth: true
         }
 
@@ -54,13 +54,21 @@ Dialog {
     }
 
     Component.onCompleted: {
-        combobox.currentIndex = themes.indexOf(currentTheme);
+        if (currentTheme === null) {
+            combobox.currentIndex = 0;
+        } else {
+            combobox.currentIndex = Object.keys(themes).indexOf(currentTheme) + 1;
+        }
         visible = true;
         combobox.focus = true;
     }
 
     onAccepted: {
-        loadRequest(combobox.currentText)
+        if (combobox.currentIndex == 0) {
+            loadRequest(null);
+        } else {
+            loadRequest(themes[Object.keys(themes)[combobox.currentIndex - 1]].metadata.id);
+        }
     }
 }
 
