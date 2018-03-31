@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Run py2app
 python3 setup.py py2app
@@ -18,5 +18,5 @@ cp $(python3 -c "import site; print(site.__file__)") "$RESOURCEDIR/"
 cp $(python3 -c "import _sitebuiltins; print(_sitebuiltins.__file__)") "$RESOURCEDIR/"
 sed -i.bak 's/site/site_mac/g' "$RESOURCEDIR/__boot__.py"
 rm "$RESOURCEDIR/__boot__.py.bak"
-{ echo 'import sys,os\nsys.path.append(os.environ["RESOURCEPATH"])'; cat "$RESOURCEDIR/__boot__.py"; } >boot.new
+{ echo -e 'import sys,os\nsys.path.append(os.environ["RESOURCEPATH"])'; cat "$RESOURCEDIR/__boot__.py"; } >boot.new
 mv "boot.new" "$RESOURCEDIR/__boot__.py"
