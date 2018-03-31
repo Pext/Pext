@@ -110,7 +110,7 @@ chmod +x appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract
 
 # build AppImage
-squashfs-root/AppRun AppDir
+squashfs-root/AppRun -u "gh-releases-zsync|Pext|Pext|continuous|Pext*x86_64.AppImage.zsync" AppDir
 
 # move AppImage back to old CWD
 mv Pext-*.AppImage* "$OLD_CWD"/
