@@ -1,59 +1,50 @@
 sudo: required
 language: generic
 
-install:
-  - pip install tox-travis
-
 os:
   - osx
   - linux
 
 before_install:
-  - [ "$TRAVIS_OS_NAME" == "osx" ] && then brew update
-  - [ "$TRAVIS_OS_NAME" == "osx" ] && brew upgrade python
-  - [ "$TRAVIS_OS_NAME" == "osx" ] && pip3 install certifi dulwich pyqt5 tox-travis urllib3
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && bash -xe travis/bootstrap-container.sh
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew upgrade python; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pip3 install certifi dulwich pyqt5 tox-travis urllib3; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash -xe travis/bootstrap-container.sh; fi
+  - pip install tox-travis
 
 install:
-  - [ "$TRAVIS_OS_NAME" == "osx" ]; ./build_mac_app.sh
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then build_mac_app.sh; fi
 
-jobs:
-  include:
-    # default stage script (stage named "test")
-    - script: tox -v
-    - stage: packaging
-      sudo: required
-      before_script:
-        - bash -xe travis/bootstrap-container.sh
-      script:
+script:
+  - tox -v
 
 # replacement for packaging stage used before
 after_script:
   # build dmg for macOS
-  - [ "$TRAVIS_OS_NAME" == "osx" ] && git clone https://github.com/andreyvit/yoursway-create-dmg.git
-  - [ "$TRAVIS_OS_NAME" == "osx" ] && pushd yoursway-create-dmg
-  - [ "$TRAVIS_OS_NAME" == "osx" ] && bash ./create-dmg --volname "Pext" --volicon "../pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg ../dist
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then git clone https://github.com/andreyvit/yoursway-create-dmg.git; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pushd yoursway-create-dmg; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash ./create-dmg --volname "Pext" --volicon "../pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg ../dist; fi
   # build AppImage
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && mkdir -p build
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && cd build
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && bash -xe ../travis/build-appimage.sh
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mkdir -p build; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd build; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash -xe ../travis/build-appimage.sh; fi
   # test AppImage
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && export PEXTHOME=$(mktemp -d)
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && chmod +x Pext*.AppImage
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PEXTHOME=$(mktemp -d); fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod +x Pext*.AppImage; fi
   # temporary solution for
   # $ ./Pext*.AppImage --version
   # QXcbConnection: Could not connect to display
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && "export DISPLAY=:99.0"
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && "sh -e /etc/init.d/xvfb start"
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && sleep 3 # give xvfb some time to start
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && env HOME="$PEXTHOME" ./Pext*.AppImage --version
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && env HOME="$PEXTHOME" SSL_CERT_DIR="/etc/ssl/certs" ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export DISPLAY=:99.0; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sh -e /etc/init.d/xvfb start; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sleep 3 # give xvfb some time to start; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" ./Pext*.AppImage --version; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" SSL_CERT_DIR="/etc/ssl/certs" ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji; fi
 
 after_success:
   - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
-  - [ "$TRAVIS_BRANCH" != "master" ] && export TRAVIS_EVENT_TYPE=pull_request
-  - [ "$TRAVIS_OS_NAME" == "osx" ] && bash upload.sh Pext.dmg
-  - [ "$TRAVIS_OS_NAME" == "linux" ] && Pext*.AppImage*
+  - if [ "$TRAVIS_BRANCH" != "master" ]; then export TRAVIS_EVENT_TYPE=pull_request; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash upload.sh Pext.dmg; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then Pext*.AppImage*; fi
 
 branches:
   except:
