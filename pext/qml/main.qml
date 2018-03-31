@@ -669,6 +669,7 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuEnableUpdateCheck"
                 text: qsTr("Automatically check for updates")
+                visible: !inAppImage
                 checkable: true
             }
         }
@@ -689,6 +690,7 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
+                visible: !inAppImage
             }
 
             MenuItem {
