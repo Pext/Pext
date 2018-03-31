@@ -804,7 +804,7 @@ class ProfileManager():
             for key in config[module]:
                 settings[key] = config[module][key]
 
-            modules.append({'metadata': data.metadata, 'settings': settings})
+            modules.append({'metadata': data['metadata'], 'settings': settings})
 
         return modules
 
