@@ -33,6 +33,7 @@ else:
             ('share/icons/hicolor/48x48/apps', ['pext/images/48x48/pext.png']),
             ('share/icons/hicolor/128x128/apps', ['pext/images/128x128/pext.png']),
             ('share/applications', ['pext.desktop']),
+            ('share/metainfo', ['me.hackerchick.pext.appdata.xml'])
         ]
     )
 
