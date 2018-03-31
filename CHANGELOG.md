@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Hindi translation (thanks, Satyam Singh!)
+- Add automatic AppImage builds (thanks, TheAssassin!)
 
 ### Changed
 - Tray icon is now always shown when the application is minimized to tray
