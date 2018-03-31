@@ -19,14 +19,11 @@ install:
 script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tox -v; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then python3.6 -m tox -v; fi
-
-# replacement for packaging stage used before
-after_success:
   # build dmg for macOS
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then git clone https://github.com/andreyvit/yoursway-create-dmg.git; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pushd yoursway-create-dmg; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash ./create-dmg --volname "Pext" --volicon "../pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg ../dist; fi
-  # build AppImage
+  # build AppImage for Linux
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mkdir -p build; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd build; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash -xe ../travis/build-appimage.sh; fi
@@ -42,6 +39,8 @@ after_success:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" ./Pext*.AppImage --version; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" SSL_CERT_DIR="/etc/ssl/certs" ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji#pext.module.emoji; fi
   - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
+
+after_success:
   - if [ "$TRAVIS_BRANCH" != "master" ]; then export TRAVIS_EVENT_TYPE=pull_request; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash upload.sh Pext.dmg; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash upload.sh Pext*.AppImage*; fi
