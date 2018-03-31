@@ -110,7 +110,17 @@ chmod +x appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract
 
 # build AppImage
-squashfs-root/AppRun -u "gh-releases-zsync|Pext|Pext|continuous|Pext*x86_64.AppImage.zsync" AppDir
+
+# continuous releases should use the latest continuous build for updates
+APPIMAGEUPDATE_TAG=continuous
+
+# if building for a tag, embed "latest" to make AppImageUpdate use the latest tag on updates
+# you could call it the "stable" channel
+if [ "$TRAVIS_TAG" != "" ]; then
+    APPIMAGEUPDATE_TAG=latest
+fi
+
+squashfs-root/AppRun -u "gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync" AppDir
 
 # move AppImage back to old CWD
 mv Pext-*.AppImage* "$OLD_CWD"/
