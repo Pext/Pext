@@ -944,8 +944,8 @@ class ModuleManager():
                        'pip',
                        'install']
 
-        # FIXME: Cheap hack to work around Debian's faultily-patched pip
-        if os.path.isfile('/etc/debian_version'):
+        # FIXME: Cheap hack to work around Debian's faultily-patched pip (unless (mini)conda is used)
+        if "conda" not in sys.version and os.path.isfile('/etc/debian_version'):
             pip_command += ['--system']
 
         pip_command += ['--upgrade',
