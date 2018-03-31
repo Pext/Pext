@@ -54,7 +54,7 @@ wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
 mkdir lib-bak
 cp AppDir/usr/lib/*.so* lib-bak/
 #(. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
-(. functions.sh && cd AppDir && set +x && move_lib && delete_blacklisted)
+(. functions.sh && cd AppDir && set +x && move_lib || true && delete_blacklisted)
 mv AppDir/usr/lib/x86_64-linux-gnu/*.so* AppDir/usr/lib/
 # copy back libraries
 cp --remove-destination lib-bak/* AppDir/usr/lib/
