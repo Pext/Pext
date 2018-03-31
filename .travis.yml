@@ -14,7 +14,7 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis; fi
 
 install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then build_mac_app.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash build_mac_app.sh; fi
 
 script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tox -v; fi
