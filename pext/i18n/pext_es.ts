@@ -141,18 +141,18 @@
     <name>InstallFromRepositoryUnsupportedDialog</name>
     <message>
         <source>Unsupported repository format</source>
-        <translation>Formato del repositorio no esta soportado</translation>
+        <translation type="vanished">Formato del repositorio no esta soportado</translation>
     </message>
     <message>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>El formato del repositorio no esta soportado (versión %1 esperada, versión %2 obtenida).</translation>
+        <translation type="vanished">El formato del repositorio no esta soportado (versión %1 esperada, versión %2 obtenida).</translation>
     </message>
 </context>
 <context>
     <name>InstallModuleFromRepositoryDialog</name>
     <message>
         <source>Module installation</source>
-        <translation>Instalación del módulo</translation>
+        <translation type="vanished">Instalación del módulo</translation>
     </message>
     <message>
         <source>Where do you want to get modules from?</source>
@@ -256,7 +256,7 @@
     <name>InstallThemeFromRepositoryDialog</name>
     <message>
         <source>Theme installation</source>
-        <translation>Instalación del tema</translation>
+        <translation type="vanished">Instalación del tema</translation>
     </message>
     <message>
         <source>Where do you want to get themes from?</source>
@@ -278,15 +278,15 @@
     <name>InstallThemeFromRepositorySelectThemeDialog</name>
     <message>
         <source>Theme installation</source>
-        <translation>Instalación del tema</translation>
+        <translation type="vanished">Instalación del tema</translation>
     </message>
     <message>
         <source>Choose the theme to install:</source>
-        <translation>Elige el tema para instalar:</translation>
+        <translation type="vanished">Elige el tema para instalar:</translation>
     </message>
     <message>
         <source>Choose the preferred download source:</source>
-        <translation>Elige la fuente de descarga preferida:</translation>
+        <translation type="vanished">Elige la fuente de descarga preferida:</translation>
     </message>
     <message>
         <source>You already have this theme installed.</source>
