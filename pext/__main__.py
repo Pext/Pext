@@ -794,7 +794,7 @@ class ProfileManager():
 
         for module in config.sections():
             identifier = module.split('_', 1)[1]
-            data = ObjectManager.list_object(os.path.join(self.module_dir, identifier))
+            data = ObjectManager.list_object(os.path.join(self.module_dir, identifier.replace('.', '_')))
             if not data:
                 # Module no longer seems to exist, skip
                 continue
