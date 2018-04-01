@@ -45,6 +45,8 @@ python setup.py install
 popd
 
 # copy resources to AppDir
+mkdir -p AppDir/usr/share/metainfo
+cp "$REPO_ROOT"/pext.appdata.xml AppDir/usr/share/metainfo
 cp "$REPO_ROOT"/pext.desktop "$REPO_ROOT"/pext/images/scalable/pext.svg AppDir
 sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 
