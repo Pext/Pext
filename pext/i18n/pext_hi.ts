@@ -53,7 +53,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source:</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम स्रोत:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
@@ -83,12 +83,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This module is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>यह मॉड्यूल पहले ही मौजूद है।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>यह थीम पहले ही इंस्टॉल है।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
@@ -228,7 +228,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>सही मॉड्यूल पहचानकर्ता डालें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
@@ -308,7 +308,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
         <source>Enter the correct theme identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>सही थीम पहचानकर्ता डालें:</translation>
     </message>
 </context>
 <context>
@@ -385,7 +385,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>पहचानकर्ता: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
@@ -729,7 +729,7 @@
     <message>
         <location filename="../qml/main.qml" line="280"/>
         <source>&amp;Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>पेक्स्ट</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>
