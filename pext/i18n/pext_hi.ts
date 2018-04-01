@@ -53,7 +53,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
         <source>Theme source:</source>
-        <translation type="unfinished"></translation>
+        <translation>थीम स्रोत:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
@@ -83,12 +83,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This module is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>यह मॉड्यूल पहले ही मौजूद है।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>यह थीम पहले ही इंस्टॉल है।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
@@ -228,7 +228,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>सही मॉड्यूल पहचानकर्ता दर्ज करें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
