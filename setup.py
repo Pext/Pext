@@ -33,7 +33,7 @@ else:
             ('share/icons/hicolor/48x48/apps', ['pext/images/48x48/pext.png']),
             ('share/icons/hicolor/128x128/apps', ['pext/images/128x128/pext.png']),
             ('share/applications', ['pext.desktop']),
-            ('share/metainfo', ['me.hackerchick.pext.appdata.xml'])
+            ('share/metainfo', ['pext.appdata.xml'])
         ]
     )
 
@@ -69,7 +69,7 @@ setup(
         'pext/helpers',
         'pext_dev'
     ],
-    package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
+    package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/128x128/*', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
                   'pext_dev': ['LICENSE', 'module/*', 'theme/*', '*.py']},
     zip_safe=False,
     entry_points={
