@@ -131,6 +131,10 @@ class ConfigRetriever():
 
     def get_updatecheck_permission_asked(self) -> bool:
         """Return info on if allowing updates was asked."""
+        # Never use internal update check in AppImage
+        if 'APPIMAGE' in os.environ:
+            return True
+
         try:
             with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r'):
                 return True
@@ -139,6 +143,10 @@ class ConfigRetriever():
 
     def get_updatecheck_permission(self) -> bool:
         """Return info on if update checking is allowed."""
+        # Never use internal update check in AppImage
+        if 'APPIMAGE' in os.environ:
+            return False
+
         try:
             with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r') as update_check_file:
                 result = update_check_file.readline()
@@ -1913,6 +1921,7 @@ class Window(QMainWindow):
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
         self.context.setContextProperty("currentLocale", self.locale_manager.get_current_locale(system_if_unset=False))
         self.context.setContextProperty("locales", self.locale_manager.get_locales())
+        self.context.setContextProperty("inAppImage", 'APPIMAGE' in os.environ)
 
         # Load the main UI
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))

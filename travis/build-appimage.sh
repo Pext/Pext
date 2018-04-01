@@ -45,6 +45,8 @@ python setup.py install
 popd
 
 # copy resources to AppDir
+mkdir -p AppDir/usr/share/metainfo
+cp "$REPO_ROOT"/pext.appdata.xml AppDir/usr/share/metainfo
 cp "$REPO_ROOT"/pext.desktop "$REPO_ROOT"/pext/images/scalable/pext.svg AppDir
 sed -i 's|Exec=.*|Exec=usr/bin/python usr/bin/pext|' AppDir/pext.desktop
 
@@ -110,7 +112,17 @@ chmod +x appimagetool-x86_64.AppImage
 ./appimagetool-x86_64.AppImage --appimage-extract
 
 # build AppImage
-squashfs-root/AppRun AppDir
+
+# continuous releases should use the latest continuous build for updates
+APPIMAGEUPDATE_TAG=continuous
+
+# if building for a tag, embed "latest" to make AppImageUpdate use the latest tag on updates
+# you could call it the "stable" channel
+if [ "$TRAVIS_TAG" != "" ]; then
+    APPIMAGEUPDATE_TAG=latest
+fi
+
+squashfs-root/AppRun -u "gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync" AppDir
 
 # move AppImage back to old CWD
 mv Pext-*.AppImage* "$OLD_CWD"/
