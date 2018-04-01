@@ -1107,10 +1107,10 @@ class ModuleManager():
     def unload_module(self, window: 'Window', tab_id: int) -> None:
         """Unload a module by tab ID."""
         try:
-            window.tab_bindings[tab_id].module.stop()
+            window.tab_bindings[tab_id]['module'].stop()
         except Exception as e:
             print('WARN: Module {} caused exception {} on unload'
-                  .format(window.tab_bindings[tab_id].metadata.id, e))
+                  .format(window.tab_bindings[tab_id]['metadata']['id'], e))
             traceback.print_exc()
 
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
