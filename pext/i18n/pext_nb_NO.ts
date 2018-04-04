@@ -244,7 +244,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation>Skriv inn korrekt modulidentifikator.</translation>
+        <translation>Skriv inn korrekt modulidentifikator:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
@@ -324,7 +324,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
         <source>Enter the correct theme identifier:</source>
-        <translation>Skriv inn korrekt draktidentifikator.</translation>
+        <translation>Skriv inn korrekt draktidentifikator:</translation>
     </message>
 </context>
 <context>
