@@ -37,6 +37,8 @@ Dialog {
     property var currentRepoVersion: 2
     property var objects: []
 
+    property bool doneLoading: false
+
     ColumnLayout {
         Label {
             text: type == "modules" ? qsTr("Module source:") : qsTr("Theme source:")
@@ -49,10 +51,14 @@ Dialog {
             Layout.fillWidth: true
         }
 
+        BusyIndicator {
+            visible: !doneLoading
+        }
+
         Label {
             text: type == "modules" ? qsTr("No modules available from this source.") : qsTr("No themes available from this source.")
             font.bold: true
-            visible: objects.length == 0
+            visible: doneLoading && objects.length == 0
         }
 
         Label {
@@ -151,11 +157,13 @@ Dialog {
 
     function getObjects(repoIndex) {
         modules = [];
+        doneLoading = false;
         getData(repositories[repoIndex].url, function(response) {
             var jsonResponse = JSON.parse(response)
 
             if (jsonResponse.version != 2) {
                 currentRepoVersion = jsonResponse.version;
+                doneLoading = true;
                 return;
             }
 
@@ -163,6 +171,7 @@ Dialog {
 
             if (objectList.length == 0) {
                 objects = [];
+                doneLoading = true;
                 return;
             }
 
@@ -174,6 +183,7 @@ Dialog {
                     objectsData.push(JSON.parse(response));
                     if (objectsData.length === objectList.length) {
                          objects = objectsData.sort(function(a, b) { return a.name.localeCompare(b.name); } );
+                         doneLoading = true;
                     };
                 });
             };
