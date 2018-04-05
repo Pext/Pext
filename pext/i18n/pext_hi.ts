@@ -729,7 +729,7 @@
     <message>
         <location filename="../qml/main.qml" line="280"/>
         <source>&amp;Pext</source>
-        <translation>पेक्स्ट</translation>
+        <translation>पैक्स्ट</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>
