@@ -56,7 +56,7 @@ Dialog {
         }
 
         Label {
-            text: qsTr("Repository format not supported (expected version %1, got version %2).").arg(expectedVersion).arg(currentRepoVersion)
+            text: qsTr("Unsupported repository format (expected version %1, not %2).").arg(expectedVersion).arg(currentRepoVersion)
             font.bold: true
             visible: expectedVersion != currentRepoVersion
         }
