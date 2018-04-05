@@ -62,77 +62,81 @@
         <translation>Instalación de Tema</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
         <source>Module source:</source>
         <translation>Fuente del módulo:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="42"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
         <source>Theme source:</source>
         <translation>Fuente del tema:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>No modules available from this source.</source>
         <translation>No hay módulos disponibles de esta fuente.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="53"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>No themes available from this source.</source>
         <translation>No hay temas disponibles de esta fuente.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation>El formato del repositorio no es soportado (versión %1 esperada, versión %2 obtenida).</translation>
+        <translation type="vanished">El formato del repositorio no es soportado (versión %1 esperada, versión %2 obtenida).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <source>Unsupported repository format (expected version %1, not %2).</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
         <source>Module:</source>
         <translation>Módulo:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="77"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
         <source>Download source:</source>
         <translation>Fuente de descarga:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This module is already installed.</source>
         <translation>Este módulo ya esta instalado.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="89"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This theme is already installed.</source>
         <translation>Este tema ya esta instalado.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>This module does not seem to support %1.</source>
         <translation>Este módulo no parece soportar %1.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>Details:</source>
         <translation>Detalles:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
         <source>Creator: </source>
         <translation>Creador: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="112"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
         <source>Description: </source>
         <translation>Descripción: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="117"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
         <source>License: </source>
         <translation>Licencia: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Como los módulos de Pext son código, asegúrese de confiar con el desarrollador antes de continuar.</translation>
     </message>
