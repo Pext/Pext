@@ -88,57 +88,57 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation>不支援的軟體庫格式（預期的版本 %1，不是 %2）</translation>
+        <translation>不支援的軟體庫格式（預期的版本 %1，不是 %2）。</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
         <source>Module:</source>
-        <translation type="unfinished"></translation>
+        <translation>模組：</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
         <source>Download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>下載來源：</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This module is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>此模組已安裝。</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>此主題已安裝。</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished">此模組似乎不支援 %1。</translation>
+        <translation>此模組似乎不支援 %1。</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>詳細資訊：</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
         <source>Creator: </source>
-        <translation type="unfinished"></translation>
+        <translation>建立者： </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
         <source>Description: </source>
-        <translation type="unfinished">描述： </translation>
+        <translation>描述： </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
         <source>License: </source>
-        <translation type="unfinished">授權條款： </translation>
+        <translation>授權條款： </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation type="unfinished">因為 Pext 模組就是原始碼，所以請在繼續前確保您信任開發者。</translation>
+        <translation>因為 Pext 模組就是原始碼，所以請在繼續前確保您信任開發者。</translation>
     </message>
 </context>
 <context>
@@ -173,7 +173,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>此軟體庫中找不到任何模組。</translation>
     </message>
     <message>
         <source>No modules found in this repository.</source>
@@ -248,7 +248,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>輸入正確的模組識別碼：</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
@@ -328,7 +328,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
         <source>Enter the correct theme identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>輸入正確的主題識別碼：</translation>
     </message>
 </context>
 <context>
@@ -405,7 +405,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>識別碼：%1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
@@ -755,7 +755,7 @@
     <message>
         <location filename="../qml/main.qml" line="280"/>
         <source>&amp;Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext(&amp;P)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>
