@@ -54,32 +54,32 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>模組安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>主題安裝</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>模組來源：</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
         <source>Theme source:</source>
-        <translation type="unfinished"></translation>
+        <translation>主題來源：</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>此來源未提供模組。</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>此來源未提供主題。</translation>
     </message>
     <message>
         <source>Repository format not supported (expected version %1, got version %2).</source>
@@ -88,7 +88,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>不支援的軟體庫格式（預期的版本 %1，不是 %2）</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
