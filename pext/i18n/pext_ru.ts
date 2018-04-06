@@ -748,7 +748,7 @@
     <message>
         <location filename="../qml/main.qml" line="665"/>
         <source>Always show tray icon</source>
-        <translation type="unfinished"></translation>
+        <translation>Всегда показывать иконку в трее</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
