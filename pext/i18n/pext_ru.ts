@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Установка модуля</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Установка темы</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
@@ -54,7 +54,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>В этом источнике не найдено модулей</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
