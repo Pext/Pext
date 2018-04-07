@@ -34,32 +34,32 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Установка модуля</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Установка темы</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Источник модуля:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
         <source>Theme source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Источник темы:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>В этом источнике не найдено модулей.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>В этом источнике не найдено тем.</translation>
     </message>
     <message>
         <source>Repository format not supported (expected version %1, got version %2).</source>
@@ -68,27 +68,27 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Неподдерживаемый формат репозитория (требуется версия %1, а не %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
         <source>Module:</source>
-        <translation type="unfinished"></translation>
+        <translation>Модуль:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
         <source>Download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Загрузить исходный код:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This module is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Этот модуль уже установлен.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Эта тема уже установлена.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
@@ -98,12 +98,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>Подробности:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
         <source>Creator: </source>
-        <translation type="unfinished"></translation>
+        <translation>Создатель: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
@@ -153,7 +153,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>В данном репозитории не найдено модулей.</translation>
     </message>
     <message>
         <source>No modules found in this repository.</source>
@@ -228,7 +228,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Введите корректный идентификатор модуля:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
@@ -308,7 +308,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
         <source>Enter the correct theme identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Введите корректный идентификатор темы:</translation>
     </message>
 </context>
 <context>
@@ -385,7 +385,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Идентификатор: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
@@ -733,7 +733,7 @@
     <message>
         <location filename="../qml/main.qml" line="280"/>
         <source>&amp;Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>

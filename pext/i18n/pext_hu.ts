@@ -73,7 +73,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
         <source>Theme source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Téma forrás:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
@@ -92,7 +92,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Tároló formátum nem támogatott (várt verzió %1 helyett verzió %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
@@ -107,12 +107,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This module is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez a modul már telepítve van.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ez a téma már telepítve van.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
@@ -252,7 +252,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>Adja meg a helyes modulazonosítót:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
@@ -332,7 +332,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
         <source>Enter the correct theme identifier:</source>
-        <translation type="unfinished"></translation>
+        <translation>Adja meg a helyes témaazonosítót:</translation>
     </message>
 </context>
 <context>
@@ -409,7 +409,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Azonosító: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
@@ -759,7 +759,7 @@
     <message>
         <location filename="../qml/main.qml" line="280"/>
         <source>&amp;Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>

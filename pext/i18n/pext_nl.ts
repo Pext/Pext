@@ -92,7 +92,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Niet-ondersteund pakketbronformaat (verwachte versie: %1, niet %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>

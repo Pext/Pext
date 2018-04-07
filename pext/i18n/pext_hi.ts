@@ -72,7 +72,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
