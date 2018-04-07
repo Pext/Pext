@@ -270,7 +270,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation type="unfinished">Choisissez le thème à basculer:</translation>
+        <translation>Choisissez le thème vers lequel basculer:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
