@@ -62,22 +62,16 @@ Simply put:
 
 ### GNU/Linux
 #### Arch
-The Arch packages are maintained by [Ivan Semkin](https://github.com/vanyasem)
-
-For the stable version:
-
-    $ pacaur -S pext
-
-For the git version:
-
-    $ pacaur -S pext-git
+Pext is available as [pext](https://aur.archlinux.org/packages/pext/) and [pext-git](https://aur.archlinux.org/packages/pext-git/). These packages are maintained by [Ivan Semkin](https://github.com/vanyasem).
 
 #### Other distros
-For the stable version:
+We recommend the AppImages under GitHub releases, but you can also install from PyPI.
+
+For the stable version (PyPI):
 
     $ pip3 install pext --user
 
-For the git version:
+For the git version (PyPI):
 
     $ pip3 install git+https://github.com/Pext/Pext.git --user
 
