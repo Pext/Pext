@@ -64,7 +64,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished">Format de référentiel non pris en charge (version attendue% 1, pas% 2).</translation>
+        <translation>Format de référentiel non pris en charge (version attendue %1, pas %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
@@ -99,7 +99,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
         <source>Creator: </source>
-        <translation type="unfinished">Créateur(trice): </translation>
+        <translation>Créateur(trice): </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
@@ -198,7 +198,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Enter the correct module identifier:</source>
-        <translation type="unfinished">Entrez le bon identifiant du module:</translation>
+        <translation>Entrez le bon identifiant du module:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
