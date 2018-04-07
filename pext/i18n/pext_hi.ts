@@ -9,22 +9,22 @@
         <translation>पैक्स्ट के बारे में</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="48"/>
+        <location filename="../qml/AboutDialog.qml" line="49"/>
         <source>Copyright</source>
         <translation>कॉपीराइट</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="80"/>
+        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Translators</source>
         <translation>अनुवादकों</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>पैक्स्ट के अनुवाद करने में सहायता करना चाहते है? कृपया यहाँ क्लिक करें।</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
+        <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>पैक्स्ट टीम पैक्स्ट के अनुवाद के लिए निम्नलिखित उपयोगकर्ताओं को धन्यवाद देना चाहती है:</translation>
     </message>
@@ -42,109 +42,79 @@
         <translation>थीम संस्थापना</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
         <translation>मॉड्यूल स्रोत:</translation>
     </message>
     <message>
-        <source>Theme source</source>
-        <translation type="vanished">थीम स्रोत</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Theme source:</source>
         <translation>थीम स्रोत:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
         <translation>इस स्रोत से कोई मॉड्यूल उपलब्ध नहीं है ।</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
         <translation>इस स्रोत से कोई थीम उपलब्ध नहीं है ।</translation>
     </message>
     <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
         <translation>भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
         <source>Module:</source>
         <translation>मॉड्यूल:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
         <translation>डाउनलोड स्रोत:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This module is already installed.</source>
         <translation>यह मॉड्यूल पहले ही मौजूद है।</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This theme is already installed.</source>
         <translation>यह थीम पहले ही इंस्टॉल है।</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
         <translation>यह मॉड्यूल %1 का समर्थन नहीं करता।</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>Details:</source>
         <translation>विवरण:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
         <translation>निर्माता: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
         <translation>विवरण: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
         <translation>लाइसेंस: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
-    </message>
-</context>
-<context>
-    <name>InstallFromRepositoryUnsupportedDialog</name>
-    <message>
-        <source>Unsupported repository format</source>
-        <translation type="vanished">असमर्थित भण्डार फार्मेट</translation>
-    </message>
-    <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">भण्डार फार्मेट समर्थित नहीं (अपेक्षित संस्करण %1, मिला संस्करण %2)।</translation>
-    </message>
-</context>
-<context>
-    <name>InstallModuleFromRepositoryDialog</name>
-    <message>
-        <source>Module installation</source>
-        <translation type="vanished">मॉड्यूल संस्थापना</translation>
-    </message>
-    <message>
-        <source>Where do you want to get modules from?</source>
-        <translation type="vanished">आप कहाँ से मॉड्यूल प्राप्त करना चाहते हैं?</translation>
     </message>
 </context>
 <context>
@@ -158,10 +128,6 @@
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
         <translation>इस भण्डार में कोई मॉड्यूल नहीं मिला।</translation>
-    </message>
-    <message>
-        <source>No modules found in this repository.</source>
-        <translation type="vanished">इस भण्डार में कोई मॉड्यूल नहीं मिला।</translation>
     </message>
 </context>
 <context>
@@ -238,63 +204,6 @@
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">थीम स्थापना</translation>
-    </message>
-    <message>
-        <source>Where do you want to get themes from?</source>
-        <translation type="vanished">आप कहां से थीम प्राप्त करना चाहते हैं?</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryNoThemesAvailableDialog</name>
-    <message>
-        <source>No themes available</source>
-        <translation type="vanished">कोई थीम उपलब्ध नहीं है</translation>
-    </message>
-    <message>
-        <source>No themes found in this repository.</source>
-        <translation type="vanished">इस भंडार में कोई थीम नहीं मिला।</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositorySelectThemeDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">थीम संस्थापना</translation>
-    </message>
-    <message>
-        <source>Choose the theme to install:</source>
-        <translation type="vanished">स्थापित करने के लिए थीम चुनें:</translation>
-    </message>
-    <message>
-        <source>Choose the preferred download source:</source>
-        <translation type="vanished">पसंदीदा डाउनलोड स्रोत चुनें:</translation>
-    </message>
-    <message>
-        <source>You already have this theme installed.</source>
-        <translation type="vanished">आपके पास पहले से ही यह थीम स्थापित है।</translation>
-    </message>
-    <message>
-        <source>Theme information:</source>
-        <translation type="vanished">थीम संस्थापना:</translation>
-    </message>
-    <message>
-        <source>Developer: </source>
-        <translation type="vanished">डेवलपर: </translation>
-    </message>
-    <message>
-        <source>Description: </source>
-        <translation type="vanished">विवरण: </translation>
-    </message>
-    <message>
-        <source>License: </source>
-        <translation type="vanished">लाइसेंस: </translation>
     </message>
 </context>
 <context>

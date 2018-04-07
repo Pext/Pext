@@ -9,44 +9,24 @@
         <translation>Over Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="48"/>
+        <location filename="../qml/AboutDialog.qml" line="49"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="80"/>
+        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Translators</source>
         <translation>Vertalers</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Wilt u meehelpen met het vertalen van Pext? Klik dan hier.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
+        <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Het Pext-team bedankt de volgende gebruikers voor het vertalen van Pext:</translation>
-    </message>
-    <message>
-        <source>Spanish</source>
-        <translation type="vanished">Spaans</translation>
-    </message>
-    <message>
-        <source>Hungarian</source>
-        <translation type="vanished">Hongaars</translation>
-    </message>
-    <message>
-        <source>Norwegian Bokmål</source>
-        <translation type="vanished">Noors (Bokmål)</translation>
-    </message>
-    <message>
-        <source>Chinese (Traditional)</source>
-        <translation type="vanished">Chinees (Traditioneel)</translation>
-    </message>
-    <message>
-        <source>Dutch</source>
-        <translation type="vanished">Nederlands</translation>
     </message>
 </context>
 <context>
@@ -62,109 +42,79 @@
         <translation>Thema-installatie</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
         <translation>Modulebron:</translation>
     </message>
     <message>
-        <source>Theme source</source>
-        <translation type="vanished">Themabron</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Theme source:</source>
         <translation>Themabron:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
         <translation>Er zijn geen modules beschikbaar in deze bron.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
         <translation>Er zijn geen thema&apos;s beschikbaar in deze bron.</translation>
     </message>
     <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">Bronformaat wordt niet ondersteund (verwachte versie: %1, verkregen versie: %2 ).</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
         <translation>Niet-ondersteund pakketbronformaat (verwachte versie: %1, niet %2).</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
         <source>Module:</source>
         <translation>Module:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
         <translation>Downloadbron:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This module is already installed.</source>
         <translation>Deze module is al geïnstalleerd.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This theme is already installed.</source>
         <translation>Dit thema is al geïnstalleerd.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
         <translation>Deze module lijkt %1 niet te ondersteunen.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>Details:</source>
         <translation>Details:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
         <translation>Maker: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
         <translation>Omschrijving: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
         <translation>Licentie: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallFromRepositoryUnsupportedDialog</name>
-    <message>
-        <source>Unsupported repository format</source>
-        <translation type="vanished">Niet-ondersteund pakketbronformaat</translation>
-    </message>
-    <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">Bronformaat wordt niet ondersteund (verwachte versie %1, kreeg versie %2).</translation>
-    </message>
-</context>
-<context>
-    <name>InstallModuleFromRepositoryDialog</name>
-    <message>
-        <source>Module installation</source>
-        <translation type="vanished">Module-installatie</translation>
-    </message>
-    <message>
-        <source>Where do you want to get modules from?</source>
-        <translation type="vanished">Waar wilt u modules vandaan halen?</translation>
     </message>
 </context>
 <context>
@@ -178,10 +128,6 @@
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
         <translation>Er zijn geen modules gevonden in deze pakketbron.</translation>
-    </message>
-    <message>
-        <source>No modules found in this repository.</source>
-        <translation type="vanished">Geen modules beschikbaar in deze bron.</translation>
     </message>
 </context>
 <context>
@@ -258,63 +204,6 @@
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Thema-installatie</translation>
-    </message>
-    <message>
-        <source>Where do you want to get themes from?</source>
-        <translation type="vanished">Waar wilt u thema&apos;s vandaan halen?</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryNoThemesAvailableDialog</name>
-    <message>
-        <source>No themes available</source>
-        <translation type="vanished">Geen thema&apos;s beschikbaar</translation>
-    </message>
-    <message>
-        <source>No themes found in this repository.</source>
-        <translation type="vanished">Geen thema&apos;s gevonden in deze bron.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositorySelectThemeDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Thema-installatie</translation>
-    </message>
-    <message>
-        <source>Choose the theme to install:</source>
-        <translation type="vanished">Kies het te installeren thema:</translation>
-    </message>
-    <message>
-        <source>Choose the preferred download source:</source>
-        <translation type="vanished">Kies de gewenste downloadbron:</translation>
-    </message>
-    <message>
-        <source>You already have this theme installed.</source>
-        <translation type="vanished">Dit thema is al geïnstalleerd.</translation>
-    </message>
-    <message>
-        <source>Theme information:</source>
-        <translation type="vanished">Thema-informatie:</translation>
-    </message>
-    <message>
-        <source>Developer: </source>
-        <translation type="vanished">Ontwikkelaar: </translation>
-    </message>
-    <message>
-        <source>Description: </source>
-        <translation type="vanished">Omschrijving: </translation>
-    </message>
-    <message>
-        <source>License: </source>
-        <translation type="vanished">Licentie: </translation>
     </message>
 </context>
 <context>
@@ -637,10 +526,6 @@
         <translation>Alle thema&apos;s bijwerken</translation>
     </message>
     <message>
-        <source>&amp;Profile</source>
-        <translation type="vanished">&amp;Profiel</translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="517"/>
         <source>Switch profile</source>
         <translation>Van profiel wisselen</translation>
@@ -709,10 +594,6 @@
         <location filename="../qml/main.qml" line="657"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Alleen handmatig: minimaliseren naar systeemvak</translation>
-    </message>
-    <message>
-        <source>Show tray icon</source>
-        <translation type="vanished">Systeemvakpictogram weergeven</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="671"/>

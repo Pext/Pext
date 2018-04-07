@@ -30,6 +30,7 @@ Dialog {
 
     property var translators: {"en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
                                "es": [{"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
+                               "fr": [{"name": "Aurora Yeen &lt;<a href='https://t.me/YeenAurora'>@YeenAurora</a>&gt;"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
                                "hi": [{"name": "Satyam Singh", "email": "trueleo@protonmail.com"}],
@@ -92,7 +93,11 @@ Dialog {
                           for (var lang in translators) {
                               text += "<b>" + Object.keys(locales).filter(function(key) { return locales[key] === lang })[0] + "</b><br>";
                               for (var translatorData in translators[lang]) {
-                                  text += translators[lang][translatorData]["name"] + " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;<br>";
+                                  text += translators[lang][translatorData]["name"]
+                                  if (translators[lang][translatorData]["email"]) {
+                                      text += " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;";
+                                  }
+                                  text += "<br>";
                               }
                               text += "<br>";
                           }

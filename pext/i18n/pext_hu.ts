@@ -9,44 +9,24 @@
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="48"/>
+        <location filename="../qml/AboutDialog.qml" line="49"/>
         <source>Copyright</source>
         <translation>Szerzői jogok</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="80"/>
+        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Translators</source>
         <translation>Fordítók</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Szeretne segíteni a Pext fordításában? Kérjük, kattintson ide.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
+        <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>A Pext csapat szeretné megköszönni a következő felhasználóknak a Pext fordítását:</translation>
-    </message>
-    <message>
-        <source>Spanish</source>
-        <translation type="vanished">spanyol</translation>
-    </message>
-    <message>
-        <source>Hungarian</source>
-        <translation type="vanished">magyar</translation>
-    </message>
-    <message>
-        <source>Norwegian Bokmål</source>
-        <translation type="vanished">norvég (bokmål)</translation>
-    </message>
-    <message>
-        <source>Chinese (Traditional)</source>
-        <translation type="vanished">kínai (hagyományos)</translation>
-    </message>
-    <message>
-        <source>Dutch</source>
-        <translation type="vanished">holland</translation>
     </message>
 </context>
 <context>
@@ -62,109 +42,79 @@
         <translation>Téma Telepítése</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
         <translation>Modul forrás:</translation>
     </message>
     <message>
-        <source>Theme source</source>
-        <translation type="vanished">Téma forrás</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Theme source:</source>
         <translation>Téma forrás:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
         <translation>Nem érhető el modul ebből a forrásból.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
         <translation>Nem érhető el téma ebből a forrásból.</translation>
     </message>
     <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">Tároló formátum nem támogatott (várt verzió %1 helyett verzió %2).</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
         <translation>Tároló formátum nem támogatott (várt verzió %1 helyett verzió %2).</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
         <source>Module:</source>
         <translation>Modul:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
         <translation>Letöltési forrás:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This module is already installed.</source>
         <translation>Ez a modul már telepítve van.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This theme is already installed.</source>
         <translation>Ez a téma már telepítve van.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
         <translation>Úgy tűnik, ez a modul nem támogatja ezt a platformot (%1).</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>Details:</source>
         <translation>Részletek:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
         <translation>Szerző: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
         <translation>Leírás: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
         <translation>Licenc: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallFromRepositoryUnsupportedDialog</name>
-    <message>
-        <source>Unsupported repository format</source>
-        <translation type="vanished">Nem támogatott tároló formátum</translation>
-    </message>
-    <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">Tároló formátum nem támogatott (várt verzió %1 helyett verzió %2).</translation>
-    </message>
-</context>
-<context>
-    <name>InstallModuleFromRepositoryDialog</name>
-    <message>
-        <source>Module installation</source>
-        <translation type="vanished">Modul telepítése</translation>
-    </message>
-    <message>
-        <source>Where do you want to get modules from?</source>
-        <translation type="vanished">Honnan szeretne modulokat beszerezni?</translation>
     </message>
 </context>
 <context>
@@ -178,10 +128,6 @@
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
         <translation>Nem található modul ebben a tárolóban.</translation>
-    </message>
-    <message>
-        <source>No modules found in this repository.</source>
-        <translation type="vanished">Nem található modul ebben a tárolóban.</translation>
     </message>
 </context>
 <context>
@@ -258,63 +204,6 @@
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Téma telepítése</translation>
-    </message>
-    <message>
-        <source>Where do you want to get themes from?</source>
-        <translation type="vanished">Honnan szeretne témákat beszerezni?</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryNoThemesAvailableDialog</name>
-    <message>
-        <source>No themes available</source>
-        <translation type="vanished">Nincs elérhető téma</translation>
-    </message>
-    <message>
-        <source>No themes found in this repository.</source>
-        <translation type="vanished">Nem található téma ebben a tárolóban.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositorySelectThemeDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Téma telepítése</translation>
-    </message>
-    <message>
-        <source>Choose the theme to install:</source>
-        <translation type="vanished">Válassza ki a telepítendő témát:</translation>
-    </message>
-    <message>
-        <source>Choose the preferred download source:</source>
-        <translation type="vanished">Válassza ki a kívánt letöltési forrást:</translation>
-    </message>
-    <message>
-        <source>You already have this theme installed.</source>
-        <translation type="vanished">Már telepítette ezt a témát.</translation>
-    </message>
-    <message>
-        <source>Theme information:</source>
-        <translation type="vanished">Téma információ:</translation>
-    </message>
-    <message>
-        <source>Developer: </source>
-        <translation type="vanished">Fejlesztő: </translation>
-    </message>
-    <message>
-        <source>Description: </source>
-        <translation type="vanished">Leírás: </translation>
-    </message>
-    <message>
-        <source>License: </source>
-        <translation type="vanished">Licenc: </translation>
     </message>
 </context>
 <context>
@@ -637,10 +526,6 @@
         <translation>Összes téma frissítése</translation>
     </message>
     <message>
-        <source>&amp;Profile</source>
-        <translation type="vanished">&amp;Profil</translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="517"/>
         <source>Switch profile</source>
         <translation>Profilváltás</translation>
@@ -709,10 +594,6 @@
         <location filename="../qml/main.qml" line="657"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Csak kézi: Minimalizálás a tálcára</translation>
-    </message>
-    <message>
-        <source>Show tray icon</source>
-        <translation type="vanished">Ikon megjelenítése a tálcán</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="671"/>

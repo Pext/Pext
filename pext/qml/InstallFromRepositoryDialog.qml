@@ -40,8 +40,11 @@ Dialog {
     property bool doneLoading: false
 
     ColumnLayout {
+        width: parent.width
         Label {
             text: type == "modules" ? qsTr("Module source:") : qsTr("Theme source:")
+            wrapMode: Text.Wrap
+            Layout.fillWidth: true
         }
 
         ComboBox {
@@ -57,77 +60,99 @@ Dialog {
 
         Label {
             text: type == "modules" ? qsTr("No modules available from this source.") : qsTr("No themes available from this source.")
+            wrapMode: Text.Wrap
             font.bold: true
             visible: doneLoading && objects.length == 0
+            Layout.fillWidth: true
         }
 
         Label {
             text: qsTr("Unsupported repository format (expected version %1, not %2).").arg(expectedVersion).arg(currentRepoVersion)
+            wrapMode: Text.Wrap
             font.bold: true
             visible: expectedVersion != currentRepoVersion
+            Layout.fillWidth: true
         }
 
         Label {
             text: qsTr("Module:")
+            wrapMode: Text.Wrap
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         ComboBox {
             id: objectComboBox
             model: objects.map(function(obj) { return obj.name; })
-            Layout.fillWidth: true
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         Label {
             text: qsTr("Download source:")
+            wrapMode: Text.Wrap
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         ComboBox {
             id: urlSelectionBox
             model: objects[objectComboBox.currentIndex] ? objects[objectComboBox.currentIndex].git_urls : [""]
-            Layout.fillWidth: true
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         Label {
             text: type == "modules" ? qsTr("This module is already installed.") : qsTr("This theme is already installed.")
+            wrapMode: Text.Wrap
             font.bold: true
             visible: objects.length >= 1 && Object.keys(installedObjects).indexOf(objects[objectComboBox.currentIndex].id) != -1
+            Layout.fillWidth: true
         }
 
         Label {
             text: qsTr("This module does not seem to support %1.").arg(platform)
+            wrapMode: Text.Wrap
             font.bold: true
             visible: type == "modules" && objects.length >= 1 && (objects[objectComboBox.currentIndex].platforms == null || objects[objectComboBox.currentIndex].platforms.indexOf(platform) == -1)
+            Layout.fillWidth: true
         }
 
         Label {
             text: qsTr("Details:")
+            wrapMode: Text.Wrap
             font.bold: true
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         Label {
             text: objects[objectComboBox.currentIndex] ? qsTr("Creator: ") + objects[objectComboBox.currentIndex].developer : ""
+            wrapMode: Text.Wrap
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         Label {
             text: objects[objectComboBox.currentIndex] ? qsTr("Description: ") + objects[objectComboBox.currentIndex].description : ""
+            wrapMode: Text.Wrap
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         Label {
             text: objects[objectComboBox.currentIndex] ? qsTr("License: ") + objects[objectComboBox.currentIndex].license : ""
+            wrapMode: Text.Wrap
             visible: objects.length >= 1
+            Layout.fillWidth: true
         }
 
         Label {
             text: qsTr("As Pext modules are code, please make sure you trust the developer before continuing.")
+            wrapMode: Text.Wrap
             font.bold: true
             visible: objects.length >= 1 && type == "modules"
+            Layout.fillWidth: true
         }
     }
 

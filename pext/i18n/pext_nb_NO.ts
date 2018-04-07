@@ -9,44 +9,24 @@
         <translation>Om Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="48"/>
+        <location filename="../qml/AboutDialog.qml" line="49"/>
         <source>Copyright</source>
         <translation>Kopirett</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="80"/>
+        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Translators</source>
         <translation>Oversettere</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Ønsker du å oversette Pext? Klikk her.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
+        <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Pext-laget ønsker å takket følgende for oversettelsen av Pext:</translation>
-    </message>
-    <message>
-        <source>Spanish</source>
-        <translation type="vanished">Spansk</translation>
-    </message>
-    <message>
-        <source>Hungarian</source>
-        <translation type="vanished">Ungarsk</translation>
-    </message>
-    <message>
-        <source>Norwegian Bokmål</source>
-        <translation type="vanished">Norsk bokmål</translation>
-    </message>
-    <message>
-        <source>Chinese (Traditional)</source>
-        <translation type="vanished">Tradisjonell kinesisk</translation>
-    </message>
-    <message>
-        <source>Dutch</source>
-        <translation type="vanished">Hollandsk</translation>
     </message>
 </context>
 <context>
@@ -62,105 +42,79 @@
         <translation>Draktinstallasjon</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
         <translation>Modulkilde:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Theme source:</source>
         <translation>Draktkilde:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
         <translation>Ingen moduler er tilgjengelige fra denne kilden.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
         <translation>Ingen drakter tilgjengelig fra denne kilden.</translation>
     </message>
     <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="obsolete">Pakkebrønnsformat støttes ikke (forventet versjon %1, fikk versjon %2).</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
         <source>Module:</source>
         <translation>Modul:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
         <translation>Last ned kilde:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This module is already installed.</source>
         <translation>Denne modulen er allerede installert.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This theme is already installed.</source>
         <translation>Denne drakten er allerede installert.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
         <translation type="unfinished">Denne modulen ser ikke ut til å støtte %1.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>Details:</source>
         <translation>Detaljer:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
         <translation>Utvikler: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
         <translation>Beskrivelse: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
         <translation>Lisens: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation type="unfinished">Siden Pext-moduler er kode, forsikre deg om at du stoler på utvikleren før du fortsetter.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallFromRepositoryUnsupportedDialog</name>
-    <message>
-        <source>Unsupported repository format</source>
-        <translation type="vanished">Ustøttet pakkebrønnsformat</translation>
-    </message>
-    <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">Pakkebrønnsformat støttes ikke (forventet versjon %1, fikk versjon %2).</translation>
-    </message>
-</context>
-<context>
-    <name>InstallModuleFromRepositoryDialog</name>
-    <message>
-        <source>Module installation</source>
-        <translation type="vanished">Modulinstallasjon</translation>
-    </message>
-    <message>
-        <source>Where do you want to get modules from?</source>
-        <translation type="vanished">Hvor ønsker du å hente modulene fra?</translation>
     </message>
 </context>
 <context>
@@ -174,10 +128,6 @@
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
         <translation>Ingen moduler ble funnet i denne pakkebrønnen.</translation>
-    </message>
-    <message>
-        <source>No modules found in this repository.</source>
-        <translation type="vanished">Ingen moduler funnet i denne pakkebrønnen.</translation>
     </message>
 </context>
 <context>
@@ -254,63 +204,6 @@
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Siden Pext-moduler er kode, forsikre deg om at du stoler på utvikleren før du fortsetter.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Draktinstallasjon</translation>
-    </message>
-    <message>
-        <source>Where do you want to get themes from?</source>
-        <translation type="vanished">Hvor ønsker du å hente drakter fra?</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryNoThemesAvailableDialog</name>
-    <message>
-        <source>No themes available</source>
-        <translation type="vanished">Ingen drakter tilgjengelig</translation>
-    </message>
-    <message>
-        <source>No themes found in this repository.</source>
-        <translation type="vanished">Ingen drakter funnet i denne pakkebrønnen.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositorySelectThemeDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Draktinstallasjon</translation>
-    </message>
-    <message>
-        <source>Choose the theme to install:</source>
-        <translation type="vanished">Velg drakt å installere:</translation>
-    </message>
-    <message>
-        <source>Choose the preferred download source:</source>
-        <translation type="vanished">Velg foretrukket nedlastingskilde:</translation>
-    </message>
-    <message>
-        <source>You already have this theme installed.</source>
-        <translation type="vanished">Drakt allerede installert.</translation>
-    </message>
-    <message>
-        <source>Theme information:</source>
-        <translation type="vanished">Draktinformasjon:</translation>
-    </message>
-    <message>
-        <source>Developer: </source>
-        <translation type="vanished">Utvikler: </translation>
-    </message>
-    <message>
-        <source>Description: </source>
-        <translation type="vanished">Beskrivelse: </translation>
-    </message>
-    <message>
-        <source>License: </source>
-        <translation type="vanished">Lisens: </translation>
     </message>
 </context>
 <context>
@@ -701,10 +594,6 @@
         <location filename="../qml/main.qml" line="657"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Kun manuelt: Minimer til systemkurv</translation>
-    </message>
-    <message>
-        <source>Show tray icon</source>
-        <translation type="vanished">Vis systemkurvsikon</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="671"/>

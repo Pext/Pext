@@ -9,22 +9,22 @@
         <translation>О Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="48"/>
+        <location filename="../qml/AboutDialog.qml" line="49"/>
         <source>Copyright</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="80"/>
+        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Translators</source>
         <translation>Переводчики</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Хотите помочь перевести Pext? Нажмите здесь.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
+        <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Команда Pext хотела бы поблагодарить следующих пользователей за помощь с переводом Pext:</translation>
     </message>
@@ -42,105 +42,79 @@
         <translation>Установка темы</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
         <translation>Источник модуля:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Theme source:</source>
         <translation>Источник темы:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
         <translation>В этом источнике не найдено модулей.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
         <translation>В этом источнике не найдено тем.</translation>
     </message>
     <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="obsolete">Данный формат репозитория не поддерживается (ожидалась версия %1, получена версия %2).</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
         <translation>Неподдерживаемый формат репозитория (требуется версия %1, а не %2).</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
         <source>Module:</source>
         <translation>Модуль:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
         <translation>Загрузить исходный код:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This module is already installed.</source>
         <translation>Этот модуль уже установлен.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This theme is already installed.</source>
         <translation>Эта тема уже установлена.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
         <translation type="unfinished">Кажется, этот модуль не поддерживает %1.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>Details:</source>
         <translation>Подробности:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
         <translation>Создатель: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
         <translation type="unfinished">Описание: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
         <translation type="unfinished">Лицензия: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation type="unfinished">Все модули Pext — это код. Перед тем, как продолжить, удостоверьтесь, что вы доверяете разработчику.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallFromRepositoryUnsupportedDialog</name>
-    <message>
-        <source>Unsupported repository format</source>
-        <translation type="vanished">Данный формат репозитория не поддерживается</translation>
-    </message>
-    <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">Данный формат репозитория не поддерживается (ожидалась версия %1, получена версия %2).</translation>
-    </message>
-</context>
-<context>
-    <name>InstallModuleFromRepositoryDialog</name>
-    <message>
-        <source>Module installation</source>
-        <translation type="vanished">Установка модуля</translation>
-    </message>
-    <message>
-        <source>Where do you want to get modules from?</source>
-        <translation type="vanished">Откуда вы хотели бы установить модули?</translation>
     </message>
 </context>
 <context>
@@ -154,10 +128,6 @@
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
         <translation>В данном репозитории не найдено модулей.</translation>
-    </message>
-    <message>
-        <source>No modules found in this repository.</source>
-        <translation type="vanished">В данном репозитории не найдено модулей.</translation>
     </message>
 </context>
 <context>
@@ -234,63 +204,6 @@
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Все модули Pext — это код. Перед тем, как продолжить, удостоверьтесь, что вы доверяете разработчику.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Установка темы</translation>
-    </message>
-    <message>
-        <source>Where do you want to get themes from?</source>
-        <translation type="vanished">Откуда вы хотели бы установить темы?</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryNoThemesAvailableDialog</name>
-    <message>
-        <source>No themes available</source>
-        <translation type="vanished">Нет доступных тем</translation>
-    </message>
-    <message>
-        <source>No themes found in this repository.</source>
-        <translation type="vanished">В данном репозитории не найдено тем.</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositorySelectThemeDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">Установка темы</translation>
-    </message>
-    <message>
-        <source>Choose the theme to install:</source>
-        <translation type="vanished">Выберите тему для установки:</translation>
-    </message>
-    <message>
-        <source>Choose the preferred download source:</source>
-        <translation type="vanished">Выберите предпочитаемый источник загрузки:</translation>
-    </message>
-    <message>
-        <source>You already have this theme installed.</source>
-        <translation type="vanished">У вас уже установлена эта тема.</translation>
-    </message>
-    <message>
-        <source>Theme information:</source>
-        <translation type="vanished">Информация о теме:</translation>
-    </message>
-    <message>
-        <source>Developer: </source>
-        <translation type="vanished">Разработчик: </translation>
-    </message>
-    <message>
-        <source>Description: </source>
-        <translation type="vanished">Описание: </translation>
-    </message>
-    <message>
-        <source>License: </source>
-        <translation type="vanished">Лицензия: </translation>
     </message>
 </context>
 <context>
@@ -681,10 +594,6 @@
         <location filename="../qml/main.qml" line="657"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Только вручную: Сворачивать в трей</translation>
-    </message>
-    <message>
-        <source>Show tray icon</source>
-        <translation type="vanished">Отображать иконку в трее</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="671"/>

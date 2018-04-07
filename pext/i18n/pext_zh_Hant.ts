@@ -9,44 +9,24 @@
         <translation>關於 Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="48"/>
+        <location filename="../qml/AboutDialog.qml" line="49"/>
         <source>Copyright</source>
         <translation>版權</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="80"/>
+        <location filename="../qml/AboutDialog.qml" line="81"/>
         <source>Translators</source>
         <translation>翻譯者</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>想要協助翻譯 Pext？請點選這裡。</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="88"/>
+        <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Pext 想要感謝下列這些翻譯 Pext 的使用者：</translation>
-    </message>
-    <message>
-        <source>Spanish</source>
-        <translation type="vanished">西班牙文</translation>
-    </message>
-    <message>
-        <source>Hungarian</source>
-        <translation type="vanished">匈牙利文</translation>
-    </message>
-    <message>
-        <source>Norwegian Bokmål</source>
-        <translation type="vanished">書面挪威語</translation>
-    </message>
-    <message>
-        <source>Chinese (Traditional)</source>
-        <translation type="vanished">正體中文</translation>
-    </message>
-    <message>
-        <source>Dutch</source>
-        <translation type="vanished">荷蘭文</translation>
     </message>
 </context>
 <context>
@@ -62,105 +42,79 @@
         <translation>主題安裝</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
         <translation>模組來源：</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="44"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Theme source:</source>
         <translation>主題來源：</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
         <translation>此來源未提供模組。</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="59"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
         <translation>此來源未提供主題。</translation>
     </message>
     <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="obsolete">不支援的軟體倉庫格式（預期版本 %1，實際版本 %2）。</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="65"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
         <translation>不支援的軟體庫格式（預期的版本 %1，不是 %2）。</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
         <source>Module:</source>
         <translation>模組：</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="83"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
         <translation>下載來源：</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This module is already installed.</source>
         <translation>此模組已安裝。</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="95"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This theme is already installed.</source>
         <translation>此主題已安裝。</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="101"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
         <translation>此模組似乎不支援 %1。</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>Details:</source>
         <translation>詳細資訊：</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="113"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
         <translation>建立者： </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="118"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
         <translation>描述： </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
         <translation>授權條款： </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="128"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>因為 Pext 模組就是原始碼，所以請在繼續前確保您信任開發者。</translation>
-    </message>
-</context>
-<context>
-    <name>InstallFromRepositoryUnsupportedDialog</name>
-    <message>
-        <source>Unsupported repository format</source>
-        <translation type="vanished">不支援的軟體庫格式</translation>
-    </message>
-    <message>
-        <source>Repository format not supported (expected version %1, got version %2).</source>
-        <translation type="vanished">不支援的軟體倉庫格式（預期版本 %1，實際版本 %2）。</translation>
-    </message>
-</context>
-<context>
-    <name>InstallModuleFromRepositoryDialog</name>
-    <message>
-        <source>Module installation</source>
-        <translation type="vanished">模組安裝</translation>
-    </message>
-    <message>
-        <source>Where do you want to get modules from?</source>
-        <translation type="vanished">您想要從哪裡取得模組？</translation>
     </message>
 </context>
 <context>
@@ -174,10 +128,6 @@
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
         <translation>此軟體庫中找不到任何模組。</translation>
-    </message>
-    <message>
-        <source>No modules found in this repository.</source>
-        <translation type="vanished">在此軟體倉庫中找不到模組。</translation>
     </message>
 </context>
 <context>
@@ -254,63 +204,6 @@
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>因為 Pext 模組就是原始碼，所以請在繼續前確保您信任開發者。</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">佈景主題安裝</translation>
-    </message>
-    <message>
-        <source>Where do you want to get themes from?</source>
-        <translation type="vanished">您想要從哪裡取得佈景主題？</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositoryNoThemesAvailableDialog</name>
-    <message>
-        <source>No themes available</source>
-        <translation type="vanished">無可用主題</translation>
-    </message>
-    <message>
-        <source>No themes found in this repository.</source>
-        <translation type="vanished">在此軟體倉庫中找不到佈景主題。</translation>
-    </message>
-</context>
-<context>
-    <name>InstallThemeFromRepositorySelectThemeDialog</name>
-    <message>
-        <source>Theme installation</source>
-        <translation type="vanished">佈景主題安裝</translation>
-    </message>
-    <message>
-        <source>Choose the theme to install:</source>
-        <translation type="vanished">選擇要安裝的主題：</translation>
-    </message>
-    <message>
-        <source>Choose the preferred download source:</source>
-        <translation type="vanished">選取偏好的下載來源：</translation>
-    </message>
-    <message>
-        <source>You already have this theme installed.</source>
-        <translation type="vanished">您已經安裝此主題了。</translation>
-    </message>
-    <message>
-        <source>Theme information:</source>
-        <translation type="vanished">佈景主題資訊：</translation>
-    </message>
-    <message>
-        <source>Developer: </source>
-        <translation type="vanished">開發者： </translation>
-    </message>
-    <message>
-        <source>Description: </source>
-        <translation type="vanished">描述： </translation>
-    </message>
-    <message>
-        <source>License: </source>
-        <translation type="vanished">授權條款： </translation>
     </message>
 </context>
 <context>
@@ -633,10 +526,6 @@
         <translation>更新所有佈景主題</translation>
     </message>
     <message>
-        <source>&amp;Profile</source>
-        <translation type="vanished">設定檔(&amp;P)</translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="517"/>
         <source>Switch profile</source>
         <translation>切換設定檔</translation>
@@ -705,10 +594,6 @@
         <location filename="../qml/main.qml" line="657"/>
         <source>Manual only: Minimize to tray</source>
         <translation>僅手動：最小化至系統匣</translation>
-    </message>
-    <message>
-        <source>Show tray icon</source>
-        <translation type="vanished">顯示系統匣圖示</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="671"/>
