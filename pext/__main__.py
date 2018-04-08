@@ -61,6 +61,9 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
 
+if 'APPIMAGE' in os.environ:
+    import appimageupdate
+
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 warn_no_openGL_linux = False
 if platform.system() == "Linux":
@@ -1304,6 +1307,9 @@ class UpdateManager():
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
                 self.version = version_file.read().strip()
 
+        if 'APPIMAGE' in os.environ:
+            self.appimageupdate = appimageupdate.Updater(os.path.dirname(AppFile.get_path()))
+
     @staticmethod
     def _path_to_repo(directory: str) -> Repo:
         return Repo(directory)
@@ -1359,6 +1365,9 @@ class UpdateManager():
 
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
+        if 'APPIMAGE' in os.environ:
+            return "APPIMAGE" if self.appimageupdate.check_for_update() else None
+
         with urlopen('https://pext.hackerchick.me/version/stable') as update_url:
             available_version = update_url.readline().decode("utf-8").strip()
 
@@ -1938,7 +1947,10 @@ class Window(QMainWindow):
 
         # Bind update dialog
         self.update_available_requests = self.window.findChild(QObject, "updateAvailableRequests")
-        self.update_available_requests.updateAvailableDialogAccepted.connect(self._show_download_page)
+        if 'APPIMAGE' in os.environ:
+            self.update_available_requests.updateAvailableDialogAccepted.connect(self._core_update_appimage)
+        else:
+            self.update_available_requests.updateAvailableDialogAccepted.connect(self._show_download_page)
 
         # Bind global shortcuts
         self.search_input_model = self.window.findChild(
@@ -2555,6 +2567,14 @@ class Window(QMainWindow):
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
+
+    def _update_core_appimage(self) -> None:
+        """Update self through AppImageUpdate."""
+        appimageupdate = UpdateManager().appimageupdate
+        appimageupdate.start()
+        t1 = threading.Timer(1000, Logger.log, [None, '⇩ Pext ({}%'.format(appimageupdate.progress * 100)], None)
+        t1.daemon = True
+        t1.start()
 
     def _show_download_page(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/download')

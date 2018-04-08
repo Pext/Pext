@@ -27,7 +27,7 @@ MessageDialog {
 
     property var updateAccepted
 
-    text: qsTr("A new version of Pext is available. Do you want to open the download page?")
+    text: qsTr("A new version of Pext is available. Do you want to download it?")
 
     Component.onCompleted: visible = true;
 

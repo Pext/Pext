@@ -33,11 +33,20 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 # activate Miniconda environment
 . AppDir/usr/bin/activate
 
+# build AppImageUpdate and install it into conda prefix
+git clone --recursive https://github.com/AppImage/AppImageUpdate
+pushd AppImageUpdate
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"/ -DBUILD_QT_UI=OFF
+make -j$(nproc)
+make install
+popd
+conda install -y -c statiskit libboost_python-dev libboost_python
+pip install -e git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate
+
 # install dependencies
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
-
-# try to fix SSL issues as specified here:
-# https://github.com/ContinuumIO/anaconda-issues/issues/494#issuecomment-155097614
 
 # install Pext
 pushd "$REPO_ROOT"/
