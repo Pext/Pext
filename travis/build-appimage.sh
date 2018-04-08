@@ -42,6 +42,7 @@ cmake .. -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"/ -DBUILD_QT_UI=OFF
 make -j$(nproc)
 make install
 popd
+
 conda install -y -c statiskit libboost_python-dev libboost_python
 pip install -e git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate
 
