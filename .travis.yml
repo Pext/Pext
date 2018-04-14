@@ -30,12 +30,6 @@ script:
   # test AppImage
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PEXTHOME=$(mktemp -d); fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod +x Pext*.AppImage; fi
-  # temporary solution for
-  # $ ./Pext*.AppImage --version
-  # QXcbConnection: Could not connect to display
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export DISPLAY=:99.0; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sh -e /etc/init.d/xvfb start; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sleep 3; fi # give xvfb some time to start
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" ./Pext*.AppImage --version; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" SSL_CERT_DIR="/etc/ssl/certs" ./Pext-x86_64.AppImage --install-module=https://github.com/Pext/pext_module_emoji#pext.module.emoji; fi
   - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
