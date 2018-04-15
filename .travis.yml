@@ -17,8 +17,7 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash build_mac_app.sh; fi
 
 script:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tox -v; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then python3.6 -m tox -v; fi
+  - tox -v
   # build dmg for macOS
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then git clone https://github.com/andreyvit/yoursway-create-dmg.git; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pushd yoursway-create-dmg; fi
