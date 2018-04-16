@@ -333,15 +333,15 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['metadata']['name'], str(action[1]))
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 
         elif action[0] == Action.add_message:
-            Logger.log(tab['module_name'], str(action[1]))
+            Logger.log(tab['metadata']['name'], str(action[1]))
 
         elif action[0] == Action.add_error:
-            Logger.log_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['metadata']['name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
             tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
@@ -617,7 +617,7 @@ class MainLoop():
 
                     tab['entries_processed'] = 0
                 except Exception as e:
-                    print('WARN: Module {} caused exception {}'.format(tab['module_name'], e))
+                    print('WARN: Module {} caused exception {}'.format(tab['metadata']['name'], e))
                     traceback.print_exc()
 
             Logger.set_queue_count(queue_size)
@@ -1012,7 +1012,7 @@ class ModuleManager():
         try:
             module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
         except ImportError as e1:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['id'], e1))
+            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e1))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1053,12 +1053,12 @@ class ModuleManager():
             if param_length != required_param_length:
                 if name == 'process_response' and param_length == 1:
                     print("WARN: Module {} uses old process_response signature and will not be able to receive an "
-                          "identifier if requested".format(module['metadata']['id']))
+                          "identifier if requested".format(module['metadata']['name']))
                 else:
                     Logger.log_error(
                         None,
                         "Failed to load module {}: {} function has {} parameters (excluding self), expected {}"
-                        .format(module['metadata']['id'], name, param_length, required_param_length))
+                        .format(module['metadata']['name'], name, param_length, required_param_length))
 
                     return False
 
@@ -1071,7 +1071,7 @@ class ModuleManager():
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
-            module['metadata']['id'],
+            module['metadata']['name'],
             q,
             target=module_code.init,
             args=(module['settings'], q))
@@ -1110,7 +1110,7 @@ class ModuleManager():
             window.tab_bindings[tab_id]['module'].stop()
         except Exception as e:
             print('WARN: Module {} caused exception {} on unload'
-                  .format(window.tab_bindings[tab_id]['metadata']['id'], e))
+                  .format(window.tab_bindings[tab_id]['metadata']['name'], e))
             traceback.print_exc()
 
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
@@ -3110,7 +3110,7 @@ def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
         try:
             module['module'].stop()
         except Exception as e:
-            print("Failed to cleanly stop module {}: {}".format(module['module_name'], e))
+            print("Failed to cleanly stop module {}: {}".format(module['metadata']['name'], e))
             traceback.print_exc()
 
     profile = Settings.get('profile')

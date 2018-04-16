@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Make text properly wrap in the installing from repository dialog
+- Crashes on tab completion and minor errors (regression in 0.13)
 
 ## [0.13] - 2018-04-07
 ### Added
