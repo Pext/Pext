@@ -10,4 +10,4 @@ sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/TheAssassi
 wget -nv https://download.opensuse.org/repositories/home:TheAssassin:AppImageLibraries/xUbuntu_14.04/Release.key -O- | sudo apt-key add -
 sudo apt-get update
 
-sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 libxi6
+sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3
