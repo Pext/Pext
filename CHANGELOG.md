@@ -9,9 +9,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - French translation (thanks, Aurora Yeen!)
 
+### Changed
+- Modules are now installed by metadata.json, instead of by git URL
+
 ### Fixed
 - Make text properly wrap in the installing from repository dialog
 - Crashes on tab completion and minor errors (regression in 0.13)
+- IDs and names are now used more consistently
 
 ## [0.13] - 2018-04-07
 ### Added
