@@ -361,7 +361,7 @@ ApplicationWindow {
                 objectName: "menuInstallModule"
                 title: qsTr("Install module")
 
-                signal installModuleRequest(string url, string identifier)
+                signal installModuleRequest(string url, string identifier, string name)
 
                 MenuItem {
                     text: qsTr("From online module list")
@@ -462,7 +462,7 @@ ApplicationWindow {
                 objectName: "menuInstallTheme"
                 title: qsTr("Install theme")
 
-                signal installThemeRequest(string url, string identifier)
+                signal installThemeRequest(string url, string identifier, string name)
 
                 MenuItem {
                     text: qsTr("From online theme list")
