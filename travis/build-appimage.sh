@@ -43,8 +43,14 @@ make -j$(nproc)
 make install
 popd
 
+# install deps for python-appimageupdate
 conda install -y -c statiskit libboost_python-dev libboost_python
-pip install -e git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate
+
+# install python-appimageupdate into conda prefix
+git clone https://github.com/TheAssassin/python-appimageupdate.git
+pushd python-appimageupdate
+python setup.py install --prefix="$CONDA_PREFIX/"
+popd
 
 # install dependencies
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
