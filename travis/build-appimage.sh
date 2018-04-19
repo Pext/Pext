@@ -33,15 +33,6 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 # activate Miniconda environment
 . AppDir/usr/bin/activate
 
-# Put all appimageupdatetool deps in our AppImage
-AIUT_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdateTool-XXXXXX)
-pushd "$AIUT_DIR"/
-wget https://github.com/AppImage/AppImageUpdate/releases/download/continuous/appimageupdatetool-301-25de4b5-x86_64.AppImage
-chmod +x *.AppImage
-./*.AppImage --appimage-extract
-cp squashfs-root/usr/lib/*.so* "$BUILD_DIR"/AppDir/usr/lib/
-popd
-
 # build AppImageUpdate and install it into conda prefix
 git clone --recursive https://github.com/AppImage/AppImageUpdate
 pushd AppImageUpdate
@@ -50,6 +41,16 @@ cd build
 cmake .. -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"/ -DBUILD_QT_UI=OFF
 make -j$(nproc)
 make install
+popd
+
+# Put all appimageupdatetool deps in our AppImage
+AIUT_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdateTool-XXXXXX)
+pushd "$AIUT_DIR"/
+wget https://github.com/AppImage/AppImageUpdate/releases/download/continuous/appimageupdatetool-301-25de4b5-x86_64.AppImage
+chmod +x *.AppImage
+./*.AppImage --appimage-extract
+rm squashfs-root/usr/lib/libappimageupdate.so
+cp squashfs-root/usr/lib/*.so* "$CONDA_PREFIX"/lib/
 popd
 
 # install deps for python-appimageupdate
