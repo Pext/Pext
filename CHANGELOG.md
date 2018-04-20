@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Crashes on tab completion and minor errors (regression in 0.13)
 - Crash on module reloading (regression in 0.13)
 - IDs and names are now used more consistently
+- Crash when trying to load a theme as a module
 
 ## [0.13] - 2018-04-07
 ### Added

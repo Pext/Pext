@@ -1019,7 +1019,15 @@ class ModuleManager():
 
             return False
 
-        Module = getattr(module_import, 'Module')
+        try:
+            Module = getattr(module_import, 'Module')
+        except AttributeError as e2:
+            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e2))
+
+            # Remove module dependencies path
+            sys.path.remove(module_dependencies_path)
+
+            return False
 
         # Ensure the module implements the base
         assert issubclass(Module, ModuleBase)
@@ -1031,8 +1039,11 @@ class ModuleManager():
         # Load module
         try:
             module_code = Module()
-        except TypeError as e2:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module.metadata.id, e2))
+        except TypeError as e3:
+            Logger.log_error(None, "Failed to load module {}: {}".format(module.metadata.id, e3))
+
+            # Remove module dependencies path
+            sys.path.remove(module_dependencies_path)
 
             return False
 
@@ -1135,15 +1146,15 @@ class ModuleManager():
         # Get the needed info to load the module
         module_data = window.tab_bindings[tab_id]
         module = {
-            'metadata': module_data.metadata,
-            'settings': module_data.settings
+            'metadata': module_data['metadata'],
+            'settings': module_data['settings']
         }
 
         # Unload the module
         self.unload_module(window, tab_id)
 
         # Force a reload to make code changes happen
-        reload(module_data.module_import)
+        reload(module_data['module_import'])
 
         # Load it into the UI
         if not self.load_module(window, module):
