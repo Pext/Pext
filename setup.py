@@ -70,7 +70,7 @@ setup(
         'pext_dev'
     ],
     package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/128x128/*', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
-                  'pext_dev': ['LICENSE', 'module/*', 'theme/*', '*.py']},
+                  'pext_dev': ['module/*', 'theme/*', '*.py']},
     zip_safe=False,
     entry_points={
         'gui_scripts': [

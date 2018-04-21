@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Modules are now installed by metadata.json, instead of by git URL
+- Make pext_dev default to CC-BY-3.0 for themes
 
 ### Fixed
 - Make text properly wrap in the installing from repository dialog
@@ -21,6 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Crash on module reloading (regression in 0.13)
 - IDs and names are now used more consistently
 - Crash when trying to load a theme as a module
+- Update pext_dev to be create files compatible with current Pext
 
 ## [0.13] - 2018-04-07
 ### Added
