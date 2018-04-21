@@ -193,7 +193,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>संस्थापित करने के लिए मॉड्यूल का मेटाडेटा यूआरएल दर्ज करें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>संस्थापित करने के लिए थीम का मेटाडेटा यूआरएल दर्ज करें:</translation>
     </message>
 </context>
 <context>
