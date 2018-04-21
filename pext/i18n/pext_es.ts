@@ -64,7 +64,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Formato de repositorio no compatible (versión esperada %1, no %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
@@ -193,7 +193,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingrese la URL de metadatos del módulo para instalar:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingrese la URL de metadatos del tema para instalar:</translation>
     </message>
 </context>
 <context>
