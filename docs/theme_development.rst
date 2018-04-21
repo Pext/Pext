@@ -49,9 +49,9 @@ write this in `theme.conf`:
    Window = 255,0,0
 
 For a complete list of all Color Roles, please see
-`https://doc.qt.io/qt-5/qpalette.html#ColorRole-enum`_. Please remember to
-only use the names after `::`. So, instead of using `QPalette::Window` as key,
-simply use `Window`.
+`the QPalette docs <https://doc.qt.io/qt-5/qpalette.html#ColorRole-enum>`_.
+Please remember to only use the names after `::`. So, instead of using
+`QPalette::Window` as key, simply use `Window`.
 
 One thing to note is that the theming engine automatically processes colors, so
 you may not exactly get the color you are looking for, but a close
