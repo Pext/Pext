@@ -63,9 +63,8 @@ both when the user is about to install the module and when they already
 installed it.
 
 `LICENSE` contains the license for your project. ``pext_dev theme init`` puts the
-GPLv3 into this file, as it defaults to using the Creative Commons Attribution
-3.0 license for generated projects, as it is a common Open Source license for
-non-code files.
+Creative Commons Attribution 3.0 license into this file, as it is a common Open
+Source license for non-code files.
 
 Testing
 -------
