@@ -9,13 +9,13 @@ as per the :doc:`README <README>` will also install pext_dev, containing all you
 to easily develop modules.
 
 Once you have installed Pext, simply navigate to the directory you want to start
-developing in and run ``pext_dev init`` to create the base files in the current
-directory or ``pext_dev init <directory>`` to create them in a new directory.
+developing in and run ``pext_dev module init`` to create the base files in the current
+directory or ``pext_dev module init <directory>`` to create them in a new directory.
 
 Starting module development
 ---------------------------
 
-After running ``pext_dev init`` and answering its questions you will have a
+After running ``pext_dev module init`` and answering its questions you will have a
 directory with the following files in it:
 
 - __init__.py
@@ -38,7 +38,7 @@ Pext to show the user who developed the module, its intended purpose and more,
 both when the user is about to install the module and when they already
 installed it.
 
-`LICENSE` contains the license for your project. ``pext_dev init`` puts the
+`LICENSE` contains the license for your project. ``pext_dev module init`` puts the
 GPLv3 into this file, as it defaults to using the GPLv3+ for generated
 projects, because Pext itself is licensed under this license. The GPLv3 is a
 copyleft license which is meant to allow people to use, modify and distribute
@@ -62,7 +62,7 @@ More advanced information on using a `requirements.txt` file can be found on
 Testing
 -------
 
-To test your module, simply run ``pext_dev run`` in the module directory. This
+To test your module, simply run ``pext_dev module run`` in the module directory. This
 will launch a completely clean instance of Pext and install your module from
 scratch, including dependencies defined in `requirements.txt`. This way you can
 be reasonably sure your module will work for others too. When you're done
