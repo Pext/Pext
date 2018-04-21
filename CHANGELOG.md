@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Packaging changes
+- Packagers can now modify pext/constants.py to more easily control some behaviour
+
 ### Added
 - French translation (thanks, Aurora Yeen!)
 

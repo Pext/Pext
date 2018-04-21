@@ -86,6 +86,8 @@ sys.path.append(os.path.join(AppFile.get_path()))
 from pext_base import ModuleBase  # noqa: E402
 from pext_helpers import Action, SelectionType  # noqa: E402
 
+from constants import USE_INTERNAL_UPDATER  # noqa: E402
+
 
 class MinimizeMode(IntEnum):
     """A list of possible ways Pext can react on minimization."""
@@ -1923,6 +1925,8 @@ class Window(QMainWindow):
         # Set QML variables
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
+            "USE_INTERNAL_UPDATER", USE_INTERNAL_UPDATER)
+        self.context.setContextProperty(
             "applicationVersion", UpdateManager().get_core_version())
         self.context.setContextProperty(
             "systemPlatform", platform.system())
@@ -2132,7 +2136,7 @@ class Window(QMainWindow):
         elif not Settings.get('background'):
             self.show()
 
-            if Settings.get('update_check') is None:
+            if USE_INTERNAL_UPDATER and Settings.get('update_check') is None:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
@@ -2564,6 +2568,9 @@ class Window(QMainWindow):
                 Logger.log(None, '✔⇩ Pext')
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
+        if not USE_INTERNAL_UPDATER:
+            return
+
         # Set a timer to run this function again in an hour
         if not manual:
             t = threading.Timer(3600, self._menu_check_updates, None, {'verbose': False, 'manual': False})

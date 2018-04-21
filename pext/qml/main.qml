@@ -25,6 +25,7 @@ import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
+    property bool internalUpdaterEnabled: USE_INTERNAL_UPDATER
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
@@ -670,6 +671,7 @@ ApplicationWindow {
                 objectName: "menuEnableUpdateCheck"
                 text: qsTr("Automatically check for updates")
                 checkable: true
+                visible: internalUpdaterEnabled
             }
         }
 
@@ -689,6 +691,7 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
+                visible: internalUpdaterEnabled
             }
 
             MenuItem {
