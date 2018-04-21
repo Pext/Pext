@@ -73,7 +73,7 @@ Publishing your module
 ----------------------
 
 To publish your module, put it on a git hosting site such as
-`NotABug <https://notabug.org/>`_. Make sure to add a README file so users who
+`GitHub <https://github.com/>`_. Make sure to add a README file so users who
 find your module online know what it's about!
 
 Whenever you make a change to your module, you can push it to git and, as long
