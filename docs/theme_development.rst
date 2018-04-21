@@ -43,8 +43,10 @@ of red, green and blue (RGB) ranging from 0 to 255.
 For example, to make the window pure red when the window is inactive, you would
 write this in `theme.conf`:
 
-[Inactive]
-Window = 255,0,0
+.. code-block:: none
+
+   [Inactive]
+   Window = 255,0,0
 
 For a complete list of all Color Roles, please see
 `https://doc.qt.io/qt-5/qpalette.html#ColorRole-enum`_. Please remember to
