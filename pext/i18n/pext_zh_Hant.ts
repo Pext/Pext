@@ -193,7 +193,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>輸入模組的詮釋資料 URL 以安裝：</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>輸入主題的詮釋資料 URL 以安裝：</translation>
     </message>
 </context>
 <context>

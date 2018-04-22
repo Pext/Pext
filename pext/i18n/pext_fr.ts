@@ -193,7 +193,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrez l&apos;URL méta data du module pour l&apos;installer :</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrez l&apos;URL méta data du thème pour l&apos;installer :</translation>
     </message>
 </context>
 <context>

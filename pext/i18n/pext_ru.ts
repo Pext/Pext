@@ -89,7 +89,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished">Кажется, этот модуль не поддерживает %1.</translation>
+        <translation>Кажется, этот модуль не поддерживает %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
@@ -104,17 +104,17 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
-        <translation type="unfinished">Описание: </translation>
+        <translation>Описание: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
-        <translation type="unfinished">Лицензия: </translation>
+        <translation>Лицензия: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation type="unfinished">Все модули Pext — это код. Перед тем, как продолжить, удостоверьтесь, что вы доверяете разработчику.</translation>
+        <translation>Все модули Pext — это код. Перед тем, как продолжить, удостоверьтесь, что вы доверяете разработчику.</translation>
     </message>
 </context>
 <context>
@@ -193,7 +193,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Введите URL метаданных модуля для установки:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -211,7 +211,7 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the theme to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Введите URL метаданных темы для установки:</translation>
     </message>
 </context>
 <context>
@@ -288,7 +288,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation type="unfinished">Идентификатор: %1</translation>
+        <translation>Идентификатор: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
