@@ -64,7 +64,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Ustøttet pakkebrønnsformat (forventet versjon %1, ikke %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
