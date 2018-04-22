@@ -2,7 +2,7 @@ Thank you for reporting a bug or requesting a feature. Please try to answer as m
 
 ### Is this a bug or a feature request?
 
-### What Pext version are you running? (the output of ``pext --version``)
+### What Pext version are you running?
 
 ### What OS are you using? (e.g.: Ubuntu 16.04, Windows 10, macOS High Sierra)
 
