@@ -5,13 +5,14 @@
 
 # When releasing, do the following:
 ## i18n
-1. Merge i18n branch
-2. Check for new translatable strings (``lupdate-qt5 pext/pext.pro``)
-3. If new translatable strings, push to i18n branch and DO NOT RELEASE (unless important)
-4. Compile translations (``lrelease-qt5 pext/pext.pro``)
+1. ```git fetch```
+2. Merge i18n branch
+3. Check for new translatable strings (``lupdate-qt5 pext/pext.pro``)
+4. If new translatable strings, push to i18n branch and DO NOT RELEASE (unless important)
+5. Compile translations (``lrelease-qt5 pext/pext.pro``)
 
 ## Cleanup
-1. ```git clean -df``` to delete all untracked files and directory
+1. ```git clean -dfx``` to delete all untracked files and directory
 2. Temporarily disable dulwich version generation in setup.py
 
 ## Preparation
