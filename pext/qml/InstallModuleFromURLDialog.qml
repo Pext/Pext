@@ -48,7 +48,7 @@ Dialog {
         }
 
         Label {
-            text: qsTr("As Pext modules are code, please make sure you trust the developer before continuing.")
+            text: qsTr("Don't install modules you don't trust the developer of.")
             font.bold: true
         }
     }
