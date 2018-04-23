@@ -192,16 +192,11 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the module to install:</source>
-        <translation>स्थापित करने के लिए मॉड्यूल का git url दर्ज करें:</translation>
+        <source>Enter the metadata URL of the module to install:</source>
+        <translation>संस्थापित करने के लिए मॉड्यूल का मेटाडेटा यूआरएल दर्ज करें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
-        <source>Enter the correct module identifier:</source>
-        <translation>सही मॉड्यूल पहचानकर्ता डालें:</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
     </message>
@@ -215,13 +210,8 @@
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the theme to install:</source>
-        <translation>स्थापित करने के लिए थीम का गिट यूआरएल दर्ज करें:</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
-        <source>Enter the correct theme identifier:</source>
-        <translation>सही थीम पहचानकर्ता डालें:</translation>
+        <source>Enter the metadata URL of the theme to install:</source>
+        <translation>संस्थापित करने के लिए थीम का मेटाडेटा यूआरएल दर्ज करें:</translation>
     </message>
 </context>
 <context>

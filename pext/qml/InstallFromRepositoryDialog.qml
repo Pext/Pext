@@ -163,7 +163,7 @@ Dialog {
 
     onAccepted: {
         if (urlSelectionBox.currentText && objects[objectComboBox.currentIndex].id) {
-            installRequest(urlSelectionBox.currentText, objects[objectComboBox.currentIndex].id);
+            installRequest(urlSelectionBox.currentText, objects[objectComboBox.currentIndex].id, objects[objectComboBox.currentIndex].name);
         }
     }
 

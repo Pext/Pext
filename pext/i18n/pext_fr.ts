@@ -192,16 +192,11 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the module to install:</source>
-        <translation>Entrez l&apos;URL git du module à installer:</translation>
+        <source>Enter the metadata URL of the module to install:</source>
+        <translation>Entrez l&apos;URL méta data du module pour l&apos;installer :</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
-        <source>Enter the correct module identifier:</source>
-        <translation>Entrez le bon identifiant du module:</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Comme les modules Pext sont du code, assurez-vous de faire confiance au développeur avant de continuer.</translation>
     </message>
@@ -215,13 +210,8 @@
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the theme to install:</source>
-        <translation>Entrez l&apos;URL git du thème à installer:</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
-        <source>Enter the correct theme identifier:</source>
-        <translation>Entrez le bon identifiant du thème:</translation>
+        <source>Enter the metadata URL of the theme to install:</source>
+        <translation>Entrez l&apos;URL méta data du thème pour l&apos;installer :</translation>
     </message>
 </context>
 <context>

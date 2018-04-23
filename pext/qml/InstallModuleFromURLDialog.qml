@@ -30,20 +30,11 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: qsTr("Enter the git URL of the module to install:")
+            text: qsTr("Enter the metadata URL of the module to install:")
         }
 
         TextField {
             id: textfield
-            Layout.fillWidth: true
-        }
-
-        Label {
-            text: qsTr("Enter the correct module identifier:")
-        }
-
-        TextField {
-            id: identifierTextfield
             Layout.fillWidth: true
         }
 
@@ -59,7 +50,17 @@ Dialog {
     }
 
     onAccepted: {
-        installRequest(textfield.text, identifierTextfield.text);
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+                var metadata = JSON.parse(xmlhttp.response);
+                installRequest(metadata.git_urls[0], metadata.id, metadata.name)
+            }
+        }
+
+        xmlhttp.open("GET", textfield.text, true);
+        xmlhttp.send();
     }
 }
 

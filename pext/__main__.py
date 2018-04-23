@@ -333,15 +333,15 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['metadata']['name'], str(action[1]))
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 
         elif action[0] == Action.add_message:
-            Logger.log(tab['module_name'], str(action[1]))
+            Logger.log(tab['metadata']['name'], str(action[1]))
 
         elif action[0] == Action.add_error:
-            Logger.log_error(tab['module_name'], str(action[1]))
+            Logger.log_error(tab['metadata']['name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
             tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
@@ -617,7 +617,7 @@ class MainLoop():
 
                     tab['entries_processed'] = 0
                 except Exception as e:
-                    print('WARN: Module {} caused exception {}'.format(tab['module_name'], e))
+                    print('WARN: Module {} caused exception {}'.format(tab['metadata']['name'], e))
                     traceback.print_exc()
 
             Logger.set_queue_count(queue_size)
@@ -1012,14 +1012,22 @@ class ModuleManager():
         try:
             module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
         except ImportError as e1:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['id'], e1))
+            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e1))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
 
             return False
 
-        Module = getattr(module_import, 'Module')
+        try:
+            Module = getattr(module_import, 'Module')
+        except AttributeError as e2:
+            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e2))
+
+            # Remove module dependencies path
+            sys.path.remove(module_dependencies_path)
+
+            return False
 
         # Ensure the module implements the base
         assert issubclass(Module, ModuleBase)
@@ -1031,8 +1039,11 @@ class ModuleManager():
         # Load module
         try:
             module_code = Module()
-        except TypeError as e2:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module.metadata.id, e2))
+        except TypeError as e3:
+            Logger.log_error(None, "Failed to load module {}: {}".format(module.metadata.id, e3))
+
+            # Remove module dependencies path
+            sys.path.remove(module_dependencies_path)
 
             return False
 
@@ -1053,12 +1064,12 @@ class ModuleManager():
             if param_length != required_param_length:
                 if name == 'process_response' and param_length == 1:
                     print("WARN: Module {} uses old process_response signature and will not be able to receive an "
-                          "identifier if requested".format(module['metadata']['id']))
+                          "identifier if requested".format(module['metadata']['name']))
                 else:
                     Logger.log_error(
                         None,
                         "Failed to load module {}: {} function has {} parameters (excluding self), expected {}"
-                        .format(module['metadata']['id'], name, param_length, required_param_length))
+                        .format(module['metadata']['name'], name, param_length, required_param_length))
 
                     return False
 
@@ -1071,7 +1082,7 @@ class ModuleManager():
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
-            module['metadata']['id'],
+            module['metadata']['name'],
             q,
             target=module_code.init,
             args=(module['settings'], q))
@@ -1110,7 +1121,7 @@ class ModuleManager():
             window.tab_bindings[tab_id]['module'].stop()
         except Exception as e:
             print('WARN: Module {} caused exception {} on unload'
-                  .format(window.tab_bindings[tab_id]['metadata']['id'], e))
+                  .format(window.tab_bindings[tab_id]['metadata']['name'], e))
             traceback.print_exc()
 
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
@@ -1135,15 +1146,15 @@ class ModuleManager():
         # Get the needed info to load the module
         module_data = window.tab_bindings[tab_id]
         module = {
-            'metadata': module_data.metadata,
-            'settings': module_data.settings
+            'metadata': module_data['metadata'],
+            'settings': module_data['settings']
         }
 
         # Unload the module
         self.unload_module(window, tab_id)
 
         # Force a reload to make code changes happen
-        reload(module_data.module_import)
+        reload(module_data['module_import'])
 
         # Load it into the UI
         if not self.load_module(window, module):
@@ -1165,25 +1176,25 @@ class ModuleManager():
 
         return True
 
-    def install_module(self, url: str, identifier: str, verbose=False, interactive=True) -> bool:
+    def install_module(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
         """Install a module."""
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
         dep_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
 
         if os.path.exists(module_path):
             if verbose:
-                Logger.log(None, '✔⇩ {}'.format(identifier))
+                Logger.log(None, '✔⇩ {}'.format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩ {} ({})'.format(identifier, url))
+            Logger.log(None, '⇩ {} ({})'.format(name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
+                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
@@ -1195,12 +1206,12 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger.log(None, '⇩⇩ {}'.format(identifier))
+            Logger.log(None, '⇩⇩ {}'.format(name))
 
         pip_exit_code = self._pip_install(identifier)
         if pip_exit_code != 0:
             if verbose:
-                Logger.log_error(None, '⇩⇩ {}: {}'.format(identifier, pip_exit_code))
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(name, pip_exit_code))
 
             try:
                 rmtree(module_path)
@@ -1215,7 +1226,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩⇩ {}'.format(identifier))
+            Logger.log(None, '✔⇩⇩ {}'.format(name))
 
         return True
 
@@ -1224,14 +1235,20 @@ class ModuleManager():
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
         dep_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
 
+        try:
+            with open(os.path.join(module_path, "metadata.json"), 'r') as metadata_json:
+                name = json.load(metadata_json)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            name = identifier
+
         if verbose:
-            Logger.log(None, '♻ {}'.format(identifier))
+            Logger.log(None, '♻ {}'.format(name))
 
         try:
             rmtree(module_path)
         except FileNotFoundError:
             if verbose:
-                Logger.log(None, '✔♻ {}'.format(identifier))
+                Logger.log(None, '✔♻ {}'.format(name))
 
             return False
 
@@ -1241,7 +1258,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, '✔♻ {}'.format(identifier))
+            Logger.log(None, '✔♻ {}'.format(name))
 
         return True
 
@@ -1249,36 +1266,42 @@ class ModuleManager():
         """Update a module."""
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
 
+        try:
+            with open(os.path.join(module_path, "metadata.json"), 'r') as metadata_json:
+                name = json.load(metadata_json)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            name = identifier
+
         if verbose:
-            Logger.log(None, '⇩ {}'.format(identifier))
+            Logger.log(None, '⇩ {}'.format(name))
 
         try:
             if not UpdateManager.update(module_path):
                 if verbose:
-                    Logger.log(None, '⏩{}'.format(identifier))
+                    Logger.log(None, '⏩{}'.format(name))
 
                 return False
 
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
+                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩⇩ {}'.format(identifier))
+            Logger.log(None, '⇩⇩ {}'.format(name))
 
         pip_exit_code = self._pip_install(identifier)
         if pip_exit_code != 0:
             if verbose:
-                Logger.log_error(None, '⇩⇩ {}: {}'.format(identifier, pip_exit_code))
+                Logger.log_error(None, '⇩⇩ {}: {}'.format(name, pip_exit_code))
 
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩⇩ {}'.format(identifier))
+            Logger.log(None, '✔⇩⇩ {}'.format(name))
 
         return True
 
@@ -1286,8 +1309,8 @@ class ModuleManager():
         """Update all modules."""
         success = True
 
-        for module in self.list_modules().keys():
-            if not self.update_module(module, verbose=verbose):
+        for identifier in self.list_modules().keys():
+            if not self.update_module(identifier, verbose=verbose):
                 success = False
 
         return success
@@ -2237,11 +2260,11 @@ class Window(QMainWindow):
                 self,
                 QQmlProperty.read(self.tabs, "currentIndex"))
 
-    def _menu_install_module(self, module_url: str, identifier: str) -> None:
+    def _menu_install_module(self, module_url: str, identifier: str, name: str) -> None:
         functions = [
             {
                 'name': self.module_manager.install_module,
-                'args': (module_url, identifier),
+                'args': (module_url, identifier, name,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -2366,11 +2389,11 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_install_theme(self, theme_url: str, identifier: str) -> None:
+    def _menu_install_theme(self, theme_url: str, identifier: str, name: str) -> None:
         functions = [
             {
                 'name': self.theme_manager.install_theme,
-                'args': (theme_url, identifier,),
+                'args': (theme_url, identifier, name,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
@@ -2671,24 +2694,24 @@ class ThemeManager():
         """Apply the palette to the app (use this before creating a window)."""
         app.setPalette(palette)
 
-    def install_theme(self, url: str, identifier: str, verbose=False, interactive=True) -> bool:
+    def install_theme(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
         """Install a theme."""
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
         if os.path.exists(theme_path):
             if verbose:
-                Logger.log(None, '✔⇩ {}'.format(identifier))
+                Logger.log(None, '✔⇩ {}'.format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩ {} ({})'.format(identifier, url))
+            Logger.log(None, '⇩ {} ({})'.format(name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
+                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
@@ -2700,7 +2723,7 @@ class ThemeManager():
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩ {}'.format(identifier))
+            Logger.log(None, '✔⇩ {}'.format(name))
 
         return True
 
@@ -2708,19 +2731,25 @@ class ThemeManager():
         """Uninstall a theme."""
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
+        try:
+            with open(os.path.join(theme_path, "metadata.json"), 'r') as metadata_json:
+                name = json.load(metadata_json)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            name = identifier
+
         if verbose:
-            Logger.log(None, '♻ {}'.format(identifier))
+            Logger.log(None, '♻ {}'.format(name))
 
         try:
             rmtree(theme_path)
         except FileNotFoundError:
             if verbose:
-                Logger.log(None, '✔♻ {}'.format(identifier))
+                Logger.log(None, '✔♻ {}'.format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '✔♻ {}'.format(identifier))
+            Logger.log(None, '✔♻ {}'.format(name))
 
         return True
 
@@ -2728,26 +2757,32 @@ class ThemeManager():
         """Update a theme."""
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
+        try:
+            with open(os.path.join(theme_path, "metadata.json"), 'r') as metadata_json:
+                name = json.load(metadata_json)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            name = identifier
+
         if verbose:
-            Logger.log(None, '⇩ {}'.format(identifier))
+            Logger.log(None, '⇩ {}'.format(name))
 
         try:
             if not UpdateManager.update(theme_path):
                 if verbose:
-                    Logger.log(None, '⏩{}'.format(identifier))
+                    Logger.log(None, '⏩{}'.format(name))
 
                 return False
 
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(identifier, e))
+                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩ {}'.format(identifier))
+            Logger.log(None, '✔⇩ {}'.format(name))
 
         return True
 
@@ -2755,8 +2790,8 @@ class ThemeManager():
         """Update all themes."""
         success = True
 
-        for theme in self.list_themes().keys():
-            if not self.update_theme(theme, verbose=verbose):
+        for identifier in self.list_themes().keys():
+            if not self.update_theme(identifier, verbose=verbose):
                 success = False
 
         return success
@@ -2900,16 +2935,16 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='name the module to use. This option may be given multiple times. '
                         'When this option is given, the profile module list will be overwritten.')
     parser.add_argument('--install-module', action='append',
-                        help='download and install a module from the given git URL.')
-    parser.add_argument('--uninstall-module', action='append', help='uninstall the given module.')
-    parser.add_argument('--update-module', action='append', help='update the given module.')
+                        help='download and install a module from the given metadata.json URL.')
+    parser.add_argument('--uninstall-module', action='append', help='uninstall a module by identifier.')
+    parser.add_argument('--update-module', action='append', help='update a module by identifier.')
     parser.add_argument('--update-modules', action='store_true', help='update all modules.')
     parser.add_argument('--list-modules', action='store_true', help='list all installed modules.')
     parser.add_argument('--theme', help='use the chosen theme.')
     parser.add_argument('--install-theme', action='append',
-                        help='download and install a theme from the given git URL.')
-    parser.add_argument('--uninstall-theme', action='append', help='uninstall a theme by name.')
-    parser.add_argument('--update-theme', action='append', help='update the chosen theme.')
+                        help='download and install a theme from the given metadata.json URL.')
+    parser.add_argument('--uninstall-theme', action='append', help='uninstall a theme by identifier.')
+    parser.add_argument('--update-theme', action='append', help='update a theme by identifier.')
     parser.add_argument('--update-themes', action='store_true', help='update all themes.')
     parser.add_argument('--list-themes', action='store_true', help='list all installed themes.')
     parser.add_argument('--profile', '-p',
@@ -2992,23 +3027,32 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
         Settings.set('clipboard', args.clipboard)
 
     if args.install_module:
-        for module in args.install_module:
-            url, identifier = module.split("#", 1)
-            if not ModuleManager(config_retriever).install_module(url, identifier, verbose=True):
-                sys.exit(3)
+        for metadata_url in args.install_module:
+            try:
+                with urlopen(metadata_url) as unparsed_metadata:
+                    metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
+
+                if not ModuleManager(config_retriever).install_module(metadata['git_urls'][0],
+                                                                      metadata['id'],
+                                                                      metadata['name'],
+                                                                      verbose=True):
+                    sys.exit(3)
+            except Exception as e:
+                print("Failed installing module from {}: {}".format(metadata_url, e))
+                traceback.print_exc()
 
         Settings.set('_launch_app', False)
 
     if args.uninstall_module:
-        for module in args.uninstall_module:
-            if not ModuleManager(config_retriever).uninstall_module(module, verbose=True):
+        for identifier in args.uninstall_module:
+            if not ModuleManager(config_retriever).uninstall_module(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_module:
-        for module in args.update_module:
-            if not ModuleManager(config_retriever).update_module(module, verbose=True):
+        for identifier in args.update_module:
+            if not ModuleManager(config_retriever).update_module(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
@@ -3020,8 +3064,8 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
         Settings.set('_launch_app', False)
 
     if args.list_modules:
-        for module_name, module_data in ModuleManager(config_retriever).list_modules().items():
-            print('{} ({})'.format(module_name, module_data['source']))
+        for module_identifier, module_data in ModuleManager(config_retriever).list_modules().items():
+            print('{} ({})'.format(module_identifier, module_data['source']))
 
         Settings.set('_launch_app', False)
 
@@ -3029,23 +3073,32 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
         Settings.set('theme', args.themes)
 
     if args.install_theme:
-        for theme in args.install_theme:
-            url, identifier = theme.split("#", 1)
-            if not ThemeManager(config_retriever).install_theme(url, identifier, verbose=True):
-                sys.exit(3)
+        for metadata_url in args.install_theme:
+            try:
+                with urlopen(metadata_url) as unparsed_metadata:
+                    metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
+
+                if not ThemeManager(config_retriever).install_theme(metadata['git_urls'][0],
+                                                                    metadata['id'],
+                                                                    metadata['name'],
+                                                                    verbose=True):
+                    sys.exit(3)
+            except Exception as e:
+                print("Failed installing theme from {}: {}".format(metadata_url, e))
+                traceback.print_exc()
 
         Settings.set('_launch_app', False)
 
     if args.uninstall_theme:
-        for theme in args.uninstall_theme:
-            if not ThemeManager(config_retriever).uninstall_theme(theme, verbose=True):
+        for identifier in args.uninstall_theme:
+            if not ThemeManager(config_retriever).uninstall_theme(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_theme:
-        for theme in args.update_theme:
-            if not ThemeManager(config_retriever).update_theme(theme, verbose=True):
+        for identifier in args.update_theme:
+            if not ThemeManager(config_retriever).update_theme(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
@@ -3110,7 +3163,7 @@ def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
         try:
             module['module'].stop()
         except Exception as e:
-            print("Failed to cleanly stop module {}: {}".format(module['module_name'], e))
+            print("Failed to cleanly stop module {}: {}".format(module['metadata']['name'], e))
             traceback.print_exc()
 
     profile = Settings.get('profile')

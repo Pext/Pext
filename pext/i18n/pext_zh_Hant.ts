@@ -192,16 +192,11 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the module to install:</source>
-        <translation>輸入要安裝的模組的 git URL：</translation>
+        <source>Enter the metadata URL of the module to install:</source>
+        <translation>輸入模組的詮釋資料 URL 以安裝：</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
-        <source>Enter the correct module identifier:</source>
-        <translation>輸入正確的模組識別碼：</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>因為 Pext 模組就是原始碼，所以請在繼續前確保您信任開發者。</translation>
     </message>
@@ -215,13 +210,8 @@
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the theme to install:</source>
-        <translation>輸入要安裝的佈景主題的 git URL：</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
-        <source>Enter the correct theme identifier:</source>
-        <translation>輸入正確的主題識別碼：</translation>
+        <source>Enter the metadata URL of the theme to install:</source>
+        <translation>輸入主題的詮釋資料 URL 以安裝：</translation>
     </message>
 </context>
 <context>

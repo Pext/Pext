@@ -192,16 +192,11 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the module to install:</source>
-        <translation>Adja meg a telepítendő modul git URL-jét:</translation>
+        <source>Enter the metadata URL of the module to install:</source>
+        <translation>Adja meg a metaadat URL-jét a telepítendő modulnak:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
-        <source>Enter the correct module identifier:</source>
-        <translation>Adja meg a helyes modulazonosítót:</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallModuleFromURLDialog.qml" line="51"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
         <translation>Mivel a Pext modulok szoftverek, kérjük győződjön meg a fejlesztő megbízhatóságában a folytatás előtt.</translation>
     </message>
@@ -215,13 +210,8 @@
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
-        <source>Enter the git URL of the theme to install:</source>
-        <translation>Adja meg a telepítendő téma git URL-jét:</translation>
-    </message>
-    <message>
-        <location filename="../qml/InstallThemeFromURLDialog.qml" line="42"/>
-        <source>Enter the correct theme identifier:</source>
-        <translation>Adja meg a helyes témaazonosítót:</translation>
+        <source>Enter the metadata URL of the theme to install:</source>
+        <translation>Adja meg a metaadat URL-jét a telepítendő témának:</translation>
     </message>
 </context>
 <context>
