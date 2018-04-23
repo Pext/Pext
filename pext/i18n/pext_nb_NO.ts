@@ -113,8 +113,8 @@
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
-        <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation type="unfinished">Siden Pext-moduler er kode, forsikre deg om at du stoler på utvikleren før du fortsetter.</translation>
+        <source>Only install modules from people you trust.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -197,8 +197,8 @@
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
-        <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Siden Pext-moduler er kode, forsikre deg om at du stoler på utvikleren før du fortsetter.</translation>
+        <source>Only install modules from people you trust.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
