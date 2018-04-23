@@ -148,7 +148,7 @@ Dialog {
         }
 
         Label {
-            text: qsTr("Don't install modules you don't trust the developer of.")
+            text: qsTr("Only install modules from people you trust.")
             wrapMode: Text.Wrap
             font.bold: true
             visible: objects.length >= 1 && type == "modules"
