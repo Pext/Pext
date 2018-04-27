@@ -703,7 +703,7 @@ class ProfileManager():
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
-        return os.path.join(tempfile.gettempdir(), 'pext_{}.pid'.format(profile))
+        return os.path.join(tempfile.gettempdir(), '{}_pext_{}.pid'.format(os.getuid(), profile))
 
     @staticmethod
     def lock_profile(profile: str) -> None:

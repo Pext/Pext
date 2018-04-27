@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - IDs and names are now used more consistently
 - Crash when trying to load a theme as a module
 - Update pext_dev to be create files compatible with current Pext
+- Pext profile locks are now per-user instead of globally (fixes being unable to start if another user is running Pext)
 
 ## [0.13] - 2018-04-07
 ### Added
