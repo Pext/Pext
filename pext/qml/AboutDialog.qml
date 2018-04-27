@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -30,10 +30,13 @@ Dialog {
 
     property var translators: {"en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
                                "es": [{"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
+                               "fr": [{"name": "Aurora Yeen &lt;<a href='https://t.me/YeenAurora'>@YeenAurora</a>&gt;"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
+                               "hi": [{"name": "Satyam Singh", "email": "trueleo@protonmail.com"}],
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
+                               "ru": [{"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
                                "zh_Hant": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
 
     TabView {
@@ -63,7 +66,7 @@ Dialog {
                         wrapMode: Text.Wrap
                         text:
                             "<h1>Pext " + version + "</h1><br>" +
-                            "Copyright 2016 - 2017 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
+                            "Copyright 2015 - 2018 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
                             "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>" +
                             "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br>" +
                             "You should have received a copy of the GNU General Public License along with this program. If not, see <a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
@@ -90,7 +93,11 @@ Dialog {
                           for (var lang in translators) {
                               text += "<b>" + Object.keys(locales).filter(function(key) { return locales[key] === lang })[0] + "</b><br>";
                               for (var translatorData in translators[lang]) {
-                                  text += translators[lang][translatorData]["name"] + " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;<br>";
+                                  text += translators[lang][translatorData]["name"]
+                                  if (translators[lang][translatorData]["email"]) {
+                                      text += " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;";
+                                  }
+                                  text += "<br>";
                               }
                               text += "<br>";
                           }

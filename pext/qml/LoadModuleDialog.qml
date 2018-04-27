@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -44,7 +44,7 @@ Dialog {
 
         ComboBox {
             id: combobox
-            model: modules
+            model: Object.keys(modules).map(function(module) { return modules[module].metadata.name })
             Layout.fillWidth: true
             onCurrentIndexChanged: getModuleSettings();
         }
@@ -95,20 +95,8 @@ Dialog {
         for (var key in moduleChosenSettings)
             settingString += key + "=" + moduleChosenSettings[key] + " ";
 
-        loadRequest(combobox.currentText, settingString)
-    }
-
-    function getData(url, callback) {
-        var xmlhttp = new XMLHttpRequest();
-
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
-                callback(xmlhttp.response);
-            }
-        }
-
-        xmlhttp.open("GET", url, true);
-        xmlhttp.send();
+        var metadata = modules[Object.keys(modules)[combobox.currentIndex]].metadata 
+        loadRequest(metadata.id, metadata.name, settingString)
     }
 
     function getModuleSettings() {
@@ -116,10 +104,7 @@ Dialog {
         moduleSettings = []
         moduleChosenSettings = {}
 
-        var path = modulesPath + "/pext_module_" + combobox.currentText + "/metadata.json";
-        getData(path, function(response) {
-            moduleSettings = JSON.parse(response)["settings"];
-        });
+        moduleSettings = modules[Object.keys(modules)[combobox.currentIndex]].metadata.settings;
     }
 }
 

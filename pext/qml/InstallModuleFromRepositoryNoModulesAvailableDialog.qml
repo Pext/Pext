@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -24,7 +24,7 @@ MessageDialog {
     title: qsTr("No modules found")
     icon: StandardIcon.Information
 
-    text: qsTr("No modules found in this repository.")
+    text: qsTr("No modules were found in this repository.")
 
     Component.onCompleted: visible = true;
 }

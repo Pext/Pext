@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -55,6 +55,12 @@ Dialog {
                     text: manageableObjects[modelData].metadata.name + "\n"
                     wrapMode: Text.Wrap 
                     font.bold: true
+                }
+
+                Label {
+                    text: qsTr("Identifier: %1").arg(manageableObjects[modelData].metadata.id)
+                    width: root.width
+                    wrapMode: Text.Wrap
                 }
 
                 Label {

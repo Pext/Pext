@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -26,6 +26,7 @@ Dialog {
     title: qsTr("Module installation")
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    property var installedModules
     property var modules
     property var installRequest
 
@@ -48,6 +49,12 @@ Dialog {
             id: urlSelectionBox
             model: modules[combobox.currentIndex].git_urls
             Layout.fillWidth: true
+        }
+
+        Label {
+            text: qsTr("You already have this module installed.")
+            font.bold: true
+            visible: Object.keys(installedModules).indexOf(modules[combobox.currentIndex].name) != -1
         }
 
         Label {

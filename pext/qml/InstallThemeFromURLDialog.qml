@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -30,7 +30,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: qsTr("Enter the git URL of the theme to install:")
+            text: qsTr("Enter the metadata URL of the theme to install:")
         }
 
         TextField {
@@ -45,7 +45,17 @@ Dialog {
     }
 
     onAccepted: {
-        installRequest(textfield.text);
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+                var metadata = JSON.parse(xmlhttp.response);
+                installRequest(metadata.git_urls[0], metadata.id, metadata.name)
+            }
+        }
+
+        xmlhttp.open("GET", textfield.text, true);
+        xmlhttp.send();
     }
 }
 

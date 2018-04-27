@@ -14,6 +14,46 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Remove setting an entry's extra info and context, from now on, edit the entry itself
 - Add clear_entries Action
 
+## [0.14] - 2018-04-22
+### Packaging changes
+- Packagers can now modify pext/constants.py to more easily control some behaviour
+
+### Added
+- French translation (thanks, Aurora Yeen!)
+
+### Changed
+- Modules are now installed by metadata.json, instead of by git URL
+- Make pext_dev default to CC-BY-3.0 for themes
+
+### Fixed
+- Make text properly wrap in the installing from repository dialog
+- Crashes on tab completion and minor errors (regression in 0.13)
+- Crash on module reloading (regression in 0.13)
+- IDs and names are now used more consistently
+- Crash when trying to load a theme as a module
+- Update pext_dev to be create files compatible with current Pext
+
+## [0.13] - 2018-04-07
+### Added
+- Hindi translation (thanks, Satyam Singh!)
+- Add automatic AppImage builds (thanks, TheAssassin!)
+
+### Changed
+- Tray icon is now always shown when the application is minimized to tray
+- Hide minimize to tray on macOS (too broken, can cause crashes)
+- The main window now has a minimal size of 500x300
+- Versioning now complies with PEP440
+- Merge module and theme repo and object selection into a single screen to save a click
+- Modules and themes are now saved based on the location of their ID
+- Modules and themes being in an incorrect location for their ID are automatically removed
+
+### Fixed
+- Themes now apply properly on Windows (forcing Fusion styling)
+- Properly fix i18n handling and giving i18n to modules
+- The name setting in metadata.json is now consistently respected
+- Make &Pext translatable
+
+## [0.12] - 2018-03-04
 ### Added
 - Support renaming profiles
 - Switching profile from the GUI
@@ -21,6 +61,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Basic profile management from the GUI
 - Ability to change language through the UI
 - `--list-locales` argument to show supported languages
+- The installation screens now tell you if you already have a module or theme installed
+- Russian translation (thanks, Ivan Semkin)
 
 ### Changed
 - Profile name is no longer displayed if default
@@ -35,12 +77,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Pext crash when module tries to empty context_menu_base
 - Inconsistent font sizing
 - Improved main screen resizing and logo showing
+- Pext passing None as locale to modules in some cases
+- --background stealing focus on macOS
+- Modules and themes are now sorted correctly in the install from repository lists
 
 ### Removed
 - Removed manpage
 
 ## [0.11.1] - 2017-12-19
-### Packaging
+### Packaging changes
 - Fix missing translation files
 
 ## [0.11] - 2017-12-19

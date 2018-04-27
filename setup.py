@@ -7,7 +7,7 @@ with open(os.path.join('pext', 'VERSION')) as version_file:
 
 try:
     from pext.git_describe import describe
-    version = describe(os.path.dirname(os.path.abspath(__file__)))
+    version = describe(os.path.dirname(os.path.abspath(__file__))).lstrip('v').replace('-', '+', 1).replace('-', '.')
     with open(os.path.join('pext', 'VERSION'), "w") as version_file:
         version_file.write(version)
 except Exception as e:
@@ -19,7 +19,11 @@ if sys.platform == 'darwin':
         setup_requires=['py2app'],
         app=['pext/__main__.py'],
         options={'py2app': {
-            'iconfile': 'pext/images/scalable/pext.icns'
+            'argv_emulation': True,
+            'iconfile': 'pext/images/scalable/pext.icns',
+            'emulate_shell_environment': 1,
+            'includes': ['pty', 'readline'],
+            'packages': ['certifi', 'distutils', 'pip', 'setuptools']
         }}
     )
 else:
@@ -29,6 +33,7 @@ else:
             ('share/icons/hicolor/48x48/apps', ['pext/images/48x48/pext.png']),
             ('share/icons/hicolor/128x128/apps', ['pext/images/128x128/pext.png']),
             ('share/applications', ['pext.desktop']),
+            ('share/metainfo', ['pext.appdata.xml'])
         ]
     )
 
@@ -64,9 +69,8 @@ setup(
         'pext/helpers',
         'pext_dev'
     ],
-    package_data={'pext': ['i18n/*.qm', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
-                  'pext_dev': ['LICENSE', 'module/*', 'theme/*', '*.py']},
-    include_package_data=True,
+    package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/128x128/*', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py'],
+                  'pext_dev': ['module/*', 'theme/*', '*.py']},
     zip_safe=False,
     entry_points={
         'gui_scripts': [

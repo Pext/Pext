@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -25,9 +25,12 @@ import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
+    property bool internalUpdaterEnabled: USE_INTERNAL_UPDATER
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
+    minimumWidth: 500
+    minimumHeight: 300
     width: Screen.width
     height: 300
 
@@ -275,7 +278,7 @@ ApplicationWindow {
 
     menuBar: MenuBar {
         Menu {
-            title: "&Pext"
+            title: qsTr("&Pext")
 
             MenuItem {
                 objectName: "menuQuit"
@@ -311,7 +314,7 @@ ApplicationWindow {
                 id: menuLoadModule
                 objectName: "menuLoadModule"
 
-                signal loadModuleRequest(string name, string settings)
+                signal loadModuleRequest(string identifier, string name, string settings)
 
                 text: qsTr("Load module")
 
@@ -324,7 +327,7 @@ ApplicationWindow {
                     } else {
                         var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
                         loadModuleDialog.createObject(applicationWindow,
-                            {"modules": Object.keys(modules).sort(),
+                            {"modules": modules,
                              "loadRequest": loadModuleRequest,
                              "modulesPath": modulesPath});
                     }
@@ -336,8 +339,8 @@ ApplicationWindow {
                 objectName: "menuManageModules"
                 text: qsTr("Manage modules")
 
-                signal updateModuleRequest(string name)
-                signal uninstallModuleRequest(string name)
+                signal updateModuleRequest(string identifier)
+                signal uninstallModuleRequest(string identifier)
 
                 onTriggered: {
                     if (Object.keys(modules).length == 0) {
@@ -359,7 +362,7 @@ ApplicationWindow {
                 objectName: "menuInstallModule"
                 title: qsTr("Install module")
 
-                signal installModuleRequest(string url)
+                signal installModuleRequest(string url, string identifier, string name)
 
                 MenuItem {
                     text: qsTr("From online module list")
@@ -374,11 +377,12 @@ ApplicationWindow {
                         }]
 
                     onTriggered: {
-                        var installModuleFromRepositoryDialog = Qt.createComponent("InstallModuleFromRepositoryDialog.qml");
+                        var installModuleFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installModuleFromRepositoryDialog.createObject(applicationWindow,
-                            {"applicationWindow": applicationWindow,
+                            {"installedObjects": modules,
                              "installRequest": menuInstallModule.installModuleRequest,
-                             "repositories": repositories})
+                             "repositories": repositories,
+                             "type": "modules"})
                     }
                 }
 
@@ -412,7 +416,7 @@ ApplicationWindow {
                 id: menuLoadTheme
                 objectName: "menuLoadTheme"
 
-                signal loadThemeRequest(string name)
+                signal loadThemeRequest(string identifier)
 
                 text: qsTr("Switch theme")
 
@@ -424,7 +428,7 @@ ApplicationWindow {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
                             {"currentTheme": currentTheme,
-                             "themes": Object.keys(themes).sort(),
+                             "themes": themes,
                              "loadRequest": loadThemeRequest,
                              "themesPath": themesPath});
                     }
@@ -436,8 +440,8 @@ ApplicationWindow {
                 objectName: "menuManageThemes"
                 text: qsTr("Manage themes")
 
-                signal updateThemeRequest(string name)
-                signal uninstallThemeRequest(string name)
+                signal updateThemeRequest(string identifier)
+                signal uninstallThemeRequest(string identifier)
 
                 onTriggered: {
                     if (Object.keys(themes).length == 0) {
@@ -459,7 +463,7 @@ ApplicationWindow {
                 objectName: "menuInstallTheme"
                 title: qsTr("Install theme")
 
-                signal installThemeRequest(string url)
+                signal installThemeRequest(string url, string identifier, string name)
 
                 MenuItem {
                     text: qsTr("From online theme list")
@@ -474,11 +478,12 @@ ApplicationWindow {
                         }]
 
                     onTriggered: {
-                        var installThemeFromRepositoryDialog = Qt.createComponent("InstallThemeFromRepositoryDialog.qml");
+                        var installThemeFromRepositoryDialog = Qt.createComponent("InstallFromRepositoryDialog.qml");
                         installThemeFromRepositoryDialog.createObject(applicationWindow,
-                            {"applicationWindow": applicationWindow,
+                            {"installedObjects": themes,
                              "installRequest": menuInstallTheme.installThemeRequest,
-                             "repositories": repositories})
+                             "repositories": repositories,
+                             "type": "themes"})
                     }
                 }
 
@@ -533,6 +538,7 @@ ApplicationWindow {
                 text: qsTr("Manage profiles")
 
                 signal createProfileRequest(string name)
+                signal renameProfileRequest(string oldName, string newName)
                 signal removeProfileRequest(string name)
 
                 onTriggered: {
@@ -540,6 +546,7 @@ ApplicationWindow {
                     manageProfilesDialog.createObject(applicationWindow,
                         {"profiles": profiles.sort(),
                          "createRequest": createProfileRequest,
+                         "renameRequest": renameProfileRequest,
                          "removeRequest": removeProfileRequest});
                 }
             }
@@ -631,6 +638,7 @@ ApplicationWindow {
                 }
 
                 MenuItem {
+                    visible: platform != 'Darwin'
                     objectName: "menuMinimizeToTray"
                     text: qsTr("Minimize to tray")
                     checkable: true
@@ -645,6 +653,7 @@ ApplicationWindow {
                 }
 
                 MenuItem {
+                    visible: platform != 'Darwin'
                     objectName: "menuMinimizeToTrayManually"
                     text: qsTr("Manual only: Minimize to tray")
                     checkable: true
@@ -654,7 +663,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuShowTrayIcon"
-                text: qsTr("Show tray icon")
+                text: qsTr("Always show tray icon")
                 checkable: true
             }
 
@@ -662,6 +671,7 @@ ApplicationWindow {
                 objectName: "menuEnableUpdateCheck"
                 text: qsTr("Automatically check for updates")
                 checkable: true
+                visible: internalUpdaterEnabled
             }
         }
 
@@ -681,6 +691,7 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
+                visible: internalUpdaterEnabled
             }
 
             MenuItem {
@@ -695,7 +706,6 @@ ApplicationWindow {
         anchors.margins: margin
 
         GridLayout {
-            Layout.minimumHeight: 30
             Layout.fillHeight: true
 
             Button {

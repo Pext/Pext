@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -28,6 +28,7 @@ Dialog {
 
     property var profiles 
     property var createRequest
+    property var renameRequest
     property var removeRequest
 
     height: 250
@@ -75,6 +76,16 @@ Dialog {
                 }
 
                 GridLayout {
+                    Button {
+                        text: qsTr("Rename")
+                        onClicked: {
+                            var renameProfileDialog = Qt.createComponent("RenameProfileDialog.qml");
+                            renameProfileDialog.createObject(applicationWindow,
+                                {"profileName": modelData,
+                                 "renameRequest": renameRequest});
+                            close()
+                        }
+                    }
                     Button {
                         text: qsTr("Remove")
                         onClicked: {

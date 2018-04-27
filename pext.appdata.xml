@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Sylvia van Os <sylvia@hackerchick.me> -->
+<component type="desktop-application">
+  <id>pext</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <developer_name>The Pext team</developer_name>
+  <name>Pext</name>
+  <summary>The Python-based extendable tool</summary>
+  <icon type="remote">https://raw.githubusercontent.com/Pext/Pext/master/pext/images/scalable/pext.svg</icon>
+  <categories>
+    <category>Utility</category>
+  </categories>
+
+  <description>
+    <p>
+      Pext is a program whose behaviour is decided by modules. Depending on the
+      module in use, Pext can be used for a wide variety of tasks.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">pext.desktop</launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <caption>The Radio module</caption>
+      <image>https://raw.githubusercontent.com/Pext/Pext/master/screenshots/pext_radiobrowser_infopanel.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The Weather module</caption>
+      <image>https://raw.githubusercontent.com/Pext/Pext/master/screenshots/pext_openweathermap_contextmenu.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>The Emoji module</caption>
+      <image>https://raw.githubusercontent.com/Pext/Pext/master/screenshots/pext_emoji.png</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://pext.hackerchick.me</url>
+  <url type="bugtracker">https://github.com/Pext/Pext</url>
+  <url type="translate">https://hosted.weblate.org/projects/pext</url>
+
+  <provides>
+    <binary>pext</binary>
+  </provides>
+
+</component>

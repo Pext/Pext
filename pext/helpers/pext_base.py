@@ -1,4 +1,6 @@
-# Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+#!/usr/bin/env python3
+
+# Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 #
 # This file is part of Pext
 #

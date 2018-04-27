@@ -19,6 +19,12 @@ Welcome to Pext's documentation!
    module_development.rst
 
 .. toctree::
+   :maxdepth 2
+   :caption: Theme Development:
+
+   theme_development.rst
+
+.. toctree::
    :maxdepth: 2
    :caption: API reference:
 
