@@ -33,11 +33,12 @@ bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
 # activate Miniconda environment
 . AppDir/usr/bin/activate
 
+# Arch lacks libxi, which is needed for xcb support (aka: X11)
+conda config --add channels conda-forge
+conda install -y xorg-libxi
+
 # install dependencies
 pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
-
-# try to fix SSL issues as specified here:
-# https://github.com/ContinuumIO/anaconda-issues/issues/494#issuecomment-155097614
 
 # install Pext
 pushd "$REPO_ROOT"/
