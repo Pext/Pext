@@ -944,7 +944,8 @@ class ModuleManager():
         pip_command = [sys.executable,
                        '-m',
                        'pip',
-                       'install']
+                       'install',
+                       '--isolated']
 
         # FIXME: Cheap hack to work around Debian's faultily-patched pip (unless (mini)conda is used)
         if "conda" not in sys.version and os.path.isfile('/etc/debian_version'):
