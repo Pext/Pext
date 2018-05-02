@@ -20,7 +20,6 @@
 - [Hotkeys](#hotkeys)
 - [Troubleshooting](#troubleshooting)
   - [GNU/Linux](#gnulinux-1)
-  - [macOS](#macos-1)
   - [Windows](#windows)
 - [License](#license)
 
@@ -153,16 +152,6 @@ The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu. Y
 
 Pext user report: <https://github.com/Pext/Pext/issues/11>
 Ubuntu bug: <https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826>
-
-### macOS
-
-#### I cannot brew/pip install anymore
-
-The Homebrew team completely broke pip's --target flag, which Pext depends on. To work around this, Pext automatically creates a ``~/.pydistutils.cfg`` file which resets the broken Homebrew pip defaults and deletes this file after its done installing module dependencies.
-
-As a side effect, this means that using brew install or pip install while Pext is installing module dependencies may fail. If you cannot use brew install or pip install at all anymore after Pext crashed, please delete ``~/.pydistutils.cfg`` if it exists.
-
-The Homebrew team refuses to fix this issue: <https://github.com/Homebrew/brew/issues/837>
 
 ### Windows
 

@@ -959,21 +959,11 @@ class ModuleManager():
 
         returncode = 0
 
-        # FIXME: Cheap macOS workaround, part 1
-        # See https://github.com/pypa/pip/pull/4111#issuecomment-280616124
-        if platform.system() == "Darwin":
-            with open(os.path.expanduser('~/.pydistutils.cfg'), 'w') as macos_workaround:
-                macos_workaround.write('[install]\nprefix=')
-
         # Actually run the pip command
         try:
             check_call(pip_command)
         except CalledProcessError as e:
             returncode = e.returncode
-
-        # FIXME: Cheap macOS workaround, part 2
-        if platform.system() == "Darwin":
-            os.remove(os.path.expanduser('~/.pydistutils.cfg'))
 
         return returncode
 
