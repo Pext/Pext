@@ -18,21 +18,21 @@ class TestConfig(unittest.TestCase):
                                     os.path.join(self.temp_dir.name, 'testdata'))
 
         self.test_config = os.path.join(test_data, "config")
-        self.config_retriever = ConfigRetriever(self.test_config)
+        ConfigRetriever.set_home_path(self.test_config)
 
     def tearDown(self):
         # Delete the temporary directory
         self.temp_dir.cleanup()
 
     def test_get_setting(self):
-        self.assertEqual(self.config_retriever.get_setting('config_path'),
+        self.assertEqual(ConfigRetriever.get_setting('config_path'),
                          self.test_config)
 
     def test_get_updatecheck_permission_asked(self):
-        self.assertTrue(self.config_retriever.get_updatecheck_permission_asked())
+        self.assertTrue(ConfigRetriever.get_updatecheck_permission_asked())
 
     def test_get_updatecheck_permission(self):
-        self.assertTrue(self.config_retriever.get_updatecheck_permission())
+        self.assertTrue(ConfigRetriever.get_updatecheck_permission())
 
     def test_get_last_update_check_time(self):
         date = datetime.datetime(2018, 3, 25, 13, 29, 55, tzinfo=datetime.timezone.utc)
@@ -44,7 +44,7 @@ class TestConfig(unittest.TestCase):
         # Convert to local time
         date += utc_offset
 
-        self.assertEqual(self.config_retriever.get_last_update_check_time(), date)
+        self.assertEqual(ConfigRetriever.get_last_update_check_time(), date)
 
 
 class TestLocaleManager(unittest.TestCase):

@@ -109,13 +109,20 @@ class SortMode(IntEnum):
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
-    def __init__(self, path: str) -> None:
-        """Initialize the configuration location."""
-        config_home = path
-        if config_home:
-            config_home = os.path.expanduser(config_home)
+    __config_home = None
+
+    @staticmethod
+    def set_home_path(path: Optional[str]) -> None:
+        """Set the root configuration directory for Pext to store in and load from."""
+        ConfigRetriever.__config_home = path
+
+    @staticmethod
+    def get_setting(variable: str) -> str:
+        """Get a specific configuration setting."""
+        if ConfigRetriever.__config_home:
+            config_home = os.path.expanduser(ConfigRetriever.__config_home)
             if os.path.isdir(config_home):
-                self.config = {'config_path': config_home}
+                config = {'config_path': config_home}
             else:
                 raise NotADirectoryError('{} is not a directory.'.format(config_home))
         else:
@@ -125,45 +132,52 @@ class ConfigRetriever():
             except Exception:
                 config_home = os.path.join(os.path.expanduser('~'), '.config')
 
-            self.config = {'config_path': os.path.join(config_home, 'pext')}
+            config = {'config_path': os.path.join(config_home, 'pext')}
 
-    def get_setting(self, variable: str) -> str:
-        """Get a specific configuration setting."""
-        return self.config[variable]
+        return config[variable]
 
-    def get_updatecheck_permission_asked(self) -> bool:
+    @staticmethod
+    def get_updatecheck_permission_asked() -> bool:
         """Return info on if allowing updates was asked."""
         try:
-            with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r'):
+            with open(os.path.join(ConfigRetriever.get_setting('config_path'), 'update_check_enabled'), 'r'):
                 return True
-        except (FileNotFoundError):
+        except FileNotFoundError:
             return False
 
-    def get_updatecheck_permission(self) -> bool:
+    @staticmethod
+    def get_updatecheck_permission() -> bool:
         """Return info on if update checking is allowed."""
         try:
-            with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'r') as update_check_file:
+            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
+                                   'update_check_enabled'), 'r') as update_check_file:
                 result = update_check_file.readline()
                 return True if result == str(1) else False
-        except (FileNotFoundError):
+        except FileNotFoundError:
             return False
 
-    def save_updatecheck_permission(self, granted: bool) -> None:
+    @staticmethod
+    def save_updatecheck_permission(granted: bool) -> None:
         """Save the current updatecheck permission status."""
-        with open(os.path.join(self.get_setting('config_path'), 'update_check_enabled'), 'w') as update_check_file:
+        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
+                               'update_check_enabled'), 'w') as update_check_file:
             update_check_file.write(str(int(granted)))
 
-    def get_last_update_check_time(self) -> Optional[datetime]:
+    @staticmethod
+    def get_last_update_check_time() -> Optional[datetime]:
         """Get the time of the last update check, returns None if there was never a check."""
         try:
-            with open(os.path.join(self.get_setting('config_path'), 'update_check_time'), 'r') as update_check_file:
+            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
+                                   'update_check_time'), 'r') as update_check_file:
                 return datetime.fromtimestamp(int(float(update_check_file.readline())))
         except (FileNotFoundError):
             return None
 
-    def set_last_update_check_time(self, dt: datetime) -> None:
+    @staticmethod
+    def set_last_update_check_time(dt: datetime) -> None:
         """Set the last update check time to the given time."""
-        with open(os.path.join(self.get_setting('config_path'), 'update_check_time'), 'w') as update_check_file:
+        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
+                               'update_check_time'), 'w') as update_check_file:
             update_check_file.write(str(dt.timestamp()))
 
 
@@ -693,11 +707,10 @@ class LocaleManager():
 class ProfileManager():
     """Create, remove, list, load and save to a profile."""
 
-    def __init__(self, config_retriever: ConfigRetriever) -> None:
+    def __init__(self) -> None:
         """Initialize the profile manager."""
-        self.profile_dir = os.path.join(config_retriever.get_setting('config_path'), 'profiles')
-        self.module_dir = os.path.join(config_retriever.get_setting('config_path'), 'modules')
-        self.config_retriever = config_retriever
+        self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
+        self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
         self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
         self.enum_settings = ['minimize_mode', 'sort_mode']
 
@@ -918,12 +931,11 @@ class ObjectManager():
 class ModuleManager():
     """Install, remove, update and list modules."""
 
-    def __init__(self, config_retriever: ConfigRetriever) -> None:
+    def __init__(self) -> None:
         """Initialize the module manager."""
-        self.config_retriever = config_retriever
-        self.module_dir = os.path.join(self.config_retriever.get_setting('config_path'),
+        self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
                                        'modules')
-        self.module_dependencies_dir = os.path.join(self.config_retriever.get_setting('config_path'),
+        self.module_dependencies_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
                                                     'module_dependencies')
 
     def _pip_install(self, identifier: str) -> int:
@@ -970,12 +982,12 @@ class ModuleManager():
     def load_module(self, window: 'Window', module: Dict[str, Any]) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
-        module_path = os.path.join(self.config_retriever.get_setting('config_path'), 'modules')
+        module_path = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
         if module_path not in sys.path:
             sys.path.append(module_path)
 
         # Append module dependencies path if not yet appended
-        module_dependencies_path = os.path.join(self.config_retriever.get_setting('config_path'),
+        module_dependencies_path = os.path.join(ConfigRetriever.get_setting('config_path'),
                                                 'module_dependencies',
                                                 module['metadata']['id'].replace('.', '_'))
         if module_dependencies_path not in sys.path:
@@ -1900,12 +1912,11 @@ class ViewModel():
 class Window(QMainWindow):
     """The main Pext window."""
 
-    def __init__(self, config_retriever: ConfigRetriever, locale_manager: LocaleManager, parent=None) -> None:
+    def __init__(self, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
 
         # Save settings
-        self.config_retriever = config_retriever
         self.locale_manager = locale_manager
 
         self.tab_bindings = []  # type: List[Dict]
@@ -1923,9 +1934,9 @@ class Window(QMainWindow):
             "systemPlatform", platform.system())
 
         self.context.setContextProperty(
-            "modulesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'modules'))
+            "modulesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'modules'))
         self.context.setContextProperty(
-            "themesPath", os.path.join(self.config_retriever.get_setting('config_path'), 'themes'))
+            "themesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'themes'))
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
@@ -1943,15 +1954,15 @@ class Window(QMainWindow):
 
         # Give QML the module info
         self.intro_screen = self.window.findChild(QObject, "introScreen")
-        self.module_manager = ModuleManager(self.config_retriever)
+        self.module_manager = ModuleManager()
         self._update_modules_info_qml()
 
         # Give QML the theme info
-        self.theme_manager = ThemeManager(self.config_retriever)
+        self.theme_manager = ThemeManager()
         self._update_themes_info_qml()
 
         # Give QML the profile info
-        self.profile_manager = ProfileManager(self.config_retriever)
+        self.profile_manager = ProfileManager()
         self._update_profiles_info_qml()
 
         # Bind update dialog
@@ -2137,7 +2148,7 @@ class Window(QMainWindow):
             for module in Settings.get('modules'):
                 self.module_manager.load_module(self, module)
         else:
-            for module in ProfileManager(self.config_retriever).retrieve_modules(Settings.get('profile')):
+            for module in ProfileManager().retrieve_modules(Settings.get('profile')):
                 self.module_manager.load_module(self, module)
 
         # If there's only one module passed through the command line, enforce
@@ -2320,7 +2331,7 @@ class Window(QMainWindow):
 
     def _menu_restart_pext(self, extra_args=None) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
-        _shut_down(self, self.config_retriever)
+        _shut_down(self)
 
         args = sys.argv[:]
         if extra_args:
@@ -2499,7 +2510,7 @@ class Window(QMainWindow):
                            Settings.get('update_check'))
 
         # Immediately save update status to file
-        self.config_retriever.save_updatecheck_permission(Settings.get('update_check'))
+        ConfigRetriever.save_updatecheck_permission(Settings.get('update_check'))
 
         # macOS breaks if we show the update dialog immediately after accepting
         # checking for updates so we need this workaround
@@ -2576,10 +2587,10 @@ class Window(QMainWindow):
             t.start()
 
         # Check if it's been over 24 hours or this is a manual check
-        last_update_check = self.config_retriever.get_last_update_check_time()
+        last_update_check = ConfigRetriever.get_last_update_check_time()
         if manual or last_update_check is None or (datetime.now() - last_update_check).total_seconds() > (86400):
             threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
-            self.config_retriever.set_last_update_check_time(datetime.now())
+            ConfigRetriever.set_last_update_check_time(datetime.now())
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -2653,10 +2664,9 @@ class SignalHandler():
 class ThemeManager():
     """Manages the theme."""
 
-    def __init__(self, config_retriever: ConfigRetriever) -> None:
+    def __init__(self) -> None:
         """Initialize the module manager."""
-        self.config_retriever = config_retriever
-        self.theme_dir = os.path.join(self.config_retriever.get_setting('config_path'), 'themes')
+        self.theme_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'themes')
 
     def _get_palette_mappings(self) -> Dict[str, int]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
@@ -2988,7 +2998,7 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
     return args
 
 
-def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) -> None:
+def _load_settings(args: argparse.Namespace) -> None:
     """Load the settings from the command line and set defaults."""
     # First, check for profile
     if args.profile:
@@ -2996,12 +3006,12 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
 
     # Create directory for profile if not existant
     try:
-        ProfileManager(config_retriever).create_profile(str(Settings.get('profile')))
+        ProfileManager().create_profile(str(Settings.get('profile')))
     except OSError:
         pass
 
     # Load all from profile
-    Settings.update(ProfileManager(config_retriever).retrieve_settings(str(Settings.get('profile'))))
+    Settings.update(ProfileManager().retrieve_settings(str(Settings.get('profile'))))
 
     # Then, check for the rest
     if args.locale:
@@ -3039,10 +3049,10 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
                 with urlopen(metadata_url) as unparsed_metadata:
                     metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
 
-                if not ModuleManager(config_retriever).install_module(metadata['git_urls'][0],
-                                                                      metadata['id'],
-                                                                      metadata['name'],
-                                                                      verbose=True):
+                if not ModuleManager().install_module(metadata['git_urls'][0],
+                                                      metadata['id'],
+                                                      metadata['name'],
+                                                      verbose=True):
                     sys.exit(3)
             except Exception as e:
                 print("Failed installing module from {}: {}".format(metadata_url, e))
@@ -3052,26 +3062,26 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
 
     if args.uninstall_module:
         for identifier in args.uninstall_module:
-            if not ModuleManager(config_retriever).uninstall_module(identifier, verbose=True):
+            if not ModuleManager().uninstall_module(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_module:
         for identifier in args.update_module:
-            if not ModuleManager(config_retriever).update_module(identifier, verbose=True):
+            if not ModuleManager().update_module(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_modules:
-        if not ModuleManager(config_retriever).update_all_modules(verbose=True):
+        if not ModuleManager().update_all_modules(verbose=True):
             sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.list_modules:
-        for module_identifier, module_data in ModuleManager(config_retriever).list_modules().items():
+        for module_identifier, module_data in ModuleManager().list_modules().items():
             print('{} ({})'.format(module_identifier, module_data['source']))
 
         Settings.set('_launch_app', False)
@@ -3085,10 +3095,10 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
                 with urlopen(metadata_url) as unparsed_metadata:
                     metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
 
-                if not ThemeManager(config_retriever).install_theme(metadata['git_urls'][0],
-                                                                    metadata['id'],
-                                                                    metadata['name'],
-                                                                    verbose=True):
+                if not ThemeManager().install_theme(metadata['git_urls'][0],
+                                                    metadata['id'],
+                                                    metadata['name'],
+                                                    verbose=True):
                     sys.exit(3)
             except Exception as e:
                 print("Failed installing theme from {}: {}".format(metadata_url, e))
@@ -3098,33 +3108,33 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
 
     if args.uninstall_theme:
         for identifier in args.uninstall_theme:
-            if not ThemeManager(config_retriever).uninstall_theme(identifier, verbose=True):
+            if not ThemeManager().uninstall_theme(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_theme:
         for identifier in args.update_theme:
-            if not ThemeManager(config_retriever).update_theme(identifier, verbose=True):
+            if not ThemeManager().update_theme(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_themes:
-        if not ThemeManager(config_retriever).update_all_themes(verbose=True):
+        if not ThemeManager().update_all_themes(verbose=True):
             sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.list_themes:
-        for theme_name, theme_data in ThemeManager(config_retriever).list_themes().items():
+        for theme_name, theme_data in ThemeManager().list_themes().items():
             print('{} ({})'.format(theme_name, theme_data['source']))
 
         Settings.set('_launch_app', False)
 
     if args.create_profile:
         for profile in args.create_profile:
-            if not ProfileManager(config_retriever).create_profile(profile):
+            if not ProfileManager().create_profile(profile):
                 print('Could not create profile {}, it already exists.'.format(profile))
                 sys.exit(3)
 
@@ -3132,7 +3142,7 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
 
     if args.remove_profile:
         for profile in args.remove_profile:
-            if not ProfileManager(config_retriever).remove_profile(profile):
+            if not ProfileManager().remove_profile(profile):
                 print('Could not delete profile {}, it is in use.'.format(profile))
                 sys.exit(3)
 
@@ -3140,14 +3150,14 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
 
     if args.rename_profile:
         for old_name, new_name in args.rename_profile:
-            if not ProfileManager(config_retriever).rename_profile(old_name, new_name):
+            if not ProfileManager().rename_profile(old_name, new_name):
                 print('Could not rename profile {} to {}.'.format(old_name, new_name))
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.list_profiles:
-        for profile in ProfileManager(config_retriever).list_profiles():
+        for profile in ProfileManager().list_profiles():
             print(profile)
 
         Settings.set('_launch_app', False)
@@ -3160,11 +3170,11 @@ def _load_settings(args: argparse.Namespace, config_retriever: ConfigRetriever) 
         Settings.set('modules', args._modules)
 
     # See if automatic update checks are allowed
-    if config_retriever.get_updatecheck_permission_asked():
-        Settings.set('update_check', config_retriever.get_updatecheck_permission())
+    if ConfigRetriever.get_updatecheck_permission_asked():
+        Settings.set('update_check', ConfigRetriever.get_updatecheck_permission())
 
 
-def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
+def _shut_down(window: Window) -> None:
     """Clean up."""
     for module in window.tab_bindings:
         try:
@@ -3177,8 +3187,8 @@ def _shut_down(window: Window, config_retriever: ConfigRetriever) -> None:
     ProfileManager.unlock_profile(profile)
 
     if Settings.get('save_settings'):
-        ProfileManager(config_retriever).save_modules(profile, window.tab_bindings)
-        ProfileManager(config_retriever).save_settings(profile)
+        ProfileManager().save_modules(profile, window.tab_bindings)
+        ProfileManager().save_settings(profile)
 
 
 def main() -> None:
@@ -3191,7 +3201,7 @@ def main() -> None:
                   args.background if args.background else False)
 
     # Load configuration
-    config_retriever = ConfigRetriever(args.config)
+    ConfigRetriever.set_home_path(args.config)
 
     # Ensure our necessary directories exist
     for directory in ['modules',
@@ -3200,7 +3210,7 @@ def main() -> None:
                       'profiles',
                       os.path.join('profiles', ProfileManager.default_profile_name())]:
         try:
-            os.makedirs(os.path.join(config_retriever.get_setting('config_path'), directory))
+            os.makedirs(os.path.join(ConfigRetriever.get_setting('config_path'), directory))
         except OSError:
             # Probably already exists, that's okay
             pass
@@ -3208,12 +3218,12 @@ def main() -> None:
     # Delete old system theme hack if exists
     # TODO: Remove later
     try:
-        rmtree(os.path.join(config_retriever.get_setting('config_path'), 'themes', "pext_theme_system"))
+        rmtree(os.path.join(ConfigRetriever.get_setting('config_path'), 'themes', "pext_theme_system"))
     except FileNotFoundError:
         # Probably already deleted
         pass
 
-    _load_settings(args, config_retriever)
+    _load_settings(args)
     del args
 
     if not Settings.get('_launch_app'):
@@ -3257,7 +3267,7 @@ def main() -> None:
         if platform.system() == 'Windows' and Settings.get('style') is None:
             app.setStyle(QStyleFactory().create('Fusion'))
 
-        theme_manager = ThemeManager(config_retriever)
+        theme_manager = ThemeManager()
         theme = theme_manager.load_theme(theme_identifier)
         theme_manager.apply_theme_to_app(theme, app)
 
@@ -3267,13 +3277,13 @@ def main() -> None:
         sys.exit(3)
 
     # Get a window
-    window = Window(config_retriever, locale_manager)
+    window = Window(locale_manager)
 
     # Give the logger a reference to the window
     Logger.bind_window(window)
 
     # Clean up on exit
-    atexit.register(_shut_down, window, config_retriever)
+    atexit.register(_shut_down, window)
 
     # Handle SIGUSR1 UNIX signal
     signal_handler = SignalHandler(window)
