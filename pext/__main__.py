@@ -2117,13 +2117,7 @@ class Window(QMainWindow):
             # First, we showMinimized to prevent Pext from being unrestorable
             self.window.showMinimized()
             # Then, we tell macOS to give the focus back to the last app
-            applescript_command = ['tell application "System Events"',
-                                   'tell process "Finder"',
-                                   'activate',
-                                   'keystroke tab using {command down}',
-                                   'end tell',
-                                   'end tell']
-            Popen(['osascript', '-e', '\n'.join(applescript_command)])
+            self._macos_focus_workaround()
         elif not Settings.get('background'):
             self.show()
 
@@ -2153,6 +2147,19 @@ class Window(QMainWindow):
             self.tabs.currentIndexChanged.emit()
         elif len(self.tab_bindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
+
+    def _macos_focus_workaround(self) -> None:
+        """Set the focus correctly after minimizing Pext on macOS."""
+        if platform.system() != 'Darwin':
+            return
+
+        applescript_command = ['tell application "System Events"',
+                               'tell process "Finder"',
+                               'activate',
+                               'keystroke tab using {command down}',
+                               'end tell',
+                               'end tell']
+        Popen(['osascript', '-e', '\n'.join(applescript_command)])
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2598,6 +2605,8 @@ class Window(QMainWindow):
             self.window.hide()
         else:
             self.window.showMinimized()
+
+        self._macos_focus_workaround()
 
     def show(self) -> None:
         """Show the window."""
