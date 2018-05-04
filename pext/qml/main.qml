@@ -285,11 +285,6 @@ ApplicationWindow {
                 text: qsTr("Quit")
                 shortcut: StandardKey.Quit
             }
-
-            MenuItem {
-                objectName: "menuQuitWithoutSaving"
-                text: qsTr("Quit without saving")
-            }
         }
 
         Menu {

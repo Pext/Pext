@@ -712,7 +712,6 @@ class ProfileManager():
         self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
         self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
-        self.enum_settings = ['minimize_mode', 'sort_mode']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -823,14 +822,21 @@ class ProfileManager():
 
         return modules
 
-    def save_settings(self, profile: str) -> None:
+    def save_settings(self, profile: str, changed_key: Optional[str]=None) -> None:
         """Save the current settings to the profile."""
+        if changed_key and changed_key not in self.saved_settings:
+            return
+
         config = configparser.ConfigParser()
         settings_to_store = {}
         for setting in Settings.get_all():
             if setting in self.saved_settings:
-                setting_data = Settings.get(setting).value if setting in self.enum_settings else Settings.get(setting)
-                if setting_data is not None:
+                setting_data = Settings.get(setting)
+                try:
+                    setting_data = setting_data.value
+                except AttributeError:
+                    pass
+                if setting_data is not None and setting_data != "":
                     settings_to_store[setting] = setting_data
 
         config['settings'] = settings_to_store
@@ -841,18 +847,18 @@ class ProfileManager():
     def retrieve_settings(self, profile: str) -> Dict:
         """Retrieve the settings from the profile."""
         config = configparser.ConfigParser()
-        settings = {}  # type: Dict[str, Any]
+        setting_dict = {}  # type: Dict[str, Any]
 
         config.read(os.path.join(self.profile_dir, profile, 'settings'))
 
         try:
             for setting in config['settings']:
                 if setting in self.saved_settings:
-                    Settings.set(setting, config['settings'][setting])
+                    setting_dict[setting] = config['settings'][setting]
         except KeyError:
             pass
 
-        return settings
+        return setting_dict
 
 
 class ObjectManager():
@@ -1118,6 +1124,9 @@ class ModuleManager():
         QQmlProperty.write(
             window.tabs, "currentIndex", QQmlProperty.read(window.tabs, "count") - 1)
 
+        # Save active modules
+        ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
+
         return True
 
     def unload_module(self, window: 'Window', tab_id: int) -> None:
@@ -1138,6 +1147,9 @@ class ModuleManager():
 
         window.tabs.removeRequest.emit(tab_id)
         del window.tab_bindings[tab_id]
+
+        # Save active modules
+        ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
 
     def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
         """Return a list of modules together with their source."""
@@ -2034,10 +2046,39 @@ class Window(QMainWindow):
             QObject, "menuEnableUpdateCheck")
 
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
-        menu_quit_without_saving_shortcut = self.window.findChild(
-            QObject, "menuQuitWithoutSaving")
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
+
+        # Set entry states
+        QQmlProperty.write(menu_sort_module_shortcut,
+                           "checked",
+                           int(Settings.get('sort_mode')) == SortMode.Module)
+        QQmlProperty.write(menu_sort_ascending_shortcut,
+                           "checked",
+                           int(Settings.get('sort_mode')) == SortMode.Ascending)
+        QQmlProperty.write(menu_sort_descending_shortcut,
+                           "checked",
+                           int(Settings.get('sort_mode')) == SortMode.Descending)
+
+        QQmlProperty.write(menu_minimize_normally_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.Normal)
+        QQmlProperty.write(menu_minimize_to_tray_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.Tray)
+        QQmlProperty.write(menu_minimize_normally_manually_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.NormalManualOnly)
+        QQmlProperty.write(menu_minimize_to_tray_manually_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
+
+        QQmlProperty.write(menu_show_tray_icon_shortcut,
+                           "checked",
+                           Settings.get('tray'))
+        QQmlProperty.write(self.menu_enable_update_check_shortcut,
+                           "checked",
+                           Settings.get('update_check'))
 
         # Bind menu entries
         menu_reload_active_module_shortcut.triggered.connect(
@@ -2080,41 +2121,8 @@ class Window(QMainWindow):
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
 
         menu_quit_shortcut.triggered.connect(self.quit)
-        menu_quit_without_saving_shortcut.triggered.connect(
-            self.quit_without_saving)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
-
-        # Set entry states
-        QQmlProperty.write(menu_sort_module_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Module)
-        QQmlProperty.write(menu_sort_ascending_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Ascending)
-        QQmlProperty.write(menu_sort_descending_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Descending)
-
-        QQmlProperty.write(menu_minimize_normally_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.Normal)
-        QQmlProperty.write(menu_minimize_to_tray_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.Tray)
-        QQmlProperty.write(menu_minimize_normally_manually_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.NormalManualOnly)
-        QQmlProperty.write(menu_minimize_to_tray_manually_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
-
-        QQmlProperty.write(menu_show_tray_icon_shortcut,
-                           "checked",
-                           Settings.get('tray'))
-        QQmlProperty.write(self.menu_enable_update_check_shortcut,
-                           "checked",
-                           Settings.get('update_check'))
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -2642,10 +2650,6 @@ class Window(QMainWindow):
     def quit(self) -> None:
         """Quit."""
         sys.exit(0)
-
-    def quit_without_saving(self) -> None:
-        """Quit without saving."""
-        Settings.set('save_settings', False)
         self.quit()
 
 
@@ -2855,7 +2859,6 @@ class Settings():
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
-        'save_settings': True,
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
@@ -2880,10 +2883,14 @@ class Settings():
     @staticmethod
     def set(name, value):
         """Set a single setting if this setting is known."""
-        if name in Settings.__settings:
-            Settings.__settings[name] = value
-        else:
+        if name not in Settings.__settings:
             raise NameError('{} is not a key of Settings'.format(name))
+
+        if Settings.get(name) == value:
+            return
+
+        Settings.__settings[name] = value
+        ProfileManager().save_settings(Settings.get('profile'), changed_key=name)
 
     @staticmethod
     def update(value):
@@ -2971,8 +2978,10 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
     parser.add_argument('--remove-profile', action='append', help='remove the chosen profile.')
     parser.add_argument('--rename-profile', nargs=2, action='append', help='rename the chosen profile.')
     parser.add_argument('--list-profiles', action='store_true', help='list all profiles.')
-    parser.add_argument('--tray', action='store_true', dest='tray', help='create a tray icon (this is the default).')
-    parser.add_argument('--no-tray', action='store_false', dest='tray', help='do not create a tray icon.')
+    parser.add_argument('--tray', action='store_true', dest='tray', default=None,
+                        help='create a tray icon (this is the default).')
+    parser.add_argument('--no-tray', action='store_false', dest='tray', default=None,
+                        help='do not create a tray icon.')
 
     # Remove weird macOS-added parameter
     # https://stackoverflow.com/questions/10242115/os-x-strange-psn-command-line-parameter-when-launched-from-finder
@@ -3185,10 +3194,6 @@ def _shut_down(window: Window) -> None:
 
     profile = Settings.get('profile')
     ProfileManager.unlock_profile(profile)
-
-    if Settings.get('save_settings'):
-        ProfileManager().save_modules(profile, window.tab_bindings)
-        ProfileManager().save_settings(profile)
 
 
 def main() -> None:

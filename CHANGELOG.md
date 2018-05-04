@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Remove quit without saving option
+- Configuration changes are now saved instantly, instead of only on a clean quit
+
 ### Fixed
 - Focus not resetting after Pext hiding on macOS
 
