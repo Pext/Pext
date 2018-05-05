@@ -38,6 +38,7 @@ import webbrowser
 import tempfile
 
 from datetime import datetime
+from distutils.util import strtobool
 from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
@@ -844,7 +845,7 @@ class ProfileManager():
         with open(os.path.join(self.profile_dir, profile, 'settings'), 'w') as configfile:
             config.write(configfile)
 
-    def retrieve_settings(self, profile: str) -> Dict:
+    def retrieve_settings(self, profile: str) -> Dict[str, Any]:
         """Retrieve the settings from the profile."""
         config = configparser.ConfigParser()
         setting_dict = {}  # type: Dict[str, Any]
@@ -854,7 +855,12 @@ class ProfileManager():
         try:
             for setting in config['settings']:
                 if setting in self.saved_settings:
-                    setting_dict[setting] = config['settings'][setting]
+                    setting_value = config['settings'][setting]  # type: Any
+                    try:
+                        setting_value = bool(strtobool(setting_value.lower()))
+                    except ValueError:
+                        pass
+                    setting_dict[setting] = setting_value
         except KeyError:
             pass
 
@@ -2049,37 +2055,6 @@ class Window(QMainWindow):
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
         menu_homepage_shortcut = self.window.findChild(QObject, "menuHomepage")
 
-        # Set entry states
-        QQmlProperty.write(menu_sort_module_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Module)
-        QQmlProperty.write(menu_sort_ascending_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Ascending)
-        QQmlProperty.write(menu_sort_descending_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Descending)
-
-        QQmlProperty.write(menu_minimize_normally_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.Normal)
-        QQmlProperty.write(menu_minimize_to_tray_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.Tray)
-        QQmlProperty.write(menu_minimize_normally_manually_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.NormalManualOnly)
-        QQmlProperty.write(menu_minimize_to_tray_manually_shortcut,
-                           "checked",
-                           int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
-
-        QQmlProperty.write(menu_show_tray_icon_shortcut,
-                           "checked",
-                           Settings.get('tray'))
-        QQmlProperty.write(self.menu_enable_update_check_shortcut,
-                           "checked",
-                           Settings.get('update_check'))
-
         # Bind menu entries
         menu_reload_active_module_shortcut.triggered.connect(
             self._reload_active_module)
@@ -2123,6 +2098,37 @@ class Window(QMainWindow):
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
+
+        # Set entry states
+        QQmlProperty.write(menu_sort_module_shortcut,
+                           "checked",
+                           int(Settings.get('sort_mode')) == SortMode.Module)
+        QQmlProperty.write(menu_sort_ascending_shortcut,
+                           "checked",
+                           int(Settings.get('sort_mode')) == SortMode.Ascending)
+        QQmlProperty.write(menu_sort_descending_shortcut,
+                           "checked",
+                           int(Settings.get('sort_mode')) == SortMode.Descending)
+
+        QQmlProperty.write(menu_minimize_normally_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.Normal)
+        QQmlProperty.write(menu_minimize_to_tray_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.Tray)
+        QQmlProperty.write(menu_minimize_normally_manually_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.NormalManualOnly)
+        QQmlProperty.write(menu_minimize_to_tray_manually_shortcut,
+                           "checked",
+                           int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
+
+        QQmlProperty.write(menu_show_tray_icon_shortcut,
+                           "checked",
+                           Settings.get('tray'))
+        QQmlProperty.write(self.menu_enable_update_check_shortcut,
+                           "checked",
+                           Settings.get('update_check'))
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
