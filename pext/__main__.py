@@ -1354,7 +1354,7 @@ class UpdateManager():
                 self.version = version_file.read().strip()
 
         if 'APPIMAGE' in os.environ:
-            self.appimageupdate = appimageupdate.Updater(os.path.dirname(AppFile.get_path()))
+            self.appimageupdate = appimageupdate.Updater(os.environ['APPIMAGE'])
 
     @staticmethod
     def _path_to_repo(directory: str) -> Repo:
