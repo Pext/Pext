@@ -46,7 +46,7 @@ popd
 # Put all appimageupdatetool deps in our AppImage
 AIUT_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdateTool-XXXXXX)
 pushd "$AIUT_DIR"/
-wget https://github.com/AppImage/AppImageUpdate/releases/download/continuous/appimageupdatetool-301-25de4b5-x86_64.AppImage
+wget https://github.com/AppImage/AppImageUpdate/releases/download/continuous/appimageupdatetool-304-8a63191-x86_64.AppImage
 chmod +x *.AppImage
 ./*.AppImage --appimage-extract
 rm squashfs-root/usr/lib/libappimageupdate.so
