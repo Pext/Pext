@@ -30,7 +30,6 @@ script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PEXTHOME=$(mktemp -d); fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod +x Pext*.AppImage; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" ./Pext*.AppImage --version; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" SSL_CERT_DIR="/etc/ssl/certs" ./Pext-x86_64.AppImage --install-module=https://raw.githubusercontent.com/Pext/pext_module_emoji/master/metadata.json; fi
   - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
 
 after_success:
