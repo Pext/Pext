@@ -2633,7 +2633,7 @@ class Window(QMainWindow):
         t1.daemon = True
         t1.start()
 
-        Logger.log(None, '⇩ Pext ({}%'.format(appimageupdate.progress * 100))
+        Logger.log(None, '⇩ Pext ({}%'.format(appimageupdate.progress() * 100))
         if appimageupdate.is_done():
             self._menu_restart_pext()
 
