@@ -2621,7 +2621,7 @@ class Window(QMainWindow):
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
 
-    def _update_core_appimage(self) -> None:
+    def _core_update_appimage(self) -> None:
         """Update self through AppImageUpdate."""
         appimageupdate = UpdateManager().appimageupdate
         appimageupdate.start()
