@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -30,7 +30,7 @@ Dialog {
 
     ColumnLayout {
         Label {
-            text: qsTr("Enter the git URL of the module to install:")
+            text: qsTr("Enter the metadata URL of the module to install:")
         }
 
         TextField {
@@ -39,16 +39,7 @@ Dialog {
         }
 
         Label {
-            text: qsTr("Enter the correct module identifier:")
-        }
-
-        TextField {
-            id: identifierTextfield
-            Layout.fillWidth: true
-        }
-
-        Label {
-            text: qsTr("As Pext modules are code, please make sure you trust the developer before continuing.")
+            text: qsTr("Only install modules from people you trust.")
             font.bold: true
         }
     }
@@ -59,7 +50,17 @@ Dialog {
     }
 
     onAccepted: {
-        installRequest(textfield.text, identifierTextfield.text);
+        var xmlhttp = new XMLHttpRequest();
+
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+                var metadata = JSON.parse(xmlhttp.response);
+                installRequest(metadata.git_urls[0], metadata.id, metadata.name)
+            }
+        }
+
+        xmlhttp.open("GET", textfield.text, true);
+        xmlhttp.send();
     }
 }
 

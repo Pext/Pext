@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -66,7 +66,7 @@ Dialog {
                         wrapMode: Text.Wrap
                         text:
                             "<h1>Pext " + version + "</h1><br>" +
-                            "Copyright 2016 - 2017 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
+                            "Copyright 2015 - 2018 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
                             "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>" +
                             "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br>" +
                             "You should have received a copy of the GNU General Public License along with this program. If not, see <a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."

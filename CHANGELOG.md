@@ -6,11 +6,32 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Remove quit without saving option
+- Configuration changes are now saved instantly, instead of only on a clean quit
+
+### Fixed
+- Focus not resetting after Pext hiding on macOS
+
+## [0.14] - 2018-04-22
+### Packaging changes
+- Packagers can now modify pext/constants.py to more easily control some behaviour
+
 ### Added
 - French translation (thanks, Aurora Yeen!)
 
+### Changed
+- Modules are now installed by metadata.json, instead of by git URL
+- Make pext_dev default to CC-BY-3.0 for themes
+
 ### Fixed
 - Make text properly wrap in the installing from repository dialog
+- Crashes on tab completion and minor errors (regression in 0.13)
+- Crash on module reloading (regression in 0.13)
+- IDs and names are now used more consistently
+- Crash when trying to load a theme as a module
+- Update pext_dev to be create files compatible with current Pext
+- Pext profile locks are now per-user instead of globally (fixes being unable to start if another user is running Pext)
 
 ## [0.13] - 2018-04-07
 ### Added

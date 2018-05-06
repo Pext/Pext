@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2017 Sylvia van Os <sylvia@hackerchick.me>
+# Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 #
 # This file is part of Pext
 #
@@ -56,7 +56,8 @@ class Module():
         description = input('Description: ')
         homepage = input('Homepage: ')
 
-        metadata = {'name': name,
+        metadata = {'id': '{}.module.{}'.format(developer.strip().lower(), name.strip().lower()),
+                    'name': name,
                     'developer': developer,
                     'description': description,
                     'homepage': homepage,
@@ -70,7 +71,7 @@ class Module():
             os.path.join(directory, '__init__.py'))
 
         copy(
-            AppFile().get_path('LICENSE'),
+            AppFile().get_path(os.path.join('module', 'LICENSE')),
             os.path.join(directory, 'LICENSE'))
 
     def run(self, tempdir: str, argv: List[str]) -> None:
@@ -155,11 +156,12 @@ class Theme():
         description = input('Description: ')
         homepage = input('Homepage: ')
 
-        metadata = {'name': name,
+        metadata = {'id': '{}.module.{}'.format(developer.strip().lower(), name.strip().lower()),
+                    'name': name,
                     'developer': developer,
                     'description': description,
                     'homepage': homepage,
-                    'license': 'GPL-3.0+'}
+                    'license': 'CC-BY-3.0'}
 
         with open(os.path.join(directory, 'metadata.json'), 'w') as metadata_file:
             metadata_file.write(json.dumps(metadata, sort_keys=True, indent=2))
@@ -169,7 +171,7 @@ class Theme():
             os.path.join(directory, 'theme.conf'))
 
         copy(
-            AppFile().get_path('LICENSE'),
+            AppFile().get_path(os.path.join('theme', 'LICENSE')),
             os.path.join(directory, 'LICENSE'))
 
     def run(self, tempdir: str, argv: List[str]) -> None:

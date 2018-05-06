@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -148,7 +148,7 @@ Dialog {
         }
 
         Label {
-            text: qsTr("As Pext modules are code, please make sure you trust the developer before continuing.")
+            text: qsTr("Only install modules from people you trust.")
             wrapMode: Text.Wrap
             font.bold: true
             visible: objects.length >= 1 && type == "modules"
@@ -163,7 +163,7 @@ Dialog {
 
     onAccepted: {
         if (urlSelectionBox.currentText && objects[objectComboBox.currentIndex].id) {
-            installRequest(urlSelectionBox.currentText, objects[objectComboBox.currentIndex].id);
+            installRequest(urlSelectionBox.currentText, objects[objectComboBox.currentIndex].id, objects[objectComboBox.currentIndex].name);
         }
     }
 

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 - 2017 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
 
     This file is part of Pext
 
@@ -25,6 +25,7 @@ import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
+    property bool internalUpdaterEnabled: USE_INTERNAL_UPDATER
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
@@ -284,11 +285,6 @@ ApplicationWindow {
                 text: qsTr("Quit")
                 shortcut: StandardKey.Quit
             }
-
-            MenuItem {
-                objectName: "menuQuitWithoutSaving"
-                text: qsTr("Quit without saving")
-            }
         }
 
         Menu {
@@ -361,7 +357,7 @@ ApplicationWindow {
                 objectName: "menuInstallModule"
                 title: qsTr("Install module")
 
-                signal installModuleRequest(string url, string identifier)
+                signal installModuleRequest(string url, string identifier, string name)
 
                 MenuItem {
                     text: qsTr("From online module list")
@@ -462,7 +458,7 @@ ApplicationWindow {
                 objectName: "menuInstallTheme"
                 title: qsTr("Install theme")
 
-                signal installThemeRequest(string url, string identifier)
+                signal installThemeRequest(string url, string identifier, string name)
 
                 MenuItem {
                     text: qsTr("From online theme list")
@@ -670,6 +666,7 @@ ApplicationWindow {
                 objectName: "menuEnableUpdateCheck"
                 text: qsTr("Automatically check for updates")
                 checkable: true
+                visible: internalUpdaterEnabled
             }
         }
 
@@ -689,6 +686,7 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
+                visible: internalUpdaterEnabled
             }
 
             MenuItem {
