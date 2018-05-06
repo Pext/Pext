@@ -2629,11 +2629,11 @@ class Window(QMainWindow):
 
     def _core_update_appimage(self, appimageupdate) -> None:
         """Report AppImageUpdate self-updating progress and restart when done."""
-        t1 = threading.Timer(1000, self._core_update_appimage, appimageupdate)
+        t1 = threading.Timer(1, self._core_update_appimage, appimageupdate)
         t1.daemon = True
         t1.start()
 
-        Logger.log(None, '⇩ Pext ({}%'.format(appimageupdate.progress() * 100))
+        Logger.log(None, '⇩ Pext ({}%)'.format(appimageupdate.progress() * 100))
         if appimageupdate.is_done():
             self._menu_restart_pext()
 
