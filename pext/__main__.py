@@ -1412,7 +1412,7 @@ class UpdateManager():
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
         if 'APPIMAGE' in os.environ:
-            return "APPIMAGE" if self.appimageupdate.check_for_update() else None
+            return "APPIMAGE" if self.appimageupdate.check_for_changes() else None
 
         with urlopen('https://pext.hackerchick.me/version/stable') as update_url:
             available_version = update_url.readline().decode("utf-8").strip()
@@ -1995,7 +1995,7 @@ class Window(QMainWindow):
         # Bind update dialog
         self.update_available_requests = self.window.findChild(QObject, "updateAvailableRequests")
         if 'APPIMAGE' in os.environ:
-            self.update_available_requests.updateAvailableDialogAccepted.connect(self._core_update_appimage)
+            self.update_available_requests.updateAvailableDialogAccepted.connect(self._core_update_appimage_start)
         else:
             self.update_available_requests.updateAvailableDialogAccepted.connect(self._show_download_page)
 
@@ -2621,13 +2621,21 @@ class Window(QMainWindow):
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
 
-    def _core_update_appimage(self) -> None:
-        """Update self through AppImageUpdate."""
+    def _core_update_appimage_start(self) -> None:
+        """Start self-update through AppImageUpdate."""
         appimageupdate = UpdateManager().appimageupdate
         appimageupdate.start()
-        t1 = threading.Timer(1000, Logger.log, [None, '⇩ Pext ({}%'.format(appimageupdate.progress * 100)], None)
+        self._core_update_appimage(appimageupdate)
+
+    def _core_update_appimage(self, appimageupdate) -> None:
+        """Report AppImageUpdate self-updating progress and restart when done."""
+        t1 = threading.Timer(1000, self._core_update_appimage, appimageupdate)
         t1.daemon = True
         t1.start()
+
+        Logger.log(None, '⇩ Pext ({}%'.format(appimageupdate.progress * 100))
+        if appimageupdate.is_done():
+            self._menu_restart_pext()
 
     def _show_download_page(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/download')
