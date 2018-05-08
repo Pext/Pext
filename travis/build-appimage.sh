@@ -53,9 +53,6 @@ rm squashfs-root/usr/lib/libappimageupdate.so
 cp squashfs-root/usr/lib/*.so* "$CONDA_PREFIX"/lib/
 popd
 
-# install deps for python-appimageupdate
-conda install -y -c statiskit
-
 # install python-appimageupdate into conda prefix
 git clone https://github.com/TheAssassin/python-appimageupdate.git
 pushd python-appimageupdate
@@ -84,10 +81,12 @@ wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
 # back up conda provided libraries -- system one won't work
 mkdir lib-bak
 cp AppDir/usr/lib/*.so* lib-bak/
+#(. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
 (. functions.sh && cd AppDir && set +x && move_lib || true && delete_blacklisted)
 mv AppDir/usr/lib/x86_64-linux-gnu/*.so* AppDir/usr/lib/ || true
 # copy back libraries
 cp --remove-destination lib-bak/* AppDir/usr/lib/
+#rm -rf AppDir/usr/lib/x86_64-linux-gnu/
 
 # remove unnecessary libraries and other useless data
 find AppDir/usr \
@@ -101,7 +100,6 @@ find AppDir/usr \
     -or -iname 'libreadline*.so*' \
     -or -iname '*.a' \
     -delete
-rm -rf AppDir/usr/pkgs/cache
 
 # precompile bytecode to speed up startup
 # do this after deleting lib2to3, otherwise it won't compile
