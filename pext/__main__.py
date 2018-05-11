@@ -2355,7 +2355,7 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_restart_pext(self, extra_args=None) -> None:
+    def _menu_restart_pext(self, extra_args=None, new_exec=None) -> None:
         # Call _shut_down manually because it isn't called when using os.execv
         _shut_down(self)
 
@@ -2363,7 +2363,7 @@ class Window(QMainWindow):
         if extra_args:
             args.extend(extra_args)
 
-        args.insert(0, sys.executable)
+        args.insert(0, sys.executable if not new_exec else new_exec)
         if sys.platform == 'win32':
             args = ['"%s"' % arg for arg in args]
 
@@ -2636,7 +2636,7 @@ class Window(QMainWindow):
 
         Logger.log(None, '⇩ Pext ({:.2%})'.format(appimageupdate.progress()))
         if appimageupdate.is_done():
-            self._menu_restart_pext()
+            self._menu_restart_pext(new_exec=appimageupdate.path_to_new_file())
 
     def _show_download_page(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/download')
