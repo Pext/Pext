@@ -46,9 +46,10 @@ popd
 # Put all appimageupdatetool deps in our AppImage
 AIUT_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdateTool-XXXXXX)
 pushd "$AIUT_DIR"/
-wget https://github.com/AppImage/AppImageUpdate/releases/download/continuous/appimageupdatetool-304-8a63191-x86_64.AppImage
-chmod +x *.AppImage
-./*.AppImage --appimage-extract
+url=$(wget -qO- https://api.github.com/repos/AppImage/AppImageUpdate/releases | grep browser_download_url | cut -d: -f2- | sed 's|"||g' | grep appimageupdatetool | grep --E '.AppImage$')
+wget "$url"
+chmod +x appimageupdatetool*.AppImage
+./appimageupdatetool*.AppImage --appimage-extract
 rm squashfs-root/usr/lib/libappimageupdate.so
 cp squashfs-root/usr/lib/*.so* "$CONDA_PREFIX"/lib/
 popd
