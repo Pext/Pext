@@ -2600,6 +2600,7 @@ class Window(QMainWindow):
             self.update_available_requests.showUpdateAvailableDialog.emit()
         else:
             if verbose:
+                self.update_available_requests.showNoUpdateAvailableDialog.emit()
                 Logger.log(None, '✔⇩ Pext')
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:

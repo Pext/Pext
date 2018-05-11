@@ -57,12 +57,18 @@ ApplicationWindow {
         objectName: "updateAvailableRequests"
 
         signal showUpdateAvailableDialog()
+        signal showNoUpdateAvailableDialog()
         signal updateAvailableDialogAccepted()
 
         onShowUpdateAvailableDialog: {
             var updateAvailableDialogRequestDialog = Qt.createComponent("UpdateAvailableDialog.qml");
             updateAvailableDialogRequestDialog.createObject(applicationWindow,
                 {"updateAccepted": updateAvailableDialogAccepted});
+        }
+
+        onShowNoUpdateAvailableDialog: {
+            var noUpdateAvailableDialog = Qt.createComponent("NoUpdateAvailableDialog.qml");
+            noUpdateAvailableDialog.createObject(applicationWindow);
         }
     }
 

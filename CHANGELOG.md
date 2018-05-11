@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Remove quit without saving option
 - Configuration changes are now saved instantly, instead of only on a clean quit
+- A dialog is now shown when manually checking for updates if Pext is already up to date
 
 ### Fixed
 - Focus not resetting after Pext hiding on macOS
