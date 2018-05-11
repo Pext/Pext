@@ -46,7 +46,7 @@ popd
 # Put all appimageupdatetool deps in our AppImage
 AIUT_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdateTool-XXXXXX)
 pushd "$AIUT_DIR"/
-url=$(wget -qO- https://api.github.com/repos/AppImage/AppImageUpdate/releases | grep browser_download_url | cut -d: -f2- | sed 's|"||g' | grep appimageupdatetool | grep --E '.AppImage$' | sed 's| ||g')
+url=$(wget -qO- https://api.github.com/repos/AppImage/AppImageUpdate/releases | grep browser_download_url | cut -d: -f2- | sed 's|"||g' | grep appimageupdatetool | grep -E '.AppImage$' | sed 's| ||g')
 wget "$url"
 chmod +x appimageupdatetool*.AppImage
 ./appimageupdatetool*.AppImage --appimage-extract
