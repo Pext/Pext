@@ -30,7 +30,7 @@ bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda -f
 
 # create conda env
 ~/miniconda/bin/conda create -n Pext python --yes
-source ~/miniconda/activate Pext
+source activate Pext
 
 # install dependencies
 pip install PyQt5==5.8 dulwich
@@ -39,7 +39,7 @@ pip install PyQt5==5.8 dulwich
 python setup.py install
 
 # leave conda env
-source ~/miniconda/deactivate
+source deactivate
 
 # create .app Framework
 mkdir -p Pext.app/Contents/
