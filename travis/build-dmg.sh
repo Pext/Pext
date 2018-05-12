@@ -27,6 +27,7 @@ pushd "$BUILD_DIR"/
 # install Miniconda, a self contained Python distribution
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda -f
+rm Miniconda3-latest-MacOSX-x86_64.sh 
 export PATH="$HOME/miniconda/bin:$PATH"
 
 # create conda env
@@ -61,13 +62,12 @@ EOF
 
 # make executable
 chmod a+x Pext.app/Contents/MacOS/Pext
+popd
 
 # generate .dmg
 git clone https://github.com/andreyvit/yoursway-create-dmg.git
 pushd yoursway-create-dmg
-bash ./create-dmg --volname "Pext" --volicon "../Pext.app/Contents/Resources/usr/local/pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg ../
+bash ./create-dmg --volname "Pext" --volicon "../Pext.app/Contents/Resources/usr/local/pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "$BUILD_DIR"/
 
 # move dmg to old CWD
 mv Pext.dmg "$OLD_CWD"/
-popd
-popd
