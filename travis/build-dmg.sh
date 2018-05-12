@@ -27,9 +27,10 @@ pushd "$BUILD_DIR"/
 # install Miniconda, a self contained Python distribution
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda -f
+export PATH="$HOME/miniconda/bin:$PATH"
 
 # create conda env
-~/miniconda/bin/conda create -n Pext python --yes
+conda create -n Pext python --yes
 source activate Pext
 
 # install dependencies
