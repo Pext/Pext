@@ -13,15 +13,12 @@ before_install:
   # beware: the line below is a DIRTY HACK -- it will override the system pip -- the proper way to do this would be a virtualenv
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis; fi
 
-install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash build_mac_app.sh; fi
-
 script:
   - tox -v
   # build dmg for macOS
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then git clone https://github.com/andreyvit/yoursway-create-dmg.git; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pushd yoursway-create-dmg; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash ./create-dmg --volname "Pext" --volicon "../pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg ../dist; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then mkdir -p build; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd build; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash -xe ../travis/build-dmg.sh; fi
   # build AppImage for Linux
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mkdir -p build; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd build; fi

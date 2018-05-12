@@ -14,19 +14,7 @@ except Exception as e:
     print("Could not determine version from git, falling back to version file: {}".format(e))
     version = version_file_version
 
-if sys.platform == 'darwin':
-    extra_options = dict(
-        setup_requires=['py2app'],
-        app=['pext/__main__.py'],
-        options={'py2app': {
-            'argv_emulation': True,
-            'iconfile': 'pext/images/scalable/pext.icns',
-            'emulate_shell_environment': 1,
-            'includes': ['pty', 'readline'],
-            'packages': ['certifi', 'distutils', 'pip', 'setuptools']
-        }}
-    )
-else:
+if sys.platform == 'linux':
     extra_options = dict(
         data_files=[
             ('share/icons/hicolor/scalable/apps', ['pext/images/scalable/pext.svg']),
@@ -36,6 +24,8 @@ else:
             ('share/metainfo', ['pext.appdata.xml'])
         ]
     )
+else:
+    extra_options = dict()
 
 setup(
     name='Pext',
