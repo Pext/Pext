@@ -20,7 +20,6 @@ cleanup () {
 
 trap cleanup EXIT
 
-REPO_ROOT="$(dirname $(dirname "$0"))"
 OLD_CWD="$(pwd)"
 
 pushd "$BUILD_DIR"/
@@ -38,9 +37,7 @@ source activate Pext
 pip install PyQt5==5.8 dulwich
 
 # install Pext
-pushd "$REPO_ROOT/"
-python setup.py install
-popd
+python /Users/travis/build/Pext/Pext/setup.py install
 
 # leave conda env
 source deactivate
