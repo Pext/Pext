@@ -54,7 +54,7 @@ touch Pext.app/Contents/Info.plist
 cp -R ~/miniconda/envs/Pext/* Pext.app/Contents/Resources/
 
 # create entry script
-cat <<EOF >> Pext.app/Contents/MacOS/Pext
+cat <<'EOF' >> Pext.app/Contents/MacOS/Pext
 #!/usr/bin/env bash
 script_dir=$(dirname "$(dirname "$0")")
 $script_dir/Resources/bin/python $script_dir/Resources/bin/Pext $@
