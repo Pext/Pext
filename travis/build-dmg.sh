@@ -29,7 +29,7 @@ wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda -f
 
 # create conda env
-~/miniconda/bin/conda create -n Pext python
+~/miniconda/bin/conda create -n Pext python --yes
 source ~/miniconda/activate Pext
 
 # install dependencies
