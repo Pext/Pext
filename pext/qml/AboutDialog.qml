@@ -29,7 +29,8 @@ Dialog {
     width: 500
 
     property var translators: {"en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
-                               "es": [{"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
+                               "es": [{"name": "Rose Garcia", "email": "rosegarcia@protonmail.com"},
+                                      {"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
                                "fr": [{"name": "Aurora Yeen &lt;<a href='https://t.me/YeenAurora'>@YeenAurora</a>&gt;"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
