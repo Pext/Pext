@@ -54,8 +54,8 @@ cp -R "$OLD_CWD"/* Pext.app/Contents/Resources/Pext/
 # create entry script
 cat <<'EOF' >> Pext.app/Contents/MacOS/Pext
 #!/usr/bin/env bash
-script_dir=$(dirname "$(dirname "$0")")
-$script_dir/../Resources/bin/python $script_dir/../Resources/Pext/pext $@
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+$DIR/../Resources/bin/python $DIR/../Resources/Pext/pext $@
 EOF
 
 # make executable
