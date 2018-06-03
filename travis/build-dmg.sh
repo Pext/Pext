@@ -42,14 +42,14 @@ source deactivate
 
 # create .app Framework
 mkdir -p Pext.app/Contents/
-mkdir Pext.app/Contents/MacOS Pext.app/Contents/Resources
+mkdir Pext.app/Contents/MacOS Pext.app/Contents/Resources Pext.app/Contents/Resources/Pext
 touch Pext.app/Contents/Info.plist
 
 # copy Miniconda env
 cp -R ~/miniconda/envs/Pext/* Pext.app/Contents/Resources/
 
 # copy Pext
-cp -R "$OLD_CWD"/* Pext.app/Contents/Resources/Pext
+cp -R "$OLD_CWD"/* Pext.app/Contents/Resources/Pext/
 
 # create entry script
 cat <<'EOF' >> Pext.app/Contents/MacOS/Pext
