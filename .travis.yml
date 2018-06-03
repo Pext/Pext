@@ -16,7 +16,7 @@ before_install:
 script:
   - tox -v
   # build dmg for macOS
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash -xe ../travis/build-dmg.sh; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash -xe travis/build-dmg.sh; fi
   # build AppImage for Linux
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mkdir -p build; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd build; fi
