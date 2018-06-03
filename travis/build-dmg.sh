@@ -38,7 +38,8 @@ source activate Pext
 pip install PyQt5==5.8 dulwich
 
 # install Pext
-python /Users/travis/build/Pext/Pext/setup.py install
+mv /Users/travis/build/Pext/Pext/* .
+python setup.py install
 
 # leave conda env
 source deactivate
