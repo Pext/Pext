@@ -10,19 +10,7 @@ else
     TEMP_BASE=/tmp
 fi
 
-BUILD_DIR=$(mktemp -d "$TEMP_BASE/Pext-MacOS-build-XXXXXX")
-
-cleanup () {
-    if [ -d "$BUILD_DIR" ]; then
-        rm -rf "$BUILD_DIR"
-    fi
-}
-
-trap cleanup EXIT
-
 OLD_CWD="$(pwd)"
-
-pushd "$BUILD_DIR"/
 
 # install Miniconda, a self contained Python distribution
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
@@ -39,7 +27,6 @@ pip install PyQt5==5.8 dulwich
 
 # install Pext
 mv /Users/travis/build/Pext/Pext/* .
-python setup.py install
 
 # leave conda env
 source deactivate
@@ -56,17 +43,16 @@ cp -R ~/miniconda/envs/Pext/* Pext.app/Contents/Resources/
 cat <<'EOF' >> Pext.app/Contents/MacOS/Pext
 #!/usr/bin/env bash
 script_dir=$(dirname "$(dirname "$0")")
-$script_dir/Resources/bin/python $script_dir/Resources/bin/Pext $@
+$script_dir/Resources/bin/python $script_dir/Resources/pext $@
 EOF
 
 # make executable
 chmod a+x Pext.app/Contents/MacOS/Pext
-popd
 
 # generate .dmg
 git clone https://github.com/andreyvit/yoursway-create-dmg.git
 pushd yoursway-create-dmg
-bash ./create-dmg --volname "Pext" --volicon "/Users/travis/build/Pext/Pext/pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "$BUILD_DIR"/
+bash ./create-dmg --volname "Pext" --volicon "../Pext.app/Contents/Resources/pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "../Pext.app"
 
 # move dmg to old CWD
 mv Pext.dmg "$OLD_CWD"/
