@@ -54,8 +54,8 @@ cp -R "$OLD_CWD"/* Pext.app/Contents/Resources/Pext/
 # create entry script
 cat <<'EOF' >> Pext.app/Contents/MacOS/Pext
 #!/usr/bin/env bash
-root_dir=$(dirname $(dirname "$(dirname "$0")"))
-$root_dir/Resources/bin/python $root_dir/Resources/Pext/pext $@
+script_dir=$(dirname "$(dirname "$0")")
+$script_dir/../Resources/bin/python $script_dir/../Resources/Pext/pext $@
 EOF
 
 # make executable
@@ -65,7 +65,7 @@ popd
 # generate .dmg
 git clone https://github.com/andreyvit/yoursway-create-dmg.git
 pushd yoursway-create-dmg
-bash ./create-dmg --volname "Pext" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "$BUILD_DIR"/
+bash ./create-dmg --volname "Pext" --volicon "$OLD_CWD/pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "$BUILD_DIR"/
 
 # move dmg to old CWD
 mv Pext.dmg "$OLD_CWD"/
