@@ -65,7 +65,7 @@ popd
 # generate .dmg
 git clone https://github.com/andreyvit/yoursway-create-dmg.git
 pushd yoursway-create-dmg
-bash ./create-dmg --volname "Pext" --volicon "$OLD_CWD/pext/images/scalable/pext.icns" --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "$BUILD_DIR"/
+bash ./create-dmg --volname "Pext" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "$BUILD_DIR"/
 
 # move dmg to old CWD
 mv Pext.dmg "$OLD_CWD"/
