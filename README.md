@@ -90,13 +90,13 @@ pip3 install git+https://github.com/Pext/Pext.git --user
 
 On some systems, you may need to use pip instead of pip3.
 
-Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md)
+Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ### macOS
 
-A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). This is still experimental, please report any issues.
+A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases).
 
-Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md)
+Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ### Windows (experimental)
 
