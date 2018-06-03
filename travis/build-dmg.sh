@@ -43,7 +43,7 @@ source deactivate
 # create .app Framework
 mkdir -p Pext.app/Contents/
 mkdir Pext.app/Contents/MacOS Pext.app/Contents/Resources Pext.app/Contents/Resources/Pext
-touch Pext.app/Contents/Info.plist
+mv "$OLD_CWD"/Info.plist Pext.app/Contents/Info.plist
 
 # copy Miniconda env
 cp -R ~/miniconda/envs/Pext/* Pext.app/Contents/Resources/
