@@ -22,6 +22,9 @@ trap cleanup EXIT
 
 OLD_CWD="$(pwd)"
 
+# update version info (this will throw an error, but that's okay)
+python3 setup.py || true
+
 pushd "$BUILD_DIR"/
 
 # install Miniconda, a self contained Python distribution
