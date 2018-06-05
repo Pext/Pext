@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Focus not resetting after Pext hiding on macOS
+- Updated PyQt5 to fix some emoji display issues
+- macOS .dmg not being able to install all modules
 
 ## [0.14] - 2018-04-22
 ### Packaging changes
