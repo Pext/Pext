@@ -89,7 +89,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished">Denne modulen ser ikke ut til å støtte %1.</translation>
+        <translation>Denne modulen ser ikke ut til å støtte  %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
