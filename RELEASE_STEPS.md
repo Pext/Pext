@@ -17,6 +17,7 @@
 
 ## Preparation
 1. Update the ``<VERSION>`` in ``pext/VERSION``
+2. Update the ``<VERSION>`` in ``Info.plist``
 3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG``
 
 ## GitHub
