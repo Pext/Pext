@@ -38,7 +38,7 @@ conda create -n Pext python --yes
 source activate Pext
 
 # install dependencies
-pip install PyQt5==5.8 dulwich
+pip install PyQt5 dulwich
 
 # leave conda env
 source deactivate

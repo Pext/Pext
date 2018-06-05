@@ -38,7 +38,7 @@ conda config --add channels conda-forge
 conda install -y xorg-libxi
 
 # install dependencies
-pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
+pip install PyQt5 PyOpenGL PyOpenGL_accelerate dulwich
 
 # install Pext
 pushd "$REPO_ROOT"/
