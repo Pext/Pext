@@ -114,7 +114,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>Only install modules from people you trust.</source>
-        <translation type="unfinished"></translation>
+        <translation>Installer uniquement les modules des personnes de confiance.</translation>
     </message>
 </context>
 <context>
@@ -198,7 +198,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Only install modules from people you trust.</source>
-        <translation type="unfinished"></translation>
+        <translation>Installer uniquement les modules des personnes de confiance.</translation>
     </message>
 </context>
 <context>
