@@ -879,7 +879,7 @@ class ObjectManager():
         location = os.path.basename(full_path)
 
         try:
-            source = UpdateManager.get_remote_url(full_path)
+            source = UpdateManager.get_remote_url(full_path)  # type: Optional[str]
         except Exception:
             source = None
 
@@ -1473,7 +1473,7 @@ class ViewModel():
         self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
-        self.selection_thread = None  # type: threading.Thread
+        self.selection_thread = None  # type: Optional[threading.Thread]
 
     def make_selection(self) -> None:
         """Make a selection if no selection is currently being processed.
