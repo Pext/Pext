@@ -26,7 +26,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="90"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation>Команда Pext хотела бы поблагодарить следующих пользователей за помощь с переводом Pext:</translation>
+        <translation>Команда Pext выражает благодарность следующим пользователям за помощь с переводом Pext:</translation>
     </message>
 </context>
 <context>
@@ -44,7 +44,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
-        <translation>Источник модуля:</translation>
+        <translation type="unfinished">Источник модуля:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
@@ -54,12 +54,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
-        <translation>В этом источнике не найдено модулей.</translation>
+        <translation type="unfinished">В этом источнике не найдено модулей.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
-        <translation>В этом источнике не найдено тем.</translation>
+        <translation type="unfinished">В этом источнике не найдено тем.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
@@ -74,7 +74,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
-        <translation>Загрузить исходный код:</translation>
+        <translation>Источник:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
@@ -99,7 +99,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
-        <translation>Создатель: </translation>
+        <translation>Разработчик: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
@@ -114,7 +114,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>Only install modules from people you trust.</source>
-        <translation type="unfinished"></translation>
+        <translation>Устанавливайте модули только из проверенных источников.</translation>
     </message>
 </context>
 <context>
@@ -198,7 +198,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Only install modules from people you trust.</source>
-        <translation type="unfinished"></translation>
+        <translation>Устанавливайте модули только из проверенных источников.</translation>
     </message>
 </context>
 <context>
@@ -224,7 +224,7 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
-        <translation>Выберите модуль для загрузки:</translation>
+        <translation>Выберите модуль:</translation>
     </message>
 </context>
 <context>
@@ -237,7 +237,7 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation>Выберите профиль для переключения:</translation>
+        <translation>Выберите профиль:</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
@@ -260,7 +260,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation>Выберите тему для переключения:</translation>
+        <translation>Выберите тему:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
@@ -318,7 +318,7 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
-        <translation></translation>
+        <translation>Источник: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="136"/>
@@ -408,7 +408,7 @@
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="37"/>
         <source>Please choose a new name for this profile.</source>
-        <translation>Выберите новое имя для этого профиля.</translation>
+        <translation>Введите новое имя для этого профиля.</translation>
     </message>
 </context>
 <context>
@@ -421,7 +421,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation>Доступна новая версия Pext. Вы хотите открыть страницу загрузки?</translation>
+        <translation>Доступна новая версия Pext. Хотите открыть страницу загрузки?</translation>
     </message>
 </context>
 <context>
@@ -429,12 +429,12 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation></translation>
+        <translation type="unfinished">Менеджер обновлений</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation>Разрешить Pext автоматически проверять обновления? Вы в любой момент сможете изменить своё решение в меню настроек.</translation>
+        <translation type="unfinished">Разрешить Pext автоматически проверять обновления? Вы в любой момент сможете изменить своё решение в меню настроек.</translation>
     </message>
 </context>
 <context>
@@ -533,27 +533,27 @@
     <message>
         <location filename="../qml/main.qml" line="567"/>
         <source>System locale</source>
-        <translation>Системная локаль</translation>
+        <translation>Системный</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="591"/>
         <source>Sorting style</source>
-        <translation>Тип сортировки</translation>
+        <translation>Сортировка</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Sort by module choice</source>
-        <translation>Сортировка модуля</translation>
+        <translation>Настройки модуля</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="607"/>
         <source>Sort ascending</source>
-        <translation>Сортировка по возрастанию</translation>
+        <translation>По возрастанию</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="614"/>
         <source>Sort descending</source>
-        <translation>Сортировка по убыванию</translation>
+        <translation>По убыванию</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="621"/>
@@ -563,7 +563,7 @@
     <message>
         <location filename="../qml/main.qml" line="630"/>
         <source>Minimize normally</source>
-        <translation>Сворачивать нормально</translation>
+        <translation>Сворачивать</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="638"/>
@@ -573,7 +573,7 @@
     <message>
         <location filename="../qml/main.qml" line="645"/>
         <source>Manual only: Minimize normally</source>
-        <translation>Только вручную: Сворачивать нормально</translation>
+        <translation>Только вручную: Сворачивать</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="653"/>
@@ -603,7 +603,7 @@
     <message>
         <location filename="../qml/main.qml" line="758"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
-        <translation>Pext создан, чтобы не мешать вам при использовании. Как только модуль решит, что вы закончили, Pext тут же спрячется в трее. Если вам понадобится воспользоваться Pext снова, просто откройте его ещё раз или нажмите на иконку в трее.</translation>
+        <translation>Pext создан, чтобы не отвлекать вас. Как только модуль решит, что вы завершили работу с ним, Pext тут же спрячется в трее. Если вам понадобится воспользоваться Pext снова, просто откройте его ещё раз или нажмите на иконку в трее.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="799"/>
@@ -642,7 +642,7 @@
     <message>
         <location filename="../qml/main.qml" line="661"/>
         <source>Always show tray icon</source>
-        <translation>Всегда показывать иконку в трее</translation>
+        <translation>Всегда показывать иконку</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="678"/>
@@ -667,7 +667,7 @@
     <message>
         <location filename="../qml/main.qml" line="722"/>
         <source>Type to search</source>
-        <translation>Введите для поиска</translation>
+        <translation>Поиск</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="833"/>
