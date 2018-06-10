@@ -54,6 +54,7 @@ from queue import Queue, Empty
 
 from dulwich import porcelain
 from dulwich.repo import Repo
+from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
@@ -113,6 +114,7 @@ class OutputMode(IntEnum):
     DefaultClipboard = 0
     SelectionClipboard = 1
     FindBuffer = 2
+    AutoType = 3
 
 
 class ConfigRetriever():
@@ -491,14 +493,17 @@ class MainLoop():
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
-            if Settings.get('output_mode') == OutputMode.SelectionClipboard:
-                mode = QClipboard.Selection
-            elif Settings.get('output_mode') == OutputMode.FindBuffer:
-                mode = QClipboard.FindBuffer
+            if Settings.get('output_mode') == OutputMode.AutoType:
+                self.window.output_queue.append(str(action[1]))
             else:
-                mode = QClipboard.Clipboard
+                if Settings.get('output_mode') == OutputMode.SelectionClipboard:
+                    mode = QClipboard.Selection
+                elif Settings.get('output_mode') == OutputMode.FindBuffer:
+                    mode = QClipboard.FindBuffer
+                else:
+                    mode = QClipboard.Clipboard
 
-            self.app.clipboard().setText(str(action[1]), mode)
+                self.app.clipboard().setText(str(action[1]), mode)
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
@@ -1944,6 +1949,9 @@ class Window(QMainWindow):
         """Initialize the window."""
         super().__init__(parent)
 
+        # Text to type on close if needed
+        self.output_queue = []  # type: List[str]
+
         # Save settings
         self.locale_manager = locale_manager
 
@@ -2047,6 +2055,8 @@ class Window(QMainWindow):
             QObject, "menuOutputSelectionClipboard")
         menu_output_find_buffer = self.window.findChild(
             QObject, "menuOutputFindBuffer")
+        menu_output_auto_type = self.window.findChild(
+            QObject, "menuOutputAutoType")
 
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
@@ -2104,6 +2114,7 @@ class Window(QMainWindow):
         menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
         menu_output_selection_clipboard.toggled.connect(self._menu_output_selection_clipboard)
         menu_output_find_buffer.toggled.connect(self._menu_output_find_buffer)
+        menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2130,6 +2141,9 @@ class Window(QMainWindow):
         QQmlProperty.write(menu_output_find_buffer,
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.FindBuffer)
+        QQmlProperty.write(menu_output_auto_type,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.AutoType)
 
         QQmlProperty.write(menu_sort_module_shortcut,
                            "checked",
@@ -2519,6 +2533,10 @@ class Window(QMainWindow):
         if enabled:
             Settings.set('output_mode', OutputMode.FindBuffer)
 
+    def _menu_output_auto_type(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.AutoType)
+
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
             Settings.set('sort_mode', SortMode.Module)
@@ -2675,6 +2693,15 @@ class Window(QMainWindow):
             self.window.showMinimized()
 
         self._macos_focus_workaround()
+
+        while True:
+            try:
+                output = self.output_queue.pop()
+            except IndexError:
+                break
+
+            keyboard_device = keyboard.Controller()
+            keyboard_device.type(output)
 
     def show(self) -> None:
         """Show the window."""
@@ -3105,6 +3132,8 @@ def _load_settings(args: argparse.Namespace) -> None:
             Settings.set('output_mode', OutputMode.SelectionClipboard)
         elif args.output == 'macos-findbuffer':
             Settings.set('output_mode', OutputMode.FindBuffer)
+        elif args.output == 'autotype':
+            Settings.set('output_mode', OutputMode.AutoType)
 
     if args.install_module:
         for metadata_url in args.install_module:

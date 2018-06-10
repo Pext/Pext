@@ -14,7 +14,8 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis; fi
 
 script:
-  - tox -v
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; xvfb-run tox -v; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; tox -v; fi
   # build dmg for macOS
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash -xe travis/build-dmg.sh; fi
   # build AppImage for Linux

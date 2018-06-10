@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Ability to switch output location on runtime
+- Ability to type output directly
 
 ## [0.15] - 2018-06-07
 ### Packaging changes

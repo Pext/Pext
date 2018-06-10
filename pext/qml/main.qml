@@ -617,8 +617,14 @@ ApplicationWindow {
                     checkable: true
                     exclusiveGroup: menuOutputGroup
                 }
-            }
 
+                MenuItem {
+                    objectName: "menuOutputAutoType"
+                    text: qsTr("Type automatically")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+            }
 
             Menu {
                 title: qsTr("Sorting style")

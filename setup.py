@@ -32,6 +32,7 @@ setup(
     version=version,
     install_requires=[
         'dulwich',
+        'pynput',
         'pyqt5'
     ],
     description='Python-based extendable tool',
