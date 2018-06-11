@@ -52,9 +52,6 @@ except ImportError:
 from urllib.request import urlopen
 from queue import Queue, Empty
 
-if platform.system() == 'Darwin':
-    import accessibility
-
 from dulwich import porcelain
 from dulwich.repo import Repo
 from pynput import keyboard
@@ -65,6 +62,9 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
+
+if platform.system() == 'Darwin':
+    import accessibility  # NOQA
 
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 warn_no_openGL_linux = False
@@ -2545,12 +2545,8 @@ class Window(QMainWindow):
         if enabled:
             if platform.system() == 'Darwin':
                 if not accessibility.is_enabled() or not accessibility.is_trusted():
-                    QQmlProperty.write(self.menu_output_auto_type,
-                        "checked",
-                        False)
-                    QQmlProperty.write(self.menu_output_default_clipboard,
-                        "checked",
-                        True)
+                    QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                    QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
                     return
 
             Settings.set('output_mode', OutputMode.AutoType)

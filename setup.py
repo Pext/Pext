@@ -23,10 +23,13 @@ if sys.platform == 'linux':
             ('share/applications', ['pext.desktop']),
             ('share/metainfo', ['pext.appdata.xml'])
         ]
-    ),
+    )
+    extra_deps = []
+elif sys.platform == 'darwin':
+    extra_options = dict()
     extra_deps = ['accessibility']
 else:
-    extra_options = dict(),
+    extra_options = dict()
     extra_deps = []
 
 setup(
