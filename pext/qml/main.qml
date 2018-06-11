@@ -391,17 +391,6 @@ ApplicationWindow {
                     }
                 }
             }
-
-            MenuItem {
-                objectName: "menuUpdateAllModules"
-                text: qsTr("Update all modules")
-
-                signal updateAllModulesRequest()
-
-                onTriggered: {
-                    updateAllModulesRequest()
-                }
-            }
         }
 
         Menu {
@@ -490,17 +479,6 @@ ApplicationWindow {
                         installThemeFromURLDialog.createObject(applicationWindow,
                             {"installRequest": menuInstallTheme.installThemeRequest});
                     }
-                }
-            }
-
-            MenuItem {
-                objectName: "menuUpdateAllThemes"
-                text: qsTr("Update all themes")
-
-                signal updateAllThemesRequest()
-
-                onTriggered: {
-                    updateAllThemesRequest()
                 }
             }
         }
@@ -695,18 +673,29 @@ ApplicationWindow {
                 }
             }
 
+            Menu {
+                title: qsTr("Automatic updating")
+
+                MenuItem {
+                    objectName: "menuEnableUpdateCheck"
+                    text: qsTr("Automatically check for Pext updates")
+                    checkable: true
+                    visible: internalUpdaterEnabled
+                }
+
+                MenuItem {
+                    objectName: "menuEnableObjectUpdateCheck"
+                    text: qsTr("Automatically update modules and themes")
+                    checkable: true
+                }
+            }
+
             MenuItem {
                 objectName: "menuShowTrayIcon"
                 text: qsTr("Always show tray icon")
                 checkable: true
             }
 
-            MenuItem {
-                objectName: "menuEnableUpdateCheck"
-                text: qsTr("Automatically check for updates")
-                checkable: true
-                visible: internalUpdaterEnabled
-            }
         }
 
         Menu {
@@ -725,7 +714,6 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
-                visible: internalUpdaterEnabled
             }
 
             MenuItem {

@@ -14,10 +14,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Ability to switch output location on runtime
 - Ability to type output directly
+- Ability to automatically update modules
 
 ### Changed
 - Switch to Qt5 for notifications
 - Remove delay in showing notifications
+- Core and module update checks are now done together
 
 ## [0.15] - 2018-06-07
 ### Packaging changes

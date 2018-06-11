@@ -150,50 +150,6 @@ class ConfigRetriever():
 
         return config[variable]
 
-    @staticmethod
-    def get_updatecheck_permission_asked() -> bool:
-        """Return info on if allowing updates was asked."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'), 'update_check_enabled'), 'r'):
-                return True
-        except FileNotFoundError:
-            return False
-
-    @staticmethod
-    def get_updatecheck_permission() -> bool:
-        """Return info on if update checking is allowed."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                                   'update_check_enabled'), 'r') as update_check_file:
-                result = update_check_file.readline()
-                return True if result == str(1) else False
-        except FileNotFoundError:
-            return False
-
-    @staticmethod
-    def save_updatecheck_permission(granted: bool) -> None:
-        """Save the current updatecheck permission status."""
-        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                               'update_check_enabled'), 'w') as update_check_file:
-            update_check_file.write(str(int(granted)))
-
-    @staticmethod
-    def get_last_update_check_time() -> Optional[datetime]:
-        """Get the time of the last update check, returns None if there was never a check."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                                   'update_check_time'), 'r') as update_check_file:
-                return datetime.fromtimestamp(int(float(update_check_file.readline())))
-        except (FileNotFoundError):
-            return None
-
-    @staticmethod
-    def set_last_update_check_time(dt: datetime) -> None:
-        """Set the last update check time to the given time."""
-        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                               'update_check_time'), 'w') as update_check_file:
-            update_check_file.write(str(dt.timestamp()))
-
 
 class RunConseq():
     """A simple helper to run several functions consecutively."""
@@ -720,7 +676,8 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
-        self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray']
+        self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
+                               'last_update_check', 'update_check', 'object_update_check']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -831,14 +788,14 @@ class ProfileManager():
 
         return modules
 
-    def save_settings(self, profile: str, changed_key: Optional[str]=None) -> None:
+    def save_settings(self, profile: Optional[str], changed_key: Optional[str]=None) -> None:
         """Save the current settings to the profile."""
         if changed_key and changed_key not in self.saved_settings:
             return
 
         config = configparser.ConfigParser()
         settings_to_store = {}
-        for setting in Settings.get_all():
+        for setting in Settings.get_all(profile if profile else None):
             if setting in self.saved_settings:
                 setting_data = Settings.get(setting)
                 try:
@@ -850,15 +807,25 @@ class ProfileManager():
 
         config['settings'] = settings_to_store
 
-        with open(os.path.join(self.profile_dir, profile, 'settings'), 'w') as configfile:
+        if profile:
+            path = os.path.join(self.profile_dir, profile, 'settings')
+        else:
+            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+
+        with open(path, 'w') as configfile:
             config.write(configfile)
 
-    def retrieve_settings(self, profile: str) -> Dict[str, Any]:
+    def retrieve_settings(self, profile: Optional[str]) -> Dict[str, Any]:
         """Retrieve the settings from the profile."""
         config = configparser.ConfigParser()
         setting_dict = {}  # type: Dict[str, Any]
 
-        config.read(os.path.join(self.profile_dir, profile, 'settings'))
+        if profile:
+            path = os.path.join(self.profile_dir, profile, 'settings')
+        else:
+            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+
+        config.read(path)
 
         try:
             for setting in config['settings']:
@@ -2027,8 +1994,6 @@ class Window(QMainWindow):
             QObject, "menuInstallModule")
         menu_manage_modules_shortcut = self.window.findChild(
             QObject, "menuManageModules")
-        menu_update_all_modules_shortcut = self.window.findChild(
-            QObject, "menuUpdateAllModules")
 
         menu_load_theme_shortcut = self.window.findChild(
             QObject, "menuLoadTheme")
@@ -2036,8 +2001,6 @@ class Window(QMainWindow):
             QObject, "menuInstallTheme")
         menu_manage_themes_shortcut = self.window.findChild(
             QObject, "menuManageThemes")
-        menu_update_all_themes_shortcut = self.window.findChild(
-            QObject, "menuUpdateAllThemes")
 
         menu_load_profile_shortcut = self.window.findChild(
             QObject, "menuLoadProfile")
@@ -2075,6 +2038,8 @@ class Window(QMainWindow):
             QObject, "menuShowTrayIcon")
         self.menu_enable_update_check_shortcut = self.window.findChild(
             QObject, "menuEnableUpdateCheck")
+        self.menu_enable_object_update_check_shortcut = self.window.findChild(
+            QObject, "menuEnableObjectUpdateCheck")
 
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
@@ -2090,8 +2055,6 @@ class Window(QMainWindow):
         menu_manage_modules_shortcut.uninstallModuleRequest.connect(
             self._menu_uninstall_module)
         menu_manage_modules_shortcut.updateModuleRequest.connect(self._menu_update_module)
-        menu_update_all_modules_shortcut.updateAllModulesRequest.connect(
-            self._menu_update_all_modules)
 
         menu_load_theme_shortcut.loadThemeRequest.connect(self._menu_switch_theme)
         menu_install_theme_shortcut.installThemeRequest.connect(
@@ -2099,8 +2062,6 @@ class Window(QMainWindow):
         menu_manage_themes_shortcut.uninstallThemeRequest.connect(
             self._menu_uninstall_theme)
         menu_manage_themes_shortcut.updateThemeRequest.connect(self._menu_update_theme)
-        menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
-            self._menu_update_all_themes)
 
         menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
         menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
@@ -2124,6 +2085,7 @@ class Window(QMainWindow):
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
+        self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
 
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
@@ -2172,6 +2134,9 @@ class Window(QMainWindow):
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
                            Settings.get('update_check'))
+        QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
+                           "checked",
+                           Settings.get('object_update_check'))
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -2189,14 +2154,14 @@ class Window(QMainWindow):
         elif not Settings.get('background'):
             self.show()
 
-            if USE_INTERNAL_UPDATER and Settings.get('update_check') is None:
+            if Settings.get('update_check') is None:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
                 permission_requests.updatePermissionRequestAccepted.connect(
-                    lambda: self._menu_toggle_update_check(True, after_permission_request=True))
+                    lambda: self._menu_update_check_dialog_result(True))
                 permission_requests.updatePermissionRequestRejected.connect(
-                    lambda: self._menu_toggle_update_check(False))
+                    lambda: self._menu_update_check_dialog_result(False))
 
                 permission_requests.updatePermissionRequest.emit()
 
@@ -2372,12 +2337,12 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_all_modules(self) -> None:
+    def _menu_update_all_modules(self, verbose=False) -> None:
         functions = [
             {
                 'name': self.module_manager.update_all_modules,
                 'args': (),
-                'kwargs': {'verbose': True}
+                'kwargs': {'verbose': verbose}
             }, {
                 'name': self._update_modules_info_qml,
                 'args': (),
@@ -2501,12 +2466,12 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_all_themes(self) -> None:
+    def _menu_update_all_themes(self, verbose=False) -> None:
         functions = [
             {
                 'name': self.theme_manager.update_all_themes,
                 'args': (),
-                'kwargs': {'verbose': True}
+                'kwargs': {'verbose': False}
             }, {
                 'name': self._update_themes_info_qml,
                 'args': (),
@@ -2582,24 +2547,30 @@ class Window(QMainWindow):
         except AttributeError:
             pass
 
+    def _menu_update_check_dialog_result(self, accepted: bool) -> None:
+        self._menu_toggle_object_update_check(True)
+        self._menu_toggle_update_check(True, True)
+
     def _menu_toggle_update_check(self, enabled: bool, after_permission_request=False) -> None:
         Settings.set('update_check', enabled)
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
                            Settings.get('update_check'))
 
-        # Immediately save update status to file
-        ConfigRetriever.save_updatecheck_permission(Settings.get('update_check'))
-
         # macOS breaks if we show the update dialog immediately after accepting
         # checking for updates so we need this workaround
-        if after_permission_request:
+        if enabled and after_permission_request:
             self._menu_restart_pext()
 
         # Check for updates immediately after toggling true
         # This is also toggled on app launch because we bind before we toggle
-        if Settings.get('update_check'):
-            self._menu_check_updates(verbose=False, manual=False)
+        self._menu_check_updates(verbose=False, manual=False)
+
+    def _menu_toggle_object_update_check(self, enabled: bool) -> None:
+        Settings.set('object_update_check', enabled)
+        QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
+                           "checked",
+                           Settings.get('object_update_check'))
 
     def _search(self) -> None:
         try:
@@ -2656,9 +2627,6 @@ class Window(QMainWindow):
                 Logger.log(None, '✔⇩ Pext')
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
-        if not USE_INTERNAL_UPDATER:
-            return
-
         # Set a timer to run this function again in an hour
         if not manual:
             t = threading.Timer(3600, self._menu_check_updates, None, {'verbose': False, 'manual': False})
@@ -2666,10 +2634,22 @@ class Window(QMainWindow):
             t.start()
 
         # Check if it's been over 24 hours or this is a manual check
-        last_update_check = ConfigRetriever.get_last_update_check_time()
-        if manual or last_update_check is None or (datetime.now() - last_update_check).total_seconds() > (86400):
-            threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
-            ConfigRetriever.set_last_update_check_time(datetime.now())
+        last_update_check = Settings.get('last_update_check')
+
+        if last_update_check is None:
+            last_update_check = time.time()
+            Settings.set('last_update_check', last_update_check)
+
+        if manual or (time.time() - float(last_update_check) > 86400):
+            if not USE_INTERNAL_UPDATER:
+                if manual or Settings.get('update_check'):
+                    threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
+
+            if manual or Settings.get('object_update_check'):
+                self._menu_update_all_modules(verbose)
+                self._menu_update_all_themes(verbose)
+
+            Settings.set('last_update_check', time.time())
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -2942,13 +2922,27 @@ class Settings():
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
-        'tray': True,
-        'update_check': None  # None = not asked, True/False = permission
+        'tray': True
+    }
+
+    __global_settings = {
+        'last_update_check': None,
+        'update_check': None,  # None = not asked, True/False = permission
+        'object_update_check': None  # None = not asked, True/False = permission
     }
 
     @staticmethod
     def get(name, default=None):
         """Return the value of a single setting, falling back to default if None."""
+        try:
+            value = Settings.__global_settings[name]
+            if value is None:
+                return default
+
+            return value
+        except KeyError:
+            pass
+
         value = Settings.__settings[name]
         if value is None:
             return default
@@ -2956,26 +2950,42 @@ class Settings():
         return value
 
     @staticmethod
-    def get_all():
+    def get_all(profile=None):
         """Return all settings."""
-        return Settings.__settings
+        if profile:
+            return Settings.__settings
+        else:
+            return Settings.__global_settings
 
     @staticmethod
     def set(name, value):
         """Set a single setting if this setting is known."""
-        if name not in Settings.__settings:
-            raise NameError('{} is not a key of Settings'.format(name))
+        if name in Settings.__global_settings:
+            profile = None
+        else:
+            profile = Settings.get('profile')
+            if name not in Settings.__settings:
+                raise NameError('{} is not a key of Settings'.format(name))
 
         if Settings.get(name) == value:
             return
 
-        Settings.__settings[name] = value
-        ProfileManager().save_settings(Settings.get('profile'), changed_key=name)
+        if name in Settings.__global_settings:
+            Settings.__global_settings[name] = value
+        else:
+            Settings.__settings[name] = value
+
+        ProfileManager().save_settings(profile, changed_key=name)
 
     @staticmethod
     def update(value):
         """Update the dictionary with new values if any changed."""
         Settings.__settings.update(value)
+
+    @staticmethod
+    def update_global(value):
+        """Update the globals dictionary with new values if any changed."""
+        Settings.__global_settings.update(value)
 
 
 class ModuleOptionParser(argparse.Action):
@@ -3099,7 +3109,8 @@ def _load_settings(args: argparse.Namespace) -> None:
     except OSError:
         pass
 
-    # Load all from profile
+    # Load all settings
+    Settings.update_global(ProfileManager().retrieve_settings(None))
     Settings.update(ProfileManager().retrieve_settings(str(Settings.get('profile'))))
 
     # Then, check for the rest
@@ -3264,10 +3275,6 @@ def _load_settings(args: argparse.Namespace) -> None:
     # Set up the parsed modules
     if '_modules' in args:
         Settings.set('modules', args._modules)
-
-    # See if automatic update checks are allowed
-    if ConfigRetriever.get_updatecheck_permission_asked():
-        Settings.set('update_check', ConfigRetriever.get_updatecheck_permission())
 
 
 def _shut_down(window: Window) -> None:
