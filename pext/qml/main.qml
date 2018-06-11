@@ -588,7 +588,7 @@ ApplicationWindow {
             }
 
             Menu {
-                title: qsTr("Output onto")
+                title: qsTr("Output style")
 
                 ExclusiveGroup {
                     id: menuOutputGroup
@@ -597,7 +597,7 @@ ApplicationWindow {
 
                 MenuItem {
                     objectName: "menuOutputDefaultClipboard"
-                    text: qsTr("Default clipboard")
+                    text: qsTr("Copy to default clipboard")
                     checkable: true
                     exclusiveGroup: menuOutputGroup
                 }
@@ -605,7 +605,7 @@ ApplicationWindow {
                 MenuItem {
                     visible: platform == 'Linux'
                     objectName: "menuOutputSelectionClipboard"
-                    text: qsTr("Selection clipboard (X11)")
+                    text: qsTr("Copy to selection clipboard (X11)")
                     checkable: true
                     exclusiveGroup: menuOutputGroup
                 }
@@ -613,7 +613,7 @@ ApplicationWindow {
                 MenuItem {
                     visible: platform == 'Darwin'
                     objectName: "menuOutputFindBuffer"
-                    text: qsTr("Find buffer (macOS)")
+                    text: qsTr("Copy to find buffer (macOS)")
                     checkable: true
                     exclusiveGroup: menuOutputGroup
                 }

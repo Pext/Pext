@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Packaging changes
+- New dependency: [pynput](https://pypi.org/project/pynput/)
+
 ### Added
 - Ability to switch output location on runtime
 - Ability to type output directly
