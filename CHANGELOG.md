@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Packaging changes
 - New dependency: [pynput](https://pypi.org/project/pynput/)
+- New macOS dependency: [accessibility](https://pypi.org/project/accessibility)
 
 ### Added
 - Ability to switch output location on runtime
