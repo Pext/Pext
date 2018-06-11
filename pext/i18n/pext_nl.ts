@@ -11,7 +11,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="50"/>
         <source>Copyright</source>
-        <translation>Copyright</translation>
+        <translation>Auteursrecht</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="82"/>
@@ -21,7 +21,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation>Wilt u meehelpen met het vertalen van Pext? Klik dan hier.</translation>
+        <translation>Wil je meehelpen met het vertalen van Pext? Klik dan hier.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="90"/>
@@ -114,7 +114,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>Only install modules from people you trust.</source>
-        <translation>Installeer alleen modules die afkomstig zijn van mensen die u vertrouwt.</translation>
+        <translation>Installeer alleen modules die afkomstig zijn van mensen die je vertrouwt.</translation>
     </message>
 </context>
 <context>
@@ -180,7 +180,7 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Pext-modules zijn code. Zorg ervoor dat u de ontwikkelaar vertrouwt voordat u doorgaat.</translation>
+        <translation>Pext-modules zijn code. Zorg ervoor dat je de ontwikkelaar vertrouwt voordat je doorgaat.</translation>
     </message>
 </context>
 <context>
@@ -198,7 +198,7 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Only install modules from people you trust.</source>
-        <translation>Installeer alleen modules die afkomstig zijn van mensen die u vertrouwt.</translation>
+        <translation>Installeer alleen modules die afkomstig zijn van mensen die je vertrouwt.</translation>
     </message>
 </context>
 <context>
@@ -247,7 +247,7 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation>Let op: Pext zal herstarten om over te schakelen naar het nieuwe profiel.</translation>
+        <translation>Let op: Pext zal opnieuw starten om over te schakelen naar het nieuwe profiel.</translation>
     </message>
 </context>
 <context>
@@ -270,7 +270,7 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>Let op: Pext zal herstarten om het nieuwe thema toe te passen.</translation>
+        <translation>Let op: Pext zal opnieuw starten om het nieuwe thema toe te passen.</translation>
     </message>
 </context>
 <context>
@@ -369,7 +369,7 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Geen modules geïnstalleerd. Installeer er eerst een.</translation>
+        <translation>Je hebt geen modules geïnstalleerd; installeer er één.</translation>
     </message>
 </context>
 <context>
@@ -382,7 +382,7 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Geen thema&apos;s geïnstalleerd; installeer er een.</translation>
+        <translation>Je hebt geen thema&apos;s geïnstalleerd; installeer er een.</translation>
     </message>
 </context>
 <context>
@@ -390,12 +390,12 @@
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation>Slechts één beschikbaar profiel</translation>
+        <translation>Slechts één profiel beschikbaar</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation>Er is slechts één profiel beschikbaar. Creëer een tweede profiel.</translation>
+        <translation>Er is slechts één profiel beschikbaar; creëer een tweede profiel.</translation>
     </message>
 </context>
 <context>
@@ -421,7 +421,7 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation>Er is een nieuwe versie van Pext beschikbaar. Wilt u de downloadpagina openen?</translation>
+        <translation>Er is een nieuwe versie van Pext beschikbaar. Wil je de downloadpagina openen?</translation>
     </message>
 </context>
 <context>
@@ -434,7 +434,7 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation>Mag Pext automatisch controleren op updates? U kunt dit altijd wijzigen in het instellingenmenu.</translation>
+        <translation>Mag Pext automatisch controleren op updates? Je kunt dit altijd wijzigen in het instellingenmenu.</translation>
     </message>
 </context>
 <context>
@@ -478,7 +478,7 @@
         <location filename="../qml/main.qml" line="385"/>
         <location filename="../qml/main.qml" line="486"/>
         <source>From URL</source>
-        <translation>Van URL</translation>
+        <translation>Via URL</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="408"/>
@@ -488,7 +488,7 @@
     <message>
         <location filename="../qml/main.qml" line="416"/>
         <source>Switch theme</source>
-        <translation>Thema wisselen</translation>
+        <translation>Thema wijzigen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="436"/>
@@ -513,7 +513,7 @@
     <message>
         <location filename="../qml/main.qml" line="513"/>
         <source>Switch profile</source>
-        <translation>Van profiel wisselen</translation>
+        <translation>Profiel wijzigen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="533"/>
@@ -523,7 +523,7 @@
     <message>
         <location filename="../qml/main.qml" line="551"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Instellingen</translation>
+        <translation>In&amp;stellingen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="557"/>
@@ -628,7 +628,7 @@
     <message>
         <location filename="../qml/main.qml" line="797"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
-        <translation>Pext is ontwikkeld om uit de weg te blijven. Zodra een module er van overtuigd is dat u klaar bent met het gebruiken ervan, verbergt Pext zichzelf naar het systeemvak. Als u Pext weer nodig hebt, dan kunt u het simpelweg opnieuw starten of vanuit het systeemvak openen.</translation>
+        <translation>Pext is ontwikkeld om uit de weg te blijven. Pext verbergt zichzelf naar het systeemvak zodra een module er van overtuigd is dat je klaar bent met het gebruik ervan. Als je Pext weer nodig hebt, dan kun je Pext simpelweg opnieuw starten of openen vanuit het systeemvak.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="838"/>
@@ -638,11 +638,9 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="839"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>Om te beginnen met Pext, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n module geïnstalleerd. Je kan modules beheren in het Module menu.</numerusform>
-            <numerusform>Om te beginnen met Pext, druk op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n modules geïnstalleerd. Je kan modules beheren in het Module menu.</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Druk, om te beginnen met Pext, op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, dan kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n module geïnstalleerd. Je kunt modules beheren in het module-menu.</numerusform>
+        <numerusform>Druk, om te beginnen met Pext, op &lt;kbd&gt;%1&lt;/kbd&gt; om een nieuw tabblad te openen. Als je klaar bent met een tabblad, dan kun je het sluiten met &lt;kbd&gt;%2&lt;/kbd&gt;. Je hebt momenteel %n modules geïnstalleerd. Je kunt modules beheren in het module-menu.</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="335"/>
         <source>Manage modules</source>
@@ -666,7 +664,7 @@
     <message>
         <location filename="../qml/main.qml" line="700"/>
         <source>Always show tray icon</source>
-        <translation>Systeemvakpictogram altijd weergeven</translation>
+        <translation>Systeemvakpictogram altijd tonen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="717"/>
@@ -706,7 +704,7 @@
     <message>
         <location filename="../qml/main.qml" line="874"/>
         <source>Waiting</source>
-        <translation>Bezig met wachten</translation>
+        <translation>Bezig met wachten...</translation>
     </message>
 </context>
 </TS>
