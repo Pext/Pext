@@ -14,18 +14,15 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis; fi
 
 script:
-  - tox -v
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then xvfb-run tox -v; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tox -v; fi
   # build dmg for macOS
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then bash -xe travis/build-dmg.sh; fi
   # build AppImage for Linux
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mkdir -p build; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd build; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash -xe ../travis/build-appimage.sh; fi
-  # test AppImage
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then export PEXTHOME=$(mktemp -d); fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then chmod +x Pext*.AppImage; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" ./Pext*.AppImage --version; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then env HOME="$PEXTHOME" SSL_CERT_DIR="/etc/ssl/certs" ./Pext-x86_64.AppImage --install-module=https://raw.githubusercontent.com/Pext/pext_module_emoji/master/metadata.json; fi
+  # get uploadtool
   - wget https://github.com/probonopd/uploadtool/raw/master/upload.sh
 
 after_success:

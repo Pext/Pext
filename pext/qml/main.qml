@@ -588,6 +588,45 @@ ApplicationWindow {
             }
 
             Menu {
+                title: qsTr("Output style")
+
+                ExclusiveGroup {
+                    id: menuOutputGroup
+                    objectName: "menuOutputGroup"
+                }
+
+                MenuItem {
+                    objectName: "menuOutputDefaultClipboard"
+                    text: qsTr("Copy to default clipboard")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    visible: platform == 'Linux'
+                    objectName: "menuOutputSelectionClipboard"
+                    text: qsTr("Copy to selection clipboard (X11)")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    visible: platform == 'Darwin'
+                    objectName: "menuOutputFindBuffer"
+                    text: qsTr("Copy to find buffer (macOS)")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    objectName: "menuOutputAutoType"
+                    text: qsTr("Type automatically")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+            }
+
+            Menu {
                 title: qsTr("Sorting style")
 
                 ExclusiveGroup {

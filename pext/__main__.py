@@ -54,6 +54,7 @@ from queue import Queue, Empty
 
 from dulwich import porcelain
 from dulwich.repo import Repo
+from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
@@ -61,6 +62,9 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
+
+if platform.system() == 'Darwin':
+    import accessibility  # NOQA
 
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 warn_no_openGL_linux = False
@@ -105,6 +109,15 @@ class SortMode(IntEnum):
     Module = 0
     Ascending = 1
     Descending = 2
+
+
+class OutputMode(IntEnum):
+    """A list of possible locations to output to."""
+
+    DefaultClipboard = 0
+    SelectionClipboard = 1
+    FindBuffer = 2
+    AutoType = 3
 
 
 class ConfigRetriever():
@@ -483,12 +496,17 @@ class MainLoop():
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
-            if Settings.get('clipboard') == 'selection':
-                mode = QClipboard.Selection
+            if Settings.get('output_mode') == OutputMode.AutoType:
+                self.window.output_queue.append(str(action[1]))
             else:
-                mode = QClipboard.Clipboard
+                if Settings.get('output_mode') == OutputMode.SelectionClipboard:
+                    mode = QClipboard.Selection
+                elif Settings.get('output_mode') == OutputMode.FindBuffer:
+                    mode = QClipboard.FindBuffer
+                else:
+                    mode = QClipboard.Clipboard
 
-            self.app.clipboard().setText(str(action[1]), mode)
+                self.app.clipboard().setText(str(action[1]), mode)
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
@@ -712,7 +730,7 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
-        self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
+        self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -879,7 +897,7 @@ class ObjectManager():
         location = os.path.basename(full_path)
 
         try:
-            source = UpdateManager.get_remote_url(full_path)
+            source = UpdateManager.get_remote_url(full_path)  # type: Optional[str]
         except Exception:
             source = None
 
@@ -1473,7 +1491,7 @@ class ViewModel():
         self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
-        self.selection_thread = None  # type: threading.Thread
+        self.selection_thread = None  # type: Optional[threading.Thread]
 
     def make_selection(self) -> None:
         """Make a selection if no selection is currently being processed.
@@ -1934,6 +1952,14 @@ class Window(QMainWindow):
         """Initialize the window."""
         super().__init__(parent)
 
+        # Ask for accessibility access to autotype on macOS
+        if platform.system() == 'Darwin':
+            self.acc = accessibility.create_systemwide_ref()
+            self.acc.set_timeout(300)
+
+        # Text to type on close if needed
+        self.output_queue = []  # type: List[str]
+
         # Save settings
         self.locale_manager = locale_manager
 
@@ -2031,6 +2057,15 @@ class Window(QMainWindow):
         menu_change_language_shortcut = self.window.findChild(
             QObject, "menuChangeLanguage")
 
+        self.menu_output_default_clipboard = self.window.findChild(
+            QObject, "menuOutputDefaultClipboard")
+        menu_output_selection_clipboard = self.window.findChild(
+            QObject, "menuOutputSelectionClipboard")
+        menu_output_find_buffer = self.window.findChild(
+            QObject, "menuOutputFindBuffer")
+        self.menu_output_auto_type = self.window.findChild(
+            QObject, "menuOutputAutoType")
+
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
         menu_sort_ascending_shortcut = self.window.findChild(
@@ -2084,6 +2119,11 @@ class Window(QMainWindow):
 
         menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
 
+        self.menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
+        menu_output_selection_clipboard.toggled.connect(self._menu_output_selection_clipboard)
+        menu_output_find_buffer.toggled.connect(self._menu_output_find_buffer)
+        self.menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
+
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
         menu_sort_descending_shortcut.toggled.connect(self._menu_sort_descending)
@@ -2100,6 +2140,19 @@ class Window(QMainWindow):
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
+        QQmlProperty.write(self.menu_output_default_clipboard,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.DefaultClipboard)
+        QQmlProperty.write(menu_output_selection_clipboard,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.SelectionClipboard)
+        QQmlProperty.write(menu_output_find_buffer,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.FindBuffer)
+        QQmlProperty.write(self.menu_output_auto_type,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.AutoType)
+
         QQmlProperty.write(menu_sort_module_shortcut,
                            "checked",
                            int(Settings.get('sort_mode')) == SortMode.Module)
@@ -2184,7 +2237,7 @@ class Window(QMainWindow):
                                'keystroke tab using {command down}',
                                'end tell',
                                'end tell']
-        Popen(['osascript', '-e', '\n'.join(applescript_command)])
+        Popen(['osascript', '-e', '\n'.join(applescript_command)]).wait()
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2476,6 +2529,28 @@ class Window(QMainWindow):
         Settings.set('locale', lang_code)
         self._menu_restart_pext()
 
+    def _menu_output_default_clipboard(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.DefaultClipboard)
+
+    def _menu_output_selection_clipboard(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.SelectionClipboard)
+
+    def _menu_output_find_buffer(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.FindBuffer)
+
+    def _menu_output_auto_type(self, enabled: bool) -> None:
+        if enabled:
+            if platform.system() == 'Darwin':
+                if not accessibility.is_enabled() or not accessibility.is_trusted():
+                    QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                    QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
+                    return
+
+            Settings.set('output_mode', OutputMode.AutoType)
+
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
             Settings.set('sort_mode', SortMode.Module)
@@ -2632,6 +2707,15 @@ class Window(QMainWindow):
             self.window.showMinimized()
 
         self._macos_focus_workaround()
+
+        while True:
+            try:
+                output = self.output_queue.pop()
+            except IndexError:
+                break
+
+            keyboard_device = keyboard.Controller()
+            keyboard_device.type(output)
 
     def show(self) -> None:
         """Show the window."""
@@ -2860,11 +2944,11 @@ class Settings():
     __settings = {
         '_launch_app': True,  # Keep track if launching is normal
         'background': False,
-        'clipboard': 'clipboard',
         'locale': None,
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
+        'output_mode': OutputMode.DefaultClipboard,
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
@@ -2959,8 +3043,8 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='print a list of loadable Qt system styles and exit.')
     parser.add_argument('--style', help='use the given Qt system style for the UI.')
     parser.add_argument('--background', action='store_true', help='do not open the user interface this invocation.')
-    parser.add_argument('--clipboard', '-c', choices=['clipboard', 'selection'],
-                        help='choose the clipboard to copy entries to.')
+    parser.add_argument('--output', choices=['default-clipboard', 'x11-selection-clipboard', 'macos-findbuffer'],
+                        help='choose the location to output entries to.')
     parser.add_argument('--module', '-m', action=ModuleOptionParser,
                         help='name the module to use. This option may be given multiple times. '
                         'When this option is given, the profile module list will be overwritten.')
@@ -3055,8 +3139,15 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.background:
         Settings.set('background', True)
 
-    if args.clipboard:
-        Settings.set('clipboard', args.clipboard)
+    if args.output:
+        if args.output == 'default-clipboard':
+            Settings.set('output_mode', OutputMode.DefaultClipboard)
+        elif args.output == 'x11-selection-clipboard':
+            Settings.set('output_mode', OutputMode.SelectionClipboard)
+        elif args.output == 'macos-findbuffer':
+            Settings.set('output_mode', OutputMode.FindBuffer)
+        elif args.output == 'autotype':
+            Settings.set('output_mode', OutputMode.AutoType)
 
     if args.install_module:
         for metadata_url in args.install_module:
@@ -3281,11 +3372,6 @@ def main() -> None:
         theme_manager = ThemeManager()
         theme = theme_manager.load_theme(theme_identifier)
         theme_manager.apply_theme_to_app(theme, app)
-
-    # Check if clipboard is supported
-    if Settings.get('clipboard') == 'selection' and not app.clipboard().supportsSelection():
-        print("Requested clipboard type is not supported")
-        sys.exit(3)
 
     # Get a window
     window = Window(locale_manager)

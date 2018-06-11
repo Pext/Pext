@@ -38,7 +38,7 @@ conda create -n Pext python --yes
 source activate Pext
 
 # install dependencies
-pip install PyQt5 dulwich
+pip install PyQt5 dulwich pynput accessibility
 
 # leave conda env
 source deactivate
@@ -66,8 +66,8 @@ chmod a+x Pext.app/Contents/MacOS/Pext
 popd
 
 # generate .dmg
-git clone https://github.com/andreyvit/yoursway-create-dmg.git
-pushd yoursway-create-dmg
+git clone -b patch-2 --single-branch https://github.com/TheLastProject/create-dmg.git
+pushd create-dmg
 bash ./create-dmg --volname "Pext" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext.dmg "$BUILD_DIR"/
 
 # move dmg to old CWD
