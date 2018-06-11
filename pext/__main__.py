@@ -301,41 +301,31 @@ class Logger():
     def show_next_message() -> None:
         """Show next statusbar message.
 
-        If the status bar has not been updated for 1 second, display the next
-        message. If no messages are available, clear the status bar after it
-        has been displayed for 5 seconds.
+        Display the next message. If no more messages are available, clear the
+        status bar after it has been displayed for 5 seconds.
         """
         if not Logger.window:
             return
 
         current_time = time.time()
-        time_diff = 5 if len(Logger.queued_messages) < 1 else 1
-        if Logger.last_update and current_time - time_diff < Logger.last_update:
-            return
 
         if len(Logger.queued_messages) == 0:
-            QQmlProperty.write(Logger.status_text, "text", "")
-            Logger.last_update = None
+            if not Logger.last_update or current_time - 5 > Logger.last_update:
+                QQmlProperty.write(Logger.status_text, "text", "")
+                Logger.last_update = None
         else:
             message = Logger.queued_messages.pop(0)
 
             if message['type'] == 'error':
-                statusbar_message = "<font color='red'>⚠ {}</color>".format(
-                    message['message'])
-                notification_message = '⚠ {}'.format(message['message'])
+                statusbar_message = "<font color='red'>⚠ {}</color>".format(message['message'])
+                icon = QSystemTrayIcon.Warning
             else:
                 statusbar_message = message['message']
-                notification_message = message['message']
+                icon = QSystemTrayIcon.Information
 
             QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            if Logger.window.window.windowState() == Qt.WindowMinimized or not Logger.window.window.isVisible():
-                try:
-                    Popen(['notify-send', 'Pext', notification_message])
-                except Exception as e:
-                    print("Could not open notify-send: {}. Notification follows after exception:".format(e))
-                    traceback.print_exc()
-                    print(notification_message)
+            Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
 
             Logger.last_update = current_time
 

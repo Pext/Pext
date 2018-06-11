@@ -9,10 +9,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Packaging changes
 - New dependency: [pynput](https://pypi.org/project/pynput/)
 - New macOS dependency: [accessibility](https://pypi.org/project/accessibility)
+- Dependency removal: notify-send
 
 ### Added
 - Ability to switch output location on runtime
 - Ability to type output directly
+
+### Changed
+- Switch to Qt5 for notifications
+- Remove delay in showing notifications
 
 ## [0.15] - 2018-06-07
 ### Packaging changes
