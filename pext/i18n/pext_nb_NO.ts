@@ -538,27 +538,27 @@
     <message>
         <location filename="../qml/main.qml" line="591"/>
         <source>Output style</source>
-        <translation type="unfinished"></translation>
+        <translation>Utdatastil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Copy to default clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopier til forvalgt utklippstavle</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopier til utvalgsutklippstavle (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="616"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopier til finn-hurtiglager (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="623"/>
         <source>Type automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv automatisk</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="630"/>
