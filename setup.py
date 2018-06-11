@@ -23,9 +23,11 @@ if sys.platform == 'linux':
             ('share/applications', ['pext.desktop']),
             ('share/metainfo', ['pext.appdata.xml'])
         ]
-    )
+    ),
+    extra_deps = ['accessibility']
 else:
-    extra_options = dict()
+    extra_options = dict(),
+    extra_deps = []
 
 setup(
     name='Pext',
@@ -34,7 +36,7 @@ setup(
         'dulwich',
         'pynput',
         'pyqt5'
-    ],
+    ] + extra_deps,
     description='Python-based extendable tool',
     long_description='A Python-based application that uses modules for extendability',
     url='https://pext.hackerchick.me/',

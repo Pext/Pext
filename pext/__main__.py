@@ -52,6 +52,9 @@ except ImportError:
 from urllib.request import urlopen
 from queue import Queue, Empty
 
+if platform.system() == 'Darwin':
+    import accessibility
+
 from dulwich import porcelain
 from dulwich.repo import Repo
 from pynput import keyboard
@@ -1949,6 +1952,11 @@ class Window(QMainWindow):
         """Initialize the window."""
         super().__init__(parent)
 
+        # Ask for accessibility access to autotype on macOS
+        if platform.system() == 'Darwin':
+            self.acc = accessibility.create_systemwide_ref()
+            self.acc.set_timeout(300)
+
         # Text to type on close if needed
         self.output_queue = []  # type: List[str]
 
@@ -2049,13 +2057,13 @@ class Window(QMainWindow):
         menu_change_language_shortcut = self.window.findChild(
             QObject, "menuChangeLanguage")
 
-        menu_output_default_clipboard = self.window.findChild(
+        self.menu_output_default_clipboard = self.window.findChild(
             QObject, "menuOutputDefaultClipboard")
         menu_output_selection_clipboard = self.window.findChild(
             QObject, "menuOutputSelectionClipboard")
         menu_output_find_buffer = self.window.findChild(
             QObject, "menuOutputFindBuffer")
-        menu_output_auto_type = self.window.findChild(
+        self.menu_output_auto_type = self.window.findChild(
             QObject, "menuOutputAutoType")
 
         menu_sort_module_shortcut = self.window.findChild(
@@ -2111,10 +2119,10 @@ class Window(QMainWindow):
 
         menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
 
-        menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
+        self.menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
         menu_output_selection_clipboard.toggled.connect(self._menu_output_selection_clipboard)
         menu_output_find_buffer.toggled.connect(self._menu_output_find_buffer)
-        menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
+        self.menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2132,7 +2140,7 @@ class Window(QMainWindow):
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
-        QQmlProperty.write(menu_output_default_clipboard,
+        QQmlProperty.write(self.menu_output_default_clipboard,
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.DefaultClipboard)
         QQmlProperty.write(menu_output_selection_clipboard,
@@ -2141,7 +2149,7 @@ class Window(QMainWindow):
         QQmlProperty.write(menu_output_find_buffer,
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.FindBuffer)
-        QQmlProperty.write(menu_output_auto_type,
+        QQmlProperty.write(self.menu_output_auto_type,
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.AutoType)
 
@@ -2535,6 +2543,16 @@ class Window(QMainWindow):
 
     def _menu_output_auto_type(self, enabled: bool) -> None:
         if enabled:
+            if platform.system() == 'Darwin':
+                if not accessibility.is_enabled() or not accessibility.is_trusted():
+                    QQmlProperty.write(self.menu_output_auto_type,
+                        "checked",
+                        False)
+                    QQmlProperty.write(self.menu_output_default_clipboard,
+                        "checked",
+                        True)
+                    return
+
             Settings.set('output_mode', OutputMode.AutoType)
 
     def _menu_sort_module(self, enabled: bool) -> None:
