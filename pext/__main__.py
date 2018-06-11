@@ -2229,7 +2229,7 @@ class Window(QMainWindow):
                                'keystroke tab using {command down}',
                                'end tell',
                                'end tell']
-        Popen(['osascript', '-e', '\n'.join(applescript_command)])
+        Popen(['osascript', '-e', '\n'.join(applescript_command)]).wait()
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
