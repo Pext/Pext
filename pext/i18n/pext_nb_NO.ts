@@ -548,7 +548,7 @@
     <message>
         <location filename="../qml/main.qml" line="594"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation>Kopier til finn-hurtiglager (macOS)</translation>
+        <translation>Kopier til find-mellomlager (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="601"/>
