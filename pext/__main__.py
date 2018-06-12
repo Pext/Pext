@@ -2633,14 +2633,10 @@ class Window(QMainWindow):
             t.daemon = True
             t.start()
 
-        # Check if it's been over 24 hours or this is a manual check
+        # Check if it's been over 24 hours or this is a manual/first check
         last_update_check = Settings.get('last_update_check')
 
-        if last_update_check is None:
-            last_update_check = time.time()
-            Settings.set('last_update_check', last_update_check)
-
-        if manual or (time.time() - float(last_update_check) > 86400):
+        if manual or last_update_check is None or (time.time() - float(last_update_check) > 86400):
             if not USE_INTERNAL_UPDATER:
                 if manual or Settings.get('update_check'):
                     threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
