@@ -674,7 +674,7 @@ ApplicationWindow {
             }
 
             Menu {
-                title: qsTr("Automatic updating")
+                title: qsTr("Automatic updates")
 
                 MenuItem {
                     objectName: "menuEnableUpdateCheck"
