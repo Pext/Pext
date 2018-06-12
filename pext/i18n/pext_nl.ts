@@ -649,17 +649,17 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>Automatic updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatische updates</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisch controleren op Pext-updates</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
         <source>Automatically update modules and themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Modules en thema&apos;s automatisch bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>
