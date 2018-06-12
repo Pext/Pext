@@ -538,27 +538,27 @@
     <message>
         <location filename="../qml/main.qml" line="591"/>
         <source>Output style</source>
-        <translation type="unfinished"></translation>
+        <translation>Uitvoerstijl</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Copy to default clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiëren naar standaard klembord</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiëren naar selectieklembord (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="616"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiëren naar zoekbuffer (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="623"/>
         <source>Type automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisch typen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="630"/>

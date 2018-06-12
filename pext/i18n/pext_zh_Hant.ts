@@ -538,27 +538,27 @@
     <message>
         <location filename="../qml/main.qml" line="591"/>
         <source>Output style</source>
-        <translation type="unfinished"></translation>
+        <translation>輸出樣式</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Copy to default clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>複製到預設的剪貼簿</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation type="unfinished"></translation>
+        <translation>複製到選取的剪貼簿 (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="616"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation type="unfinished"></translation>
+        <translation>複製到尋找緩衝區 (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="623"/>
         <source>Type automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>自動輸入</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="630"/>
