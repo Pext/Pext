@@ -6,12 +6,12 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation>Acerca de Pext</translation>
+        <translation>Información Acerca de Pext</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="50"/>
         <source>Copyright</source>
-        <translation>Copyright</translation>
+        <translation>Derechos de Autor</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="82"/>
