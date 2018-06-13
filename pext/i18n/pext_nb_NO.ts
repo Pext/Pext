@@ -651,17 +651,17 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>Automatic updates</source>
-        <translation>Automatiske oppdateringer</translation>
+        <translation type="unfinished">Automatiske oppdateringer</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation>Se etter Pext-oppdateringer automatisk</translation>
+        <translation type="unfinished">Se etter Pext-oppdateringer automatisk</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
         <source>Automatically update modules and themes</source>
-        <translation>Oppgrader moduler og drakter automatisk</translation>
+        <translation type="unfinished">Oppgrader moduler og drakter automatisk</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>
