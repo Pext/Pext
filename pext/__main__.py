@@ -74,6 +74,10 @@ if platform.system() == "Linux":
     except ImportError:
         warn_no_openGL_linux = True
 
+# Windows doesn't support getuid
+if platform.system() == 'Windows':
+    import getpass  # NOQA
+
 
 class AppFile():
     """Get access to application-specific files."""
@@ -681,7 +685,12 @@ class ProfileManager():
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
-        return os.path.join(tempfile.gettempdir(), '{}_pext_{}.pid'.format(os.getuid(), profile))
+        if platform.system() == 'Windows':
+            uid = getpass.getuser()
+        else:
+            uid = str(os.getuid())
+
+        return os.path.join(tempfile.gettempdir(), '{}_pext_{}.pid'.format(uid, profile))
 
     @staticmethod
     def lock_profile(profile: str) -> None:
@@ -1905,7 +1914,7 @@ class ViewModel():
 class Window(QMainWindow):
     """The main Pext window."""
 
-    def __init__(self, locale_manager: LocaleManager, parent=None) -> None:
+    def __init__(self, title: str, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
 
@@ -1929,6 +1938,8 @@ class Window(QMainWindow):
         self.context = self.engine.rootContext()
         self.context.setContextProperty(
             "USE_INTERNAL_UPDATER", USE_INTERNAL_UPDATER)
+        self.context.setContextProperty(
+            "applicationTitle", title)
         self.context.setContextProperty(
             "applicationVersion", UpdateManager().get_core_version())
         self.context.setContextProperty(
@@ -3370,7 +3381,7 @@ def main() -> None:
         theme_manager.apply_theme_to_app(theme, app)
 
     # Get a window
-    window = Window(locale_manager)
+    window = Window(appname, locale_manager)
 
     # Give the logger a reference to the window
     Logger.bind_window(window)

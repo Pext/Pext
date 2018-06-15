@@ -25,6 +25,7 @@ import QtQuick.Window 2.0
 
 ApplicationWindow {
     id: applicationWindow
+    title: applicationTitle
     property bool internalUpdaterEnabled: USE_INTERNAL_UPDATER
     property string version: applicationVersion
     property string platform: systemPlatform
