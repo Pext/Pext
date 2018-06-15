@@ -21,6 +21,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Remove delay in showing notifications
 - Core and module update checks are now done together
 
+### Fixed
+- Inconsistent behaviour between clicking or selecting an entry
+
 ## [0.15] - 2018-06-07
 ### Packaging changes
 - The macOS .dmg is now officially supported

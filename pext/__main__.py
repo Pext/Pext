@@ -1729,6 +1729,7 @@ class ViewModel():
             return {'type': SelectionType.none, 'value': None, 'context_option': None}
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
+        selected_command = None
 
         if self.result_list_model_command_mode:
             try:
@@ -1736,7 +1737,10 @@ class ViewModel():
             except IndexError:
                 entry = self.filtered_entry_list[current_index - len(self.filtered_command_list)]
                 return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
+        elif current_index >= len(self.filtered_entry_list):
+            selected_command = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
 
+        if selected_command:
             selected_command_split = selected_command.split(" ", 1)
             command_typed = QQmlProperty.read(self.search_input_model, "text")
             command_typed_split = command_typed.split(" ", 1)
@@ -1750,10 +1754,6 @@ class ViewModel():
                     command_typed = selected_command_split[0]
 
             return {'type': SelectionType.command, 'value': command_typed, 'context_option': None}
-
-        if current_index >= len(self.filtered_entry_list):
-            entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
-            return {'type': SelectionType.command, 'value': entry, 'context_option': None}
         else:
             entry = self.filtered_entry_list[current_index]
             return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
