@@ -2674,14 +2674,17 @@ class Window(QMainWindow):
 
         self._macos_focus_workaround()
 
-        while True:
-            try:
-                output = self.output_queue.pop()
-            except IndexError:
-                break
+        if self.output_queue:
+            time.sleep(0.5)
 
-            keyboard_device = keyboard.Controller()
-            keyboard_device.type(output)
+            while True:
+                try:
+                    output = self.output_queue.pop()
+                except IndexError:
+                    break
+
+                keyboard_device = keyboard.Controller()
+                keyboard_device.type(output)
 
     def show(self) -> None:
         """Show the window."""
