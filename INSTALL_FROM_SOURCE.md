@@ -86,7 +86,7 @@ pip3 install . --user --upgrade --no-deps
 
 After doing this (and adding "$HOME/Library/Python/3.6/bin" to your $PATH), you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
 
-## Windows (experimental)
+## Windows
 
 ### Preparation
 
@@ -95,7 +95,7 @@ Assuming you have no previous python installation, either
 - Use a package manager like [Chocolatey](http://chocolatey.org/) to install Python 3
 - Install Python 3.6 manually from <https://www.python.org/downloads/windows/>
 
-Then, assuming python and pip are installed, run `pip install dulwich PyQt5` in a command window.
+Then, assuming python and pip are installed, run `pip install dulwich PyQt5 pynput` in a command window.
 
 ### Starting Pext
 

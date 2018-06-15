@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Ability to switch output location on runtime
 - Ability to type output directly
 - Ability to automatically update modules
+- Windows installer
 
 ### Changed
 - Switch to Qt5 for notifications

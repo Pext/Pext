@@ -2,7 +2,8 @@
 
 ![Lilly the leoger](/logo.png)
 
-[![Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
+[![Linux & macOS Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/73oaa4x1spa5vumx/branch/master?svg=true)](https://ci.appveyor.com/project/TheLastProject/pext/branch/master)
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 [![Code Health](https://landscape.io/github/Pext/Pext/master/landscape.svg?style=flat)](https://landscape.io/github/Pext/Pext/master)
@@ -15,7 +16,7 @@
 - [Installation](#installation)
   - [GNU/Linux](#gnulinux)
   - [macOS](#macos)
-  - [Windows (experimental)](#windows-experimental)
+  - [Windows](#windows)
 - [Usage](#usage)
 - [Hotkeys](#hotkeys)
 - [Troubleshooting](#troubleshooting)
@@ -98,9 +99,11 @@ A macOS .dmg file is available [in the releases section on GitHub](https://githu
 
 Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
-### Windows (experimental)
+### Windows
 
-See [Installing Pext from source](INSTALL_FROM_SOURCE.md)
+A Windows installer is available [from AppVeyor](https://ci.appveyor.com/project/TheLastProject/pext/branch/master/artifacts).
+
+Alternatively, see See [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ## Usage
 
@@ -152,23 +155,6 @@ The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu. Y
 
 Pext user report: <https://github.com/Pext/Pext/issues/11>
 Ubuntu bug: <https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826>
-
-### Windows
-
-#### The python or pip commands do not work/The PATH variable is wrong
-
-In the installer, make sure that 'Include Python in PATH' or similar is checked. Then after the installation, start a new command prompt and type `python -V` or `pip3` to check if it was properly installed. If the version number and the help message are returned respectively, you are good to go further. If not, in case you already had `cmd.exe` open, restart it or execute `refreshenv` to reload environment variables.
-If it still does not work yet, check if the PATH was set in the GUI or manually with `cmd.exe`.
-
-GUI:
-
-- Start Menu > Computer (right click) > Properties > Advanced System Settings > Environment Variables
-- Check the PATH for both the system and the current user and in one of them the Python installation directory should be present, which is normally `C:\Python36` and `C:\Python36\Scripts`
-
-cmd.exe:
-
-- Run `path` or `echo %PATH%` to check if the directory (`C:\Python36` and `C:\Python36\Scripts`) is included
-- The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: <https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows>)
 
 ## License
 
