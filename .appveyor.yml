@@ -48,3 +48,16 @@ after_test:
 
 artifacts:
   - path: Pext.exe
+
+deploy:
+  description: 'Continuous build'
+  provider: GitHub
+  auth_token:
+    secure: 65d53bVQDHWMI6lhm76+WQcIYtkNufVnmZ5XGVWyW3G/dD8aJwvpGzZoTxDP0gu6
+  artifact: Pext.exe
+  draft: false
+  prerelease: true
+  on:
+    branch: master
+    appveyor_repo_tag: true
+    APPVEYOR_REPO_TAG_NAME: continuous

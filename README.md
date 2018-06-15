@@ -101,7 +101,7 @@ Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not re
 
 ### Windows
 
-A Windows installer is available [from AppVeyor](https://ci.appveyor.com/project/TheLastProject/pext/branch/master/artifacts).
+A Windows installer is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases).
 
 Alternatively, see See [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
