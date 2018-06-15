@@ -54,6 +54,7 @@ from queue import Queue, Empty
 
 from dulwich import porcelain
 from dulwich.repo import Repo
+from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QInputDialog, QLabel, QLineEdit, QMainWindow,
@@ -61,6 +62,9 @@ from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
                              QStyleFactory, QSystemTrayIcon)
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
+
+if platform.system() == 'Darwin':
+    import accessibility  # NOQA
 
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 warn_no_openGL_linux = False
@@ -111,6 +115,15 @@ class SortMode(IntEnum):
     Descending = 2
 
 
+class OutputMode(IntEnum):
+    """A list of possible locations to output to."""
+
+    DefaultClipboard = 0
+    SelectionClipboard = 1
+    FindBuffer = 2
+    AutoType = 3
+
+
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
@@ -140,50 +153,6 @@ class ConfigRetriever():
             config = {'config_path': os.path.join(config_home, 'pext')}
 
         return config[variable]
-
-    @staticmethod
-    def get_updatecheck_permission_asked() -> bool:
-        """Return info on if allowing updates was asked."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'), 'update_check_enabled'), 'r'):
-                return True
-        except FileNotFoundError:
-            return False
-
-    @staticmethod
-    def get_updatecheck_permission() -> bool:
-        """Return info on if update checking is allowed."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                                   'update_check_enabled'), 'r') as update_check_file:
-                result = update_check_file.readline()
-                return True if result == str(1) else False
-        except FileNotFoundError:
-            return False
-
-    @staticmethod
-    def save_updatecheck_permission(granted: bool) -> None:
-        """Save the current updatecheck permission status."""
-        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                               'update_check_enabled'), 'w') as update_check_file:
-            update_check_file.write(str(int(granted)))
-
-    @staticmethod
-    def get_last_update_check_time() -> Optional[datetime]:
-        """Get the time of the last update check, returns None if there was never a check."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                                   'update_check_time'), 'r') as update_check_file:
-                return datetime.fromtimestamp(int(float(update_check_file.readline())))
-        except (FileNotFoundError):
-            return None
-
-    @staticmethod
-    def set_last_update_check_time(dt: datetime) -> None:
-        """Set the last update check time to the given time."""
-        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                               'update_check_time'), 'w') as update_check_file:
-            update_check_file.write(str(dt.timestamp()))
 
 
 class RunConseq():
@@ -292,41 +261,31 @@ class Logger():
     def show_next_message() -> None:
         """Show next statusbar message.
 
-        If the status bar has not been updated for 1 second, display the next
-        message. If no messages are available, clear the status bar after it
-        has been displayed for 5 seconds.
+        Display the next message. If no more messages are available, clear the
+        status bar after it has been displayed for 5 seconds.
         """
         if not Logger.window:
             return
 
         current_time = time.time()
-        time_diff = 5 if len(Logger.queued_messages) < 1 else 1
-        if Logger.last_update and current_time - time_diff < Logger.last_update:
-            return
 
         if len(Logger.queued_messages) == 0:
-            QQmlProperty.write(Logger.status_text, "text", "")
-            Logger.last_update = None
+            if not Logger.last_update or current_time - 5 > Logger.last_update:
+                QQmlProperty.write(Logger.status_text, "text", "")
+                Logger.last_update = None
         else:
             message = Logger.queued_messages.pop(0)
 
             if message['type'] == 'error':
-                statusbar_message = "<font color='red'>⚠ {}</color>".format(
-                    message['message'])
-                notification_message = '⚠ {}'.format(message['message'])
+                statusbar_message = "<font color='red'>⚠ {}</color>".format(message['message'])
+                icon = QSystemTrayIcon.Warning
             else:
                 statusbar_message = message['message']
-                notification_message = message['message']
+                icon = QSystemTrayIcon.Information
 
             QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            if Logger.window.window.windowState() == Qt.WindowMinimized or not Logger.window.window.isVisible():
-                try:
-                    Popen(['notify-send', 'Pext', notification_message])
-                except Exception as e:
-                    print("Could not open notify-send: {}. Notification follows after exception:".format(e))
-                    traceback.print_exc()
-                    print(notification_message)
+            Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
 
             Logger.last_update = current_time
 
@@ -487,12 +446,17 @@ class MainLoop():
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
-            if Settings.get('clipboard') == 'selection':
-                mode = QClipboard.Selection
+            if Settings.get('output_mode') == OutputMode.AutoType:
+                self.window.output_queue.append(str(action[1]))
             else:
-                mode = QClipboard.Clipboard
+                if Settings.get('output_mode') == OutputMode.SelectionClipboard:
+                    mode = QClipboard.Selection
+                elif Settings.get('output_mode') == OutputMode.FindBuffer:
+                    mode = QClipboard.FindBuffer
+                else:
+                    mode = QClipboard.Clipboard
 
-            self.app.clipboard().setText(str(action[1]), mode)
+                self.app.clipboard().setText(str(action[1]), mode)
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
@@ -716,7 +680,8 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
-        self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
+        self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
+                               'last_update_check', 'update_check', 'object_update_check']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -832,14 +797,14 @@ class ProfileManager():
 
         return modules
 
-    def save_settings(self, profile: str, changed_key: Optional[str]=None) -> None:
+    def save_settings(self, profile: Optional[str], changed_key: Optional[str]=None) -> None:
         """Save the current settings to the profile."""
         if changed_key and changed_key not in self.saved_settings:
             return
 
         config = configparser.ConfigParser()
         settings_to_store = {}
-        for setting in Settings.get_all():
+        for setting in Settings.get_all(profile if profile else None):
             if setting in self.saved_settings:
                 setting_data = Settings.get(setting)
                 try:
@@ -851,15 +816,25 @@ class ProfileManager():
 
         config['settings'] = settings_to_store
 
-        with open(os.path.join(self.profile_dir, profile, 'settings'), 'w') as configfile:
+        if profile:
+            path = os.path.join(self.profile_dir, profile, 'settings')
+        else:
+            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+
+        with open(path, 'w') as configfile:
             config.write(configfile)
 
-    def retrieve_settings(self, profile: str) -> Dict[str, Any]:
+    def retrieve_settings(self, profile: Optional[str]) -> Dict[str, Any]:
         """Retrieve the settings from the profile."""
         config = configparser.ConfigParser()
         setting_dict = {}  # type: Dict[str, Any]
 
-        config.read(os.path.join(self.profile_dir, profile, 'settings'))
+        if profile:
+            path = os.path.join(self.profile_dir, profile, 'settings')
+        else:
+            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+
+        config.read(path)
 
         try:
             for setting in config['settings']:
@@ -1943,6 +1918,14 @@ class Window(QMainWindow):
         """Initialize the window."""
         super().__init__(parent)
 
+        # Ask for accessibility access to autotype on macOS
+        if platform.system() == 'Darwin':
+            self.acc = accessibility.create_systemwide_ref()
+            self.acc.set_timeout(300)
+
+        # Text to type on close if needed
+        self.output_queue = []  # type: List[str]
+
         # Save settings
         self.locale_manager = locale_manager
 
@@ -2022,8 +2005,6 @@ class Window(QMainWindow):
             QObject, "menuInstallModule")
         menu_manage_modules_shortcut = self.window.findChild(
             QObject, "menuManageModules")
-        menu_update_all_modules_shortcut = self.window.findChild(
-            QObject, "menuUpdateAllModules")
 
         menu_load_theme_shortcut = self.window.findChild(
             QObject, "menuLoadTheme")
@@ -2031,8 +2012,6 @@ class Window(QMainWindow):
             QObject, "menuInstallTheme")
         menu_manage_themes_shortcut = self.window.findChild(
             QObject, "menuManageThemes")
-        menu_update_all_themes_shortcut = self.window.findChild(
-            QObject, "menuUpdateAllThemes")
 
         menu_load_profile_shortcut = self.window.findChild(
             QObject, "menuLoadProfile")
@@ -2041,6 +2020,15 @@ class Window(QMainWindow):
 
         menu_change_language_shortcut = self.window.findChild(
             QObject, "menuChangeLanguage")
+
+        self.menu_output_default_clipboard = self.window.findChild(
+            QObject, "menuOutputDefaultClipboard")
+        menu_output_selection_clipboard = self.window.findChild(
+            QObject, "menuOutputSelectionClipboard")
+        menu_output_find_buffer = self.window.findChild(
+            QObject, "menuOutputFindBuffer")
+        self.menu_output_auto_type = self.window.findChild(
+            QObject, "menuOutputAutoType")
 
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
@@ -2061,6 +2049,8 @@ class Window(QMainWindow):
             QObject, "menuShowTrayIcon")
         self.menu_enable_update_check_shortcut = self.window.findChild(
             QObject, "menuEnableUpdateCheck")
+        self.menu_enable_object_update_check_shortcut = self.window.findChild(
+            QObject, "menuEnableObjectUpdateCheck")
 
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
@@ -2076,8 +2066,6 @@ class Window(QMainWindow):
         menu_manage_modules_shortcut.uninstallModuleRequest.connect(
             self._menu_uninstall_module)
         menu_manage_modules_shortcut.updateModuleRequest.connect(self._menu_update_module)
-        menu_update_all_modules_shortcut.updateAllModulesRequest.connect(
-            self._menu_update_all_modules)
 
         menu_load_theme_shortcut.loadThemeRequest.connect(self._menu_switch_theme)
         menu_install_theme_shortcut.installThemeRequest.connect(
@@ -2085,8 +2073,6 @@ class Window(QMainWindow):
         menu_manage_themes_shortcut.uninstallThemeRequest.connect(
             self._menu_uninstall_theme)
         menu_manage_themes_shortcut.updateThemeRequest.connect(self._menu_update_theme)
-        menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
-            self._menu_update_all_themes)
 
         menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
         menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
@@ -2094,6 +2080,11 @@ class Window(QMainWindow):
         menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
 
         menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
+
+        self.menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
+        menu_output_selection_clipboard.toggled.connect(self._menu_output_selection_clipboard)
+        menu_output_find_buffer.toggled.connect(self._menu_output_find_buffer)
+        self.menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2105,12 +2096,26 @@ class Window(QMainWindow):
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
+        self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
 
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
+        QQmlProperty.write(self.menu_output_default_clipboard,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.DefaultClipboard)
+        QQmlProperty.write(menu_output_selection_clipboard,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.SelectionClipboard)
+        QQmlProperty.write(menu_output_find_buffer,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.FindBuffer)
+        QQmlProperty.write(self.menu_output_auto_type,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.AutoType)
+
         QQmlProperty.write(menu_sort_module_shortcut,
                            "checked",
                            int(Settings.get('sort_mode')) == SortMode.Module)
@@ -2140,6 +2145,9 @@ class Window(QMainWindow):
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
                            Settings.get('update_check'))
+        QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
+                           "checked",
+                           Settings.get('object_update_check'))
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -2157,14 +2165,14 @@ class Window(QMainWindow):
         elif not Settings.get('background'):
             self.show()
 
-            if USE_INTERNAL_UPDATER and Settings.get('update_check') is None:
+            if Settings.get('update_check') is None:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
                 permission_requests.updatePermissionRequestAccepted.connect(
-                    lambda: self._menu_toggle_update_check(True, after_permission_request=True))
+                    lambda: self._menu_update_check_dialog_result(True))
                 permission_requests.updatePermissionRequestRejected.connect(
-                    lambda: self._menu_toggle_update_check(False))
+                    lambda: self._menu_update_check_dialog_result(False))
 
                 permission_requests.updatePermissionRequest.emit()
 
@@ -2195,7 +2203,7 @@ class Window(QMainWindow):
                                'keystroke tab using {command down}',
                                'end tell',
                                'end tell']
-        Popen(['osascript', '-e', '\n'.join(applescript_command)])
+        Popen(['osascript', '-e', '\n'.join(applescript_command)]).wait()
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2340,12 +2348,12 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_all_modules(self) -> None:
+    def _menu_update_all_modules(self, verbose=False) -> None:
         functions = [
             {
                 'name': self.module_manager.update_all_modules,
                 'args': (),
-                'kwargs': {'verbose': True}
+                'kwargs': {'verbose': verbose}
             }, {
                 'name': self._update_modules_info_qml,
                 'args': (),
@@ -2469,12 +2477,12 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_all_themes(self) -> None:
+    def _menu_update_all_themes(self, verbose=False) -> None:
         functions = [
             {
                 'name': self.theme_manager.update_all_themes,
                 'args': (),
-                'kwargs': {'verbose': True}
+                'kwargs': {'verbose': False}
             }, {
                 'name': self._update_themes_info_qml,
                 'args': (),
@@ -2486,6 +2494,28 @@ class Window(QMainWindow):
     def _menu_change_language(self, lang_code: str) -> None:
         Settings.set('locale', lang_code)
         self._menu_restart_pext()
+
+    def _menu_output_default_clipboard(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.DefaultClipboard)
+
+    def _menu_output_selection_clipboard(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.SelectionClipboard)
+
+    def _menu_output_find_buffer(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.FindBuffer)
+
+    def _menu_output_auto_type(self, enabled: bool) -> None:
+        if enabled:
+            if platform.system() == 'Darwin':
+                if not accessibility.is_enabled() or not accessibility.is_trusted():
+                    QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                    QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
+                    return
+
+            Settings.set('output_mode', OutputMode.AutoType)
 
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
@@ -2528,24 +2558,30 @@ class Window(QMainWindow):
         except AttributeError:
             pass
 
+    def _menu_update_check_dialog_result(self, accepted: bool) -> None:
+        self._menu_toggle_object_update_check(True)
+        self._menu_toggle_update_check(True, True)
+
     def _menu_toggle_update_check(self, enabled: bool, after_permission_request=False) -> None:
         Settings.set('update_check', enabled)
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
                            Settings.get('update_check'))
 
-        # Immediately save update status to file
-        ConfigRetriever.save_updatecheck_permission(Settings.get('update_check'))
-
         # macOS breaks if we show the update dialog immediately after accepting
         # checking for updates so we need this workaround
-        if after_permission_request:
+        if enabled and after_permission_request:
             self._menu_restart_pext()
 
         # Check for updates immediately after toggling true
         # This is also toggled on app launch because we bind before we toggle
-        if Settings.get('update_check'):
-            self._menu_check_updates(verbose=False, manual=False)
+        self._menu_check_updates(verbose=False, manual=False)
+
+    def _menu_toggle_object_update_check(self, enabled: bool) -> None:
+        Settings.set('object_update_check', enabled)
+        QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
+                           "checked",
+                           Settings.get('object_update_check'))
 
     def _search(self) -> None:
         try:
@@ -2602,20 +2638,25 @@ class Window(QMainWindow):
                 Logger.log(None, '✔⇩ Pext')
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
-        if not USE_INTERNAL_UPDATER:
-            return
-
         # Set a timer to run this function again in an hour
         if not manual:
             t = threading.Timer(3600, self._menu_check_updates, None, {'verbose': False, 'manual': False})
             t.daemon = True
             t.start()
 
-        # Check if it's been over 24 hours or this is a manual check
-        last_update_check = ConfigRetriever.get_last_update_check_time()
-        if manual or last_update_check is None or (datetime.now() - last_update_check).total_seconds() > (86400):
-            threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
-            ConfigRetriever.set_last_update_check_time(datetime.now())
+        # Check if it's been over 24 hours or this is a manual/first check
+        last_update_check = Settings.get('last_update_check')
+
+        if manual or last_update_check is None or (time.time() - float(last_update_check) > 86400):
+            if not USE_INTERNAL_UPDATER:
+                if manual or Settings.get('update_check'):
+                    threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
+
+            if manual or Settings.get('object_update_check'):
+                self._menu_update_all_modules(verbose)
+                self._menu_update_all_themes(verbose)
+
+            Settings.set('last_update_check', time.time())
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.hackerchick.me/')
@@ -2643,6 +2684,15 @@ class Window(QMainWindow):
             self.window.showMinimized()
 
         self._macos_focus_workaround()
+
+        while True:
+            try:
+                output = self.output_queue.pop()
+            except IndexError:
+                break
+
+            keyboard_device = keyboard.Controller()
+            keyboard_device.type(output)
 
     def show(self) -> None:
         """Show the window."""
@@ -2871,21 +2921,35 @@ class Settings():
     __settings = {
         '_launch_app': True,  # Keep track if launching is normal
         'background': False,
-        'clipboard': 'clipboard',
         'locale': None,
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
+        'output_mode': OutputMode.DefaultClipboard,
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
-        'tray': True,
-        'update_check': None  # None = not asked, True/False = permission
+        'tray': True
+    }
+
+    __global_settings = {
+        'last_update_check': None,
+        'update_check': None,  # None = not asked, True/False = permission
+        'object_update_check': None  # None = not asked, True/False = permission
     }
 
     @staticmethod
     def get(name, default=None):
         """Return the value of a single setting, falling back to default if None."""
+        try:
+            value = Settings.__global_settings[name]
+            if value is None:
+                return default
+
+            return value
+        except KeyError:
+            pass
+
         value = Settings.__settings[name]
         if value is None:
             return default
@@ -2893,26 +2957,42 @@ class Settings():
         return value
 
     @staticmethod
-    def get_all():
+    def get_all(profile=None):
         """Return all settings."""
-        return Settings.__settings
+        if profile:
+            return Settings.__settings
+        else:
+            return Settings.__global_settings
 
     @staticmethod
     def set(name, value):
         """Set a single setting if this setting is known."""
-        if name not in Settings.__settings:
-            raise NameError('{} is not a key of Settings'.format(name))
+        if name in Settings.__global_settings:
+            profile = None
+        else:
+            profile = Settings.get('profile')
+            if name not in Settings.__settings:
+                raise NameError('{} is not a key of Settings'.format(name))
 
         if Settings.get(name) == value:
             return
 
-        Settings.__settings[name] = value
-        ProfileManager().save_settings(Settings.get('profile'), changed_key=name)
+        if name in Settings.__global_settings:
+            Settings.__global_settings[name] = value
+        else:
+            Settings.__settings[name] = value
+
+        ProfileManager().save_settings(profile, changed_key=name)
 
     @staticmethod
     def update(value):
         """Update the dictionary with new values if any changed."""
         Settings.__settings.update(value)
+
+    @staticmethod
+    def update_global(value):
+        """Update the globals dictionary with new values if any changed."""
+        Settings.__global_settings.update(value)
 
 
 class ModuleOptionParser(argparse.Action):
@@ -2970,8 +3050,8 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='print a list of loadable Qt system styles and exit.')
     parser.add_argument('--style', help='use the given Qt system style for the UI.')
     parser.add_argument('--background', action='store_true', help='do not open the user interface this invocation.')
-    parser.add_argument('--clipboard', '-c', choices=['clipboard', 'selection'],
-                        help='choose the clipboard to copy entries to.')
+    parser.add_argument('--output', choices=['default-clipboard', 'x11-selection-clipboard', 'macos-findbuffer'],
+                        help='choose the location to output entries to.')
     parser.add_argument('--module', '-m', action=ModuleOptionParser,
                         help='name the module to use. This option may be given multiple times. '
                         'When this option is given, the profile module list will be overwritten.')
@@ -3036,7 +3116,8 @@ def _load_settings(args: argparse.Namespace) -> None:
     except OSError:
         pass
 
-    # Load all from profile
+    # Load all settings
+    Settings.update_global(ProfileManager().retrieve_settings(None))
     Settings.update(ProfileManager().retrieve_settings(str(Settings.get('profile'))))
 
     # Then, check for the rest
@@ -3066,8 +3147,15 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.background:
         Settings.set('background', True)
 
-    if args.clipboard:
-        Settings.set('clipboard', args.clipboard)
+    if args.output:
+        if args.output == 'default-clipboard':
+            Settings.set('output_mode', OutputMode.DefaultClipboard)
+        elif args.output == 'x11-selection-clipboard':
+            Settings.set('output_mode', OutputMode.SelectionClipboard)
+        elif args.output == 'macos-findbuffer':
+            Settings.set('output_mode', OutputMode.FindBuffer)
+        elif args.output == 'autotype':
+            Settings.set('output_mode', OutputMode.AutoType)
 
     if args.install_module:
         for metadata_url in args.install_module:
@@ -3195,10 +3283,6 @@ def _load_settings(args: argparse.Namespace) -> None:
     if '_modules' in args:
         Settings.set('modules', args._modules)
 
-    # See if automatic update checks are allowed
-    if ConfigRetriever.get_updatecheck_permission_asked():
-        Settings.set('update_check', ConfigRetriever.get_updatecheck_permission())
-
 
 def _shut_down(window: Window) -> None:
     """Clean up."""
@@ -3292,11 +3376,6 @@ def main() -> None:
         theme_manager = ThemeManager()
         theme = theme_manager.load_theme(theme_identifier)
         theme_manager.apply_theme_to_app(theme, app)
-
-    # Check if clipboard is supported
-    if Settings.get('clipboard') == 'selection' and not app.clipboard().supportsSelection():
-        print("Requested clipboard type is not supported")
-        sys.exit(3)
 
     # Get a window
     window = Window(appname, locale_manager)

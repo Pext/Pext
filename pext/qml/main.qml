@@ -392,17 +392,6 @@ ApplicationWindow {
                     }
                 }
             }
-
-            MenuItem {
-                objectName: "menuUpdateAllModules"
-                text: qsTr("Update all modules")
-
-                signal updateAllModulesRequest()
-
-                onTriggered: {
-                    updateAllModulesRequest()
-                }
-            }
         }
 
         Menu {
@@ -493,17 +482,6 @@ ApplicationWindow {
                     }
                 }
             }
-
-            MenuItem {
-                objectName: "menuUpdateAllThemes"
-                text: qsTr("Update all themes")
-
-                signal updateAllThemesRequest()
-
-                onTriggered: {
-                    updateAllThemesRequest()
-                }
-            }
         }
 
         Menu {
@@ -589,6 +567,45 @@ ApplicationWindow {
             }
 
             Menu {
+                title: qsTr("Output style")
+
+                ExclusiveGroup {
+                    id: menuOutputGroup
+                    objectName: "menuOutputGroup"
+                }
+
+                MenuItem {
+                    objectName: "menuOutputDefaultClipboard"
+                    text: qsTr("Copy to default clipboard")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    visible: platform == 'Linux'
+                    objectName: "menuOutputSelectionClipboard"
+                    text: qsTr("Copy to selection clipboard (X11)")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    visible: platform == 'Darwin'
+                    objectName: "menuOutputFindBuffer"
+                    text: qsTr("Copy to find buffer (macOS)")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    objectName: "menuOutputAutoType"
+                    text: qsTr("Type automatically")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+            }
+
+            Menu {
                 title: qsTr("Sorting style")
 
                 ExclusiveGroup {
@@ -657,18 +674,29 @@ ApplicationWindow {
                 }
             }
 
+            Menu {
+                title: qsTr("Automatic updates")
+
+                MenuItem {
+                    objectName: "menuEnableUpdateCheck"
+                    text: qsTr("Automatically check for Pext updates")
+                    checkable: true
+                    visible: internalUpdaterEnabled
+                }
+
+                MenuItem {
+                    objectName: "menuEnableObjectUpdateCheck"
+                    text: qsTr("Automatically update modules and themes")
+                    checkable: true
+                }
+            }
+
             MenuItem {
                 objectName: "menuShowTrayIcon"
                 text: qsTr("Always show tray icon")
                 checkable: true
             }
 
-            MenuItem {
-                objectName: "menuEnableUpdateCheck"
-                text: qsTr("Automatically check for updates")
-                checkable: true
-                visible: internalUpdaterEnabled
-            }
         }
 
         Menu {
@@ -687,7 +715,6 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
-                visible: internalUpdaterEnabled
             }
 
             MenuItem {
