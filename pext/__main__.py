@@ -313,7 +313,11 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_error(tab['metadata']['name'], str(action[1]))
+            QMessageBox.critical(
+                self.window,
+                tab['metadata']['name'],
+                str(action[1]))
+
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 

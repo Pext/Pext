@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Switch to Qt5 for notifications
 - Remove delay in showing notifications
 - Core and module update checks are now done together
+- Critical module errors now create a dialog box
 
 ### Fixed
 - Inconsistent behaviour between clicking or selecting an entry
