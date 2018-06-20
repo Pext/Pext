@@ -675,18 +675,18 @@ ApplicationWindow {
             }
 
             Menu {
-                title: qsTr("Automatic updates")
+                title: qsTr("New versions")
 
                 MenuItem {
                     objectName: "menuEnableUpdateCheck"
-                    text: qsTr("Automatically check for Pext updates")
+                    text: qsTr("Check for new Pext versions automatically")
                     checkable: true
                     visible: internalUpdaterEnabled
                 }
 
                 MenuItem {
                     objectName: "menuEnableObjectUpdateCheck"
-                    text: qsTr("Automatically update modules and themes")
+                    text: qsTr("Install new modules and themes automatically")
                     checkable: true
                 }
             }
@@ -714,7 +714,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuCheckForUpdates"
-                text: qsTr("Check for updates")
+                text: qsTr("Check for new versions")
             }
 
             MenuItem {
