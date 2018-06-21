@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Inconsistent behaviour between clicking or selecting an entry
+- MacOS menu not merging on non-English languages
 
 ## [0.15] - 2018-06-07
 ### Packaging changes

@@ -283,7 +283,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuQuit"
-                text: qsTr("Quit")
+                text: platform == 'Darwin' ? "Quit" : qsTr("Quit")
                 shortcut: StandardKey.Quit
             }
         }
@@ -527,7 +527,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Settings")
+            title: platform == 'Darwin' ? "Settings" : qsTr("&Settings")
 
             Menu {
                 id: menuChangeLanguage
@@ -704,7 +704,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuAbout"
-                text: qsTr("About")
+                text: platform == 'Darwin' ? "About" : qsTr("About")
                 onTriggered: {
                     var aboutDialog = Qt.createComponent("AboutDialog.qml");
                     aboutDialog.createObject(applicationWindow,
