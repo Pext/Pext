@@ -3107,7 +3107,7 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                 # Probably already added
                 pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     return args
 
 
