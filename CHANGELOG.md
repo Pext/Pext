@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Ability to type output directly
 - Ability to automatically update modules
 - Windows installer
+- Polish translation
 
 ### Changed
 - Switch to Qt5 for notifications

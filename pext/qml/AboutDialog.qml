@@ -31,12 +31,13 @@ Dialog {
     property var translators: {"en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
                                "es": [{"name": "Rose Garcia", "email": "rosegarcia@protonmail.com"},
                                       {"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
-                               "fr": [{"name": "Aurora Yeen &lt;<a href='https://t.me/YeenAurora'>@YeenAurora</a>&gt;"}],
+                               "fr": [{"name": "Aurora Yeen"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
                                "hi": [{"name": "Satyam Singh", "email": "trueleo@protonmail.com"}],
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
+                               "pl": [{"name": "Konrad Dybcio"}],
                                "ru": [{"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
                                "zh_Hant": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
 

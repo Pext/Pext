@@ -7,6 +7,7 @@ lupdate_only {
                    i18n/pext_hi.ts \
                    i18n/pext_hu.ts \
                    i18n/pext_nl.ts \
+                   i18n/pext_pl.ts \
                    i18n/pext_ru.ts \
                    i18n/pext_zh_Hant.ts
 }
