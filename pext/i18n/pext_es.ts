@@ -6,12 +6,12 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation>Acerca de Pext</translation>
+        <translation>Información Acerca de Pext</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="50"/>
         <source>Copyright</source>
-        <translation>Copyright</translation>
+        <translation>Derechos de Autor</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="82"/>
@@ -533,27 +533,27 @@
     <message>
         <location filename="../qml/main.qml" line="569"/>
         <source>Output style</source>
-        <translation type="unfinished"></translation>
+        <translation>Estilo de salida</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="578"/>
         <source>Copy to default clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar al portapapeles predeterminado</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="586"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar al portapapeles de selección (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="594"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation type="unfinished"></translation>
+        <translation>Copiar para encontrar el búfer (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="601"/>
         <source>Type automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Escriba automáticamente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
@@ -651,17 +651,17 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>Automatic updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizaciones automáticas</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Verifica automáticamente las actualizaciones de Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
         <source>Automatically update modules and themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualiza automáticamente módulos y temas</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>

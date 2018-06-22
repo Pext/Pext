@@ -650,17 +650,17 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>Automatic updates</source>
-        <translation type="unfinished"></translation>
+        <translation>自動更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>自動檢查 Pext 更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
         <source>Automatically update modules and themes</source>
-        <translation type="unfinished"></translation>
+        <translation>自動更新模組與主題</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>

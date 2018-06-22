@@ -533,27 +533,27 @@
     <message>
         <location filename="../qml/main.qml" line="569"/>
         <source>Output style</source>
-        <translation type="unfinished"></translation>
+        <translation>Kimenet stílusa</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="578"/>
         <source>Copy to default clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Másolás az alapértelmezett vágólapra</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="586"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation type="unfinished"></translation>
+        <translation>Másolás a kijelölésvágólapra (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="594"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation type="unfinished"></translation>
+        <translation>Másolás a &quot;find&quot; pufferre (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="601"/>
         <source>Type automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikus gépelés</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
@@ -650,17 +650,17 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>Automatic updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikus frissítések</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>A Pext frissítéseinek automatikus keresése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
         <source>Automatically update modules and themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulok és témák automatikus frissítése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>

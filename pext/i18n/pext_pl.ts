@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="nb_NO">
+<TS version="2.1" language="pl">
 <context>
     <name>AboutDialog</name>
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation>Om Pext</translation>
+        <translation>O Pext&apos;cie</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="50"/>
         <source>Copyright</source>
-        <translation>Kopirett</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="82"/>
         <source>Translators</source>
-        <translation>Oversettere</translation>
+        <translation>Tłumacze</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="89"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation>Ønsker du å oversette Pext? Klikk her.</translation>
+        <translation>Chcesz pomóc tłumaczyć Pext&apos;a? Kliknij tutaj.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="90"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation>Pext-laget ønsker å takket følgende for oversettelsen av Pext:</translation>
+        <translation>Pext team chciałby podziękować następującym osobom za pomoc w tłumaczeniu:</translation>
     </message>
 </context>
 <context>
@@ -34,87 +34,87 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation>Modulinstallasjon</translation>
+        <translation>Instalacja modułów</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation>Draktinstallasjon</translation>
+        <translation>Instalacja motywów</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Module source:</source>
-        <translation>Modulkilde:</translation>
+        <translation>Źródło modułu:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
         <source>Theme source:</source>
-        <translation>Draktkilde:</translation>
+        <translation>Źródło motywu:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No modules available from this source.</source>
-        <translation>Ingen moduler er tilgjengelige fra denne kilden.</translation>
+        <translation>Z tego źródła nie są dostępne żadne moduły.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
         <source>No themes available from this source.</source>
-        <translation>Ingen drakter tilgjengelig fra denne kilden.</translation>
+        <translation>Z tego źródła nie są dostępne żadne motywy.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation>Ustøttet pakkebrønnsformat (forventet versjon %1, ikke %2).</translation>
+        <translation>Nieobsługiwany format repozytorium (spodziewana wersja %1, zamiast %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
         <source>Module:</source>
-        <translation>Modul:</translation>
+        <translation>Moduł:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
         <source>Download source:</source>
-        <translation>Last ned kilde:</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This module is already installed.</source>
-        <translation>Denne modulen er allerede installert.</translation>
+        <translation>Ten moduł jest już zainstalowany.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
         <source>This theme is already installed.</source>
-        <translation>Denne drakten er allerede installert.</translation>
+        <translation>Ten motyw jest już zainstalowany.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
         <source>This module does not seem to support %1.</source>
-        <translation>Denne modulen ser ikke ut til å støtte %1.</translation>
+        <translation>Wygląda na to, że ten moduł nie wspiera %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
         <source>Details:</source>
-        <translation>Detaljer:</translation>
+        <translation>Szczegóły:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
         <source>Creator: </source>
-        <translation>Utvikler: </translation>
+        <translation>Twórca: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
         <source>Description: </source>
-        <translation>Beskrivelse: </translation>
+        <translation>Opis: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
         <source>License: </source>
-        <translation>Lisens: </translation>
+        <translation>Licencja: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
         <source>Only install modules from people you trust.</source>
-        <translation>Kun installer moduler fra folk du stoler på.</translation>
+        <translation>Instaluj moduły tylko od osób, którym ufasz.</translation>
     </message>
 </context>
 <context>
@@ -122,12 +122,12 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="24"/>
         <source>No modules found</source>
-        <translation>Fant ingen moduler</translation>
+        <translation>Nie znaleziono żadnych modułów</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation>Ingen moduler ble funnet i denne pakkebrønnen.</translation>
+        <translation>Nie znaleziono modułów w tym repozytorium.</translation>
     </message>
 </context>
 <context>
@@ -135,52 +135,52 @@
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation>Modulinstallasjon</translation>
+        <translation>Instalacja modułu</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="35"/>
         <source>Choose the module to install:</source>
-        <translation>Velg en modul å installere:</translation>
+        <translation>Wybierz moduł do zainstalowania:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation>Velg foretrukket nedlastingskilde:</translation>
+        <translation>Wybierz preferowane źródło pobierania:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
         <source>You already have this module installed.</source>
-        <translation>Modul allerede installert.</translation>
+        <translation>Ten moduł jest już zainstalowany.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
         <source>This module does not seem to support %1.</source>
-        <translation>Denne modulen ser ikke ut til å støtte %1.</translation>
+        <translation>Wygląda na to, że ten moduł nie wspiera %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
         <source>Module information:</source>
-        <translation>Modulinformasjon:</translation>
+        <translation>Informacje o module:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
-        <translation>Utvikler: </translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
         <source>Description: </source>
-        <translation>Beskrivelse: </translation>
+        <translation>Opis: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
         <source>License: </source>
-        <translation>Lisens: </translation>
+        <translation>Licencja: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>Siden Pext-moduler er kode, forsikre deg om at du stoler på utvikleren før du fortsetter.</translation>
+        <translation>Jako iż moduły Pext&apos;a są kodem, proszę upewnij się, że ufasz temu developerowi zanim kontynuujesz.</translation>
     </message>
 </context>
 <context>
@@ -188,17 +188,17 @@
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation>Modulinstallasjon</translation>
+        <translation>Instalacja modułu</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation>Skriv inn metadata-nettadresse for modulen å installere:</translation>
+        <translation>Umieść metadata URL modułu, który chcesz zainstalować:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
         <source>Only install modules from people you trust.</source>
-        <translation>Kun installer moduler fra folk du stoler på.</translation>
+        <translation>Instaluj tylko moduły od osób, którym ufasz.</translation>
     </message>
 </context>
 <context>
@@ -206,12 +206,12 @@
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="26"/>
         <source>Theme installation</source>
-        <translation>Draktinstallasjon</translation>
+        <translation>Instalacja motywu</translation>
     </message>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the theme to install:</source>
-        <translation>Skriv inn metadata-nettadresse for drakten å installere:</translation>
+        <translation>Umieść metadata URL modułu, który chcesz zainstalować:</translation>
     </message>
 </context>
 <context>
@@ -219,12 +219,12 @@
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="26"/>
         <source>Load module</source>
-        <translation>Last inn modul</translation>
+        <translation>Załaduj moduł</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
-        <translation>Velg modul å laste inn:</translation>
+        <translation>Wybierz moduł do załadowania:</translation>
     </message>
 </context>
 <context>
@@ -232,22 +232,22 @@
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation>Last inn profil</translation>
+        <translation>Załaduj profil</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation>Velg profil å bytte til:</translation>
+        <translation>Wybierz profil, na który chcesz się przełączyć:</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation>Åpne i nytt vindu</translation>
+        <translation>Otwórz w nowym oknie</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation>Merk: Pext må starte på nytt for å bytte profil.</translation>
+        <translation>Notka: Pext uruchomi się ponownie w celu zmiany profilu.</translation>
     </message>
 </context>
 <context>
@@ -255,22 +255,22 @@
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="26"/>
         <source>Switch theme</source>
-        <translation>Bytt drakt</translation>
+        <translation>Zmień motyw</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation>Velg drakt å ikle:</translation>
+        <translation>Wybierz motyw, na który chcesz zmienić:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
         <source>No theme</source>
-        <translation>Ingen drakt</translation>
+        <translation>Brak motywu</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>Merk: Pext vil starte på nytt for å iføre ny drakt.</translation>
+        <translation>Notka: Pext uruchomi się ponownie aby zaaplikować nowy motyw.</translation>
     </message>
 </context>
 <context>
@@ -278,57 +278,57 @@
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage modules</source>
-        <translation>Behandle moduler</translation>
+        <translation>Zarządzaj modułami</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="26"/>
         <source>Manage themes</source>
-        <translation>Behandle drakter</translation>
+        <translation>Zarządaj motywami</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation>Identifikator: %1</translation>
+        <translation>Identyfikator: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
         <source>Version: %1 (%2)</source>
-        <translation>Versjon: %1 (%2)</translation>
+        <translation>Wersja: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="77"/>
         <source>Developer: %1</source>
-        <translation>Utvikler: %1</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="85"/>
         <source>Description: %1</source>
-        <translation>Beskrivelse: %1</translation>
+        <translation>Opis: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="93"/>
         <source>License: %1</source>
-        <translation>Lisens: %1</translation>
+        <translation>Licencja: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="101"/>
         <source>Homepage: %1</source>
-        <translation>Hjemmeside: %1</translation>
+        <translation>Strona startowa: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
-        <translation>Nedlastingskilde: %1</translation>
+        <translation>Źródło pobrania: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="136"/>
         <source>Update</source>
-        <translation>Oppdater</translation>
+        <translation>Aktualizacja</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="146"/>
         <source>Uninstall</source>
-        <translation>Avinstallert</translation>
+        <translation>Odinstaluj</translation>
     </message>
 </context>
 <context>
@@ -336,27 +336,27 @@
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="26"/>
         <source>Manage profiles</source>
-        <translation>Behandle profiler</translation>
+        <translation>Zarządzaj profilami</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="44"/>
         <source>Enter profile name</source>
-        <translation>Skriv inn profilnavn</translation>
+        <translation>Wprowadź nazwę profilu</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="48"/>
         <source>Create</source>
-        <translation>Opprett</translation>
+        <translation>Stwórz</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="80"/>
         <source>Rename</source>
-        <translation>Gi nytt navn</translation>
+        <translation>Zmień nazwę</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="90"/>
         <source>Remove</source>
-        <translation>Fjern</translation>
+        <translation>Usuń</translation>
     </message>
 </context>
 <context>
@@ -364,12 +364,12 @@
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="24"/>
         <source>No modules installed</source>
-        <translation>Ingen moduler installert</translation>
+        <translation>Brak zainstalowanych modułów</translation>
     </message>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Ingen moduler installert, installer en først.</translation>
+        <translation>Brak zainstalowanych modułów, proszę zainstaluj jakiś.</translation>
     </message>
 </context>
 <context>
@@ -377,12 +377,12 @@
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="24"/>
         <source>No themes installed</source>
-        <translation>Ingen drakter installert</translation>
+        <translation>Brak zainstalowanych motywów</translation>
     </message>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>Ingen drakter installert, installer en først.</translation>
+        <translation>Brak zainstalowanych motywów, proszę zainstaluj jakiś.</translation>
     </message>
 </context>
 <context>
@@ -390,12 +390,12 @@
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation>Kun én profil tilgjengelig</translation>
+        <translation>Tylko jeden profil jest dostępny</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation>Det er kun én profil tilgjengelig. Opprett en annen profil først.</translation>
+        <translation>Tylko jeden profil jest dostępny. Proszę spróbuj stworzyć drugi.</translation>
     </message>
 </context>
 <context>
@@ -403,12 +403,12 @@
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="26"/>
         <source>Rename profile</source>
-        <translation>Gi profil nytt navn</translation>
+        <translation>Zmień nazwę profilu</translation>
     </message>
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="37"/>
         <source>Please choose a new name for this profile.</source>
-        <translation>Velg et nytt navn for denne profilen.</translation>
+        <translation>Proszę wybierz nową nazwę dla tego profilu.</translation>
     </message>
 </context>
 <context>
@@ -416,12 +416,12 @@
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="24"/>
         <source>New version available</source>
-        <translation>Ny versjon tilgjengelig</translation>
+        <translation>Nowa wersja jest dostępna</translation>
     </message>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation>En ny versjona av Pext er tilgjengelig. Ønsker du å åpne nedlastingssiden?</translation>
+        <translation>Nowa wersja Pexta jest dostępna. Czy chcesz przejść do strony pobierania?</translation>
     </message>
 </context>
 <context>
@@ -429,12 +429,12 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation>Oppgradingsbehandler</translation>
+        <translation>Menedżer aktualizacji</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation>Skal Pext kunne se etter oppgraderinger automatisk? Kan endres når som helst fra innstillingsmenyen.</translation>
+        <translation>Czy Pext ma automatycznie sprawdzać dostępność aktualizacji? Możesz to zmienić w każdej chwili w ustawieniach.</translation>
     </message>
 </context>
 <context>
@@ -442,206 +442,205 @@
     <message>
         <location filename="../qml/main.qml" line="285"/>
         <source>Quit</source>
-        <translation>Avslutt</translation>
+        <translation>Wyjście</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="291"/>
         <source>&amp;Module</source>
-        <translation>&amp;Modul</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="295"/>
         <source>Reload active module</source>
-        <translation>Last inn aktiv modul igjen</translation>
+        <translation>Przeładuj aktywny moduł</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="302"/>
         <source>Close active module</source>
-        <translation>Lukk aktiv modul</translation>
+        <translation>Zamknij aktywny moduł</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="314"/>
         <source>Load module</source>
-        <translation>Last inn modul</translation>
+        <translation>Załaduj moduł</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="358"/>
         <source>Install module</source>
-        <translation>Installer modul</translation>
+        <translation>Zainstaluj moduł</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="363"/>
         <source>From online module list</source>
-        <translation>Fra nettbasert modulliste</translation>
+        <translation>Z listy modułów online</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="385"/>
         <location filename="../qml/main.qml" line="475"/>
         <source>From URL</source>
-        <translation>Fra nettadresse</translation>
+        <translation>Z URLa</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="397"/>
         <source>&amp;Theme</source>
-        <translation>&amp;Drakt</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="405"/>
         <source>Switch theme</source>
-        <translation>Bytt drakt</translation>
+        <translation>Zmień motyw</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
         <source>Manage themes</source>
-        <translation>Behandle drakter</translation>
+        <translation>Zarządzaj motywami</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="448"/>
         <source>Install theme</source>
-        <translation>Installer drakt</translation>
+        <translation>Zainstaluj motyw</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="453"/>
         <source>From online theme list</source>
-        <translation>Fra nettbasert draktliste</translation>
+        <translation>Z listy motywów online</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="491"/>
         <source>Switch profile</source>
-        <translation>Bytt profil</translation>
+        <translation>Zmień profil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="511"/>
         <source>Manage profiles</source>
-        <translation>Behandle profiler</translation>
+        <translation>Zarządzaj profilami</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="529"/>
         <source>&amp;Settings</source>
-        <translation>&amp;Innstillinger</translation>
+        <translation>&amp;Ustawienia</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="535"/>
         <source>Language</source>
-        <translation>Språk</translation>
+        <translation>Język</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="545"/>
         <source>System locale</source>
-        <translation>Systemlokalitet</translation>
+        <translation>Język systemu</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="569"/>
         <source>Output style</source>
-        <translation>Utdatastil</translation>
+        <translation>Styl danych wyjściowych</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="578"/>
         <source>Copy to default clipboard</source>
-        <translation>Kopier til forvalgt utklippstavle</translation>
+        <translation>Skopiuj do domyślnego schowka</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="586"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation>Kopier til utvalgsutklippstavle (X11)</translation>
+        <translation>Skopiuj do selection clipboard (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="594"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation>Kopier til find-mellomlager (macOS)</translation>
+        <translation>Skopiuj do buforu szukania (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="601"/>
         <source>Type automatically</source>
-        <translation>Skriv automatisk</translation>
+        <translation>Wpisz automatycznie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
         <source>Sorting style</source>
-        <translation>Sorteringsstil</translation>
+        <translation>Styl sortowania</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="617"/>
         <source>Sort by module choice</source>
-        <translation>Sorter etter modulvalg</translation>
+        <translation>Sortuj według wyboru modułu</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="624"/>
         <source>Sort ascending</source>
-        <translation>Sorter stigende</translation>
+        <translation>Sortuj rosnąco</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="631"/>
         <source>Sort descending</source>
-        <translation>Sorter synkende</translation>
+        <translation>Sortuj malejąco</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="638"/>
         <source>Minimizing behaviour</source>
-        <translation>Minimeringsoppførsel</translation>
+        <translation>Typ minimalizacji</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="647"/>
         <source>Minimize normally</source>
-        <translation>Minimer normalt</translation>
+        <translation>Zmininalizuj normalnie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="655"/>
         <source>Minimize to tray</source>
-        <translation>Minimer til systemkurv</translation>
+        <translation>Zminimalizuj do tray&apos;a</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="662"/>
         <source>Manual only: Minimize normally</source>
-        <translation>Kun manuelt: Minimer normalt</translation>
+        <translation>Manualnie: Zminimalizuj normalnie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="670"/>
         <source>Manual only: Minimize to tray</source>
-        <translation>Kun manuelt: Minimer til systemkurv</translation>
+        <translation>Manualnie: Zminimalizuj do tray&apos;a</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="702"/>
         <source>&amp;Help</source>
-        <translation>&amp;Hjelp</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="716"/>
         <source>Check for updates</source>
-        <translation>Se etter oppgraderinger</translation>
+        <translation>Sprawdź dostępność aktualizacji</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="784"/>
         <source>Design philosophy</source>
-        <translation>Formgivningsfilosofi</translation>
+        <translation>Filozofia designu</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="785"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
-        <translation>Pext er designet for å ikke være til bryderi. Så snart en modul anser at du er ferdig med å bruke den, vil Pext skjule seg i systemkurven. Hvis du ønsker å bruke det igjen, kan du starte det igjen, eller åpne det fra systemkurven.</translation>
+        <translation>Pext jest zaprojektowany tak, aby nie wchodzić Ci w drogę. Jak tylko moduł stwierdzi, że przestałeś go używać, Pext schowa się do tray&apos;a. Gdy chcesz otworzyć go ponownie, uruchom go jescze raz lub otwórz go w tray&apos;u.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="826"/>
         <source>Getting started</source>
-        <translation>Kom igang</translation>
+        <translation>Pierwsze kroki</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/main.qml" line="827"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>For å komme i gang, trykk &lt;kbd&gt;%1&lt;/kbd&gt; for å åpne en ny fane. Når du er ferdig med en fane, kan du alltids lukke den ved å trykke &lt;kbd&gt;%2&lt;/kbd&gt;. Du har nå %n modul installert. Du kan behandle moduler i modul-menyen.</numerusform>
-            <numerusform>For å komme i gang, trykk &lt;kbd&gt;%1&lt;/kbd&gt; for å åpne en ny fane. Når du er ferdig med en fane, kan du alltids lukke den ved å trykke &lt;kbd&gt;%2&lt;/kbd&gt;. Du har nå %n moduler installert. Du kan behandle moduler i modul-menyen.</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Aktualnie masz zainstalowanych %n modułów. Możesz zarządzać modułami w menu Moduły.</numerusform>
+        <numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Aktualnie masz zainstalowanych %n modułów. Możesz zarządzać modułami w menu Moduły.</numerusform>
+        <numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Aktualnie masz zainstalowanych %n modułów. Możesz zarządzać modułami w menu Moduły.</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="335"/>
         <source>Manage modules</source>
-        <translation>Behandle moduler</translation>
+        <translation>Zarządzaj modułami</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="281"/>
         <source>&amp;Pext</source>
-        <translation>&amp;Pext</translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="487"/>
@@ -651,62 +650,62 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>Automatic updates</source>
-        <translation type="unfinished">Automatiske oppdateringer</translation>
+        <translation>Automatyczne aktualizacje</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation type="unfinished">Se etter Pext-oppdateringer automatisk</translation>
+        <translation>Automatycznie sprawdzaj dostępność aktualizacji Pext&apos;a</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
         <source>Automatically update modules and themes</source>
-        <translation type="unfinished">Oppgrader moduler og drakter automatisk</translation>
+        <translation>Automatycznie aktualizuj moduły i motywy</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>
         <source>Always show tray icon</source>
-        <translation>Alltid vis systemkurvsikon</translation>
+        <translation>Zawsze pokazuj ikonę w tray&apos;u</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="706"/>
         <source>About</source>
-        <translation>Om</translation>
+        <translation>O programie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="721"/>
         <source>Visit homepage</source>
-        <translation>Besøk hjemmeside</translation>
+        <translation>Odwiedź stronę</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="740"/>
         <source>Clear</source>
-        <translation>Tøm</translation>
+        <translation>Wyczyść</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="740"/>
         <source>Back</source>
-        <translation>Tilbake</translation>
+        <translation>Wróć</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="749"/>
         <source>Type to search</source>
-        <translation>Skriv for å søke</translation>
+        <translation>Wpisz, aby wyszukać</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="860"/>
         <source>Processing: %1 (%2)</source>
-        <translation>Behandler: %1 (%2)</translation>
+        <translation>Przetwarzanie: %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="862"/>
         <source>Ready</source>
-        <translation>Klar</translation>
+        <translation>Gotowe</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="862"/>
         <source>Waiting</source>
-        <translation>Venter</translation>
+        <translation>Oczekiwanie</translation>
     </message>
 </context>
 </TS>
