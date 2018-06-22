@@ -533,27 +533,27 @@
     <message>
         <location filename="../qml/main.qml" line="569"/>
         <source>Output style</source>
-        <translation type="unfinished"></translation>
+        <translation>आउटपुट शैली</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="578"/>
         <source>Copy to default clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>डिफ़ॉल्ट क्लिपबोर्ड पर कॉपी करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="586"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation type="unfinished"></translation>
+        <translation>चयन क्लिपबोर्ड (एक्स 11) पर कॉपी करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="594"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation type="unfinished"></translation>
+        <translation>बफ़र (macOS) ढूँढने के लिए कॉपी करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="601"/>
         <source>Type automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>स्वचालित रूप से लिखें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
@@ -652,17 +652,17 @@
     <message>
         <location filename="../qml/main.qml" line="677"/>
         <source>Automatic updates</source>
-        <translation type="unfinished"></translation>
+        <translation>स्वचालित अपडेट</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्स्ट अद्यतनों के लिए स्वचालित रूप से जांचें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
         <source>Automatically update modules and themes</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल और थीम्स  स्वचालित रूप से अपडेट करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>
