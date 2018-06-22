@@ -657,7 +657,7 @@
     <message>
         <location filename="../qml/main.qml" line="681"/>
         <source>Automatically check for Pext updates</source>
-        <translation>पैक्स्ट अद्यतनों के लिए स्वचालित रूप से जांचें</translation>
+        <translation>पैक्स्ट अपडेटस के लिए स्वचालित रूप से जांचें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
