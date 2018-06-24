@@ -29,6 +29,7 @@ import configparser
 import json
 import os
 import platform
+import re
 import signal
 import sys
 import threading
@@ -658,7 +659,8 @@ class LocaleManager():
 
         return None
 
-    def find_best_locale(self, locale=None) -> QLocale:
+    @staticmethod
+    def find_best_locale(locale=None) -> QLocale:
         """Find the best locale to use, defaulting to system locale."""
         return QLocale(locale) if locale else QLocale()
 
@@ -878,6 +880,14 @@ class ObjectManager():
             print("Object {} lacks a correctly formatted metadata.json file".format(location))
             return None
 
+        try:
+            with open(os.path.join(full_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                metadata.update(json.load(metadata_json_i18n))
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            print("Object {} has no metadata_{}.json file".format(location,
+                  LocaleManager.find_best_locale(Settings.get('locale')).name()))
+
         # Ensure the required metadata is set
         if 'id' not in metadata:
             print("Object {} lacks required field id".format(location))
@@ -1079,8 +1089,7 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        locale_manager = LocaleManager()
-        locale = locale_manager.find_best_locale(Settings.get('locale')).name()
+        locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
         module['settings']['_api_version'] = [0, 7, 0]
         module['settings']['_locale'] = locale
@@ -1252,6 +1261,13 @@ class ModuleManager():
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
 
+        try:
+            with open(os.path.join(module_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
+
         if verbose:
             Logger.log(None, '♻ {}'.format(name))
 
@@ -1282,6 +1298,13 @@ class ModuleManager():
                 name = json.load(metadata_json)['name']
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
+
+        try:
+            with open(os.path.join(module_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
 
         if verbose:
             Logger.log(None, '⇩ {}'.format(name))
@@ -1957,6 +1980,8 @@ class Window(QMainWindow):
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
         self.context.setContextProperty("currentLocale", self.locale_manager.get_current_locale(system_if_unset=False))
+        self.context.setContextProperty("currentLocaleCode",
+                                        LocaleManager.find_best_locale(Settings.get('locale')).name())
         self.context.setContextProperty("locales", self.locale_manager.get_locales())
 
         # Load the main UI
@@ -2832,6 +2857,13 @@ class ThemeManager():
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
 
+        try:
+            with open(os.path.join(theme_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
+
         if verbose:
             Logger.log(None, '♻ {}'.format(name))
 
@@ -2857,6 +2889,13 @@ class ThemeManager():
                 name = json.load(metadata_json)['name']
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
+
+        try:
+            with open(os.path.join(theme_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
 
         if verbose:
             Logger.log(None, '⇩ {}'.format(name))
@@ -3170,6 +3209,14 @@ def _load_settings(args: argparse.Namespace) -> None:
                 with urlopen(metadata_url) as unparsed_metadata:
                     metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
 
+                try:
+                    with urlopen(re.sub('\.json$', '{}_.json'
+                                        .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
+                                        '')) as unparsed_metadata_i18n:
+                        metadata.update(json.loads(unparsed_metadata_i18n.read().decode('utf-8')))
+                except Exception as e:
+                    pass
+
                 if not ModuleManager().install_module(metadata['git_urls'][0],
                                                       metadata['id'],
                                                       metadata['name'],
@@ -3215,6 +3262,14 @@ def _load_settings(args: argparse.Namespace) -> None:
             try:
                 with urlopen(metadata_url) as unparsed_metadata:
                     metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
+
+                try:
+                    with urlopen(re.sub('\.json$', '{}_.json'
+                                        .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
+                                        '')) as unparsed_metadata_i18n:
+                        metadata.update(json.loads(unparsed_metadata_i18n.read().decode('utf-8')))
+                except Exception as e:
+                    pass
 
                 if not ThemeManager().install_theme(metadata['git_urls'][0],
                                                     metadata['id'],
@@ -3357,7 +3412,7 @@ def main() -> None:
 
     # Load the locale
     locale_manager = LocaleManager()
-    locale_manager.load_locale(app, locale_manager.find_best_locale(Settings.get('locale')))
+    locale_manager.load_locale(app, LocaleManager.find_best_locale(Settings.get('locale')))
 
     # Load the app icon
     # KDE doesn't support svg in the system tray and macOS makes the png in

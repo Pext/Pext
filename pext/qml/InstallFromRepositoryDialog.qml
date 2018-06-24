@@ -33,6 +33,7 @@ Dialog {
     property var installedObjects
     property var installRequest
     property var repositories
+    property var currentLocaleCode
     property var expectedVersion: 2
     property var currentRepoVersion: 2
     property var objects: []
@@ -171,8 +172,8 @@ Dialog {
         var xmlhttp = new XMLHttpRequest();
 
         xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
-                callback(xmlhttp.response);
+            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                callback(url, xmlhttp.response, xmlhttp.status);
             }
         }
 
@@ -183,7 +184,12 @@ Dialog {
     function getObjects(repoIndex) {
         modules = [];
         doneLoading = false;
-        getData(repositories[repoIndex].url, function(response) {
+        getData(repositories[repoIndex].url, function(url, response, status) {
+            if (status !== 200) {
+                getObjects(repoIndex);
+                return;
+            }
+
             var jsonResponse = JSON.parse(response)
 
             if (jsonResponse.version != 2) {
@@ -204,11 +210,25 @@ Dialog {
             var objectsData = [];
 
             for (var i = 0; i < objectList.length; i++) {
-                getData(objectList[i], function(response) {
-                    objectsData.push(JSON.parse(response));
-                    if (objectsData.length === objectList.length) {
-                         objects = objectsData.sort(function(a, b) { return a.name.localeCompare(b.name); } );
-                         doneLoading = true;
+                getData(objectList[i], function(url, response, status) {
+                    if (status === 200) {
+                        var objectData = JSON.parse(response);
+                        getData(url.replace(/.json$/, '_' + currentLocaleCode + '.json'), function(url, response, status) {
+                            if (status === 200) {
+                                Object.assign(objectData, JSON.parse(response));
+                            };
+                            objectsData.push(objectData);
+                            if (objectsData.length === objectList.length) {
+                                 objects = objectsData.sort(function(a, b) { return a.name.localeCompare(b.name); } );
+                                 doneLoading = true;
+                            };
+                        });
+                    } else {
+                        objectsData.push(JSON.parse('{}'));
+                        if (objectsData.length === objectList.length) {
+                             objects = objectsData.sort(function(a, b) { return a.name.localeCompare(b.name); } );
+                             doneLoading = true;
+                        };
                     };
                 });
             };

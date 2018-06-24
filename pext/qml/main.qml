@@ -378,7 +378,8 @@ ApplicationWindow {
                             {"installedObjects": modules,
                              "installRequest": menuInstallModule.installModuleRequest,
                              "repositories": repositories,
-                             "type": "modules"})
+                             "type": "modules",
+                             "currentLocaleCode": currentLocaleCode})
                     }
                 }
 
@@ -468,7 +469,8 @@ ApplicationWindow {
                             {"installedObjects": themes,
                              "installRequest": menuInstallTheme.installThemeRequest,
                              "repositories": repositories,
-                             "type": "themes"})
+                             "type": "themes",
+                             "currentLocaleCode": currentLocaleCode})
                     }
                 }
 
