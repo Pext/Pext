@@ -9,22 +9,22 @@
         <translation>О Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="50"/>
+        <location filename="../qml/AboutDialog.qml" line="51"/>
         <source>Copyright</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="82"/>
+        <location filename="../qml/AboutDialog.qml" line="83"/>
         <source>Translators</source>
         <translation>Переводчики</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="89"/>
+        <location filename="../qml/AboutDialog.qml" line="90"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Хотите помочь перевести Pext? Нажмите здесь.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="90"/>
+        <location filename="../qml/AboutDialog.qml" line="91"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Команда Pext выражает благодарность следующим пользователям за помощь с переводом Pext:</translation>
     </message>
@@ -42,77 +42,77 @@
         <translation>Установка темы</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Module source:</source>
         <translation type="unfinished">Источник модуля:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="45"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Theme source:</source>
         <translation>Источник темы:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No modules available from this source.</source>
         <translation type="unfinished">В этом источнике не найдено модулей.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="62"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No themes available from this source.</source>
         <translation type="unfinished">В этом источнике не найдено тем.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="70"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
         <translation>Неподдерживаемый формат репозитория (требуется версия %1, а не %2).</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="78"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="79"/>
         <source>Module:</source>
         <translation>Модуль:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="92"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
         <source>Download source:</source>
         <translation>Источник:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>This module is already installed.</source>
         <translation>Этот модуль уже установлен.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="106"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>This theme is already installed.</source>
         <translation>Эта тема уже установлена.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="114"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="115"/>
         <source>This module does not seem to support %1.</source>
         <translation>Кажется, этот модуль не поддерживает %1.</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="122"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
         <source>Details:</source>
         <translation>Подробности:</translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="130"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="131"/>
         <source>Creator: </source>
         <translation>Разработчик: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="137"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="138"/>
         <source>Description: </source>
         <translation>Описание: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="144"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="145"/>
         <source>License: </source>
         <translation>Лицензия: </translation>
     </message>
     <message>
-        <location filename="../qml/InstallFromRepositoryDialog.qml" line="151"/>
+        <location filename="../qml/InstallFromRepositoryDialog.qml" line="152"/>
         <source>Only install modules from people you trust.</source>
         <translation>Устанавливайте модули только из проверенных источников.</translation>
     </message>
@@ -360,6 +360,14 @@
     </message>
 </context>
 <context>
+    <name>ModuleData</name>
+    <message>
+        <location filename="../qml/ModuleData.qml" line="159"/>
+        <source>No results</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>NoModulesInstalledDialog</name>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="24"/>
@@ -440,193 +448,193 @@
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="285"/>
+        <location filename="../qml/main.qml" line="286"/>
         <source>Quit</source>
         <translation>Выйти</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="291"/>
+        <location filename="../qml/main.qml" line="292"/>
         <source>&amp;Module</source>
         <translation>&amp;Модуль</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="295"/>
+        <location filename="../qml/main.qml" line="296"/>
         <source>Reload active module</source>
         <translation>Перезагрузить активный модуль</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="302"/>
+        <location filename="../qml/main.qml" line="303"/>
         <source>Close active module</source>
         <translation>Закрыть активный модуль</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="314"/>
+        <location filename="../qml/main.qml" line="315"/>
         <source>Load module</source>
         <translation>Загрузить модуль</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="358"/>
+        <location filename="../qml/main.qml" line="359"/>
         <source>Install module</source>
         <translation>Установить модуль</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="363"/>
+        <location filename="../qml/main.qml" line="364"/>
         <source>From online module list</source>
         <translation>Из онлайн списка модулей</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="385"/>
-        <location filename="../qml/main.qml" line="475"/>
+        <location filename="../qml/main.qml" line="387"/>
+        <location filename="../qml/main.qml" line="478"/>
         <source>From URL</source>
         <translation>По ссылке</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="397"/>
+        <location filename="../qml/main.qml" line="399"/>
         <source>&amp;Theme</source>
         <translation>&amp;Тема</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="405"/>
+        <location filename="../qml/main.qml" line="407"/>
         <source>Switch theme</source>
         <translation>Изменить тему</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="425"/>
+        <location filename="../qml/main.qml" line="427"/>
         <source>Manage themes</source>
         <translation>Управление темами</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="448"/>
+        <location filename="../qml/main.qml" line="450"/>
         <source>Install theme</source>
         <translation>Установить тему</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="453"/>
+        <location filename="../qml/main.qml" line="455"/>
         <source>From online theme list</source>
         <translation>Из онлайн списка тем</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="491"/>
+        <location filename="../qml/main.qml" line="494"/>
         <source>Switch profile</source>
         <translation>Сменить профиль</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="511"/>
+        <location filename="../qml/main.qml" line="514"/>
         <source>Manage profiles</source>
         <translation>Управление профилями</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="529"/>
+        <location filename="../qml/main.qml" line="532"/>
         <source>&amp;Settings</source>
         <translation>&amp;Настройки</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="535"/>
+        <location filename="../qml/main.qml" line="538"/>
         <source>Language</source>
         <translation>Язык</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="545"/>
+        <location filename="../qml/main.qml" line="548"/>
         <source>System locale</source>
         <translation>Системный</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="569"/>
+        <location filename="../qml/main.qml" line="572"/>
         <source>Output style</source>
         <translation>Стиль вывода</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="578"/>
+        <location filename="../qml/main.qml" line="581"/>
         <source>Copy to default clipboard</source>
         <translation>Копировать в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="586"/>
+        <location filename="../qml/main.qml" line="589"/>
         <source>Copy to selection clipboard (X11)</source>
         <translation>Копировать в буфер обмена (X11)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="594"/>
+        <location filename="../qml/main.qml" line="597"/>
         <source>Copy to find buffer (macOS)</source>
         <translation>Копировать в буфер обмена (macOS)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="601"/>
+        <location filename="../qml/main.qml" line="604"/>
         <source>Type automatically</source>
         <translation>Вводить автоматически</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="608"/>
+        <location filename="../qml/main.qml" line="611"/>
         <source>Sorting style</source>
         <translation>Сортировка</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="617"/>
+        <location filename="../qml/main.qml" line="620"/>
         <source>Sort by module choice</source>
         <translation>Настройки модуля</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="624"/>
+        <location filename="../qml/main.qml" line="627"/>
         <source>Sort ascending</source>
         <translation>По возрастанию</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="631"/>
+        <location filename="../qml/main.qml" line="634"/>
         <source>Sort descending</source>
         <translation>По убыванию</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="638"/>
+        <location filename="../qml/main.qml" line="641"/>
         <source>Minimizing behaviour</source>
         <translation>Поведение при сворачивании</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="647"/>
+        <location filename="../qml/main.qml" line="650"/>
         <source>Minimize normally</source>
         <translation>Сворачивать</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="655"/>
+        <location filename="../qml/main.qml" line="658"/>
         <source>Minimize to tray</source>
         <translation>Сворачивать в трей</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="662"/>
+        <location filename="../qml/main.qml" line="665"/>
         <source>Manual only: Minimize normally</source>
         <translation>Только вручную: Сворачивать</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="670"/>
+        <location filename="../qml/main.qml" line="673"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Только вручную: Сворачивать в трей</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="702"/>
+        <location filename="../qml/main.qml" line="705"/>
         <source>&amp;Help</source>
         <translation>&amp;Помощь</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="716"/>
+        <location filename="../qml/main.qml" line="719"/>
         <source>Check for updates</source>
         <translation>Проверить обновления</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="784"/>
+        <location filename="../qml/main.qml" line="787"/>
         <source>Design philosophy</source>
         <translation>Философия дизайна</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="785"/>
+        <location filename="../qml/main.qml" line="788"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>Pext создан, чтобы не отвлекать вас. Как только модуль решит, что вы завершили работу с ним, Pext тут же спрячется в трее. Если вам понадобится воспользоваться Pext снова, просто откройте его ещё раз или нажмите на иконку в трее.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="826"/>
+        <location filename="../qml/main.qml" line="829"/>
         <source>Getting started</source>
         <translation>Начало работы</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="827"/>
+        <location filename="../qml/main.qml" line="830"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Для начала, нажмите &lt;kbd&gt;%1&lt;/kbd&gt;, чтобы открыть новую вкладку. Когда вы закончите работать с вкладкой, вы можете закрыть её, нажав &lt;kbd&gt;%2&lt;/kbd&gt;. У вас сейчас установлено %n модуль. Вы можете управлять модулями из меню Модулей.</numerusform>
@@ -635,77 +643,77 @@
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="335"/>
+        <location filename="../qml/main.qml" line="336"/>
         <source>Manage modules</source>
         <translation>Управление модулями</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="281"/>
+        <location filename="../qml/main.qml" line="282"/>
         <source>&amp;Pext</source>
         <translation>&amp;Pext</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="487"/>
+        <location filename="../qml/main.qml" line="490"/>
         <source>P&amp;rofile</source>
         <translation>П&amp;рофиль</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="677"/>
+        <location filename="../qml/main.qml" line="680"/>
         <source>Automatic updates</source>
         <translation>Автоматические обновления</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="681"/>
+        <location filename="../qml/main.qml" line="684"/>
         <source>Automatically check for Pext updates</source>
         <translation>Автоматически проверять обновления</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="688"/>
+        <location filename="../qml/main.qml" line="691"/>
         <source>Automatically update modules and themes</source>
         <translation>Автоматически обновлять модули и темы</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="695"/>
+        <location filename="../qml/main.qml" line="698"/>
         <source>Always show tray icon</source>
         <translation>Всегда показывать иконку</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="706"/>
+        <location filename="../qml/main.qml" line="709"/>
         <source>About</source>
         <translation>О программе</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="721"/>
+        <location filename="../qml/main.qml" line="724"/>
         <source>Visit homepage</source>
         <translation>Посетить домашнюю страницу</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="740"/>
+        <location filename="../qml/main.qml" line="743"/>
         <source>Clear</source>
         <translation>Очистить</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="740"/>
+        <location filename="../qml/main.qml" line="743"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="749"/>
+        <location filename="../qml/main.qml" line="752"/>
         <source>Type to search</source>
         <translation>Поиск</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="860"/>
+        <location filename="../qml/main.qml" line="863"/>
         <source>Processing: %1 (%2)</source>
         <translation>Обработка: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="862"/>
+        <location filename="../qml/main.qml" line="865"/>
         <source>Ready</source>
         <translation>Готово</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="862"/>
+        <location filename="../qml/main.qml" line="865"/>
         <source>Waiting</source>
         <translation>Ожидание</translation>
     </message>

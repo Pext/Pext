@@ -1022,6 +1022,8 @@ class ModuleManager():
             "contextMenuModel", vm.context_menu_model_list)
         module_context.setContextProperty(
             "contextMenuEnabled", False)
+        module_context.setContextProperty(
+            "searchInputFieldEmpty", True)
 
         # Prepare module
         try:
@@ -1585,6 +1587,7 @@ class ViewModel():
 
         if QQmlProperty.read(self.search_input_model, "text") != "":
             QQmlProperty.write(self.search_input_model, "text", "")
+            self.context.setContextProperty("searchInputFieldEmpty", True)
             return
 
         if self.selection_thread and self.selection_thread.is_alive():
@@ -1615,6 +1618,7 @@ class ViewModel():
         visible in the search bar.
         """
         search_string = QQmlProperty.read(self.search_input_model, "text").lower()
+        self.context.setContextProperty("searchInputFieldEmpty", not search_string)
 
         # Don't search if nothing changed
         if not new_entries and search_string == self.last_search:
@@ -1817,6 +1821,7 @@ class ViewModel():
             "resultListModelDepth", len(self.selection))
 
         QQmlProperty.write(self.search_input_model, "text", "")
+        self.context.setContextProperty("searchInputFieldEmpty", True)
         self.search(new_entries=True, manual=True)
         self._clear_queue()
         self.window.update()

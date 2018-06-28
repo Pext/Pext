@@ -126,7 +126,6 @@ Item {
             Layout.rowSpan: 1
             Layout.columnSpan: 1
 
-
             Item {
                 width: parent.width
                 visible: headerText.text
@@ -150,8 +149,25 @@ Item {
             }
 
             BusyIndicator {
-                visible: !resultList.hasEntries
+                visible: !resultList.hasEntries && searchInputFieldEmpty
                 anchors.centerIn: parent
+            }
+
+            TextEdit {
+                visible: resultList.hasEntries && resultList.normalEntries == 0 && resultList.commandEntries == 0 && !searchInputFieldEmpty
+
+                text: "<h2>" + qsTr("No results") + "</h2>"
+
+                anchors.centerIn: parent
+                color: palette.text
+                textFormat: TextEdit.RichText
+                readOnly: true
+                selectByMouse: false
+                wrapMode: TextEdit.Wrap
+                horizontalAlignment: TextEdit.AlignHCenter
+                verticalAlignment: TextEdit.AlignVCenter
+                Layout.fillHeight: true
+                Layout.fillWidth: true
             }
 
             ListView {

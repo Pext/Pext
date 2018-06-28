@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Metadata i18n support
+- No result text when filtering empties list
 
 ### Fixed
 - Pext on macOS now ignores -psn_0_* arguments
