@@ -260,7 +260,7 @@ class Action(Enum):
         key -- the entry to set it for
         value -- the value to set it to
 
-        Example: self.q.put([Action.set_entry_info, "Audio settings", "Change the audio settings")
+        Example: self.q.put([Action.set_entry_info, "Audio settings", "Change the audio settings"])
 
     replace_entry_info_dict:
         Introduced in API version 0.5.
