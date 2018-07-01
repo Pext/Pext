@@ -13,7 +13,7 @@ after_test:
   - XCOPY /E /H /Y /C "*" ..\Build\Pext\
   - XCOPY /E /H /Y /C "C:\Miniconda3-x64\envs\Pext\*" ..\Build\
   - ps: echo "CD /d %~dp0" > ..\Build\Pext.bat1
-  - ps: echo "START .\python .\Pext\pext %*" >> ..\Build\Pext.bat1
+  - ps: echo "START .\pythonw .\Pext\pext %*" >> ..\Build\Pext.bat1
   - ps: get-content ..\Build\Pext.bat1 | set-content ..\Build\Pext.bat
   - DEL ..\Build\Pext.bat1
   - cd ..\Build
