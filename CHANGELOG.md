@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - USE_INTERNAL_UPDATER is now used correctly
 - Terminal window opening on Windows
 - macOS certificate check failing on update check
+- Off-by-one error in git describe version generation
 
 ## [0.16] - 2018-06-22
 ### Packaging changes

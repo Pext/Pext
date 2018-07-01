@@ -81,7 +81,7 @@ def describe(directory):
                     if commit_count == 0:
                         return tag_name
                     else:
-                        return "{}-{}-g{}".format(tag_name, commit_count + 1, latest_commit.id.decode('utf-8')[:7])
+                        return "{}-{}-g{}".format(tag_name, commit_count, latest_commit.id.decode('utf-8')[:7])
 
             commit_count += 1
 
