@@ -364,7 +364,7 @@
     <message>
         <location filename="../qml/ModuleData.qml" line="159"/>
         <source>No results</source>
-        <translation type="unfinished"></translation>
+        <translation>沒有結果</translation>
     </message>
 </context>
 <context>
