@@ -686,7 +686,7 @@ ApplicationWindow {
 
                 MenuItem {
                     objectName: "menuEnableObjectUpdateCheck"
-                    text: qsTr("Install new modules and themes automatically")
+                    text: qsTr("Download and install new modules and themes automatically")
                     checkable: true
                 }
             }
