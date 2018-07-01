@@ -74,7 +74,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
         <source>Download source:</source>
-        <translation></translation>
+        <translation>Źródło:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
@@ -636,12 +636,10 @@
     <message numerus="yes">
         <location filename="../qml/main.qml" line="830"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation>
-            <numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Aktualnie masz zainstalowanych %n modułów. Możesz zarządzać modułami w menu Moduły.</numerusform>
-            <numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Aktualnie masz zainstalowanych %n modułów. Możesz zarządzać modułami w menu Moduły.</numerusform>
-            <numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Aktualnie masz zainstalowanych %n modułów. Możesz zarządzać modułami w menu Moduły.</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Aktualnie masz zainstalowany %n moduł. Możesz zarządzać modułami w menu Moduły.</numerusform>
+        <numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Liczba zainstalowanych modułów wynosi: %n . Możesz zarządzać modułami w menu Moduły.</numerusform>
+        <numerusform>Aby zacząć, kliknij &lt;kbd&gt;%1&lt;/kbd&gt; aby otworzyć nową kartę. Możesz ją zamknąć używając &lt;kbd&gt;%2&lt;/kbd&gt;. Liczba zainstalowanych modułów wynosi: %n . Możesz zarządzać modułami w menu Moduły.</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="336"/>
         <source>Manage modules</source>
