@@ -38,7 +38,8 @@ setup(
     install_requires=[
         'dulwich',
         'pynput',
-        'pyqt5'
+        'pyqt5',
+        'requests'
     ] + extra_deps,
     description='Python-based extendable tool',
     long_description='A Python-based application that uses modules for extendability',

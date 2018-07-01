@@ -50,8 +50,9 @@ try:
     from typing import Any, Dict, List, Optional, Tuple
 except ImportError:
     from backports.typing import Any, Dict, List, Optional, Tuple  # type: ignore
-from urllib.request import urlopen
 from queue import Queue, Empty
+
+import requests
 
 from dulwich import porcelain
 from dulwich.repo import Repo
@@ -1418,8 +1419,8 @@ class UpdateManager():
 
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
-        with urlopen('https://pext.hackerchick.me/version/stable') as update_url:
-            available_version = update_url.readline().decode("utf-8").strip()
+        r = requests.get('https://pext.hackerchick.me/version/stable')
+        available_version = r.text.splitlines()[0].strip()
 
         # Normalize own version
         if self.version.find('+') != -1:
@@ -2682,7 +2683,7 @@ class Window(QMainWindow):
         last_update_check = Settings.get('last_update_check')
 
         if manual or last_update_check is None or (time.time() - float(last_update_check) > 86400):
-            if not USE_INTERNAL_UPDATER:
+            if USE_INTERNAL_UPDATER:
                 if manual or Settings.get('update_check'):
                     threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
 
@@ -3211,14 +3212,13 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.install_module:
         for metadata_url in args.install_module:
             try:
-                with urlopen(metadata_url) as unparsed_metadata:
-                    metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
+                metadata = requests.get(metadata_url).json()
 
                 try:
-                    with urlopen(re.sub('\.json$', '{}_.json'
-                                        .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
-                                        '')) as unparsed_metadata_i18n:
-                        metadata.update(json.loads(unparsed_metadata_i18n.read().decode('utf-8')))
+                    r = requests.get(re.sub('\.json$', '{}_.json'
+                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
+                                     ''))
+                    metadata.update(r.json())
                 except Exception as e:
                     pass
 
@@ -3265,14 +3265,13 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.install_theme:
         for metadata_url in args.install_theme:
             try:
-                with urlopen(metadata_url) as unparsed_metadata:
-                    metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
+                metadata = requests.get(metadata_url).json()
 
                 try:
-                    with urlopen(re.sub('\.json$', '{}_.json'
-                                        .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
-                                        '')) as unparsed_metadata_i18n:
-                        metadata.update(json.loads(unparsed_metadata_i18n.read().decode('utf-8')))
+                    r = requests.get(re.sub('\.json$', '{}_.json'
+                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
+                                     ''))
+                    metadata.update(r.json())
                 except Exception as e:
                     pass
 

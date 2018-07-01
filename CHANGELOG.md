@@ -6,12 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Packaging changes
+- New dependency: [requests](https://pypi.org/project/requests/)
+
 ### Added
 - Metadata i18n support
 - No result text when filtering empties list
 
 ### Fixed
 - Pext on macOS now ignores -psn_0_* arguments
+- USE_INTERNAL_UPDATER is now used correctly
+- Terminal window opening on Windows
+- macOS certificate check failing on update check
 
 ## [0.16] - 2018-06-22
 ### Packaging changes
