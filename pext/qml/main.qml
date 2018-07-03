@@ -22,6 +22,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
+import QtQuick.Extras 1.0
 
 ApplicationWindow {
     id: applicationWindow
