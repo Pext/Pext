@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.17] - 2018-07-08
 ### Packaging changes
 - New dependency: [requests](https://pypi.org/project/requests/)
 
@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Terminal window opening on Windows
 - macOS certificate check failing on update check
 - Off-by-one error in git describe version generation
+- Installing module fails (rebuild on dulwich 0.9.15)
 
 ## [0.16] - 2018-06-22
 ### Packaging changes
