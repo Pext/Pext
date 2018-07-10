@@ -6,22 +6,22 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation></translation>
+        <translation>Mu Pext</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="51"/>
         <source>Copyright</source>
-        <translation></translation>
+        <translation>Còir-lethbhreac</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="83"/>
         <source>Translators</source>
-        <translation></translation>
+        <translation>Eadar-theangadairean</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="90"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation></translation>
+        <translation>Togair a&apos; cuideachadh eadar-theangaich Pext?  Toilich briog an seo.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="91"/>
