@@ -6,7 +6,7 @@ with open(os.path.join('pext', 'VERSION')) as version_file:
     version_file_version = version_file.read().strip()
 
 try:
-    from pext.git_describe import describe
+    from dulwich.porcelain import describe
     version = describe(os.path.dirname(os.path.abspath(__file__))).lstrip('v').replace('-', '+', 1).replace('-', '.')
     with open(os.path.join('pext', 'VERSION'), "w") as version_file:
         version_file.write(version)

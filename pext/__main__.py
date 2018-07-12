@@ -1407,8 +1407,7 @@ class UpdateManager():
     @staticmethod
     def get_version(directory: str) -> Optional[str]:
         """Get the version of the git-managed directory."""
-        from git_describe import describe
-        return describe(directory)
+        return porcelain.describe(directory)
 
     @staticmethod
     def get_last_updated(directory: str) -> Optional[datetime]:
