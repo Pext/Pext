@@ -44,7 +44,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Module source:</source>
-        <translation type="unfinished">Источник модуля:</translation>
+        <translation>Источник модуля:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
@@ -54,12 +54,12 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished">В этом источнике не найдено модулей.</translation>
+        <translation>В этом источнике не найдено модулей.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished">В этом источнике не найдено тем.</translation>
+        <translation>В этом источнике не найдено тем.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
@@ -364,7 +364,7 @@
     <message>
         <location filename="../qml/ModuleData.qml" line="159"/>
         <source>No results</source>
-        <translation type="unfinished"></translation>
+        <translation>Результаты не найдены</translation>
     </message>
 </context>
 <context>
@@ -437,12 +437,12 @@
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation type="unfinished">Менеджер обновлений</translation>
+        <translation>Менеджер обновлений</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation type="unfinished">Разрешить Pext автоматически проверять обновления? Вы в любой момент сможете изменить своё решение в меню настроек.</translation>
+        <translation>Разрешить Pext автоматически проверять обновления? Вы в любой момент сможете изменить своё решение в меню настроек.</translation>
     </message>
 </context>
 <context>
