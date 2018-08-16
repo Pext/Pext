@@ -10,7 +10,6 @@
 
 ## Contents
 
-- [Community](#community)
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
 - [Installation](#installation)
@@ -22,19 +21,9 @@
 - [Troubleshooting](#troubleshooting)
   - [GNU/Linux](#gnulinux-1)
   - [Windows](#windows)
+- [Community](#community)
 - [License](#license)
 
-## Community
-
-If you need support or just want to chat with our community, we have the following options:
-
-- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
-- Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
-- Telegram: [@PextTool](https://t.me/PextTool)
-
-All these channels are linked to each other, so there is no need to worry about missing out.
-
-We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## Introduction
 
@@ -155,6 +144,18 @@ The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu. Y
 
 Pext user report: <https://github.com/Pext/Pext/issues/11>
 Ubuntu bug: <https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826>
+
+## Community
+
+If you need support or just want to chat with our community, we have the following options:
+
+- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
+- Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
+- Telegram: [@PextTool](https://t.me/PextTool)
+
+All these channels are linked to each other, so there is no need to worry about missing out.
+
+We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## License
 
