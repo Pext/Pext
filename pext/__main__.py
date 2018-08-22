@@ -3057,7 +3057,13 @@ class ModuleOptionParser(argparse.Action):
         modules = namespace._modules
 
         if self.dest == 'module':
-            modules.append({'name': value, 'settings': {}})
+            module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
+            data = ObjectManager.list_object(os.path.join(module_dir, value.replace('.', '_')))
+            if not data:
+                print("Could not find module {}".format(value))
+                return
+
+            modules.append({'metadata': data['metadata'], 'settings': {}})
             setattr(namespace, '_modules', modules)
         else:
             modules[-1]['settings'][self.dest[len('module-'):]] = value

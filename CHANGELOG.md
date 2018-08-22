@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Move upstream URLs to pext.io
 
+### Fixed
+- Fixed --module flag
+
 ## [0.18] - 2018-08-22
 ### Added
 - Belarusian translation (thanks, Nelly Simkova!)
