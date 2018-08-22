@@ -43,7 +43,7 @@ setup(
     ] + extra_deps,
     description='Python-based extendable tool',
     long_description='A Python-based application that uses modules for extendability',
-    url='https://pext.hackerchick.me/',
+    url='https://pext.io/',
     author='Sylvia van Os',
     author_email='sylvia@hackerchick.me',
     license='GPLv3+',

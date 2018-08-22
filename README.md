@@ -171,4 +171,4 @@ Under artwork and documentation fall:
 - All Markdown files in the root directory.
 - logo.png
 
-When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as Lilly the leoger by White Paper Fox. Alternatively, it may be referred to as the Pext logo. Please link to Pext with <https://github.com/Pext/Pext> or <https://pext.hackerchick.me/> and to White Paper Fox with <http://www.whitepaperfox.com/> where possible.
+When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as Lilly the leoger by White Paper Fox. Alternatively, it may be referred to as the Pext logo. Please link to Pext with <https://github.com/Pext/Pext> or <https://pext.io/> and to White Paper Fox with <http://www.whitepaperfox.com/> where possible.

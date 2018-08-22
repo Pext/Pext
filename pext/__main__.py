@@ -1418,7 +1418,7 @@ class UpdateManager():
 
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
-        r = requests.get('https://pext.hackerchick.me/version/stable')
+        r = requests.get('https://pext.io/version/stable')
         available_version = r.text.splitlines()[0].strip()
 
         # Normalize own version
@@ -2693,10 +2693,10 @@ class Window(QMainWindow):
             Settings.set('last_update_check', time.time())
 
     def _show_homepage(self) -> None:
-        webbrowser.open('https://pext.hackerchick.me/')
+        webbrowser.open('https://pext.io/')
 
     def _show_download_page(self) -> None:
-        webbrowser.open('https://pext.hackerchick.me/download')
+        webbrowser.open('https://pext.io/download')
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""

@@ -367,10 +367,10 @@ ApplicationWindow {
                     property var repositories:
                         [{
                           "name": "Pext team",
-                          "url": "https://pext.hackerchick.me/modules_v2.json"
+                          "url": "https://pext.io/modules_v2.json"
                         }, {
                           "name": "Other developers",
-                          "url": "https://pext.hackerchick.me/third_party_modules_v2.json"
+                          "url": "https://pext.io/third_party_modules_v2.json"
                         }]
 
                     onTriggered: {
@@ -458,10 +458,10 @@ ApplicationWindow {
                     property var repositories:
                         [{
                           "name": "Pext team",
-                          "url": "https://pext.hackerchick.me/themes_v2.json"
+                          "url": "https://pext.io/themes_v2.json"
                         }, {
                           "name": "Other developers",
-                          "url": "https://pext.hackerchick.me/third_party_themes_v2.json"
+                          "url": "https://pext.io/third_party_themes_v2.json"
                         }]
 
                     onTriggered: {
