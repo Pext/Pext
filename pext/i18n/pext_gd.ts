@@ -26,7 +26,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="91"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation></translation>
+        <translation>Bu math a&apos; Phext sgioba taing feadhainn seo air eadar-mhìneachadh Pext:</translation>
     </message>
 </context>
 <context>
@@ -34,32 +34,32 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation></translation>
+        <translation>Mòideal suidheachadh</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation></translation>
+        <translation>Ùrlar suidheachadh</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Module source:</source>
-        <translation></translation>
+        <translation>Mòideal bun:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Theme source:</source>
-        <translation></translation>
+        <translation>Ùrlar bun:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No modules available from this source.</source>
-        <translation></translation>
+        <translation>Chan &apos;eil mòideal sam bith ri làimh ás bun seo.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No themes available from this source.</source>
-        <translation></translation>
+        <translation>Chan &apos;eil ùrlar sam bith ri làimh ás bun seo.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
@@ -69,7 +69,7 @@
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="79"/>
         <source>Module:</source>
-        <translation></translation>
+        <translation>Mòideal:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
