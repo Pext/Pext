@@ -5,9 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.18] - 2018-08-22
 ### Added
 - Belarusian translation (thanks, Nelly Simkova!)
+
+### Fixed
+- Module installation issues in Windows distribution
 
 ## [0.17] - 2018-07-08
 ### Packaging changes
