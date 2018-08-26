@@ -47,9 +47,9 @@ from pkg_resources import parse_version
 from shutil import rmtree
 from subprocess import check_call, CalledProcessError, Popen
 try:
-    from typing import Any, Dict, List, Optional, Tuple
+    from typing import Any, Callable, Dict, List, Optional, Tuple
 except ImportError:
-    from backports.typing import Any, Dict, List, Optional, Tuple  # type: ignore
+    from backports.typing import Any, Callable, Dict, List, Optional, Tuple  # type: ignore  # noqa: F401
 from queue import Queue, Empty
 
 import requests
@@ -306,10 +306,11 @@ class MainLoop():
     ensures these events get managed without locking up the UI.
     """
 
-    def __init__(self, app: QApplication, window: 'Window') -> None:
+    def __init__(self, app: QApplication, window: 'Window', main_loop_queue: Queue) -> None:
         """Initialize the main loop."""
         self.app = app
         self.window = window
+        self.main_loop_queue = main_loop_queue
 
     def _process_tab_action(self, tab: Dict, active_tab: int) -> None:
         action = tab['queue'].get_nowait()
@@ -577,6 +578,12 @@ class MainLoop():
     def run(self) -> None:
         """Process actions modules put in the queue and keep the window working."""
         while True:
+            try:
+                main_loop_request = self.main_loop_queue.get_nowait()
+                main_loop_request()
+            except Empty:
+                pass
+
             self.app.sendPostedEvents()
             self.app.processEvents()
             Logger.show_next_message()
@@ -2966,6 +2973,41 @@ class Tray():
         self.tray.hide()
 
 
+class HotkeyHandler():
+    """Handles global hotkey presses."""
+
+    def __init__(self, needs_main_loop_queue: Queue, window: Window) -> None:
+        """Initialize the global hotkey handler."""
+        self.window = window
+        self.pressed = []  # type: List[Union[keyboard.Key, keyboard.KeyCode]]
+        self.needs_main_loop_queue = needs_main_loop_queue
+
+        listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
+        listener.start()
+
+    def on_press(self, key) -> bool:
+        """Executed when a key is pressed."""
+        if key is None:
+            return True
+
+        if key not in self.pressed:
+            self.pressed.append(key)
+
+        if len(self.pressed) == 2 and self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`':
+            self.needs_main_loop_queue.put(self.window.show)
+
+        return True
+
+    def on_release(self, key) -> bool:
+        """Executed when a key is released."""
+        try:
+            self.pressed.remove(key)
+        except KeyError:
+            pass
+
+        return True
+
+
 class Settings():
     """A globally accessible class that stores all Pext's settings."""
 
@@ -3462,8 +3504,12 @@ def main() -> None:
     if not platform.system() == 'Windows':
         signal.signal(signal.SIGUSR1, signal_handler.handle)
 
+    # Start handling the global hotkey
+    needs_main_loop_queue = Queue()  # type: Queue[Callable[[], None]]
+    HotkeyHandler(needs_main_loop_queue, window)
+
     # Create a main loop
-    main_loop = MainLoop(app, window)
+    main_loop = MainLoop(app, window, needs_main_loop_queue)
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
