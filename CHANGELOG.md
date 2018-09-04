@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Fixed --module flag
+- Fixed module install screens (from URL and from repo) failing when redirected
 
 ## [0.18] - 2018-08-22
 ### Added

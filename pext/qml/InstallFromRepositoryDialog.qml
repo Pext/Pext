@@ -171,9 +171,13 @@ Dialog {
     function getData(url, callback) {
         var xmlhttp = new XMLHttpRequest();
 
+        var responseStart = 0;
+
         xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE) {
-                callback(url, xmlhttp.response, xmlhttp.status);
+            if (xmlhttp.readyState == XMLHttpRequest.LOADING && xmlhttp.status.toString().startsWith("3")) {
+                responseStart = xmlhttp.responseText.length;
+            } else if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+                callback(url, xmlhttp.response.substring(responseStart), xmlhttp.status);
             }
         }
 

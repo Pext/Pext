@@ -52,9 +52,13 @@ Dialog {
     onAccepted: {
         var xmlhttp = new XMLHttpRequest();
 
+        var responseStart = 0;
+
         xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
-                var metadata = JSON.parse(xmlhttp.response);
+            if (xmlhttp.readyState == XMLHttpRequest.LOADING && xmlhttp.status.toString().startsWith("3")) {
+                responseStart = xmlhttp.responseText.length;
+            } else if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
+                var metadata = JSON.parse(xmlhttp.response.substring(responseStart));
                 installRequest(metadata.git_urls[0], metadata.id, metadata.name)
             }
         }
