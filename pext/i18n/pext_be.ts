@@ -609,32 +609,37 @@
         <translation>Толькі ўручную: Згортваць у трэй</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="706"/>
+        <location filename="../qml/main.qml" line="700"/>
+        <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="713"/>
         <source>&amp;Help</source>
         <translation>&amp;Дапамога</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="720"/>
+        <location filename="../qml/main.qml" line="727"/>
         <source>Check for updates</source>
         <translation>Праверыць абнаўлення</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="788"/>
+        <location filename="../qml/main.qml" line="795"/>
         <source>Design philosophy</source>
         <translation>Філасофія дызайну</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="789"/>
+        <location filename="../qml/main.qml" line="796"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>Pext створаны, каб не адцягваць вас. Як толькі модуль вырашыць, што вы завяршылі працу з ім, Pext тут жа схаваецца ў трэі. Калі вам спатрэбіцца скарыстацца Pext зноў, проста адкрыйце яго яшчэ раз або націсніце на абразок у трэі.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="830"/>
+        <location filename="../qml/main.qml" line="837"/>
         <source>Getting started</source>
         <translation>Пачатак працы</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="831"/>
+        <location filename="../qml/main.qml" line="838"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Для пачатку, націсніце &lt;kbd&gt;%1&lt;/kbd&gt;, каб адкрыць новую ўкладку. Калі вы скончыце працаваць з укладкай можна зачыніць яе, націснуўшы &lt;kbd&gt;%2&lt;/kbd&gt;. У вас зараз ўстаноўлена %n модуль. Вы можаце кіраваць модулямі з меню Модуляў.</numerusform>
@@ -673,47 +678,47 @@
         <translation>Аўтаматычна абнаўляць модулі і тэмы</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="699"/>
+        <location filename="../qml/main.qml" line="706"/>
         <source>Always show tray icon</source>
         <translation>Заўсёды паказваць абразок</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="710"/>
+        <location filename="../qml/main.qml" line="717"/>
         <source>About</source>
         <translation>Аб праграме</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="725"/>
+        <location filename="../qml/main.qml" line="732"/>
         <source>Visit homepage</source>
         <translation>Наведаць дамашнюю старонку</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="744"/>
+        <location filename="../qml/main.qml" line="751"/>
         <source>Clear</source>
         <translation>Ачысціць</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="744"/>
+        <location filename="../qml/main.qml" line="751"/>
         <source>Back</source>
         <translation>Назад</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="753"/>
+        <location filename="../qml/main.qml" line="760"/>
         <source>Type to search</source>
         <translation>Пошук</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="864"/>
+        <location filename="../qml/main.qml" line="871"/>
         <source>Processing: %1 (%2)</source>
         <translation>Апрацоўка: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="866"/>
+        <location filename="../qml/main.qml" line="873"/>
         <source>Ready</source>
         <translation>Гатова</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="866"/>
+        <location filename="../qml/main.qml" line="873"/>
         <source>Waiting</source>
         <translation>Чаканне</translation>
     </message>
