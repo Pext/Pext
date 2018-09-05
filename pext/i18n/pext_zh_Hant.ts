@@ -611,7 +611,7 @@
     <message>
         <location filename="../qml/main.qml" line="700"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>按下全域快捷鍵 (%1) 時，將 Pext 移動到前景</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="713"/>
