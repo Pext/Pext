@@ -2086,6 +2086,8 @@ class Window(QMainWindow):
             QObject, "menuMinimizeNormallyManually")
         menu_minimize_to_tray_manually_shortcut = self.window.findChild(
             QObject, "menuMinimizeToTrayManually")
+        menu_enable_global_hotkey_shortcut = self.window.findChild(
+            QObject, "menuEnableGlobalHotkey")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
         self.menu_enable_update_check_shortcut = self.window.findChild(
@@ -2135,6 +2137,7 @@ class Window(QMainWindow):
         menu_minimize_to_tray_shortcut.toggled.connect(self._menu_minimize_to_tray)
         menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
+        menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
         self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
@@ -2180,6 +2183,9 @@ class Window(QMainWindow):
                            "checked",
                            int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
 
+        QQmlProperty.write(menu_enable_global_hotkey_shortcut,
+                           "checked",
+                           Settings.get('global_hotkey_enabled'))
         QQmlProperty.write(menu_show_tray_icon_shortcut,
                            "checked",
                            Settings.get('tray'))
@@ -2592,6 +2598,9 @@ class Window(QMainWindow):
         if enabled:
             Settings.set('minimize_mode', MinimizeMode.TrayManualOnly)
 
+    def _menu_enable_global_hotkey_shortcut(self, enabled: bool) -> None:
+        Settings.set('global_hotkey_enabled', enabled)
+
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
         Settings.set('tray', enabled)
         try:
@@ -2993,7 +3002,7 @@ class HotkeyHandler():
         if key not in self.pressed:
             self.pressed.append(key)
 
-        if len(self.pressed) == 2 and self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`':
+        if len(self.pressed) == 2 and self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`' and Settings.get('global_hotkey_enabled'):
             self.needs_main_loop_queue.put(self.window.show)
 
         return True
@@ -3022,6 +3031,7 @@ class Settings():
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
+        'global_hotkey_enabled': True,
         'tray': True
     }
 

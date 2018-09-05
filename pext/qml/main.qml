@@ -695,6 +695,13 @@ ApplicationWindow {
             }
 
             MenuItem {
+                visible: platform == 'Darwin'
+                objectName: "menuEnableGlobalHotkey"
+                text: qsTr("Move Pext to the foreground when global hotkey is pressed (%1)").arg(QKeySequence("Ctrl+`"))
+                checkable: true
+            }
+
+            MenuItem {
                 objectName: "menuShowTrayIcon"
                 text: qsTr("Always show tray icon")
                 checkable: true
