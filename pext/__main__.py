@@ -695,7 +695,7 @@ class ProfileManager():
         self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
         self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
-                               'last_update_check', 'update_check', 'object_update_check']
+                               'global_hotkey_enabled', 'last_update_check', 'update_check', 'object_update_check']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -3002,7 +3002,9 @@ class HotkeyHandler():
         if key not in self.pressed:
             self.pressed.append(key)
 
-        if len(self.pressed) == 2 and self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`' and Settings.get('global_hotkey_enabled'):
+        if (len(self.pressed) == 2 and
+                self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`' and
+                Settings.get('global_hotkey_enabled')):
             self.needs_main_loop_queue.put(self.window.show)
 
         return True
