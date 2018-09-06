@@ -34,7 +34,7 @@ ApplicationWindow {
     minimumWidth: 500
     minimumHeight: 300
     width: Screen.width
-    height: 300
+    height: Math.max(300, 0.3 * Screen.height)
 
     flags: Qt.Window
 
