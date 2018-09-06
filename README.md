@@ -18,6 +18,9 @@
   - [Windows](#windows)
 - [Usage](#usage)
 - [Hotkeys](#hotkeys)
+- [Troubleshooting](#troubleshooting)
+  - [GNU/Linux](#gnulinux-1)
+  - [Windows](#windows)
 - [Community](#community)
 - [License](#license)
 
@@ -81,7 +84,7 @@ Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md) (not r
 
 ### macOS
 
-A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases).
+A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). If you use [Homebrew](https://brew.sh), you can use `brew cask install pext` on the command line.
 
 Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
@@ -124,7 +127,23 @@ For command line options, use `--help`.
 
 ### Session management
 
-- Ctrl+Q: Quit
+- Ctrl+Q: Quit and save the currently loaded modules and settings to the profile
+- Ctrl+Shift+Q: Quit without saving to the profile
+
+## Troubleshooting
+
+### GNU/Linux
+
+#### Installing module dependencies fails
+
+Your distribution may ship with an outdated version of pip. Run ``pip install --upgrade pip`` (possibly as root) in a terminal.
+
+#### Pext's window is completely white
+
+The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu. You can work around this by running ``sudo apt-get install python3-opengl``.
+
+Pext user report: <https://github.com/Pext/Pext/issues/11>
+Ubuntu bug: <https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826>
 
 ## Community
 
