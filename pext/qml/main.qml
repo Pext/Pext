@@ -36,6 +36,15 @@ ApplicationWindow {
     width: Screen.width
     height: Math.max(300, 0.3 * Screen.height)
 
+    signal confirmedClose()
+
+    onClosing: {
+        close.accepted = false;
+        var confirmQuitDialog = Qt.createComponent("ConfirmQuitDialog.qml");
+        confirmQuitDialog.createObject(applicationWindow,
+            {"confirmedClose": confirmedClose});
+    }
+
     flags: Qt.Window
 
     SystemPalette { id: palette; colorGroup: SystemPalette.Active }

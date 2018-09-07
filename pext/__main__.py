@@ -2002,7 +2002,7 @@ class Window(QMainWindow):
         self.window = self.engine.rootObjects()[0]
 
         # Override quit and minimize
-        self.window.closing.connect(self.quit)
+        self.window.confirmedClose.connect(self.quit)
         self.window.windowStateChanged.connect(self._process_window_state)
 
         # Give QML the module info

@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Are you sure message when closing Pext normally
+
 ### Changed
 - Pick a more reasonable height on wide screens
 
