@@ -611,7 +611,7 @@
     <message>
         <location filename="../qml/main.qml" line="700"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Разгарніце Pext націскам гарачай клавішы (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="713"/>
