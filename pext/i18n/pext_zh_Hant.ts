@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="30"/>
@@ -43,7 +43,11 @@
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>您將要離開 Pext。
+
+這將會停止任何執行中的模組，且全域快捷鍵在您手動重新啟動 Pext 前將會無法運作。
+
+您確定您想要離開嗎？</translation>
     </message>
 </context>
 <context>
@@ -386,7 +390,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="159"/>
         <source>You are currently %1 levels deep into this module. Using the Clear/Back button on the top may unlock more search results</source>
-        <translation type="unfinished"></translation>
+        <translation>您目前在此模組中深 %1 層的地方。使用頂部的清除／返回鈕可能會解鎖更多搜尋結果</translation>
     </message>
 </context>
 <context>
