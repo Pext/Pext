@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="30"/>
@@ -43,7 +43,11 @@
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Du er i ferd med å avslutte Pext.
+
+Dette vil avslutte enhver kjørende modul, og den globale tastatursnarveien vil ikke virke før du starter Pext på nytt manuelt.
+
+Er du sikker på at du vil avslutte?</translation>
     </message>
 </context>
 <context>
@@ -386,7 +390,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="159"/>
         <source>You are currently %1 levels deep into this module. Using the Clear/Back button on the top may unlock more search results</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Du er nå %1 nivåer inne i denne modulen. Å bruke tøm/tilbake-knappen på toppen kan låse opp flere søkeresultater.</translation>
     </message>
 </context>
 <context>
@@ -633,7 +637,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="709"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Flytt Pext til forgrunnen når global tastatursnarvei brukes (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="722"/>
