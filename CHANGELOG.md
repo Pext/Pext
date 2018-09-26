@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Pick a more reasonable height on wide screens
+- Disable macOS focus workaround on Mojave due to spammy System Events.app permission requests
 
 ## [0.19] - 2018-09-05
 ### Added

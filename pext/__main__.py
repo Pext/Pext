@@ -2240,8 +2240,10 @@ class Window(QMainWindow):
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def _macos_focus_workaround(self) -> None:
-        """Set the focus correctly after minimizing Pext on macOS."""
-        if platform.system() != 'Darwin':
+        """Set the focus correctly after minimizing Pext on macOS.
+        
+        Disabled on 10.14 (Mojave) and up, because it causes spammy requests for System Events.app access."""
+        if platform.system() != 'Darwin' or platform.mac_ver[0] >= '10.14':
             return
 
         applescript_command = ['tell application "System Events"',
