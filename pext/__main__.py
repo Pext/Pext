@@ -2090,6 +2090,8 @@ class Window(QMainWindow):
             QObject, "menuEnableGlobalHotkey")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
+        menu_install_quick_action_service = self.window.findChild(
+            QObject, "menuInstallQuickActionService")
         self.menu_enable_update_check_shortcut = self.window.findChild(
             QObject, "menuEnableUpdateCheck")
         self.menu_enable_object_update_check_shortcut = self.window.findChild(
@@ -2139,6 +2141,7 @@ class Window(QMainWindow):
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
         menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
+        menu_install_quick_action_service.triggered.connect(self._menu_install_quick_action_service)
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
         self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
 
@@ -2609,6 +2612,9 @@ class Window(QMainWindow):
             self.tray.show() if enabled else self.tray.hide()  # type: ignore
         except AttributeError:
             pass
+
+    def _menu_install_quick_action_service(self) -> None:
+        Popen(['open', os.path.join(AppFile.get_path(), 'pext.workflow')])
 
     def _menu_update_check_dialog_result(self, accepted: bool) -> None:
         self._menu_toggle_object_update_check(True)

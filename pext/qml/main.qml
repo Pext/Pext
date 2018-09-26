@@ -715,7 +715,6 @@ ApplicationWindow {
                 text: qsTr("Always show tray icon")
                 checkable: true
             }
-
         }
 
         Menu {
@@ -734,6 +733,12 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
+            }
+
+            MenuItem {
+                visible: platform == 'Darwin'
+                objectName: "menuInstallQuickActionService"
+                text: qsTr("Install quick action service")
             }
 
             MenuItem {
