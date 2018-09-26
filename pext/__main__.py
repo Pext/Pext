@@ -44,7 +44,7 @@ from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from pkg_resources import parse_version
-from shutil import rmtree
+from shutil import copytree, rmtree
 from subprocess import check_call, CalledProcessError, Popen
 try:
     from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -2614,7 +2614,13 @@ class Window(QMainWindow):
             pass
 
     def _menu_install_quick_action_service(self) -> None:
-        Popen(['open', os.path.join(AppFile.get_path(), 'pext.workflow')])
+        new_path = os.path.join(tempfile.gettempdir(), 'Pext.workflow')
+        try:
+            rmtree(new_path)
+        except IOError:
+            pass
+        copytree(os.path.join(AppFile.get_path(), 'Pext.workflow'), new_path)
+        Popen(['open', new_path])
 
     def _menu_update_check_dialog_result(self, accepted: bool) -> None:
         self._menu_toggle_object_update_check(True)
