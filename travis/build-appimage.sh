@@ -106,6 +106,16 @@ EAT
 
 chmod +x AppDir/AppRun
 
+# remove bloat
+pushd AppDir/usr
+rm -rf pkgs
+find . -type d -iname '__pycache__' -print0 | xargs -0 rm -r
+find . -type f -iname '*.so*' -print -exec strip '{}' \;
+rm -rf lib/cmake/
+rm -rf include/
+rm -rf share/{gtk-,}doc
+popd
+
 # get appimagetool
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool-x86_64.AppImage
