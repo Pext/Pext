@@ -44,7 +44,7 @@ from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from pkg_resources import parse_version
-from shutil import rmtree
+from shutil import copytree, rmtree
 from subprocess import check_call, CalledProcessError, Popen
 try:
     from typing import Any, Callable, Dict, List, Optional, Tuple
@@ -2090,6 +2090,8 @@ class Window(QMainWindow):
             QObject, "menuEnableGlobalHotkey")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
+        menu_install_quick_action_service = self.window.findChild(
+            QObject, "menuInstallQuickActionService")
         self.menu_enable_update_check_shortcut = self.window.findChild(
             QObject, "menuEnableUpdateCheck")
         self.menu_enable_object_update_check_shortcut = self.window.findChild(
@@ -2139,6 +2141,7 @@ class Window(QMainWindow):
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
         menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
+        menu_install_quick_action_service.triggered.connect(self._menu_install_quick_action_service)
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
         self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
 
@@ -2240,8 +2243,10 @@ class Window(QMainWindow):
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def _macos_focus_workaround(self) -> None:
-        """Set the focus correctly after minimizing Pext on macOS."""
-        if platform.system() != 'Darwin':
+        """Set the focus correctly after minimizing Pext on macOS.
+        
+        Disabled on 10.14 (Mojave) and up, because it causes spammy requests for System Events.app access."""
+        if platform.system() != 'Darwin' or platform.mac_ver[0] >= '10.14':
             return
 
         applescript_command = ['tell application "System Events"',
@@ -2607,6 +2612,15 @@ class Window(QMainWindow):
             self.tray.show() if enabled else self.tray.hide()  # type: ignore
         except AttributeError:
             pass
+
+    def _menu_install_quick_action_service(self) -> None:
+        new_path = os.path.join(tempfile.gettempdir(), 'Pext.workflow')
+        try:
+            rmtree(new_path)
+        except IOError:
+            pass
+        copytree(os.path.join(AppFile.get_path(), 'Pext.workflow'), new_path)
+        Popen(['open', new_path])
 
     def _menu_update_check_dialog_result(self, accepted: bool) -> None:
         self._menu_toggle_object_update_check(True)

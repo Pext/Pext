@@ -8,9 +8,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Are you sure message when closing Pext normally
+- Add installable quick action service for easier launching
 
 ### Changed
 - Pick a more reasonable height on wide screens
+- Disable macOS focus workaround on Mojave due to spammy System Events.app permission requests
+- Disable automatic typing on macOS due to above workaround removal
 
 ## [0.19] - 2018-09-05
 ### Added
