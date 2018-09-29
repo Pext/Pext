@@ -977,8 +977,10 @@ class ModuleManager():
                        'install',
                        '--isolated']
 
-        # FIXME: Cheap hack to work around Debian's faultily-patched pip (unless (mini)conda is used)
-        if "conda" not in sys.version and os.path.isfile('/etc/debian_version'):
+        # FIXME: Cheap hack to work around Debian's faultily-patched pip
+        # We try to prevent false positives by checking for (mini)conda or a venv
+        if ("conda" not in sys.version and os.path.isfile('/etc/debian_version') and
+           not hasattr(sys, 'real_prefix') and not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
             pip_command += ['--system']
 
         pip_command += ['--upgrade',
@@ -2244,9 +2246,10 @@ class Window(QMainWindow):
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS.
-        
-        Disabled on 10.14 (Mojave) and up, because it causes spammy requests for System Events.app access."""
-        if platform.system() != 'Darwin' or platform.mac_ver[0] >= '10.14':
+
+        Disabled on 10.14 (Mojave) and up, because it causes spammy requests for System Events.app access.
+        """
+        if platform.system() != 'Darwin' or platform.mac_ver()[0] >= '10.14':
             return
 
         applescript_command = ['tell application "System Events"',
