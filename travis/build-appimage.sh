@@ -78,7 +78,7 @@ chmod +x linuxdeploy*.{sh,AppImage}
 
 # make sure linuxdeploy-plugin-conda switches to repo root so that the "-e ." pip requirement can be satisfied
 export PIP_WORKDIR="$REPO_ROOT"
-"$BUILD_DIR"/linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir "$BUILD_DIR"/AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --output appimage --custom-apprun "$BUILD_DIR"/AppRun.sh -v0
+./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --output appimage --custom-apprun AppRun.sh -v0
 
 # move AppImage back to old CWD
-mv "$REPO_ROOT"/Pext-*.AppImage* "$OLD_CWD"/
+mv Pext-*.AppImage* "$OLD_CWD"/
