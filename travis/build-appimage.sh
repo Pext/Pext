@@ -58,7 +58,7 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/mast
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
-export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests -e ."
+export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests ."
 
 mkdir -p AppDir/usr/share/metainfo/
 cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
@@ -76,7 +76,7 @@ export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.App
 
 chmod +x linuxdeploy*.{sh,AppImage}
 
-# make sure linuxdeploy-plugin-conda switches to repo root so that the "-e ." pip requirement can be satisfied
+# make sure linuxdeploy-plugin-conda switches to repo root so that the "." pip requirement can be satisfied
 export PIP_WORKDIR="$REPO_ROOT"
 ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --output appimage --custom-apprun AppRun.sh -v0
 
