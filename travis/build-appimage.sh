@@ -60,7 +60,8 @@ export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
 export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests -e ."
 
-install "$REPO_ROOT"/*.appdata.xml -D -t AppDir/usr/share/metainfo/
+mkdir -p AppDir/usr/share/metainfo/
+cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
 
 # continuous releases should use the latest continuous build for updates
 APPIMAGEUPDATE_TAG=continuous
