@@ -59,6 +59,7 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/mast
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
 export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests ."
+export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
 
 mkdir -p AppDir/usr/share/metainfo/
 cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
