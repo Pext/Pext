@@ -24,6 +24,10 @@ trap cleanup EXIT
 REPO_ROOT=$(readlink -f $(dirname $(dirname "$0")))
 OLD_CWD=$(readlink -f .)
 
+pushd "$REPO_ROOT"/
+python3 setup.py || true
+popd
+
 pushd "$BUILD_DIR"/
 
 # set up custom AppRun script
@@ -99,4 +103,4 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --output appimage
 
 # move AppImage back to old CWD
-mv Pext-*.AppImage* "$OLD_CWD"/
+mv Pext*.AppImage* "$OLD_CWD"/
