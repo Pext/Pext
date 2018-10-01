@@ -24,6 +24,10 @@ trap cleanup EXIT
 REPO_ROOT=$(readlink -f $(dirname $(dirname "$0")))
 OLD_CWD=$(readlink -f .)
 
+pushd "$REPO_ROOT"/
+python3 setup.py || true
+popd
+
 pushd "$BUILD_DIR"/
 
 # set up custom AppRun script
@@ -82,4 +86,4 @@ export PIP_WORKDIR="$REPO_ROOT"
 ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --output appimage --custom-apprun AppRun.sh -v0
 
 # move AppImage back to old CWD
-mv Pext-*.AppImage* "$OLD_CWD"/
+mv Pext*.AppImage* "$OLD_CWD"/
