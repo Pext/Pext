@@ -27,8 +27,8 @@ if sys.platform == 'linux':
             ('share/icons/hicolor/scalable/apps', ['pext/images/scalable/pext.svg']),
             ('share/icons/hicolor/48x48/apps', ['pext/images/48x48/pext.png']),
             ('share/icons/hicolor/128x128/apps', ['pext/images/128x128/pext.png']),
-            ('share/applications', ['pext.desktop']),
-            ('share/metainfo', ['pext.appdata.xml'])
+            ('share/applications', ['io.pext.pext.desktop']),
+            ('share/metainfo', ['io.pext.pext.appdata.xml'])
         ]
     )
     extra_deps = []
