@@ -13,7 +13,7 @@ try:
 except Exception as e:
     print("Failed to determine version with dulwich, falling back to git describe: {}".format(e))
     try:
-        version = check_output(['git', 'describe'], cwd=pext_path).splitlines()[0]
+        version = check_output(['git', 'describe'], cwd=pext_path).splitlines()[0].encode()
     except Exception as e:
         print("Failed to determine version with git describe: {}".format(e))
 
