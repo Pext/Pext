@@ -24,10 +24,6 @@ trap cleanup EXIT
 REPO_ROOT=$(readlink -f $(dirname $(dirname "$0")))
 OLD_CWD=$(readlink -f .)
 
-pushd "$REPO_ROOT"/
-python3 setup.py || true
-popd
-
 pushd "$BUILD_DIR"/
 
 # set up custom AppRun script
@@ -62,7 +58,7 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/mast
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
-export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests ."
+export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests setuptools ."
 export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
 export OUTPUT="Pext-$VERSION-x86_64.AppImage"
 
