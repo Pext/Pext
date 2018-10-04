@@ -651,7 +651,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Dienst voor snelle actie installeren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
