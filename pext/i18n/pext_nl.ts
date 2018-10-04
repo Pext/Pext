@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="30"/>
@@ -43,7 +43,11 @@
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Je staat op het punt om Pext af te sluiten.
+
+Alle nog draaiende modules worden gestopt en de globale sneltoets werkt niet meer totdat je Pext handmatig herstart.
+
+Weet je zeker dat je wilt afsluiten?</translation>
     </message>
 </context>
 <context>
@@ -386,7 +390,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="159"/>
         <source>You are currently %1 levels deep into this module. Using the Clear/Back button on the top may unlock more search results</source>
-        <translation type="unfinished"></translation>
+        <translation>Je bent momenteel %1 niveaus verzonken in deze module. Als je de Wissen/Terug-knop bovenaan gebruikt, krijg je mogelijk meer zoekresultaten.</translation>
     </message>
 </context>
 <context>
