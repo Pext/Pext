@@ -2740,29 +2740,37 @@ class Window(QMainWindow):
 
     def close(self, manual=False, force_tray=False) -> None:
         """Close the window."""
-        if (force_tray
-                or Settings.get('minimize_mode') == MinimizeMode.Tray
-                or (manual and Settings.get('minimize_mode') == MinimizeMode.TrayManualOnly)):
+        if force_tray:
             if self.tray:
                 self.tray.show()
 
             self.window.hide()
         else:
-            self.window.showMinimized()
+            if (not manual
+                    and Settings.get('minimize_mode') in [MinimizeMode.NormalManualOnly, MinimizeMode.TrayManualOnly]):
+                return
+
+            if Settings.get('minimize_mode') in [MinimizeMode.Normal, MinimizeMode.NormalManualOnly]:
+                self.window.showMinimized()
+            else:
+                self.window.hide()
 
         self._macos_focus_workaround()
 
         if self.output_queue:
             time.sleep(0.5)
+            keyboard_device = keyboard.Controller()
 
             while True:
                 try:
-                    output = self.output_queue.pop()
+                    output = self.output_queue.pop(0)
                 except IndexError:
                     break
 
-                keyboard_device = keyboard.Controller()
                 keyboard_device.type(output)
+                if self.output_queue:
+                    keyboard_device.press(keyboard.Key.tab)
+                    keyboard_device.release(keyboard.Key.tab)
 
     def show(self) -> None:
         """Show the window."""

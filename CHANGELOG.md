@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Disable macOS focus workaround on Mojave due to spammy System Events.app permission requests
 - Disable automatic typing on macOS due to above workaround removal
 
+### Fixed
+- Minimize normally manually now works as intended
+- Autotype now correctly queues up multiple entries to type
+
 ## [0.19] - 2018-09-05
 ### Added
 - Foreground Pext at any time by pressing Ctrl+\`
