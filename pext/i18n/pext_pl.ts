@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="30"/>
@@ -43,7 +43,11 @@
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Za chwilę wyłączysz Pext&apos;a.
+
+To sprawi, że wszystkie aktywne moduły i globalne przypisania klawiszy nie będą działać dopóki nie zrestartujesz Pext&apos;a manualnie.
+
+Czy na pewno chcesz wyjść?</translation>
     </message>
 </context>
 <context>
@@ -628,7 +632,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="710"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pokaż Pext&apos;a nad innymi oknami gdy globalnie przypisany klawisz jest naciśnięty (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="722"/>
@@ -643,7 +647,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Zainstaluj usługę szybkich akcji</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
