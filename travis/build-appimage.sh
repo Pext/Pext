@@ -81,8 +81,8 @@ chmod +x linuxdeploy*.{sh,AppImage}
 export PIP_WORKDIR="$REPO_ROOT"
 
 # build AppDir using linuxdeploy
-# NO_CLEANUP makes --appimage-extract-and-run more efficient
-env NO_CLEANUP=1 ./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh -v0
+# NO_CLEANUP makes more efficient
+env NO_CLEANUP=1 ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh -v0
 
 # remove unused files from AppDir manually
 # these files are nothing the conda plugin could remove manually
@@ -96,7 +96,7 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 
 # now, actually build AppImage
 # the extracted AppImage files will be cleaned up now
-./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --output appimage
+./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
 
 # move AppImage back to old CWD
 mv Pext*.AppImage* "$OLD_CWD"/
