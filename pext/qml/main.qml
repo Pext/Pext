@@ -610,7 +610,6 @@ ApplicationWindow {
                 }
 
                 MenuItem {
-                    visible: platform != 'Darwin'
                     objectName: "menuOutputAutoType"
                     text: qsTr("Type automatically")
                     checkable: true

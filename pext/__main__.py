@@ -2249,7 +2249,7 @@ class Window(QMainWindow):
 
         Disabled on 10.14 (Mojave) and up, because it causes spammy requests for System Events.app access.
         """
-        if platform.system() != 'Darwin' or platform.mac_ver()[0] >= '10.14':
+        if platform.system() != 'Darwin':
             return
 
         applescript_command = ['tell application "System Events"',
