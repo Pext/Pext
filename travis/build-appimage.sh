@@ -96,7 +96,12 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 
 # now, actually build AppImage
 # the extracted AppImage files will be cleaned up now
-./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+#./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+
+ls -al AppDir/
+wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+chmod +x appimagetool*.AppImage
+./appimagetool*.AppImage AppDir -u "$UPD_INFO"
 
 # move AppImage back to old CWD
 mv Pext*.AppImage* "$OLD_CWD"/
