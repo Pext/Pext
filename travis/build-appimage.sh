@@ -79,7 +79,29 @@ chmod +x linuxdeploy*.{sh,AppImage}
 
 # make sure linuxdeploy-plugin-conda switches to repo root so that the "." pip requirement can be satisfied
 export PIP_WORKDIR="$REPO_ROOT"
-./linuxdeploy-x86_64.AppImage --appimage-extract-and-run --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --output appimage --custom-apprun AppRun.sh -v0
+
+# build AppDir using linuxdeploy
+# NO_CLEANUP makes more efficient
+env NO_CLEANUP=1 ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh -v0
+
+# remove unused files from AppDir manually
+# these files are nothing the conda plugin could remove manually
+rm  AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/QtWebEngine*
+rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/translations/qtwebengine*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/resources/qtwebengine*
+rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/qml/QtWebEngine*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/plugins/webview/libqtwebview*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
+
+# now, actually build AppImage
+# the extracted AppImage files will be cleaned up now
+#./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+
+ls -al AppDir/
+wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+chmod +x appimagetool*.AppImage
+./appimagetool*.AppImage AppDir -u "$UPD_INFO"
 
 # move AppImage back to old CWD
 mv Pext*.AppImage* "$OLD_CWD"/
