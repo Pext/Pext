@@ -59,7 +59,6 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/mast
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
 export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests ."
-export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
 
 mkdir -p AppDir/usr/share/metainfo/
 cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
@@ -97,6 +96,9 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 #./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
 
 ls -al AppDir/
+
+export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool*.AppImage
 ./appimagetool*.AppImage AppDir -u "$UPD_INFO"
