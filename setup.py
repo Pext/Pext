@@ -18,6 +18,9 @@ except Exception as e:
     except Exception as e:
         print("Failed to determine version with git describe: {}".format(e))
 
+if not isinstance(version, bytes):
+    version = version.encode()
+
 version = version.lstrip('v').replace('-', '+', 1).replace('-', '.')
 with open(os.path.join(pext_path, 'pext', 'VERSION'), "w") as version_file:
     version_file.write(version)
