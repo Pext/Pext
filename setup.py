@@ -9,6 +9,7 @@ with open(os.path.join(pext_path, 'pext', 'VERSION')) as version_file:
 
 try:
     from dulwich.porcelain import describe
+    print("Updating version with dulwich")
     version = describe(pext_path)
 except Exception as e:
     print("Failed to determine version with dulwich, falling back to git describe: {}".format(e))
@@ -20,6 +21,8 @@ except Exception as e:
 version = version.lstrip('v').replace('-', '+', 1).replace('-', '.')
 with open(os.path.join(pext_path, 'pext', 'VERSION'), "w") as version_file:
     version_file.write(version)
+
+print("Pext version: {}".format(version))
 
 if sys.platform == 'linux':
     extra_options = dict(
