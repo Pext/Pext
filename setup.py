@@ -3,10 +3,10 @@ import sys
 from setuptools import setup
 from subprocess import check_output
 
-with open(os.path.join('pext', 'VERSION')) as version_file:
+pext_path = os.path.dirname(os.path.abspath(__file__))
+with open(os.path.join(pext_path, 'pext', 'VERSION')) as version_file:
     version = version_file.read().strip()
 
-pext_path = os.path.dirname(os.path.abspath(__file__))
 try:
     from dulwich.porcelain import describe
     version = describe(pext_path)
@@ -18,7 +18,7 @@ except Exception as e:
         print("Failed to determine version with git describe: {}".format(e))
 
 version = version.lstrip('v').replace('-', '+', 1).replace('-', '.')
-with open(os.path.join('pext', 'VERSION'), "w") as version_file:
+with open(os.path.join(pext_path, 'pext', 'VERSION'), "w") as version_file:
     version_file.write(version)
 
 if sys.platform == 'linux':
