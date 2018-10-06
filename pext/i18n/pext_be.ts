@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="30"/>
