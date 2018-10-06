@@ -78,6 +78,7 @@ chmod +x linuxdeploy*.{sh,AppImage}
 
 # make sure linuxdeploy-plugin-conda switches to repo root so that the "." pip requirement can be satisfied
 export PIP_WORKDIR="$REPO_ROOT"
+export PIP_VERBOSE=1
 
 ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh
 
