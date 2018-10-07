@@ -98,6 +98,7 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 
 ls -al AppDir/
 
+python "$REPO_ROOT/setup.py" || true
 export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
 
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
