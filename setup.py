@@ -18,11 +18,14 @@ except Exception as e:
     except Exception as e:
         print("Failed to determine version with git describe: {}".format(e))
 
-version = version.lstrip('v').replace('-', '+', 1).replace('-', '.').encode()
-with open(os.path.join(pext_path, 'pext', 'VERSION'), "w") as version_file:
-    version_file.write(version.decode())
+if version.startswith('v'):
+    version = version[1:]
 
-print("Pext version: {}".format(version.decode()))
+version = version.replace('-', '+', 1).replace('-', '.')
+with open(os.path.join(pext_path, 'pext', 'VERSION'), "w") as version_file:
+    version_file.write(version)
+
+print("Pext version: {}".format(version))
 
 if sys.platform == 'linux':
     extra_options = dict(
@@ -44,7 +47,7 @@ else:
 
 setup(
     name='Pext',
-    version=version.decode(),
+    version=version,
     install_requires=[
         'dulwich',
         'pynput',
