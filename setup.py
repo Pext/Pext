@@ -4,21 +4,29 @@ from setuptools import setup
 from subprocess import check_output
 
 pext_path = os.path.dirname(os.path.abspath(__file__))
-with open(os.path.join(pext_path, 'pext', 'VERSION')) as version_file:
+pext_version_path = os.path.join(pext_path, 'pext', 'VERSION')
+
+with open(pext_version_path) as version_file:
     version = version_file.read().strip()
 
 try:
     from dulwich.porcelain import describe
+    print("Updating version with dulwich")
     version = describe(pext_path)
 except Exception as e:
     print("Failed to determine version with dulwich, falling back to git describe: {}".format(e))
     try:
-        version = check_output(['git', 'describe'], cwd=pext_path).splitlines()[0].encode()
+        version = check_output(['git', 'describe'], cwd=pext_path).splitlines()[0]
     except Exception as e:
         print("Failed to determine version with git describe: {}".format(e))
 
-version = version.lstrip('v').replace('-', '+', 1).replace('-', '.')
-with open(os.path.join(pext_path, 'pext', 'VERSION'), "w") as version_file:
+if isinstance(version, bytes):
+    version = version.decode()
+
+version = version.lstrip("v")
+version = version.replace('-', '+', 1).replace('-', '.')
+
+with open(pext_version_path, "w") as version_file:
     version_file.write(version)
 
 if sys.platform == 'linux':
