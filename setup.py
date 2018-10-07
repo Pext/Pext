@@ -4,7 +4,11 @@ from setuptools import setup
 from subprocess import check_output
 
 pext_path = os.path.dirname(os.path.abspath(__file__))
-with open(os.path.join(pext_path, 'pext', 'VERSION')) as version_file:
+pext_version_path = os.path.join(pext_path, 'pext', 'VERSION')
+
+print("version file path: {}".format(pext_version_path))
+
+with open(pext_version_path) as version_file:
     version = version_file.read().strip()
 
 try:
@@ -21,11 +25,10 @@ except Exception as e:
 if isinstance(version, bytes):
     version = version.decode()
 
-if version.startswith('v'):
-    version = version[1:]
-
+version = version.lstrip("v")
 version = version.replace('-', '+', 1).replace('-', '.')
-with open(os.path.join(pext_path, 'pext', 'VERSION'), "w") as version_file:
+
+with open(pext_version_path, "w") as version_file:
     version_file.write(version)
 
 print("Pext version: {}".format(version))
