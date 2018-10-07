@@ -19,7 +19,7 @@ except Exception as e:
         print("Failed to determine version with git describe: {}".format(e))
 
 if isinstance(version, bytes):
-    version = version.encode()
+    version = version.decode()
 
 if version.startswith('v'):
     version = version[1:]
