@@ -6,8 +6,6 @@ from subprocess import check_output
 pext_path = os.path.dirname(os.path.abspath(__file__))
 pext_version_path = os.path.join(pext_path, 'pext', 'VERSION')
 
-print("version file path: {}".format(pext_version_path))
-
 with open(pext_version_path) as version_file:
     version = version_file.read().strip()
 
@@ -30,8 +28,6 @@ version = version.replace('-', '+', 1).replace('-', '.')
 
 with open(pext_version_path, "w") as version_file:
     version_file.write(version)
-
-print("Pext version: {}".format(version))
 
 if sys.platform == 'linux':
     extra_options = dict(
