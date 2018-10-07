@@ -43,7 +43,11 @@
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Estás a punto de salir de Pext.
+
+Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo global no funcionará hasta que reinicie Pext manualmente.
+
+¿Seguro que quieres salir?</translation>
     </message>
 </context>
 <context>
@@ -643,7 +647,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalar servicio de acción rápida</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
