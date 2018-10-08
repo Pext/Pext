@@ -70,7 +70,7 @@ chmod a+x Pext.app/Contents/MacOS/Pext
 pushd Pext.app/Contents/Resources
 rm -rf pkgs
 find . -type d -iname '__pycache__' -print0 | xargs -0 rm -r
-find . -type f -iname '*.so*' -print -exec strip '{}' \;
+#find . -type f -iname '*.so*' -print -exec strip '{}' \;
 rm -rf lib/cmake/
 rm -rf include/
 rm -rf share/{gtk-,}doc
