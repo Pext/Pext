@@ -59,7 +59,6 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/mast
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
 export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests ."
-export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
 
 mkdir -p AppDir/usr/share/metainfo/
 cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
@@ -79,10 +78,9 @@ chmod +x linuxdeploy*.{sh,AppImage}
 
 # make sure linuxdeploy-plugin-conda switches to repo root so that the "." pip requirement can be satisfied
 export PIP_WORKDIR="$REPO_ROOT"
+export PIP_VERBOSE=1
 
-# build AppDir using linuxdeploy
-# NO_CLEANUP makes more efficient
-env NO_CLEANUP=1 ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh -v0
+./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh
 
 # remove unused files from AppDir manually
 # these files are nothing the conda plugin could remove manually
@@ -99,6 +97,10 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 #./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
 
 ls -al AppDir/
+
+python "$REPO_ROOT/setup.py" || true
+export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool*.AppImage
 ./appimagetool*.AppImage AppDir -u "$UPD_INFO"
