@@ -651,7 +651,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Installer hurtighandlingstjeneste</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
