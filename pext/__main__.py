@@ -47,9 +47,9 @@ from pkg_resources import parse_version
 from shutil import copytree, rmtree
 from subprocess import check_call, CalledProcessError, Popen
 try:
-    from typing import Any, Callable, Dict, List, Optional, Tuple
+    from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 except ImportError:
-    from backports.typing import Any, Callable, Dict, List, Optional, Tuple  # type: ignore  # noqa: F401
+    from backports.typing import Any, Callable, Dict, List, Optional, Tuple, Union  # type: ignore  # noqa: F401
 from queue import Queue, Empty
 
 import requests
@@ -287,7 +287,8 @@ class Logger():
 
             QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
+            if Logger.window.tray:
+                Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
 
             Logger.last_update = current_time
 
@@ -717,17 +718,19 @@ class ProfileManager():
     def get_lock_instance(profile: str) -> Optional[int]:
         """Get the pid of the current process having a lock, if any."""
         pidfile = ProfileManager._get_pid_path(profile)
-        if os.path.isfile(pidfile):
-            pid = int(open(pidfile, 'r').read())
-            if platform.system() == 'Windows':
-                return True
+        if not os.path.isfile(pidfile):
+            return None
 
-            try:
-                os.kill(pid, 0)
-            except ProcessLookupError:
-                return None
+        pid = int(open(pidfile, 'r').read())
+        if platform.system() == 'Windows':
+            return True
 
-            return pid
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return None
+
+        return pid
 
     @staticmethod
     def unlock_profile(profile: str) -> None:
@@ -869,7 +872,7 @@ class ObjectManager():
     """Shared management for modules and themes."""
 
     @staticmethod
-    def list_object(full_path: str) -> Optional[Dict[str, Dict[str, str]]]:
+    def list_object(full_path: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return the identifier, name, source and metadata of an object."""
         if not os.path.isdir(full_path):
             return None
@@ -927,14 +930,15 @@ class ObjectManager():
         return {"source": source, "metadata": metadata}
 
     @staticmethod
-    def list_objects(core_directory: str) -> Dict[str, Dict[str, Dict[str, str]]]:
+    def list_objects(core_directory: str) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of objects together with their identifier, name, source and metadata."""
         objects = {}
 
         for directory in os.listdir(core_directory):
             dir_object = ObjectManager.list_object(os.path.join(core_directory, directory))
-            if dir_object:
-                objects[dir_object['metadata']['id']] = dir_object
+            if dir_object and isinstance(dir_object['metadata'], dict) and 'id' in dir_object['metadata']:
+                object_id = dir_object['metadata']['id']
+                objects[object_id] = dir_object
             else:
                 # Remove corrupted entry (FIXME: Temporary?)
                 print("Removing corrupted object at {}".format(os.path.join(core_directory, directory)))
@@ -1067,7 +1071,7 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e3:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module.metadata.id, e3))
+            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['id'], e3))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1166,7 +1170,7 @@ class ModuleManager():
         # Save active modules
         ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
 
-    def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
+    def list_modules(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.module_dir)
 
@@ -1367,11 +1371,18 @@ class UpdateManager():
 
     def __init__(self) -> None:
         """Initialize the UpdateManager and store the version info of Pext."""
+        self.version = "Unknown"
         try:
-            self.version = UpdateManager.get_version(os.path.dirname(AppFile.get_path()))
+            version = UpdateManager.get_version(os.path.dirname(AppFile.get_path()))
         except Exception:
+            pass
+
+        if not version:
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
-                self.version = version_file.read().strip()
+                version = version_file.read().strip()
+
+        if version:
+            self.version = version
 
     @staticmethod
     def _path_to_repo(directory: str) -> Repo:
@@ -2324,10 +2335,12 @@ class Window(QMainWindow):
             return None
 
     def _go_up(self) -> None:
-        try:
-            self._get_current_element()['vm'].go_up()
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].go_up()
+            except TypeError:
+                pass
 
     def _open_tab(self, identifier: str, name: str, settings: str) -> None:
         module_settings = {}
@@ -2647,22 +2660,28 @@ class Window(QMainWindow):
                            Settings.get('object_update_check'))
 
     def _search(self) -> None:
-        try:
-            self._get_current_element()['vm'].search(manual=True)
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].search(manual=True)
+            except TypeError:
+                pass
 
     def _select(self) -> None:
-        try:
-            self._get_current_element()['vm'].select()
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].select()
+            except TypeError:
+                pass
 
     def _tab_complete(self) -> None:
-        try:
-            self._get_current_element()['vm'].tab_complete()
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].tab_complete()
+            except TypeError:
+                pass
 
     def _update_modules_info_qml(self) -> None:
         modules = self.module_manager.list_modules()
@@ -2771,7 +2790,10 @@ class Window(QMainWindow):
     def show(self) -> None:
         """Show the window."""
         if self.tray:
-            self.tray.show() if Settings.get('tray') else self.tray.hide()
+            if Settings.get('tray'):
+                self.tray.show()
+            else:
+                self.tray.hide()
 
         if self.window.windowState() == Qt.WindowMinimized:
             self.window.showNormal()
@@ -2813,7 +2835,7 @@ class ThemeManager():
         """Initialize the module manager."""
         self.theme_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'themes')
 
-    def _get_palette_mappings(self) -> Dict[str, int]:
+    def _get_palette_mappings(self) -> Dict[str, Dict[str, str]]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
         for key in dir(QPalette):
             value = getattr(QPalette, key)
@@ -2826,7 +2848,7 @@ class ThemeManager():
 
         return mapping
 
-    def list_themes(self) -> Dict[str, Dict[str, Dict[str, str]]]:
+    def list_themes(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.theme_dir)
 
