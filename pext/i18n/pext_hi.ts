@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्सट</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="30"/>
@@ -43,7 +43,11 @@
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>आप अब पैक्सट को बंद करने वाले हैं।
+
+यह सभी काम कर रहे पैक्सट के मॉड्यूल्स को रोक देगा एवं वैश्विक कुंजी कार्य करना बंद कर देगी।
+
+क्या आप सच में पैक्सट बंद करना चाहते हैं?</translation>
     </message>
 </context>
 <context>
@@ -628,7 +632,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="710"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>वैश्विक कुंजी को दबाने पर पैक्सट को अग्र भाग में लाए (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="722"/>
@@ -643,7 +647,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>त्वरित कार्य करने की सेवा को इंस्टॉल करे</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
