@@ -1959,7 +1959,7 @@ class Window(QMainWindow):
         """Initialize the window."""
         super().__init__(parent)
 
-        # Ask for accessibility access to autotype on macOS
+        # Ask for accessibility access to autotype and focus-fix on macOS
         if platform.system() == 'Darwin':
             self.acc = accessibility.create_systemwide_ref()
             self.acc.set_timeout(300)
@@ -2245,20 +2245,16 @@ class Window(QMainWindow):
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
     def _macos_focus_workaround(self) -> None:
-        """Set the focus correctly after minimizing Pext on macOS.
-
-        Disabled on 10.14 (Mojave) and up, because it causes spammy requests for System Events.app access.
-        """
+        """Set the focus correctly after minimizing Pext on macOS."""
         if platform.system() != 'Darwin':
             return
 
-        applescript_command = ['tell application "System Events"',
-                               'tell process "Finder"',
-                               'activate',
-                               'keystroke tab using {command down}',
-                               'end tell',
-                               'end tell']
-        Popen(['osascript', '-e', '\n'.join(applescript_command)]).wait()
+        keyboard_device = keyboard.Controller()
+
+        keyboard_device.press(keyboard.Key.cmd)
+        keyboard_device.press(keyboard.Key.tab)
+        keyboard_device.release(keyboard.Key.tab)
+        keyboard_device.release(keyboard.Key.cmd)
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
