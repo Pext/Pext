@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Minimize normally manually now works as intended
 - Autotype now correctly queues up multiple entries to type
+- Focus fix on macOS is now fast and reliable again
+- Logo background is no longer misaligned
 
 ## [0.19] - 2018-09-05
 ### Added
