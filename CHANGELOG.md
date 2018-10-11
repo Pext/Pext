@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Are you sure message when closing Pext normally
-- Add installable quick action service for easier launching
+- Add installable touch bar quick action service for easier launching on macOS
 
 ### Changed
 - Pick a more reasonable height on wide screens
