@@ -26,8 +26,9 @@ MessageDialog {
     standardButtons: StandardButton.Yes | StandardButton.No
 
     property var confirmedClose;
+    property var platform;
 
-    text: qsTr("You are about to quit Pext.\n\nThis will stop any running module and the global hotkey will not work until you restart Pext manually.\n\nAre you sure you want to quit?")
+    text: platform == 'Darwin' ? qsTr("You are about to quit Pext.\n\nThis will stop any running module.\n\nAre you sure you want to quit?") : qsTr("You are about to quit Pext.\n\nThis will stop any running module and the global hotkey will not work until you restart Pext manually.\n\nAre you sure you want to quit?")
 
     Component.onCompleted: {
         visible = true;

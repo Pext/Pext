@@ -42,7 +42,8 @@ ApplicationWindow {
         close.accepted = false;
         var confirmQuitDialog = Qt.createComponent("ConfirmQuitDialog.qml");
         confirmQuitDialog.createObject(applicationWindow,
-            {"confirmedClose": confirmedClose});
+            {"confirmedClose": confirmedClose,
+             "platform": platform});
     }
 
     flags: Qt.Window
