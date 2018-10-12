@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -43,7 +43,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous êtes sur le point de quitter Pext.
+
+Cela arrêtera tout module en cours d&apos;exécution.
+
+Êtes-vous sûr de vouloir quitter?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -52,7 +56,11 @@ Are you sure you want to quit?</source>
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Vous êtes sur le point de quitter Pext.
+
+Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier global ne fonctionnera pas tant que vous n&apos;aurez pas redémarré Pext manuellement.
+
+Êtes-vous sûr de vouloir quitter?</translation>
     </message>
 </context>
 <context>
@@ -390,7 +398,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="159"/>
         <source>No results</source>
-        <translation type="unfinished"></translation>
+        <translation>Aucun résultat</translation>
     </message>
 </context>
 <context>
@@ -567,27 +575,27 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="583"/>
         <source>Output style</source>
-        <translation type="unfinished"></translation>
+        <translation>Format de sortie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="592"/>
         <source>Copy to default clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier dans le presse-papier défaut</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier dans le presse-papiers de  sélection (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
         <source>Copy to find buffer (macOS)</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier pour trouver le tampon (macOS)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="615"/>
         <source>Type automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Tapez automatiquement</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="622"/>
@@ -652,7 +660,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Installer un service d&apos;action rapide</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
@@ -695,17 +703,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="691"/>
         <source>Automatic updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Mises à jour automatiques</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="695"/>
         <source>Automatically check for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Vérifier automatiquement les mises à jour pour Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="702"/>
         <source>Automatically update modules and themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre à jour automatiquement les modules et les thèmes</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="716"/>
