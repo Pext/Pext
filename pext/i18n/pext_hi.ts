@@ -43,7 +43,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>आप अब पैक्सट बंद करने वाले हैं।
+
+यह कोई भी चल रहे मॉड्यूल को रोक देगा।
+
+क्या आप सच में पैक्सट बंद करना चाहते हैं?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
