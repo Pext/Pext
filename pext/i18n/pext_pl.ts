@@ -43,7 +43,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Za chwilę wyjdziesz z Pext&apos;a.
+
+To zatrzyma wszystkie działające w tle moduły.
+
+Czy jesteś pewny, że chcesz wyjść?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -104,7 +108,7 @@ Czy na pewno chcesz wyjść?</translation>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
         <source>Download source:</source>
-        <translation>Źródło:</translation>
+        <translation>Źródło pobrania:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>

@@ -43,7 +43,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Je staat op het punt om Pext af te sluiten.
+
+Elke nog draaiende module wordt gestopt.
+
+Weet je zeker dat je wilt afsluiten?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>

@@ -43,7 +43,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>您將要離開 Pext。
+
+這將會中止任何執行中的模組。
+
+您確定您想要離開嗎？</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -660,7 +664,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>安裝快捷動作服務</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
