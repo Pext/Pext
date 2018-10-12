@@ -1372,6 +1372,7 @@ class UpdateManager():
     def __init__(self) -> None:
         """Initialize the UpdateManager and store the version info of Pext."""
         self.version = "Unknown"
+        version = None
         try:
             version = UpdateManager.get_version(os.path.dirname(AppFile.get_path()))
         except Exception:
