@@ -11,15 +11,15 @@
     <key>CFBundleIconFile</key>
     <string>Pext/pext/images/scalable/pext.icns</string>
     <key>CFBundleIdentifier</key>
-    <string>me.hackerchick.pext</string>
+    <string>io.pext.pext</string>
     <key>CFBundleName</key>
     <string>Pext</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleVersion</key>
-    <string>0.19</string>
+    <string>0.20</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.19</string>
+    <string>0.20</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.7.0</string>
     <key>LSUIElement</key>
