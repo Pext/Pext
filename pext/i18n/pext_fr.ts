@@ -585,7 +585,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="600"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation>Copier dans le presse-papiers de  sélection (X11)</translation>
+        <translation>Copier dans le presse-papiers de sélection (X11)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="608"/>
