@@ -29,6 +29,40 @@ from typing import Any, Dict, List, Union
 
 from pext_helpers import SelectionType
 
+# Work around python modules falsely assuming stdout and stderr always exist
+from io import RawIOBase
+import sys
+
+
+class NoneStream(RawIOBase):
+    """Fallback if stdout or stderr are unavailable, does nothing."""
+
+    def read(self, size=-1):
+        """Do nothing."""
+        return None
+
+    def readall(self):
+        """Do nothing."""
+        return None
+
+    def readinto(self, b):
+        """Do nothing."""
+        return None
+
+    def write(self, b):
+        """Do nothing."""
+        return None
+
+
+if not sys.stdin:
+    sys.stdin = NoneStream()
+
+if not sys.stdout:
+    sys.stdout = NoneStream()
+
+if not sys.stderr:
+    sys.stderr = NoneStream()
+
 
 class ModuleBase(ABC):
     """Introduced in API version 0.1.0.
