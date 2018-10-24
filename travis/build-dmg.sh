@@ -78,7 +78,7 @@ rm lib/python3.7/site-packages/PyQt5/QtWebEngine*
 rm -r lib/python3.7/site-packages/PyQt5/Qt/translations/qtwebengine*
 #rm lib/python3.7/site-packages/PyQt5/Qt/resources/qtwebengine*
 rm -r lib/python3.7/site-packages/PyQt5/Qt/qml/QtWebEngine*
-rm lib/python3.7/site-packages/PyQt5/Qt/plugins/webview/libqtwebview*
+rm -r lib/python3.7/site-packages/PyQt5/Qt/plugins/webview/libqtwebview*
 #rm lib/python3.7/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess*
 #rm lib/python3.7/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 popd
