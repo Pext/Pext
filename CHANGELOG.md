@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### API changes
+- Bump API version to 0.8.0
+- Commands can now be multiple words and arguments will be given in a new 'args' field
+
 ## [0.20] - 2018-10-12
 ### Added
 - Are you sure message when closing Pext normally

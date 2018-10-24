@@ -86,7 +86,8 @@ class ModuleBase(ABC):
         [{type: SelectionType.entry, value: "Audio settings"}]. If the user
         then runs the command "volume 50", this function is called again, with
         the value of selection being
-        [{type: SelectionType.entry, value: "Audio settings"}, {type: SelectionType.command, value: "volume 50"}].
+        [{type: SelectionType.entry, value: "Audio settings"},
+         {type: SelectionType.command, value: "volume", args: ["50"]}].
         """
         pass
 
