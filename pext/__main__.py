@@ -1107,7 +1107,7 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 7, 0]
+        module['settings']['_api_version'] = [0, 8, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1775,12 +1775,12 @@ class ViewModel():
 
         self.update_context_info_panel()
 
-    def _get_entry(self, include_context=False, shorten_command=False) -> Dict:
+    def _get_entry(self, include_context=False) -> Dict:
         """Get info on the entry that's currently focused."""
         if include_context and self.context.contextProperty("contextMenuEnabled"):
             current_index = QQmlProperty.read(self.context_menu_model, "currentIndex")
 
-            selected_entry = self._get_entry(shorten_command=shorten_command)
+            selected_entry = self._get_entry()
 
             selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
 
@@ -1802,19 +1802,14 @@ class ViewModel():
             selected_command = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
 
         if selected_command:
-            selected_command_split = selected_command.split(" ", 1)
             command_typed = QQmlProperty.read(self.search_input_model, "text")
-            command_typed_split = command_typed.split(" ", 1)
 
-            if shorten_command:
-                command_typed = selected_command_split[0]
+            if command_typed.startswith(selected_command + " "):
+                args = command_typed.split(selected_command + " ", 1)[-1]
             else:
-                try:
-                    command_typed = selected_command_split[0] + " " + command_typed_split[1]
-                except IndexError:
-                    command_typed = selected_command_split[0]
+                args = ""
 
-            return {'type': SelectionType.command, 'value': command_typed, 'context_option': None}
+            return {'type': SelectionType.command, 'value': selected_command, 'args': args, 'context_option': None}
         else:
             entry = self.filtered_entry_list[current_index]
             return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
@@ -1865,7 +1860,7 @@ class ViewModel():
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             return
 
-        current_entry = self._get_entry(shorten_command=True)
+        current_entry = self._get_entry()
 
         try:
             if current_entry['type'] == SelectionType.entry:
@@ -1894,7 +1889,7 @@ class ViewModel():
             self.extra_info_last_entry_type = None
             return
 
-        current_entry = self._get_entry(shorten_command=True)
+        current_entry = self._get_entry()
 
         # Prevent updating the list unnecessarily often
         if (current_entry['value'] == self.extra_info_last_entry
