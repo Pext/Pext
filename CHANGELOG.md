@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Bump API version to 0.8.0
 - Commands can now be multiple words and arguments will be given in a new 'args' field
 
+### Changed
+- A module throwing an uncaught exception will now open a dialog box with the full exception to ease debugging
+
 ## [0.20] - 2018-10-12
 ### Added
 - Are you sure message when closing Pext normally

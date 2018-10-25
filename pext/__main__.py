@@ -260,6 +260,20 @@ class Logger():
             print(message)
 
     @staticmethod
+    def log_critical(module_name: Optional[str], message: str) -> None:
+        """If a window is provided, pop up a window. Otherwise, print."""
+        if Logger.window:
+            if not module_name:
+                module_name = ""
+
+            QMessageBox.critical(
+                Logger.window,
+                module_name,
+                message)
+        else:
+            print(message)
+
+    @staticmethod
     def show_next_message() -> None:
         """Show next statusbar message.
 
@@ -317,10 +331,7 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            QMessageBox.critical(
-                self.window,
-                tab['metadata']['name'],
-                str(action[1]))
+            Logger.log_critical(tab['metadata']['name'], str(action[1]))
 
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
@@ -1043,7 +1054,10 @@ class ModuleManager():
         try:
             module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
         except ImportError as e1:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e1))
+            Logger.log_critical(
+                None,
+                "Failed to load module {}: {}\n\nFull exception:\n{}"
+                .format(module['metadata']['name'], e1, traceback.format_exc()))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1053,7 +1067,10 @@ class ModuleManager():
         try:
             Module = getattr(module_import, 'Module')
         except AttributeError as e2:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e2))
+            Logger.log_critical(
+                None,
+                "Failed to load module {}: {}\n\nFull exception:\n{}"
+                .format(module['metadata']['name'], e2, traceback.format_exc()))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1071,7 +1088,10 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e3:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['id'], e3))
+            Logger.log_critical(
+                None,
+                "Failed to load module {}: {}\n\nFull exception:\n{}"
+                .format(module['metadata']['name'], e3, traceback.format_exc()))
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1477,8 +1497,8 @@ class ModuleThreadInitializer(threading.Thread):
             threading.Thread.run(self)
         except Exception as e:
             self.queue.put(
-                [Action.critical_error, "Exception thrown: {}".format(e)])
-            traceback.print_exc()
+                [Action.critical_error,
+                 "Exception thrown: {}\n\nFull exception:\n{}".format(e, traceback.format_exc())])
 
 
 class ViewModel():
