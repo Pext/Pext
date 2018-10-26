@@ -31,10 +31,10 @@ ApplicationWindow {
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
-    minimumWidth: 500
-    minimumHeight: 300
-    width: Screen.width
-    height: Math.max(300, 0.3 * Screen.height)
+    minimumWidth: 800
+    minimumHeight: 600
+    x: (Screen.width - width) / 2
+    y: (Screen.height - height) / 2
 
     signal confirmedClose()
 
