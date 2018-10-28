@@ -268,7 +268,7 @@ class Logger():
 
             QMessageBox.critical(
                 Logger.window,
-                module_name,
+                "Pext - {}".format(module_name) if module_name else "Pext",
                 message)
         else:
             print(message)
