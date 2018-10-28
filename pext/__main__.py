@@ -45,7 +45,7 @@ from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from pkg_resources import parse_version
 from shutil import copytree, rmtree
-from subprocess import check_call, CalledProcessError, Popen
+from subprocess import check_output, CalledProcessError, Popen
 try:
     from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 except ImportError:
@@ -971,13 +971,13 @@ class ModuleManager():
         self.module_dependencies_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
                                                     'module_dependencies')
 
-    def _pip_install(self, identifier: str) -> int:
+    def _pip_install(self, identifier: str) -> Optional[str]:
         """Install module dependencies using pip."""
         module_requirements_path = os.path.join(self.module_dir, identifier.replace('.', '_'), 'requirements.txt')
         module_dependencies_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
 
         if not os.path.isfile(module_requirements_path):
-            return 0
+            return None
 
         try:
             os.mkdir(module_dependencies_path)
@@ -1004,15 +1004,13 @@ class ModuleManager():
                         '-r',
                         module_requirements_path]
 
-        returncode = 0
-
         # Actually run the pip command
         try:
-            check_call(pip_command)
+            check_output(pip_command)
         except CalledProcessError as e:
-            returncode = e.returncode
+            return e.output
 
-        return returncode
+        return None
 
     def load_module(self, window: 'Window', module: Dict[str, Any]) -> bool:
         """Load a module and attach it to the main window."""
@@ -1250,7 +1248,7 @@ class ModuleManager():
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
@@ -1264,10 +1262,10 @@ class ModuleManager():
         if verbose:
             Logger.log(None, '⇩⇩ {}'.format(name))
 
-        pip_exit_code = self._pip_install(identifier)
-        if pip_exit_code != 0:
+        pip_error_output = self._pip_install(identifier)
+        if pip_error_output is not None:
             if verbose:
-                Logger.log_error(None, '⇩⇩ {}: {}'.format(name, pip_exit_code))
+                Logger.log_critical(None, '⇩⇩ {}: {}'.format(name, pip_error_output))
 
             try:
                 rmtree(module_path)
@@ -1354,7 +1352,7 @@ class ModuleManager():
 
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
@@ -1363,10 +1361,10 @@ class ModuleManager():
         if verbose:
             Logger.log(None, '⇩⇩ {}'.format(name))
 
-        pip_exit_code = self._pip_install(identifier)
-        if pip_exit_code != 0:
+        pip_error_output = self._pip_install(identifier)
+        if pip_error_output is not None:
             if verbose:
-                Logger.log_error(None, '⇩⇩ {}: {}'.format(name, pip_exit_code))
+                Logger.log_critical(None, '⇩⇩ {}: {}'.format(name, pip_error_output))
 
             return False
 
@@ -2911,7 +2909,7 @@ class ThemeManager():
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
@@ -2989,7 +2987,7 @@ class ThemeManager():
 
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
 
             traceback.print_exc()
 
