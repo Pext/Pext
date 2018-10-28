@@ -1006,7 +1006,7 @@ class ModuleManager():
 
         # Actually run the pip command
         try:
-            check_output(pip_command)
+            check_output(pip_command, universal_newlines=True)
         except CalledProcessError as e:
             return e.output
 
