@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - A module throwing an uncaught exception will now open a dialog box with the full exception to ease debugging
 - Pext's Window is now 800x600 by default and centered on the screen
 
+### Fixed
+- Module installation issues in Windows distribution. Again.
+
 ## [0.20] - 2018-10-12
 ### Added
 - Are you sure message when closing Pext normally
