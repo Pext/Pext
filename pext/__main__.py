@@ -75,6 +75,9 @@ if platform.system() == "Linux":
         from OpenGL import GL  # NOQA
     except ImportError:
         warn_no_openGL_linux = True
+    except Exception as e:
+        print('Could not import OpenGL module: {}'.format(e))
+        traceback.print_exc()
 
 # Windows doesn't support getuid
 if platform.system() == 'Windows':
@@ -994,8 +997,9 @@ class ModuleManager():
 
         # FIXME: Cheap hack to work around Debian's faultily-patched pip
         # We try to prevent false positives by checking for (mini)conda or a venv
-        if ("conda" not in sys.version and os.path.isfile('/etc/debian_version') and
-           not hasattr(sys, 'real_prefix') and not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
+        if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
+            'Debian' in open('/etc/issue.net', 'r').read() and 
+            not hasattr(sys, 'real_prefix') and not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
             pip_command += ['--system']
 
         pip_command += ['--upgrade',
