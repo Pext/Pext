@@ -702,7 +702,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="293"/>
