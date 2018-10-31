@@ -76,6 +76,8 @@ class ModuleBase(ABC):
     def selection_made(self, selection: List[Dict[SelectionType, str]]) -> None:
         """Introduced in API version 0.1.0.
 
+        Last changed in API version 0.8.0.
+
         Called when the user makes a selection.
 
         The selection variable contains a list of the selection tree and the

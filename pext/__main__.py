@@ -58,10 +58,7 @@ from dulwich import porcelain
 from dulwich.repo import Repo
 from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
-from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
-                             QInputDialog, QLabel, QLineEdit, QMainWindow,
-                             QMessageBox, QTextEdit, QVBoxLayout,
-                             QStyleFactory, QSystemTrayIcon)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
 
@@ -172,31 +169,6 @@ class RunConseq():
                 function['name'](**function['kwargs'])
 
 
-class InputDialog(QDialog):
-    """A simple dialog requesting user input."""
-
-    def __init__(self, question: str, text: str, parent=None) -> None:
-        """Initialize the dialog."""
-        super().__init__(parent)
-
-        self.setWindowTitle("Pext")
-
-        layout = QVBoxLayout(self)
-
-        layout.addWidget(QLabel(question))
-        self.text_edit = QTextEdit(self)
-        self.text_edit.setPlainText(text)
-        layout.addWidget(self.text_edit)
-        button = QDialogButtonBox(QDialogButtonBox.Ok)
-        button.accepted.connect(self.accept)
-        layout.addWidget(button)
-
-    def show(self) -> Tuple[str, bool]:
-        """Show the dialog."""
-        result = self.exec_()
-        return (self.text_edit.toPlainText(), result == QDialog.Accepted)
-
-
 class Logger():
     """Log events to the appropriate location.
 
@@ -269,10 +241,8 @@ class Logger():
             if not module_name:
                 module_name = ""
 
-            QMessageBox.critical(
-                Logger.window,
-                "Pext - {}".format(module_name) if module_name else "Pext",
-                message)
+            error_dialog = Logger.window.window.findChild(QObject, "errorDialog")
+            error_dialog.showErrorDialog.emit(module_name, message)
         else:
             print(message)
 
@@ -387,84 +357,70 @@ class MainLoop():
             else:
                 QQmlProperty.write(tab['vm'].search_input_model, "text", "")
 
-        elif action[0] == Action.ask_question_default_yes:
-            answer = QMessageBox.question(
-                self.window,
-                "Pext",
-                action[1],
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes)
-
+        elif action[0] in [Action.ask_question, Action.ask_question_default_yes, Action.ask_question_default_no]:
+            question_dialog = self.window.window.findChild(QObject, "questionDialog")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False,
-                    action[2] if len(action) > 2 else None)
+                question_dialog.questionAccepted.connect(
+                    lambda: tab['vm'].module.process_response(True, action[2] if len(action) > 2 else None))
+                question_dialog.questionRejected.connect(
+                    lambda: tab['vm'].module.process_response(False, action[2] if len(action) > 2 else None))
             else:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False)
+                question_dialog.questionAccepted.connect(
+                    lambda: tab['vm'].module.process_response(True))
+                question_dialog.questionRejected.connect(
+                    lambda: tab['vm'].module.process_response(False))
 
-        elif action[0] == Action.ask_question_default_no:
-            answer = QMessageBox.question(
-                self.window,
-                "Pext",
-                action[1],
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No)
-
-            if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False,
-                    action[2] if len(action) > 2 else None)
-            else:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False)
+            question_dialog.showQuestionDialog.emit(tab['metadata']['name'], action[1])
 
         elif action[0] == Action.ask_input:
-            answer, ok = QInputDialog.getText(
-                self.window,
-                "Pext",
-                action[1],
-                QLineEdit.Normal,
-                action[2] if len(action) > 2 else "")
-
+            input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    answer if ok else None,
-                    action[3] if len(action) > 3 else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput,
+                                                                        action[3] if len(action) > 3 else None))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
             else:
-                tab['vm'].module.process_response(
-                    answer if ok else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+
+            input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, False,
+                                            action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.ask_input_password:
-            answer, ok = QInputDialog.getText(
-                self.window,
-                "Pext",
-                action[1],
-                QLineEdit.Password,
-                action[2] if len(action) > 2 else "")
-
+            input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    answer if ok else None,
-                    action[3] if len(action) > 3 else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput,
+                                                                        action[3] if len(action) > 3 else None))
+                input_request.inputRequestRejected.connect(
+                        lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
             else:
-                tab['vm'].module.process_response(
-                    answer if ok else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+
+            input_request.inputRequest.emit(tab['metadata']['name'], action[1], True, False,
+                                            action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.ask_input_multi_line:
-            dialog = InputDialog(
-                action[1],
-                action[2] if len(action) > 2 else "",
-                self.window)
-
-            answer, ok = dialog.show()
+            input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    answer if ok else None,
-                    action[3] if len(action) > 3 else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput,
+                                                                        action[3] if len(action) > 3 else None))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
             else:
-                tab['vm'].module.process_response(
-                    answer if ok else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+            input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, True,
+                                            action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
@@ -998,8 +954,9 @@ class ModuleManager():
         # FIXME: Cheap hack to work around Debian's faultily-patched pip
         # We try to prevent false positives by checking for (mini)conda or a venv
         if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
-            'Debian' in open('/etc/issue.net', 'r').read() and 
-            not hasattr(sys, 'real_prefix') and not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
+                'Debian' in open('/etc/issue.net', 'r').read() and
+                not hasattr(sys, 'real_prefix') and
+                not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
             pip_command += ['--system']
 
         pip_command += ['--upgrade',

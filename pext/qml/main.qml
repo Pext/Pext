@@ -78,6 +78,57 @@ ApplicationWindow {
         }
     }
 
+    Item {
+        objectName: "inputRequests"
+
+        signal inputRequest(string moduleName, string description, bool isPassword, bool isMultiline, string prefill)
+        signal inputRequestAccepted(string userInput)
+        signal inputRequestRejected()
+
+        onInputRequest: {
+            var inputRequestDialog = Qt.createComponent("InputRequestDialog.qml");
+            inputRequestDialog.createObject(applicationWindow,
+                {"moduleName": moduleName,
+                 "description": description,
+                 "isPassword": isPassword,
+                 "isMultiline": isMultiline,
+                 "prefill": prefill,
+                 "requestAccepted": inputRequestAccepted,
+                 "requestRejected": inputRequestRejected});
+        }
+    }
+
+    Item {
+        objectName: "questionDialog"
+
+        signal showQuestionDialog(string moduleName, string question)
+        signal questionAccepted()
+        signal questionRejected()
+
+        onShowQuestionDialog: {
+            var questionDialog = Qt.createComponent("QuestionDialog.qml");
+            questionDialog.createObject(applicationWindow,
+                {"moduleName": moduleName,
+                 "question": question,
+                 "accepted": questionAccepted,
+                 "rejected": questionRejected});
+        }
+    }
+
+
+    Item {
+        objectName: "errorDialog"
+
+        signal showErrorDialog(string moduleName, string message)
+
+        onShowErrorDialog: {
+            var errorDialog = Qt.createComponent("CriticalErrorDialog.qml");
+            errorDialog.createObject(applicationWindow,
+              {"moduleName": moduleName,
+               "message": message});
+        }
+    }
+
     function getActiveList() {
         var tab = tabs.getTab(tabs.currentIndex);
         if (typeof tab === "undefined")

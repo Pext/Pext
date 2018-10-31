@@ -156,8 +156,19 @@ class Action(Enum):
 
         Example: self.q.put([Action.set_header, "Weather for New York"])
 
+    ask_question:
+        Introduced in API version 0.9.0.
+
+        Ask a yes/no question.
+
+        question -- the question to ask
+        identifier -- an optional identifier which gets passed back to process_response
+
+        Example: self.q.put([Action.ask_question, "Are you sure you want to continue?", 0])
+
     ask_question_default_yes
         Introduced in API version 0.1.0.
+        Deprecated in API version 0.9.0.
 
         Ask a yes/no question, with the default value being yes.
 
@@ -168,6 +179,7 @@ class Action(Enum):
 
     ask_question_default_no
         Introduced in API version 0.1.0.
+        Deprecated in API version 0.9.0.
 
         Ask a yes/no question, with the default value being no.
 
@@ -359,24 +371,25 @@ class Action(Enum):
     replace_command_list = 10
     set_header = 11
     set_filter = 12
-    ask_question_default_yes = 13
-    ask_question_default_no = 14
-    ask_input = 15
-    ask_input_password = 16
-    ask_input_multi_line = 17
-    copy_to_clipboard = 18
-    set_selection = 19
-    close = 20
-    set_entry_info = 21
-    replace_entry_info_dict = 22
-    set_command_info = 23
-    replace_command_info_dict = 24
-    set_base_info = 25
-    set_entry_context = 26
-    replace_entry_context_dict = 27
-    set_command_context = 28
-    replace_command_context_dict = 29
-    set_base_context = 30
+    ask_question = 13
+    ask_question_default_yes = 14
+    ask_question_default_no = 15
+    ask_input = 16
+    ask_input_password = 17
+    ask_input_multi_line = 18
+    copy_to_clipboard = 19
+    set_selection = 20
+    close = 21
+    set_entry_info = 22
+    replace_entry_info_dict = 23
+    set_command_info = 24
+    replace_command_info_dict = 25
+    set_base_info = 26
+    set_entry_context = 27
+    replace_entry_context_dict = 28
+    set_command_context = 29
+    replace_command_context_dict = 30
+    set_base_context = 31
 
 
 class SelectionType(Enum):
