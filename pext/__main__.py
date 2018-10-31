@@ -825,7 +825,7 @@ class ProfileManager():
 
         return modules
 
-    def save_settings(self, profile: Optional[str], changed_key: Optional[str]=None) -> None:
+    def save_settings(self, profile: Optional[str], changed_key: Optional[str] = None) -> None:
         """Save the current settings to the profile."""
         if changed_key and changed_key not in self.saved_settings:
             return
@@ -955,7 +955,7 @@ class ObjectManager():
                 print("Removing corrupted object at {}".format(os.path.join(core_directory, directory)))
                 try:
                     rmtree(os.path.join(core_directory, directory))
-                except Exception as e:
+                except Exception:
                     pass
 
         return objects
@@ -1980,7 +1980,7 @@ class ViewModel():
 class Window(QMainWindow):
     """The main Pext window."""
 
-    def __init__(self, title: str, locale_manager: LocaleManager, parent=None) -> None:
+    def __init__(self, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
         super().__init__(parent)
 
@@ -2005,8 +2005,6 @@ class Window(QMainWindow):
         self.context.setContextProperty(
             "USE_INTERNAL_UPDATER", USE_INTERNAL_UPDATER)
         self.context.setContextProperty(
-            "applicationTitle", title)
-        self.context.setContextProperty(
             "applicationVersion", UpdateManager().get_core_version())
         self.context.setContextProperty(
             "systemPlatform", platform.system())
@@ -2017,6 +2015,7 @@ class Window(QMainWindow):
             "themesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'themes'))
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
+        self.context.setContextProperty("defaultProfile", ProfileManager.default_profile_name())
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
         self.context.setContextProperty("currentLocale", self.locale_manager.get_current_locale(system_if_unset=False))
         self.context.setContextProperty("currentLocaleCode",
@@ -3020,10 +3019,7 @@ class Tray():
 
         self.tray.activated.connect(self.icon_clicked)
 
-        if Settings.get('profile') == ProfileManager.default_profile_name():
-            self.tray.setToolTip('Pext')
-        else:
-            self.tray.setToolTip('Pext ({})'.format(Settings.get('profile')))
+        self.tray.setToolTip(QQmlProperty.read(self.window.window, "title"))
 
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
@@ -3331,11 +3327,11 @@ def _load_settings(args: argparse.Namespace) -> None:
                 metadata = requests.get(metadata_url).json()
 
                 try:
-                    r = requests.get(re.sub('\.json$', '{}_.json'
+                    r = requests.get(re.sub(r'\.json$', '{}_.json'
                                      .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
                                      ''))
                     metadata.update(r.json())
-                except Exception as e:
+                except Exception:
                     pass
 
                 if not ModuleManager().install_module(metadata['git_urls'][0],
@@ -3384,11 +3380,11 @@ def _load_settings(args: argparse.Namespace) -> None:
                 metadata = requests.get(metadata_url).json()
 
                 try:
-                    r = requests.get(re.sub('\.json$', '{}_.json'
+                    r = requests.get(re.sub(r'\.json$', '{}_.json'
                                      .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
                                      ''))
                     metadata.update(r.json())
-                except Exception as e:
+                except Exception:
                     pass
 
                 if not ThemeManager().install_theme(metadata['git_urls'][0],
@@ -3560,7 +3556,7 @@ def main() -> None:
         theme_manager.apply_theme_to_app(theme, app)
 
     # Get a window
-    window = Window(appname, locale_manager)
+    window = Window(locale_manager)
 
     # Give the logger a reference to the window
     Logger.bind_window(window)

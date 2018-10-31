@@ -26,7 +26,7 @@ import QtQuick.Extras 1.0
 
 ApplicationWindow {
     id: applicationWindow
-    title: applicationTitle
+    title: currentProfile == defaultProfile ? qsTr("Pext") : qsTr("Pext (%1)").arg(currentProfile)
     property bool internalUpdaterEnabled: USE_INTERNAL_UPDATER
     property string version: applicationVersion
     property string platform: systemPlatform

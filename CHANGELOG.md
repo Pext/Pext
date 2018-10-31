@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Module installation issues in Windows distribution. Again.
+- Title and tray tooltip are now translatable
 
 ## [0.20] - 2018-10-12
 ### Added
