@@ -43,7 +43,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы збіраецеся пакінуць Pext.
+
+Гэта спыніць усе бягучыя модулі.
+
+Вы ўпэўненыя, што хочаце выйсці?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -52,7 +56,11 @@ Are you sure you want to quit?</source>
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы збіраецеся пакінуць Pext.
+
+Гэта спыніць усе бягучыя модулі і глабальныя прызначэньні клавіш не будуць працаваць да ручнога перазапуску Pext.
+
+Вы ўпэўненыя, што хочаце выйсці?</translation>
     </message>
 </context>
 <context>
@@ -652,7 +660,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Усталяваць службу хутках дзеяньняў</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>

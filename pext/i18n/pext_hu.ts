@@ -43,7 +43,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ön most kilép a Pextből.
+
+Minden jelenleg futó modul leáll.
+
+Biztosan ki szeretne lépni?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -52,7 +56,11 @@ Are you sure you want to quit?</source>
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Ön most kilép a Pextből.
+
+Minden jelenleg futó modul leáll, és  a gyorsbillentyűt sem tudja használni, amíg újból el nem indítja a Pextet.
+
+Biztosan ki szeretne lépni?</translation>
     </message>
 </context>
 <context>
@@ -390,7 +398,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="159"/>
         <source>No results</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs találat</translation>
     </message>
 </context>
 <context>
@@ -637,7 +645,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="710"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Hozza előtérbe a Pextet, ha lenyomja a globális gyorsbillentyűt (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="722"/>
@@ -652,7 +660,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="742"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Quick action szolgáltatás telepítése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="810"/>
