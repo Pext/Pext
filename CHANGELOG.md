@@ -7,8 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### API changes
-- Bump API version to 0.8.0
+- Bump API version to 0.9.0
 - Commands can now be multiple words and arguments will be given in a new 'args' field
+- ask_question_default_yes and ask_question_default_no are deprecated in favor of ask_question
 
 ### Changed
 - A module throwing an uncaught exception will now open a dialog box with the full exception to ease debugging
