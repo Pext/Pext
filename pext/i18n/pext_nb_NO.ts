@@ -73,7 +73,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -86,7 +86,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -480,7 +480,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
