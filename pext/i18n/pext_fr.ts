@@ -691,6 +691,16 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
         <translation>Gérer les modules</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext</source>
+        <translation type="unfinished">Pext</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Pext</source>
         <translation></translation>

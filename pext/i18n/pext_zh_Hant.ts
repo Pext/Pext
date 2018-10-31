@@ -694,6 +694,16 @@ Are you sure you want to quit?</source>
         <translation>管理模組</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext</source>
+        <translation type="unfinished">Pext</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Pext</source>
         <translation>Pext(&amp;P)</translation>

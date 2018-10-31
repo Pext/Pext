@@ -692,6 +692,16 @@ Czy na pewno chcesz wyjść?</translation>
         <translation>Zarządzaj modułami</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext</source>
+        <translation type="unfinished">Pext</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Pext</source>
         <translation></translation>

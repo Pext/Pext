@@ -695,6 +695,16 @@ Weet je zeker dat je wilt afsluiten?</translation>
         <translation>Modules beheren</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext</source>
+        <translation type="unfinished">Pext</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Pext</source>
         <translation>&amp;Pext</translation>

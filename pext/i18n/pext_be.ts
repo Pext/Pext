@@ -692,6 +692,16 @@ Are you sure you want to quit?</source>
         <translation>Упраўленне модулямі</translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext</source>
+        <translation type="unfinished">Pext</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="29"/>
+        <source>Pext (%1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="293"/>
         <source>&amp;Pext</source>
         <translation></translation>
