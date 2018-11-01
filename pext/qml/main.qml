@@ -119,13 +119,14 @@ ApplicationWindow {
     Item {
         objectName: "errorDialog"
 
-        signal showErrorDialog(string moduleName, string message)
+        signal showErrorDialog(string moduleName, string message, string detailedMessage)
 
         onShowErrorDialog: {
             var errorDialog = Qt.createComponent("CriticalErrorDialog.qml");
             errorDialog.createObject(applicationWindow,
               {"moduleName": moduleName,
-               "message": message});
+               "message": message,
+               "detailedMessage": detailedMessage});
         }
     }
 

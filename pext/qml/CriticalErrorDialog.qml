@@ -26,8 +26,10 @@ MessageDialog {
 
     property var moduleName
     property var message
+    property var detailedMessage
 
     text: message
+    detailedText: detailedMessage
 
     Component.onCompleted: visible = true;
 }

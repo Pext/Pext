@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - ask_question_default_yes and ask_question_default_no are deprecated in favor of ask_question
 
 ### Changed
-- A module throwing an uncaught exception will now open a dialog box with the full exception to ease debugging
+- Better error logging, using dialogs for critical errors
 - Pext's Window is now 800x600 by default and centered on the screen
 
 ### Fixed

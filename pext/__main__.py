@@ -235,16 +235,18 @@ class Logger():
             print(message)
 
     @staticmethod
-    def log_critical(module_name: Optional[str], message: str) -> None:
+    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str]) -> None:
         """If a window is provided, pop up a window. Otherwise, print."""
-        if Logger.window:
-            if not module_name:
-                module_name = ""
+        if not module_name:
+            module_name = ""
+        if not detailed_message:
+            detailed_message = ""
 
+        if Logger.window:
             error_dialog = Logger.window.window.findChild(QObject, "errorDialog")
-            error_dialog.showErrorDialog.emit(module_name, message)
+            error_dialog.showErrorDialog.emit(module_name, message, detailed_message)
         else:
-            print(message)
+            print("{}\n{}\n{}".format(module_name, message, detailed_message))
 
     @staticmethod
     def show_next_message() -> None:
@@ -304,7 +306,7 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_critical(tab['metadata']['name'], str(action[1]))
+            Logger.log_critical(tab['metadata']['name'], str(action[1]), str(action[2]) if len(action) < 2 else None)
 
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
@@ -1014,9 +1016,9 @@ class ModuleManager():
             module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
         except ImportError as e1:
             Logger.log_critical(
-                None,
-                "Failed to load module {}: {}\n\nFull exception:\n{}"
-                .format(module['metadata']['name'], e1, traceback.format_exc()))
+                module['metadata']['name'],
+                str(e1),
+                traceback.format_exc())
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1027,9 +1029,9 @@ class ModuleManager():
             Module = getattr(module_import, 'Module')
         except AttributeError as e2:
             Logger.log_critical(
-                None,
-                "Failed to load module {}: {}\n\nFull exception:\n{}"
-                .format(module['metadata']['name'], e2, traceback.format_exc()))
+                module['metadata']['name'],
+                str(e2),
+                traceback.format_exc())
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1048,9 +1050,9 @@ class ModuleManager():
             module_code = Module()
         except TypeError as e3:
             Logger.log_critical(
-                None,
-                "Failed to load module {}: {}\n\nFull exception:\n{}"
-                .format(module['metadata']['name'], e3, traceback.format_exc()))
+                module['metadata']['name'],
+                str(e3),
+                traceback.format_exc())
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1209,9 +1211,7 @@ class ModuleManager():
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             try:
                 rmtree(module_path)
@@ -1226,7 +1226,7 @@ class ModuleManager():
         pip_error_output = self._pip_install(identifier)
         if pip_error_output is not None:
             if verbose:
-                Logger.log_critical(None, '⇩⇩ {}: {}'.format(name, pip_error_output))
+                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
 
             try:
                 rmtree(module_path)
@@ -1313,9 +1313,7 @@ class ModuleManager():
 
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             return False
 
@@ -1325,7 +1323,7 @@ class ModuleManager():
         pip_error_output = self._pip_install(identifier)
         if pip_error_output is not None:
             if verbose:
-                Logger.log_critical(None, '⇩⇩ {}: {}'.format(name, pip_error_output))
+                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
 
             return False
 
@@ -2869,9 +2867,7 @@ class ThemeManager():
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             try:
                 rmtree(os.path.join(self.theme_dir, identifier))
@@ -2947,9 +2943,7 @@ class ThemeManager():
 
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             return False
 
