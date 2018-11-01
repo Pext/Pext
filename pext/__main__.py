@@ -306,7 +306,7 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_critical(tab['metadata']['name'], str(action[1]), str(action[2]) if len(action) < 2 else None)
+            Logger.log_critical(tab['metadata']['name'], str(action[1]), str(action[2]) if len(action) > 2 else None)
 
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
@@ -1453,9 +1453,7 @@ class ModuleThreadInitializer(threading.Thread):
         try:
             threading.Thread.run(self)
         except Exception as e:
-            self.queue.put(
-                [Action.critical_error,
-                 "Exception thrown: {}\n\nFull exception:\n{}".format(e, traceback.format_exc())])
+            self.queue.put([Action.critical_error, str(e), traceback.format_exc()])
 
 
 class ViewModel():
