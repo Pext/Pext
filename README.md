@@ -10,7 +10,7 @@
 ## Contents
 
 <a href="https://repology.org/metapackage/pext/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.20" alt="Packaging status" align="right">
+    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.21" alt="Packaging status" align="right">
 </a>
 
 - [Introduction](#introduction)
