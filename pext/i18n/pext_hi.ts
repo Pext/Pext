@@ -521,204 +521,204 @@ Are you sure you want to quit?</source>
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="348"/>
+        <location filename="../qml/main.qml" line="349"/>
         <source>Quit</source>
         <translation>छोड़ें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="354"/>
+        <location filename="../qml/main.qml" line="355"/>
         <source>&amp;Module</source>
         <translation>मॉड्यूल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="358"/>
+        <location filename="../qml/main.qml" line="359"/>
         <source>Reload active module</source>
         <translation>सक्रिय मॉड्यूल पुनः लोड करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="365"/>
+        <location filename="../qml/main.qml" line="366"/>
         <source>Close active module</source>
         <translation>सक्रिय मॉड्यूल बंद करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="377"/>
+        <location filename="../qml/main.qml" line="378"/>
         <source>Load module</source>
         <translation>लोड मॉड्यूल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="421"/>
+        <location filename="../qml/main.qml" line="422"/>
         <source>Install module</source>
         <translation>मॉड्यूल स्थापित करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="426"/>
+        <location filename="../qml/main.qml" line="427"/>
         <source>From online module list</source>
         <translation>ऑनलाइन मॉड्यूल सूची से</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="449"/>
-        <location filename="../qml/main.qml" line="540"/>
+        <location filename="../qml/main.qml" line="450"/>
+        <location filename="../qml/main.qml" line="541"/>
         <source>From URL</source>
         <translation>यूआरएल से</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="461"/>
+        <location filename="../qml/main.qml" line="462"/>
         <source>&amp;Theme</source>
         <translation>थीम</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="469"/>
+        <location filename="../qml/main.qml" line="470"/>
         <source>Switch theme</source>
         <translation>थीम स्विच करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="489"/>
+        <location filename="../qml/main.qml" line="490"/>
         <source>Manage themes</source>
         <translation>थीम का प्रबंधन करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="512"/>
+        <location filename="../qml/main.qml" line="513"/>
         <source>Install theme</source>
         <translation>थीम स्थापित करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="517"/>
+        <location filename="../qml/main.qml" line="518"/>
         <source>From online theme list</source>
         <translation>ऑनलाइन थीम सूची से</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="556"/>
+        <location filename="../qml/main.qml" line="557"/>
         <source>Switch profile</source>
         <translation>प्रोफ़ाइल स्विच करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="576"/>
+        <location filename="../qml/main.qml" line="577"/>
         <source>Manage profiles</source>
         <translation>प्रोफ़ाइल प्रबंधित करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="594"/>
+        <location filename="../qml/main.qml" line="595"/>
         <source>&amp;Settings</source>
         <translation>सेटिंग्स</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="600"/>
+        <location filename="../qml/main.qml" line="601"/>
         <source>Language</source>
         <translation>भाषा</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="610"/>
+        <location filename="../qml/main.qml" line="611"/>
         <source>System locale</source>
         <translation>स्थानीय सिस्टम</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="634"/>
+        <location filename="../qml/main.qml" line="635"/>
         <source>Output style</source>
         <translation>आउटपुट शैली</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="643"/>
+        <location filename="../qml/main.qml" line="644"/>
         <source>Copy to default clipboard</source>
         <translation>डिफ़ॉल्ट क्लिपबोर्ड पर कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="651"/>
+        <location filename="../qml/main.qml" line="652"/>
         <source>Copy to selection clipboard (X11)</source>
         <translation>चयन क्लिपबोर्ड (एक्स 11) पर कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="659"/>
+        <location filename="../qml/main.qml" line="660"/>
         <source>Copy to find buffer (macOS)</source>
         <translation>बफ़र (macOS) ढूँढने के लिए कॉपी करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="666"/>
+        <location filename="../qml/main.qml" line="667"/>
         <source>Type automatically</source>
         <translation>स्वचालित रूप से लिखें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="673"/>
+        <location filename="../qml/main.qml" line="674"/>
         <source>Sorting style</source>
         <translation>सॉर्टिंग शैली</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="682"/>
+        <location filename="../qml/main.qml" line="683"/>
         <source>Sort by module choice</source>
         <translation>मॉड्यूल पसंद द्वारा क्रमबद्ध करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="689"/>
+        <location filename="../qml/main.qml" line="690"/>
         <source>Sort ascending</source>
         <translation>आरोही क्रम में सॉर्ट करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="696"/>
+        <location filename="../qml/main.qml" line="697"/>
         <source>Sort descending</source>
         <translation>अवरोही क्रम में सॉर्ट करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="703"/>
+        <location filename="../qml/main.qml" line="704"/>
         <source>Minimizing behaviour</source>
         <translation>मिनिमाइज़िंग व्यवहार</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="712"/>
+        <location filename="../qml/main.qml" line="713"/>
         <source>Minimize normally</source>
         <translation>सामान्य रूप से छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="720"/>
+        <location filename="../qml/main.qml" line="721"/>
         <source>Minimize to tray</source>
         <translation>ट्रे में छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="727"/>
+        <location filename="../qml/main.qml" line="728"/>
         <source>Manual only: Minimize normally</source>
         <translation>केवल मैनुअल: सामान्य रूप से छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="735"/>
+        <location filename="../qml/main.qml" line="736"/>
         <source>Manual only: Minimize to tray</source>
         <translation>केवल मैनुअल: ट्रे में छोटा करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="761"/>
+        <location filename="../qml/main.qml" line="762"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
         <translation>वैश्विक कुंजी को दबाने पर पैक्सट को अग्र भाग में लाए (%1)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="773"/>
+        <location filename="../qml/main.qml" line="774"/>
         <source>&amp;Help</source>
         <translation>मदद</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="787"/>
+        <location filename="../qml/main.qml" line="788"/>
         <source>Check for updates</source>
         <translation>अपडेट्स के लिए जाँच करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="793"/>
+        <location filename="../qml/main.qml" line="794"/>
         <source>Install quick action service</source>
         <translation>त्वरित कार्य करने की सेवा को इंस्टॉल करे</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="861"/>
+        <location filename="../qml/main.qml" line="862"/>
         <source>Design philosophy</source>
         <translation>डिज़ाइन दर्शन</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="862"/>
+        <location filename="../qml/main.qml" line="863"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>पैक्स्ट आपके रास्ते से बाहर रहने के लिए डिज़ाइन किया गया है। जैसे ही एक मॉड्यूल समझा की आप इसका उपयोग कर चुके, पैक्स्ट सिस्टम ट्रे में छिप जायेगा। यदि आप पैक्स्ट
 के छिप जाने के बाद फिर उसे खोलना चाहते है तो, बस इसे फिर से शुरू या सिस्टम ट्रे से इसे खोलने की जरूरत है।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="903"/>
+        <location filename="../qml/main.qml" line="904"/>
         <source>Getting started</source>
         <translation>प्रारंभ करना</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="904"/>
+        <location filename="../qml/main.qml" line="905"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>आरंभ करने के लिए, एक नया टैब खोलने के लिए &lt;kbd&gt;%1&lt;/kbd&gt; दबाएं। जब आप किसी टैब के साथ काम कर लें, तो आप उसे &lt;kbd&gt;%2&lt;/kbd&gt; दबाकर हमेशा बंद कर सकते हैं। आपके पास वर्तमान में %n मॉड्यूल इंस्टॉल किए गए हैं आप मॉड्यूल मेनू में मॉड्यूल प्रबंधित कर सकते हैं।</numerusform>
@@ -726,7 +726,7 @@ Are you sure you want to quit?</source>
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="398"/>
+        <location filename="../qml/main.qml" line="399"/>
         <source>Manage modules</source>
         <translation>मॉड्यूल प्रबंधित करें</translation>
     </message>
@@ -741,72 +741,72 @@ Are you sure you want to quit?</source>
         <translation>पैक्स्ट (%1)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="344"/>
+        <location filename="../qml/main.qml" line="345"/>
         <source>&amp;Pext</source>
         <translation>पैक्स्ट</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="552"/>
+        <location filename="../qml/main.qml" line="553"/>
         <source>P&amp;rofile</source>
         <translation>प्रोफ़ाइल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="742"/>
+        <location filename="../qml/main.qml" line="743"/>
         <source>Automatic updates</source>
         <translation>स्वचालित अपडेट</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="746"/>
+        <location filename="../qml/main.qml" line="747"/>
         <source>Automatically check for Pext updates</source>
         <translation>पैक्स्ट अपडेटस के लिए स्वचालित रूप से जांचें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="753"/>
+        <location filename="../qml/main.qml" line="754"/>
         <source>Automatically update modules and themes</source>
         <translation>मॉड्यूल और थीम्स  स्वचालित रूप से अपडेट करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="767"/>
+        <location filename="../qml/main.qml" line="768"/>
         <source>Always show tray icon</source>
         <translation>हमेशा ट्रे चिह्न दिखाएं</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="777"/>
+        <location filename="../qml/main.qml" line="778"/>
         <source>About</source>
         <translation>परिचय</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="798"/>
+        <location filename="../qml/main.qml" line="799"/>
         <source>Visit homepage</source>
         <translation>मुखपृष्ठ पर जाऐँ</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="817"/>
+        <location filename="../qml/main.qml" line="818"/>
         <source>Clear</source>
         <translation>मिटाएं</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="817"/>
+        <location filename="../qml/main.qml" line="818"/>
         <source>Back</source>
         <translation>पीछे</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="826"/>
+        <location filename="../qml/main.qml" line="827"/>
         <source>Type to search</source>
         <translation>खोजने के लिए लिखें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="937"/>
+        <location filename="../qml/main.qml" line="938"/>
         <source>Processing: %1 (%2)</source>
         <translation>प्रोसेस किया जा रहा है : %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="939"/>
+        <location filename="../qml/main.qml" line="940"/>
         <source>Ready</source>
         <translation>तैयार</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="939"/>
+        <location filename="../qml/main.qml" line="940"/>
         <source>Waiting</source>
         <translation>इंतजार</translation>
     </message>

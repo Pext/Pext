@@ -521,210 +521,210 @@ Biztosan ki szeretne lépni?</translation>
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="348"/>
+        <location filename="../qml/main.qml" line="349"/>
         <source>Quit</source>
         <translation>Kilépés</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="354"/>
+        <location filename="../qml/main.qml" line="355"/>
         <source>&amp;Module</source>
         <translation>&amp;Modul</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="358"/>
+        <location filename="../qml/main.qml" line="359"/>
         <source>Reload active module</source>
         <translation>Aktív modul újratöltése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="365"/>
+        <location filename="../qml/main.qml" line="366"/>
         <source>Close active module</source>
         <translation>Aktív modul újratöltése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="377"/>
+        <location filename="../qml/main.qml" line="378"/>
         <source>Load module</source>
         <translation>Modul betöltése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="421"/>
+        <location filename="../qml/main.qml" line="422"/>
         <source>Install module</source>
         <translation>Modul telepítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="426"/>
+        <location filename="../qml/main.qml" line="427"/>
         <source>From online module list</source>
         <translation>Online modul listából</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="449"/>
-        <location filename="../qml/main.qml" line="540"/>
+        <location filename="../qml/main.qml" line="450"/>
+        <location filename="../qml/main.qml" line="541"/>
         <source>From URL</source>
         <translation>URL címről</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="461"/>
+        <location filename="../qml/main.qml" line="462"/>
         <source>&amp;Theme</source>
         <translation>&amp;Téma</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="469"/>
+        <location filename="../qml/main.qml" line="470"/>
         <source>Switch theme</source>
         <translation>Téma váltása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="489"/>
+        <location filename="../qml/main.qml" line="490"/>
         <source>Manage themes</source>
         <translation>Témák kezelése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="512"/>
+        <location filename="../qml/main.qml" line="513"/>
         <source>Install theme</source>
         <translation>Téma telepítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="517"/>
+        <location filename="../qml/main.qml" line="518"/>
         <source>From online theme list</source>
         <translation>Online téma listából</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="556"/>
+        <location filename="../qml/main.qml" line="557"/>
         <source>Switch profile</source>
         <translation>Profilváltás</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="576"/>
+        <location filename="../qml/main.qml" line="577"/>
         <source>Manage profiles</source>
         <translation>Profilok kezelése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="594"/>
+        <location filename="../qml/main.qml" line="595"/>
         <source>&amp;Settings</source>
         <translation>&amp;Beállítások</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="600"/>
+        <location filename="../qml/main.qml" line="601"/>
         <source>Language</source>
         <translation>Nyelv</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="610"/>
+        <location filename="../qml/main.qml" line="611"/>
         <source>System locale</source>
         <translation>Rendszer nyelve</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="634"/>
+        <location filename="../qml/main.qml" line="635"/>
         <source>Output style</source>
         <translation>Kimenet stílusa</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="643"/>
+        <location filename="../qml/main.qml" line="644"/>
         <source>Copy to default clipboard</source>
         <translation>Másolás az alapértelmezett vágólapra</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="651"/>
+        <location filename="../qml/main.qml" line="652"/>
         <source>Copy to selection clipboard (X11)</source>
         <translation>Másolás a kijelölésvágólapra (X11)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="659"/>
+        <location filename="../qml/main.qml" line="660"/>
         <source>Copy to find buffer (macOS)</source>
         <translation>Másolás a &quot;find&quot; pufferre (macOS)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="666"/>
+        <location filename="../qml/main.qml" line="667"/>
         <source>Type automatically</source>
         <translation>Automatikus gépelés</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="673"/>
+        <location filename="../qml/main.qml" line="674"/>
         <source>Sorting style</source>
         <translation>Rendezés szempontja</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="682"/>
+        <location filename="../qml/main.qml" line="683"/>
         <source>Sort by module choice</source>
         <translation>Rendezés a modul választása szerint</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="689"/>
+        <location filename="../qml/main.qml" line="690"/>
         <source>Sort ascending</source>
         <translation>Rendezés növekvő sorrendben</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="696"/>
+        <location filename="../qml/main.qml" line="697"/>
         <source>Sort descending</source>
         <translation>Rendezés csökkenő sorrendben</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="703"/>
+        <location filename="../qml/main.qml" line="704"/>
         <source>Minimizing behaviour</source>
         <translation>Minimalizálás típusa</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="712"/>
+        <location filename="../qml/main.qml" line="713"/>
         <source>Minimize normally</source>
         <translation>Általános minimalizálás</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="720"/>
+        <location filename="../qml/main.qml" line="721"/>
         <source>Minimize to tray</source>
         <translation>Minimalizálás a tálcára</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="727"/>
+        <location filename="../qml/main.qml" line="728"/>
         <source>Manual only: Minimize normally</source>
         <translation>Csak kézi: Általános minimalizálás</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="735"/>
+        <location filename="../qml/main.qml" line="736"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Csak kézi: Minimalizálás a tálcára</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="761"/>
+        <location filename="../qml/main.qml" line="762"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
         <translation>Hozza előtérbe a Pextet, ha lenyomja a globális gyorsbillentyűt (%1)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="773"/>
+        <location filename="../qml/main.qml" line="774"/>
         <source>&amp;Help</source>
         <translation>&amp;Segítség</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="787"/>
+        <location filename="../qml/main.qml" line="788"/>
         <source>Check for updates</source>
         <translation>Frissítések keresése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="793"/>
+        <location filename="../qml/main.qml" line="794"/>
         <source>Install quick action service</source>
         <translation>Quick action szolgáltatás telepítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="861"/>
+        <location filename="../qml/main.qml" line="862"/>
         <source>Design philosophy</source>
         <translation>Tervezési filozófia</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="862"/>
+        <location filename="../qml/main.qml" line="863"/>
         <source>Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.</source>
         <translation>A Pextet úgy terveztük, hogy ne álljon az útjában. Amint egy modul úgy gondolja, hogy Ön végzett a használatával, a Pext minimalizálja magát a rendszer tálcájára. Ha újra szüksége lesz a Pextre miután elrejtette magát, indítsa el újra, vagy nyissa meg a tálcáról.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="903"/>
+        <location filename="../qml/main.qml" line="904"/>
         <source>Getting started</source>
         <translation>Első lépések</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/main.qml" line="904"/>
+        <location filename="../qml/main.qml" line="905"/>
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
         <translation>
             <numerusform>Nyomja le a &lt;kbd&gt;%1&lt;/kbd&gt; billentyű(kombináció)t egy új lap létrehozásához. Amikor egy lapon végzett a munkával, nyomja le a &lt;kbd&gt;%2&lt;/kbd&gt; billentyű(kombináció)t a lap bezárásához. Jelenleg %n modul van telepítve. A modulokat a Modul menüben kezelheti.</numerusform>
         </translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="398"/>
+        <location filename="../qml/main.qml" line="399"/>
         <source>Manage modules</source>
         <translation>Modulok kezelése</translation>
     </message>
@@ -739,72 +739,72 @@ Biztosan ki szeretne lépni?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="344"/>
+        <location filename="../qml/main.qml" line="345"/>
         <source>&amp;Pext</source>
         <translation>&amp;Pext</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="552"/>
+        <location filename="../qml/main.qml" line="553"/>
         <source>P&amp;rofile</source>
         <translation>P&amp;rofil</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="742"/>
+        <location filename="../qml/main.qml" line="743"/>
         <source>Automatic updates</source>
         <translation>Automatikus frissítések</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="746"/>
+        <location filename="../qml/main.qml" line="747"/>
         <source>Automatically check for Pext updates</source>
         <translation>A Pext frissítéseinek automatikus keresése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="753"/>
+        <location filename="../qml/main.qml" line="754"/>
         <source>Automatically update modules and themes</source>
         <translation>Modulok és témák automatikus frissítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="767"/>
+        <location filename="../qml/main.qml" line="768"/>
         <source>Always show tray icon</source>
         <translation>Mindig mutassa a tálca ikont</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="777"/>
+        <location filename="../qml/main.qml" line="778"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="798"/>
+        <location filename="../qml/main.qml" line="799"/>
         <source>Visit homepage</source>
         <translation>Honlap meglátogatása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="817"/>
+        <location filename="../qml/main.qml" line="818"/>
         <source>Clear</source>
         <translation>Törlés</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="817"/>
+        <location filename="../qml/main.qml" line="818"/>
         <source>Back</source>
         <translation>Vissza</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="826"/>
+        <location filename="../qml/main.qml" line="827"/>
         <source>Type to search</source>
         <translation>Gépeljen a kereséshez</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="937"/>
+        <location filename="../qml/main.qml" line="938"/>
         <source>Processing: %1 (%2)</source>
         <translation>Feldolgozás: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="939"/>
+        <location filename="../qml/main.qml" line="940"/>
         <source>Ready</source>
         <translation>Kész</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="939"/>
+        <location filename="../qml/main.qml" line="940"/>
         <source>Waiting</source>
         <translation>Várakozás</translation>
     </message>
