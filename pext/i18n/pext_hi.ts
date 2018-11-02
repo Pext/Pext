@@ -68,12 +68,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished">पैक्सट</translation>
+        <translation>पैक्सट</translation>
     </message>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्सट - %1</translation>
     </message>
 </context>
 <context>
@@ -81,12 +81,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">पैक्सट</translation>
+        <translation>पैक्सट</translation>
     </message>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्सट - %1</translation>
     </message>
 </context>
 <context>
@@ -471,12 +471,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished">पैक्सट</translation>
+        <translation>पैक्स्ट</translation>
     </message>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्स्ट - %1</translation>
     </message>
 </context>
 <context>
@@ -733,12 +733,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext</source>
-        <translation type="unfinished">पैक्सट</translation>
+        <translation>पैक्स्ट</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्स्ट (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="344"/>
