@@ -7,11 +7,11 @@
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 
+## Contents
+
 <a href="https://repology.org/metapackage/pext/versions">
     <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.20" alt="Packaging status" align="right">
 </a>
-
-## Contents
 
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
