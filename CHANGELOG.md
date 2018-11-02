@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Pext's Window is now 800x600 by default and centered on the screen
 
 ### Fixed
-- Module installation issues in Windows distribution. Again.
+- Module installation issues on Windows and Linux Mint
 - Title and tray tooltip are now translatable
 
 ## [0.20] - 2018-10-12
