@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.21] - 2018-11-02
 ### API changes
 - Bump API version to 0.9.0
 - Commands can now be multiple words and arguments will be given in a new 'args' field
