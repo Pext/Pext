@@ -84,6 +84,7 @@ export PIP_VERBOSE=1
 AIU_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdate-XXXXXX)
 pushd "$AIU_DIR"/
 git clone --recursive https://github.com/AppImage/AppImageUpdate
+cd AppImageUpdate
 mkdir build
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX="$REPO_ROOT"/AppDir -DBUILD_QT_UI=OFF
