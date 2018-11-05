@@ -58,7 +58,7 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/mast
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
-export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests . -e git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate"
+export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate ."
 
 mkdir -p AppDir/usr/share/metainfo/
 cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
@@ -79,6 +79,28 @@ chmod +x linuxdeploy*.{sh,AppImage}
 # make sure linuxdeploy-plugin-conda switches to repo root so that the "." pip requirement can be satisfied
 export PIP_WORKDIR="$REPO_ROOT"
 export PIP_VERBOSE=1
+
+# build AppImageUpdate and install it into conda prefix
+AIU_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdate-XXXXXX)
+git clone --recursive https://github.com/AppImage/AppImageUpdate
+pushd "$AIU_DIR"/
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX="$REPO_ROOT"/AppDir -DBUILD_QT_UI=OFF
+make -j$(nproc)
+make install
+popd
+
+# Put all appimageupdatetool deps in our AppImage
+AIUT_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdateTool-XXXXXX)
+pushd "$AIUT_DIR"/
+url=$(wget -qO- https://api.github.com/repos/AppImage/AppImageUpdate/releases | grep browser_download_url | cut -d: -f2- | sed 's|"||g' | grep appimageupdatetool | grep -E '.AppImage$' | sed 's| ||g')
+wget "$url"
+chmod +x appimageupdatetool*.AppImage
+./appimageupdatetool*.AppImage --appimage-extract
+rm squashfs-root/usr/lib/libappimageupdate.so
+cp squashfs-root/usr/lib/*.so* "$REPO_ROOT"/AppDir/lib/
+popd
 
 ./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh
 
