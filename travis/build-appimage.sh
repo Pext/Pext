@@ -82,8 +82,8 @@ export PIP_VERBOSE=1
 
 # build AppImageUpdate and install it into conda prefix
 AIU_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdate-XXXXXX)
-git clone --recursive https://github.com/AppImage/AppImageUpdate
 pushd "$AIU_DIR"/
+git clone --recursive https://github.com/AppImage/AppImageUpdate
 mkdir build
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX="$REPO_ROOT"/AppDir -DBUILD_QT_UI=OFF
