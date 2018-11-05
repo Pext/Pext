@@ -5,7 +5,95 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.21] - 2018-11-02
+### API changes
+- Bump API version to 0.9.0
+- Commands can now be multiple words and arguments will be given in a new 'args' field
+- ask_question_default_yes and ask_question_default_no are deprecated in favor of ask_question
+
+### Changed
+- Better error logging, using dialogs for critical errors
+- Pext's Window is now 800x600 by default and centered on the screen
+
+### Fixed
+- Module installation issues on Windows and Linux Mint
+- Title and tray tooltip are now translatable
+
+## [0.20] - 2018-10-12
+### Added
+- Are you sure message when closing Pext normally
+- Add installable touch bar quick action service for easier launching on macOS
+
+### Changed
+- Pick a more reasonable height on wide screens
+
+### Fixed
+- Minimize normally manually now works as intended
+- Autotype now correctly queues up multiple entries to type
+- Focus fix on macOS is now fast and reliable again
+- Logo background is no longer misaligned
+
+## [0.19] - 2018-09-05
+### Added
+- Foreground Pext at any time by pressing Ctrl+\`
+
+### Changed
+- Move upstream URLs to pext.io
+
+### Fixed
+- Fixed --module flag
+- Fixed module install screens (from URL and from repo) failing when redirected
+
+## [0.18] - 2018-08-22
+### Added
+- Belarusian translation (thanks, Nelly Simkova!)
+
+### Fixed
+- Module installation issues in Windows distribution
+
+## [0.17] - 2018-07-08
+### Packaging changes
+- New dependency: [requests](https://pypi.org/project/requests/)
+
+### Added
+- Metadata i18n support
+- No result text when filtering empties list
+
+### Fixed
+- Pext on macOS now ignores -psn_0_* arguments
+- USE_INTERNAL_UPDATER is now used correctly
+- Terminal window opening on Windows
+- macOS certificate check failing on update check
+- Off-by-one error in git describe version generation
+- Installing module fails (rebuild on dulwich 0.9.15)
+
+## [0.16] - 2018-06-22
+### Packaging changes
+- New dependency: [pynput](https://pypi.org/project/pynput/)
+- New macOS dependency: [accessibility](https://pypi.org/project/accessibility)
+- Dependency removal: notify-send
+
+### Added
+- Ability to switch output location on runtime
+- Ability to type output directly
+- Ability to automatically update modules
+- Windows installer
+- Polish translation
+
+### Changed
+- Switch to Qt5 for notifications
+- Remove delay in showing notifications
+- Core and module update checks are now done together
+- Critical module errors now create a dialog box
+
+### Fixed
+- Inconsistent behaviour between clicking or selecting an entry
+- MacOS menu not merging on non-English languages
+
+## [0.15] - 2018-06-07
+### Packaging changes
+- The macOS .dmg is now officially supported
+
 ### Changed
 - Remove quit without saving option
 - Configuration changes are now saved instantly, instead of only on a clean quit
@@ -13,6 +101,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Focus not resetting after Pext hiding on macOS
+- Updated PyQt5 to fix some emoji display issues
+- macOS .dmg not being able to install all modules
 
 ## [0.14] - 2018-04-22
 ### Packaging changes

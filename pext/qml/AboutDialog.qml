@@ -28,15 +28,21 @@ Dialog {
     height: 350
     width: 500
 
-    property var translators: {"en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
-                               "es": [{"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
-                               "fr": [{"name": "Aurora Yeen &lt;<a href='https://t.me/YeenAurora'>@YeenAurora</a>&gt;"}],
+    property var translators: {"be": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
+                               "en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
+                               "es": [{"name": "Rose Garcia", "email": "rosegarcia@protonmail.com"},
+                                      {"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
+                               "fr": [{"name": "Claire Goulet"},
+                                      {"name": "Aurora Yeen"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
-                               "hi": [{"name": "Satyam Singh", "email": "trueleo@protonmail.com"}],
+                               "hi": [{"name": "Aayush Gupta", "email": "aayushgupta219@gmail.com"},
+                                      {"name": "Satyam Singh", "email": "trueleo@protonmail.com"}],
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
-                               "ru": [{"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
+                               "pl": [{"name": "Konrad Dybcio"}],
+                               "ru": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"},
+                                      {"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
                                "zh_Hant": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
 
     TabView {

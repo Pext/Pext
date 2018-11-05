@@ -17,10 +17,11 @@
 
 ## Preparation
 1. Update the ``<VERSION>`` in ``pext/VERSION``
+2. Update the ``<VERSION>`` in ``Info.plist``
 3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG``
 
 ## GitHub
-1. ```git add pext/VERSION CHANGELOG```
+1. ```git add pext/VERSION Info.plist CHANGELOG```
 2. ```git commit -m "Release Pext v<VERSION>"```
 3. ```git tag -a v<VERSION> -m "Release Pext v<VERSION>"```
 4. ```git push```

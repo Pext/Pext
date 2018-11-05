@@ -76,6 +76,8 @@ class ModuleBase(ABC):
     def selection_made(self, selection: List[Dict[SelectionType, str]]) -> None:
         """Introduced in API version 0.1.0.
 
+        Last changed in API version 0.8.0.
+
         Called when the user makes a selection.
 
         The selection variable contains a list of the selection tree and the
@@ -86,7 +88,8 @@ class ModuleBase(ABC):
         [{type: SelectionType.entry, value: "Audio settings"}]. If the user
         then runs the command "volume 50", this function is called again, with
         the value of selection being
-        [{type: SelectionType.entry, value: "Audio settings"}, {type: SelectionType.command, value: "volume 50"}].
+        [{type: SelectionType.entry, value: "Audio settings"},
+         {type: SelectionType.command, value: "volume", args: ["50"]}].
         """
         pass
 

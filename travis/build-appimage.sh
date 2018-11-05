@@ -4,7 +4,7 @@ set -x
 set -e
 
 # use RAM disk if possible
-if [ -d /dev/shm ]; then
+if [ -d /dev/shm ] && [ "$CI" != "" ]; then
     TEMP_BASE=/dev/shm
 else
     TEMP_BASE=/tmp
@@ -26,119 +26,42 @@ OLD_CWD=$(readlink -f .)
 
 pushd "$BUILD_DIR"/
 
-# install Miniconda, a self contained Python distribution, into AppDir
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh -b -p AppDir/usr -f
-
-# activate Miniconda environment
-. AppDir/usr/bin/activate
-
-# build AppImageUpdate and install it into conda prefix
-git clone --recursive https://github.com/AppImage/AppImageUpdate
-pushd AppImageUpdate
-mkdir build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX"/ -DBUILD_QT_UI=OFF
-make -j$(nproc)
-make install
-popd
-
-# Put all appimageupdatetool deps in our AppImage
-AIUT_DIR=$(mktemp -d -p "$TEMP_BASE" AppImageUpdateTool-XXXXXX)
-pushd "$AIUT_DIR"/
-url=$(wget -qO- https://api.github.com/repos/AppImage/AppImageUpdate/releases | grep browser_download_url | cut -d: -f2- | sed 's|"||g' | grep appimageupdatetool | grep -E '.AppImage$' | sed 's| ||g')
-wget "$url"
-chmod +x appimageupdatetool*.AppImage
-./appimageupdatetool*.AppImage --appimage-extract
-rm squashfs-root/usr/lib/libappimageupdate.so
-cp squashfs-root/usr/lib/*.so* "$CONDA_PREFIX"/lib/
-popd
-
-# install python-appimageupdate into conda prefix
-git clone https://github.com/TheAssassin/python-appimageupdate.git
-pushd python-appimageupdate
-python setup.py install --prefix="$CONDA_PREFIX/"
-popd
-
-# Arch lacks libxi, which is needed for xcb support (aka: X11)
-conda config --add channels conda-forge
-conda install -y xorg-libxi
-
-# install dependencies
-pip install PyQt5==5.8 PyOpenGL PyOpenGL_accelerate dulwich
-
-# install Pext
-pushd "$REPO_ROOT"/
-python setup.py install
-popd
-
-# copy resources to AppDir
-mkdir -p AppDir/usr/share/metainfo
-cp "$REPO_ROOT"/pext.appdata.xml AppDir/usr/share/metainfo
-cp "$REPO_ROOT"/pext.desktop "$REPO_ROOT"/pext/images/scalable/pext.svg AppDir
-
-# copy in libraries
-wget https://raw.githubusercontent.com/AppImage/AppImages/master/functions.sh
-# back up conda provided libraries -- system one won't work
-mkdir lib-bak
-cp AppDir/usr/lib/*.so* lib-bak/
-#(. functions.sh && cd AppDir && set +x && copy_deps && copy_deps && copy_deps && move_lib && delete_blacklisted)
-(. functions.sh && cd AppDir && set +x && move_lib || true && delete_blacklisted)
-mv AppDir/usr/lib/x86_64-linux-gnu/*.so* AppDir/usr/lib/ || true
-# copy back libraries
-cp --remove-destination lib-bak/* AppDir/usr/lib/
-#rm -rf AppDir/usr/lib/x86_64-linux-gnu/
-
-# remove unnecessary libraries and other useless data
-find AppDir/usr \
-    -iname '*Tk*' \
-    -or -iname '*QtNetwork*' \
-    -or -iname '*lib2to3*' \
-    -or -iname '*ucene*' \
-    -or -iname '*pip*' \
-    -or -iname '*setuptools*' \
-    -or -iname '*declarative*'  \
-    -or -iname 'libreadline*.so*' \
-    -or -iname '*.a' \
-    -delete
-
-# precompile bytecode to speed up startup
-# do this after deleting lib2to3, otherwise it won't compile
-pushd AppDir/
-python -m compileall . -fqb || true
-popd
-
-# install AppRun
-cat > AppDir/AppRun <<EAT
+# set up custom AppRun script
+cat > AppRun.sh <<\EAT
 #! /bin/sh
 
 # make sure to set APPDIR when run directly from the AppDir
-if [ -z \$APPDIR ]; then APPDIR=\$(readlink -f \$(dirname "\$0")); fi
+if [ -z $APPDIR ]; then APPDIR=$(readlink -f $(dirname "$0")); fi
 
-export LD_LIBRARY_PATH="\$APPDIR"/usr/lib
+export LD_LIBRARY_PATH="$APPDIR"/usr/lib
 
-for path in /etc/ssl/ca-bundle.pem \\
-    /etc/ssl/certs/ca-certificates.crt \\
-    /etc/ssl/cert.pem /etc/pki/tls/certs/ca-bundle.crt \\
-    /etc/pki/tls/cert.pem /etc/pki/tls/cacert.pem \\
+for path in /etc/ssl/ca-bundle.pem \
+    /etc/ssl/certs/ca-certificates.crt \
+    /etc/ssl/cert.pem /etc/pki/tls/certs/ca-bundle.crt \
+    /etc/pki/tls/cert.pem /etc/pki/tls/cacert.pem \
     /usr/local/share/certs/ca-root-nss.crt; do
-    if [ -f "\$path" ]; then
-        export SSL_CERT_FILE="\$path"
+    if [ -f "$path" ]; then
+        export SSL_CERT_FILE="$path"
         break
     fi
 done
 
-exec "\$APPDIR"/usr/bin/python -m pext "\$@"
+exec "$APPDIR"/usr/bin/python -m pext "$@"
 EAT
 
-chmod +x AppDir/AppRun
+chmod +x AppRun.sh
 
-# get appimagetool
-wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
-chmod +x appimagetool-x86_64.AppImage
-./appimagetool-x86_64.AppImage --appimage-extract
+# get linuxdeploy and its conda plugin
+wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/master/linuxdeploy-plugin-conda.sh
 
-# build AppImage
+# can use the plugin's environment variables to ease some setup
+export CONDA_CHANNELS=conda-forge
+export CONDA_PACKAGES=xorg-libxi
+export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests . -e git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate"
+
+mkdir -p AppDir/usr/share/metainfo/
+cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
 
 # continuous releases should use the latest continuous build for updates
 APPIMAGEUPDATE_TAG=continuous
@@ -149,7 +72,38 @@ if [ "$TRAVIS_TAG" != "" ]; then
     APPIMAGEUPDATE_TAG=latest
 fi
 
-squashfs-root/AppRun -u "gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync" AppDir
+export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync"
+
+chmod +x linuxdeploy*.{sh,AppImage}
+
+# make sure linuxdeploy-plugin-conda switches to repo root so that the "." pip requirement can be satisfied
+export PIP_WORKDIR="$REPO_ROOT"
+export PIP_VERBOSE=1
+
+./linuxdeploy-x86_64.AppImage --appdir AppDir --plugin conda -d "$REPO_ROOT"/io.pext.pext.desktop -i "$REPO_ROOT"/pext/images/scalable/pext.svg --custom-apprun AppRun.sh
+
+# remove unused files from AppDir manually
+# these files are nothing the conda plugin could remove manually
+rm  AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/QtWebEngine*
+rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/translations/qtwebengine*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/resources/qtwebengine*
+rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/qml/QtWebEngine*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/plugins/webview/libqtwebview*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
+
+# now, actually build AppImage
+# the extracted AppImage files will be cleaned up now
+#./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+
+ls -al AppDir/
+
+python "$REPO_ROOT/setup.py" || true
+export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+
+wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+chmod +x appimagetool*.AppImage
+./appimagetool*.AppImage AppDir -u "$UPD_INFO"
 
 # move AppImage back to old CWD
-mv Pext-*.AppImage* "$OLD_CWD"/
+mv Pext*.AppImage* "$OLD_CWD"/

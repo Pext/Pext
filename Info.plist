@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleDisplayName</key>
+    <string>Pext</string>
+    <key>CFBundleExecutable</key>
+    <string>Pext</string>
+    <key>CFBundleIconFile</key>
+    <string>Pext/pext/images/scalable/pext.icns</string>
+    <key>CFBundleIdentifier</key>
+    <string>io.pext.pext</string>
+    <key>CFBundleName</key>
+    <string>Pext</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleVersion</key>
+    <string>0.21</string>
+    <key>CFBundleShortVersionString</key>
+    <string>0.21</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>10.7.0</string>
+    <key>LSUIElement</key>
+    <false/>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>© 2018 Sylvia van Os</string>
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+    <key>LSEnvironment</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    </dict>
+</dict>
+</plist>

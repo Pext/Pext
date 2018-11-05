@@ -2,38 +2,28 @@
 
 ![Lilly the leoger](/logo.png)
 
-[![Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
+[![Linux & macOS Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
+[![Windows Build status](https://ci.appveyor.com/api/projects/status/73oaa4x1spa5vumx/branch/master?svg=true)](https://ci.appveyor.com/project/TheLastProject/pext/branch/master)
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
-[![Code Health](https://landscape.io/github/Pext/Pext/master/landscape.svg?style=flat)](https://landscape.io/github/Pext/Pext/master)
 
 ## Contents
 
-- [Community](#community)
+<a href="https://repology.org/metapackage/pext/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.21" alt="Packaging status" align="right">
+</a>
+
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
 - [Installation](#installation)
   - [GNU/Linux](#gnulinux)
   - [macOS](#macos)
-  - [Windows (experimental)](#windows-experimental)
+  - [Windows](#windows)
 - [Usage](#usage)
 - [Hotkeys](#hotkeys)
-- [Troubleshooting](#troubleshooting)
-  - [GNU/Linux](#gnulinux-1)
-  - [Windows](#windows)
+- [Community](#community)
 - [License](#license)
 
-## Community
-
-If you need support or just want to chat with our community, we have the following options:
-
-- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
-- Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
-- Telegram: [@PextTool](https://t.me/PextTool)
-
-All these channels are linked to each other, so there is no need to worry about missing out.
-
-We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## Introduction
 
@@ -90,17 +80,19 @@ pip3 install git+https://github.com/Pext/Pext.git --user
 
 On some systems, you may need to use pip instead of pip3.
 
-Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md)
+Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ### macOS
 
-A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). This is still experimental, please report any issues.
+A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). If you use [Homebrew](https://brew.sh), you can use `brew cask install pext` on the command line.
 
-Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md)
+Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
-### Windows (experimental)
+### Windows
 
-See [Installing Pext from source](INSTALL_FROM_SOURCE.md)
+A Windows installer is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases).
+
+Alternatively, see See [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ## Usage
 
@@ -135,40 +127,19 @@ For command line options, use `--help`.
 
 ### Session management
 
-- Ctrl+Q: Quit and save the currently loaded modules and settings to the profile
-- Ctrl+Shift+Q: Quit without saving to the profile
+- Ctrl+Q: Quit
 
-## Troubleshooting
+## Community
 
-### GNU/Linux
+If you need support or just want to chat with our community, we have the following options:
 
-#### Installing module dependencies fails
+- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
+- Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
+- Telegram: [@PextTool](https://t.me/PextTool)
 
-Your distribution may ship with an outdated version of pip. Run ``pip install --upgrade pip`` (possibly as root) in a terminal.
+All these channels are linked to each other, so there is no need to worry about missing out.
 
-#### Pext's window is completely white
-
-The proprietary NVIDIA driver is known to cause this issue on at least Ubuntu. You can work around this by running ``sudo apt-get install python3-opengl``.
-
-Pext user report: <https://github.com/Pext/Pext/issues/11>
-Ubuntu bug: <https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826>
-
-### Windows
-
-#### The python or pip commands do not work/The PATH variable is wrong
-
-In the installer, make sure that 'Include Python in PATH' or similar is checked. Then after the installation, start a new command prompt and type `python -V` or `pip3` to check if it was properly installed. If the version number and the help message are returned respectively, you are good to go further. If not, in case you already had `cmd.exe` open, restart it or execute `refreshenv` to reload environment variables.
-If it still does not work yet, check if the PATH was set in the GUI or manually with `cmd.exe`.
-
-GUI:
-
-- Start Menu > Computer (right click) > Properties > Advanced System Settings > Environment Variables
-- Check the PATH for both the system and the current user and in one of them the Python installation directory should be present, which is normally `C:\Python36` and `C:\Python36\Scripts`
-
-cmd.exe:
-
-- Run `path` or `echo %PATH%` to check if the directory (`C:\Python36` and `C:\Python36\Scripts`) is included
-- The path can then be set with `setx` but because the possibility for truncation and the merging of users and system path, the gui method is to be preferred. (more details: <https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows>)
+We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## License
 
@@ -184,4 +155,4 @@ Under artwork and documentation fall:
 - All Markdown files in the root directory.
 - logo.png
 
-When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as Lilly the leoger by White Paper Fox. Alternatively, it may be referred to as the Pext logo. Please link to Pext with <https://github.com/Pext/Pext> or <https://pext.hackerchick.me/> and to White Paper Fox with <http://www.whitepaperfox.com/> where possible.
+When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as Lilly the leoger by White Paper Fox. Alternatively, it may be referred to as the Pext logo. Please link to Pext with <https://github.com/Pext/Pext> or <https://pext.io/> and to White Paper Fox with <http://www.whitepaperfox.com/> where possible.

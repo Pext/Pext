@@ -1,0 +1,67 @@
+install:
+  - set PATH=C:\Miniconda3-x64;C:\Miniconda3-x64\Scripts;%PATH%
+
+build: off
+
+after_test:
+  - conda create -n Pext python --yes
+  - activate Pext
+  - pip install PyQt5 pynput requests
+  - git clone -q --branch=master https://github.com/dulwich/dulwich dulwich-master
+  - cd dulwich-master
+  - python setup.py install
+  - cd ..\
+  - deactivate
+  - mkdir ..\Build
+  - mkdir ..\Build\Pext
+  - XCOPY /E /H /Y /C "*" ..\Build\Pext\
+  - XCOPY /E /H /Y /C "C:\Miniconda3-x64\envs\Pext\*" ..\Build\
+  - ps: echo "CD /d %~dp0" > ..\Build\Pext.bat1
+  - ps: echo "START .\pythonw .\Pext\pext %*" >> ..\Build\Pext.bat1
+  - ps: get-content ..\Build\Pext.bat1 | set-content ..\Build\Pext.bat
+  - DEL ..\Build\Pext.bat1
+  - cd ..\Build
+  - echo !define APPNAME "Pext" > Pext.nsi
+  - echo Name ${APPNAME} >> Pext.nsi
+  - echo Icon 'Pext\pext\images\scalable\pext.ico' >> Pext.nsi
+  - echo OutFile 'Pext.exe' >> Pext.nsi
+  - echo RequestExecutionLevel admin >> Pext.nsi
+  - echo InstallDir "$PROGRAMFILES\${APPNAME}" >> Pext.nsi
+  - echo Page directory >> Pext.nsi
+  - echo Page instfiles >> Pext.nsi
+  - echo Section 'install' >> Pext.nsi
+  - echo SetOutPath $INSTDIR >> Pext.nsi
+  - echo File /r '*' >> Pext.nsi
+  - echo WriteUninstaller '$INSTDIR\uninstall.exe' >> Pext.nsi
+  - echo CreateShortcut '$SMPROGRAMS\Pext.lnk' '$INSTDIR\Pext.bat' '' '$INSTDIR\Pext\pext\images\scalable\pext.ico' >> Pext.nsi
+  - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}" >> Pext.nsi
+  - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\"" >> Pext.nsi
+  - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S" >> Pext.nsi
+  - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "InstallLocation" "$\"$INSTDIR$\"" >> Pext.nsi
+  - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayIcon" "$\"$INSTDIR\Pext\pext\images\scalable\pext.ico$\"" >> Pext.nsi
+  - echo WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoModify" 1 >> Pext.nsi
+  - echo WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoRepair" 1 >> Pext.nsi
+  - echo SectionEnd >> Pext.nsi
+  - echo Section 'uninstall' >> Pext.nsi
+  - echo Delete '$SMPROGRAMS\Pext.lnk' >> Pext.nsi
+  - echo RmDir /r '$INSTDIR' >> Pext.nsi
+  - echo SectionEnd >> Pext.nsi
+  - makensis Pext.nsi
+  - cd ..\Pext
+  - MOVE ..\Build\Pext.exe Pext.exe
+
+artifacts:
+  - path: Pext.exe
+
+deploy:
+  description: 'Continuous build'
+  provider: GitHub
+  auth_token:
+    secure: 65d53bVQDHWMI6lhm76+WQcIYtkNufVnmZ5XGVWyW3G/dD8aJwvpGzZoTxDP0gu6
+  artifact: Pext.exe
+  draft: false
+  prerelease: true
+  on:
+    branch: master
+    appveyor_repo_tag: true
+    APPVEYOR_REPO_TAG_NAME: continuous

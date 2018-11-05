@@ -22,17 +22,29 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
+import QtQuick.Extras 1.0
 
 ApplicationWindow {
     id: applicationWindow
+    title: currentProfile == defaultProfile ? qsTr("Pext") : qsTr("Pext (%1)").arg(currentProfile)
     property bool internalUpdaterEnabled: USE_INTERNAL_UPDATER
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
-    minimumWidth: 500
-    minimumHeight: 300
-    width: Screen.width
-    height: 300
+    minimumWidth: 800
+    minimumHeight: 600
+    x: (Screen.width - width) / 2
+    y: (Screen.height - height) / 2
+
+    signal confirmedClose()
+
+    onClosing: {
+        close.accepted = false;
+        var confirmQuitDialog = Qt.createComponent("ConfirmQuitDialog.qml");
+        confirmQuitDialog.createObject(applicationWindow,
+            {"confirmedClose": confirmedClose,
+             "platform": platform});
+    }
 
     flags: Qt.Window
 
@@ -69,6 +81,58 @@ ApplicationWindow {
         onShowNoUpdateAvailableDialog: {
             var noUpdateAvailableDialog = Qt.createComponent("NoUpdateAvailableDialog.qml");
             noUpdateAvailableDialog.createObject(applicationWindow);
+        }
+    }
+
+    Item {
+        objectName: "inputRequests"
+
+        signal inputRequest(string moduleName, string description, bool isPassword, bool isMultiline, string prefill)
+        signal inputRequestAccepted(string userInput)
+        signal inputRequestRejected()
+
+        onInputRequest: {
+            var inputRequestDialog = Qt.createComponent("InputRequestDialog.qml");
+            inputRequestDialog.createObject(applicationWindow,
+                {"moduleName": moduleName,
+                 "description": description,
+                 "isPassword": isPassword,
+                 "isMultiline": isMultiline,
+                 "prefill": prefill,
+                 "requestAccepted": inputRequestAccepted,
+                 "requestRejected": inputRequestRejected});
+        }
+    }
+
+    Item {
+        objectName: "questionDialog"
+
+        signal showQuestionDialog(string moduleName, string question)
+        signal questionAccepted()
+        signal questionRejected()
+
+        onShowQuestionDialog: {
+            var questionDialog = Qt.createComponent("QuestionDialog.qml");
+            questionDialog.createObject(applicationWindow,
+                {"moduleName": moduleName,
+                 "question": question,
+                 "accepted": questionAccepted,
+                 "rejected": questionRejected});
+        }
+    }
+
+
+    Item {
+        objectName: "errorDialog"
+
+        signal showErrorDialog(string moduleName, string message, string detailedMessage)
+
+        onShowErrorDialog: {
+            var errorDialog = Qt.createComponent("CriticalErrorDialog.qml");
+            errorDialog.createObject(applicationWindow,
+              {"moduleName": moduleName,
+               "message": message,
+               "detailedMessage": detailedMessage});
         }
     }
 
@@ -288,7 +352,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuQuit"
-                text: qsTr("Quit")
+                text: platform == 'Darwin' ? "Quit" : qsTr("Quit")
                 shortcut: StandardKey.Quit
             }
         }
@@ -371,10 +435,10 @@ ApplicationWindow {
                     property var repositories:
                         [{
                           "name": "Pext team",
-                          "url": "https://pext.hackerchick.me/modules_v2.json"
+                          "url": "https://pext.io/modules_v2.json"
                         }, {
                           "name": "Other developers",
-                          "url": "https://pext.hackerchick.me/third_party_modules_v2.json"
+                          "url": "https://pext.io/third_party_modules_v2.json"
                         }]
 
                     onTriggered: {
@@ -383,7 +447,8 @@ ApplicationWindow {
                             {"installedObjects": modules,
                              "installRequest": menuInstallModule.installModuleRequest,
                              "repositories": repositories,
-                             "type": "modules"})
+                             "type": "modules",
+                             "currentLocaleCode": currentLocaleCode})
                     }
                 }
 
@@ -395,17 +460,6 @@ ApplicationWindow {
                         installModuleFromURLDialog.createObject(applicationWindow,
                             {"installRequest": menuInstallModule.installModuleRequest});
                     }
-                }
-            }
-
-            MenuItem {
-                objectName: "menuUpdateAllModules"
-                text: qsTr("Update all modules")
-
-                signal updateAllModulesRequest()
-
-                onTriggered: {
-                    updateAllModulesRequest()
                 }
             }
         }
@@ -472,10 +526,10 @@ ApplicationWindow {
                     property var repositories:
                         [{
                           "name": "Pext team",
-                          "url": "https://pext.hackerchick.me/themes_v2.json"
+                          "url": "https://pext.io/themes_v2.json"
                         }, {
                           "name": "Other developers",
-                          "url": "https://pext.hackerchick.me/third_party_themes_v2.json"
+                          "url": "https://pext.io/third_party_themes_v2.json"
                         }]
 
                     onTriggered: {
@@ -484,7 +538,8 @@ ApplicationWindow {
                             {"installedObjects": themes,
                              "installRequest": menuInstallTheme.installThemeRequest,
                              "repositories": repositories,
-                             "type": "themes"})
+                             "type": "themes",
+                             "currentLocaleCode": currentLocaleCode})
                     }
                 }
 
@@ -496,17 +551,6 @@ ApplicationWindow {
                         installThemeFromURLDialog.createObject(applicationWindow,
                             {"installRequest": menuInstallTheme.installThemeRequest});
                     }
-                }
-            }
-
-            MenuItem {
-                objectName: "menuUpdateAllThemes"
-                text: qsTr("Update all themes")
-
-                signal updateAllThemesRequest()
-
-                onTriggered: {
-                    updateAllThemesRequest()
                 }
             }
         }
@@ -554,7 +598,7 @@ ApplicationWindow {
         }
 
         Menu {
-            title: qsTr("&Settings")
+            title: platform == 'Darwin' ? "Settings" : qsTr("&Settings")
 
             Menu {
                 id: menuChangeLanguage
@@ -590,6 +634,45 @@ ApplicationWindow {
                         exclusiveGroup: menuLanguageGroup
                         onTriggered: menuChangeLanguage.changeLanguage(locales[modelData])
                     }
+                }
+            }
+
+            Menu {
+                title: qsTr("Output style")
+
+                ExclusiveGroup {
+                    id: menuOutputGroup
+                    objectName: "menuOutputGroup"
+                }
+
+                MenuItem {
+                    objectName: "menuOutputDefaultClipboard"
+                    text: qsTr("Copy to default clipboard")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    visible: platform == 'Linux'
+                    objectName: "menuOutputSelectionClipboard"
+                    text: qsTr("Copy to selection clipboard (X11)")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    visible: platform == 'Darwin'
+                    objectName: "menuOutputFindBuffer"
+                    text: qsTr("Copy to find buffer (macOS)")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
+                }
+
+                MenuItem {
+                    objectName: "menuOutputAutoType"
+                    text: qsTr("Type automatically")
+                    checkable: true
+                    exclusiveGroup: menuOutputGroup
                 }
             }
 
@@ -662,17 +745,34 @@ ApplicationWindow {
                 }
             }
 
+            Menu {
+                title: qsTr("Automatic updates")
+
+                MenuItem {
+                    objectName: "menuEnableUpdateCheck"
+                    text: qsTr("Automatically check for Pext updates")
+                    checkable: true
+                    visible: internalUpdaterEnabled
+                }
+
+                MenuItem {
+                    objectName: "menuEnableObjectUpdateCheck"
+                    text: qsTr("Automatically update modules and themes")
+                    checkable: true
+                }
+            }
+
             MenuItem {
-                objectName: "menuShowTrayIcon"
-                text: qsTr("Always show tray icon")
+                visible: platform != 'Darwin'
+                objectName: "menuEnableGlobalHotkey"
+                text: qsTr("Move Pext to the foreground when global hotkey is pressed (%1)").arg("Ctrl+`")
                 checkable: true
             }
 
             MenuItem {
-                objectName: "menuEnableUpdateCheck"
-                text: qsTr("Automatically check for updates")
+                objectName: "menuShowTrayIcon"
+                text: qsTr("Always show tray icon")
                 checkable: true
-                visible: internalUpdaterEnabled
             }
         }
 
@@ -681,7 +781,7 @@ ApplicationWindow {
 
             MenuItem {
                 objectName: "menuAbout"
-                text: qsTr("About")
+                text: platform == 'Darwin' ? "About" : qsTr("About")
                 onTriggered: {
                     var aboutDialog = Qt.createComponent("AboutDialog.qml");
                     aboutDialog.createObject(applicationWindow,
@@ -692,7 +792,12 @@ ApplicationWindow {
             MenuItem {
                 objectName: "menuCheckForUpdates"
                 text: qsTr("Check for updates")
-                visible: internalUpdaterEnabled
+            }
+
+            MenuItem {
+                visible: platform == 'Darwin'
+                objectName: "menuInstallQuickActionService"
+                text: qsTr("Install quick action service")
             }
 
             MenuItem {

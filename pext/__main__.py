@@ -29,6 +29,7 @@ import configparser
 import json
 import os
 import platform
+import re
 import signal
 import sys
 import threading
@@ -43,27 +44,29 @@ from enum import IntEnum
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from pkg_resources import parse_version
-from shutil import rmtree
-from subprocess import check_call, CalledProcessError, Popen
+from shutil import copytree, rmtree
+from subprocess import check_output, CalledProcessError, Popen
 try:
-    from typing import Any, Dict, List, Optional, Tuple
+    from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 except ImportError:
-    from backports.typing import Any, Dict, List, Optional, Tuple  # type: ignore
-from urllib.request import urlopen
+    from backports.typing import Any, Callable, Dict, List, Optional, Tuple, Union  # type: ignore  # noqa: F401
 from queue import Queue, Empty
+
+import requests
 
 from dulwich import porcelain
 from dulwich.repo import Repo
+from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
-from PyQt5.QtWidgets import (QApplication, QDialog, QDialogButtonBox,
-                             QInputDialog, QLabel, QLineEdit, QMainWindow,
-                             QMessageBox, QTextEdit, QVBoxLayout,
-                             QStyleFactory, QSystemTrayIcon)
+from PyQt5.QtWidgets import QApplication, QMainWindow, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
 
 if 'APPIMAGE' in os.environ:
     import appimageupdate
+
+if platform.system() == 'Darwin':
+    import accessibility  # NOQA
 
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 warn_no_openGL_linux = False
@@ -72,6 +75,13 @@ if platform.system() == "Linux":
         from OpenGL import GL  # NOQA
     except ImportError:
         warn_no_openGL_linux = True
+    except Exception as e:
+        print('Could not import OpenGL module: {}'.format(e))
+        traceback.print_exc()
+
+# Windows doesn't support getuid
+if platform.system() == 'Windows':
+    import getpass  # NOQA
 
 
 class AppFile():
@@ -110,6 +120,15 @@ class SortMode(IntEnum):
     Descending = 2
 
 
+class OutputMode(IntEnum):
+    """A list of possible locations to output to."""
+
+    DefaultClipboard = 0
+    SelectionClipboard = 1
+    FindBuffer = 2
+    AutoType = 3
+
+
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
@@ -140,50 +159,6 @@ class ConfigRetriever():
 
         return config[variable]
 
-    @staticmethod
-    def get_updatecheck_permission_asked() -> bool:
-        """Return info on if allowing updates was asked."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'), 'update_check_enabled'), 'r'):
-                return True
-        except FileNotFoundError:
-            return False
-
-    @staticmethod
-    def get_updatecheck_permission() -> bool:
-        """Return info on if update checking is allowed."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                                   'update_check_enabled'), 'r') as update_check_file:
-                result = update_check_file.readline()
-                return True if result == str(1) else False
-        except FileNotFoundError:
-            return False
-
-    @staticmethod
-    def save_updatecheck_permission(granted: bool) -> None:
-        """Save the current updatecheck permission status."""
-        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                               'update_check_enabled'), 'w') as update_check_file:
-            update_check_file.write(str(int(granted)))
-
-    @staticmethod
-    def get_last_update_check_time() -> Optional[datetime]:
-        """Get the time of the last update check, returns None if there was never a check."""
-        try:
-            with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                                   'update_check_time'), 'r') as update_check_file:
-                return datetime.fromtimestamp(int(float(update_check_file.readline())))
-        except (FileNotFoundError):
-            return None
-
-    @staticmethod
-    def set_last_update_check_time(dt: datetime) -> None:
-        """Set the last update check time to the given time."""
-        with open(os.path.join(ConfigRetriever.get_setting('config_path'),
-                               'update_check_time'), 'w') as update_check_file:
-            update_check_file.write(str(dt.timestamp()))
-
 
 class RunConseq():
     """A simple helper to run several functions consecutively."""
@@ -195,31 +170,6 @@ class RunConseq():
                 function['name'](*function['args'], **function['kwargs'])
             else:
                 function['name'](**function['kwargs'])
-
-
-class InputDialog(QDialog):
-    """A simple dialog requesting user input."""
-
-    def __init__(self, question: str, text: str, parent=None) -> None:
-        """Initialize the dialog."""
-        super().__init__(parent)
-
-        self.setWindowTitle("Pext")
-
-        layout = QVBoxLayout(self)
-
-        layout.addWidget(QLabel(question))
-        self.text_edit = QTextEdit(self)
-        self.text_edit.setPlainText(text)
-        layout.addWidget(self.text_edit)
-        button = QDialogButtonBox(QDialogButtonBox.Ok)
-        button.accepted.connect(self.accept)
-        layout.addWidget(button)
-
-    def show(self) -> Tuple[str, bool]:
-        """Show the dialog."""
-        result = self.exec_()
-        return (self.text_edit.toPlainText(), result == QDialog.Accepted)
 
 
 class Logger():
@@ -288,44 +238,49 @@ class Logger():
             print(message)
 
     @staticmethod
+    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str]) -> None:
+        """If a window is provided, pop up a window. Otherwise, print."""
+        if not module_name:
+            module_name = ""
+        if not detailed_message:
+            detailed_message = ""
+
+        if Logger.window:
+            error_dialog = Logger.window.window.findChild(QObject, "errorDialog")
+            error_dialog.showErrorDialog.emit(module_name, message, detailed_message)
+        else:
+            print("{}\n{}\n{}".format(module_name, message, detailed_message))
+
+    @staticmethod
     def show_next_message() -> None:
         """Show next statusbar message.
 
-        If the status bar has not been updated for 1 second, display the next
-        message. If no messages are available, clear the status bar after it
-        has been displayed for 5 seconds.
+        Display the next message. If no more messages are available, clear the
+        status bar after it has been displayed for 5 seconds.
         """
         if not Logger.window:
             return
 
         current_time = time.time()
-        time_diff = 5 if len(Logger.queued_messages) < 1 else 1
-        if Logger.last_update and current_time - time_diff < Logger.last_update:
-            return
 
         if len(Logger.queued_messages) == 0:
-            QQmlProperty.write(Logger.status_text, "text", "")
-            Logger.last_update = None
+            if not Logger.last_update or current_time - 5 > Logger.last_update:
+                QQmlProperty.write(Logger.status_text, "text", "")
+                Logger.last_update = None
         else:
             message = Logger.queued_messages.pop(0)
 
             if message['type'] == 'error':
-                statusbar_message = "<font color='red'>⚠ {}</color>".format(
-                    message['message'])
-                notification_message = '⚠ {}'.format(message['message'])
+                statusbar_message = "<font color='red'>⚠ {}</color>".format(message['message'])
+                icon = QSystemTrayIcon.Warning
             else:
                 statusbar_message = message['message']
-                notification_message = message['message']
+                icon = QSystemTrayIcon.Information
 
             QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            if Logger.window.window.windowState() == Qt.WindowMinimized or not Logger.window.window.isVisible():
-                try:
-                    Popen(['notify-send', 'Pext', notification_message])
-                except Exception as e:
-                    print("Could not open notify-send: {}. Notification follows after exception:".format(e))
-                    traceback.print_exc()
-                    print(notification_message)
+            if Logger.window.tray:
+                Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
 
             Logger.last_update = current_time
 
@@ -344,16 +299,18 @@ class MainLoop():
     ensures these events get managed without locking up the UI.
     """
 
-    def __init__(self, app: QApplication, window: 'Window') -> None:
+    def __init__(self, app: QApplication, window: 'Window', main_loop_queue: Queue) -> None:
         """Initialize the main loop."""
         self.app = app
         self.window = window
+        self.main_loop_queue = main_loop_queue
 
     def _process_tab_action(self, tab: Dict, active_tab: int) -> None:
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_error(tab['metadata']['name'], str(action[1]))
+            Logger.log_critical(tab['metadata']['name'], str(action[1]), str(action[2]) if len(action) > 2 else None)
+
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
 
@@ -405,93 +362,84 @@ class MainLoop():
             else:
                 QQmlProperty.write(tab['vm'].search_input_model, "text", "")
 
-        elif action[0] == Action.ask_question_default_yes:
-            answer = QMessageBox.question(
-                self.window,
-                "Pext",
-                action[1],
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.Yes)
-
+        elif action[0] in [Action.ask_question, Action.ask_question_default_yes, Action.ask_question_default_no]:
+            question_dialog = self.window.window.findChild(QObject, "questionDialog")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False,
-                    action[2] if len(action) > 2 else None)
+                question_dialog.questionAccepted.connect(
+                    lambda: tab['vm'].module.process_response(True, action[2] if len(action) > 2 else None))
+                question_dialog.questionRejected.connect(
+                    lambda: tab['vm'].module.process_response(False, action[2] if len(action) > 2 else None))
             else:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False)
+                question_dialog.questionAccepted.connect(
+                    lambda: tab['vm'].module.process_response(True))
+                question_dialog.questionRejected.connect(
+                    lambda: tab['vm'].module.process_response(False))
 
-        elif action[0] == Action.ask_question_default_no:
-            answer = QMessageBox.question(
-                self.window,
-                "Pext",
-                action[1],
-                QMessageBox.Yes | QMessageBox.No,
-                QMessageBox.No)
-
-            if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False,
-                    action[2] if len(action) > 2 else None)
-            else:
-                tab['vm'].module.process_response(
-                    True if (answer == QMessageBox.Yes) else False)
+            question_dialog.showQuestionDialog.emit(tab['metadata']['name'], action[1])
 
         elif action[0] == Action.ask_input:
-            answer, ok = QInputDialog.getText(
-                self.window,
-                "Pext",
-                action[1],
-                QLineEdit.Normal,
-                action[2] if len(action) > 2 else "")
-
+            input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    answer if ok else None,
-                    action[3] if len(action) > 3 else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput,
+                                                                        action[3] if len(action) > 3 else None))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
             else:
-                tab['vm'].module.process_response(
-                    answer if ok else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+
+            input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, False,
+                                            action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.ask_input_password:
-            answer, ok = QInputDialog.getText(
-                self.window,
-                "Pext",
-                action[1],
-                QLineEdit.Password,
-                action[2] if len(action) > 2 else "")
-
+            input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    answer if ok else None,
-                    action[3] if len(action) > 3 else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput,
+                                                                        action[3] if len(action) > 3 else None))
+                input_request.inputRequestRejected.connect(
+                        lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
             else:
-                tab['vm'].module.process_response(
-                    answer if ok else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+
+            input_request.inputRequest.emit(tab['metadata']['name'], action[1], True, False,
+                                            action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.ask_input_multi_line:
-            dialog = InputDialog(
-                action[1],
-                action[2] if len(action) > 2 else "",
-                self.window)
-
-            answer, ok = dialog.show()
+            input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                tab['vm'].module.process_response(
-                    answer if ok else None,
-                    action[3] if len(action) > 3 else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput,
+                                                                        action[3] if len(action) > 3 else None))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
             else:
-                tab['vm'].module.process_response(
-                    answer if ok else None)
+                input_request.inputRequestAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                input_request.inputRequestRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+            input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, True,
+                                            action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
-            if Settings.get('clipboard') == 'selection':
-                mode = QClipboard.Selection
+            if Settings.get('output_mode') == OutputMode.AutoType:
+                self.window.output_queue.append(str(action[1]))
             else:
-                mode = QClipboard.Clipboard
+                if Settings.get('output_mode') == OutputMode.SelectionClipboard:
+                    mode = QClipboard.Selection
+                elif Settings.get('output_mode') == OutputMode.FindBuffer:
+                    mode = QClipboard.FindBuffer
+                else:
+                    mode = QClipboard.Clipboard
 
-            self.app.clipboard().setText(str(action[1]), mode)
+                self.app.clipboard().setText(str(action[1]), mode)
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
@@ -606,6 +554,12 @@ class MainLoop():
     def run(self) -> None:
         """Process actions modules put in the queue and keep the window working."""
         while True:
+            try:
+                main_loop_request = self.main_loop_queue.get_nowait()
+                main_loop_request()
+            except Empty:
+                pass
+
             self.app.sendPostedEvents()
             self.app.processEvents()
             Logger.show_next_message()
@@ -689,7 +643,8 @@ class LocaleManager():
 
         return None
 
-    def find_best_locale(self, locale=None) -> QLocale:
+    @staticmethod
+    def find_best_locale(locale=None) -> QLocale:
         """Find the best locale to use, defaulting to system locale."""
         return QLocale(locale) if locale else QLocale()
 
@@ -715,11 +670,17 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
-        self.saved_settings = ['clipboard', 'locale', 'minimize_mode', 'sort_mode', 'theme', 'tray']
+        self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
+                               'global_hotkey_enabled', 'last_update_check', 'update_check', 'object_update_check']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
-        return os.path.join(tempfile.gettempdir(), '{}_pext_{}.pid'.format(os.getuid(), profile))
+        if platform.system() == 'Windows':
+            uid = getpass.getuser()
+        else:
+            uid = str(os.getuid())
+
+        return os.path.join(tempfile.gettempdir(), '{}_pext_{}.pid'.format(uid, profile))
 
     @staticmethod
     def lock_profile(profile: str) -> None:
@@ -732,17 +693,19 @@ class ProfileManager():
     def get_lock_instance(profile: str) -> Optional[int]:
         """Get the pid of the current process having a lock, if any."""
         pidfile = ProfileManager._get_pid_path(profile)
-        if os.path.isfile(pidfile):
-            pid = int(open(pidfile, 'r').read())
-            if platform.system() == 'Windows':
-                return True
+        if not os.path.isfile(pidfile):
+            return None
 
-            try:
-                os.kill(pid, 0)
-            except ProcessLookupError:
-                return None
+        pid = int(open(pidfile, 'r').read())
+        if platform.system() == 'Windows':
+            return True
 
-            return pid
+        try:
+            os.kill(pid, 0)
+        except ProcessLookupError:
+            return None
+
+        return pid
 
     @staticmethod
     def unlock_profile(profile: str) -> None:
@@ -826,14 +789,14 @@ class ProfileManager():
 
         return modules
 
-    def save_settings(self, profile: str, changed_key: Optional[str]=None) -> None:
+    def save_settings(self, profile: Optional[str], changed_key: Optional[str] = None) -> None:
         """Save the current settings to the profile."""
         if changed_key and changed_key not in self.saved_settings:
             return
 
         config = configparser.ConfigParser()
         settings_to_store = {}
-        for setting in Settings.get_all():
+        for setting in Settings.get_all(profile if profile else None):
             if setting in self.saved_settings:
                 setting_data = Settings.get(setting)
                 try:
@@ -845,15 +808,25 @@ class ProfileManager():
 
         config['settings'] = settings_to_store
 
-        with open(os.path.join(self.profile_dir, profile, 'settings'), 'w') as configfile:
+        if profile:
+            path = os.path.join(self.profile_dir, profile, 'settings')
+        else:
+            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+
+        with open(path, 'w') as configfile:
             config.write(configfile)
 
-    def retrieve_settings(self, profile: str) -> Dict[str, Any]:
+    def retrieve_settings(self, profile: Optional[str]) -> Dict[str, Any]:
         """Retrieve the settings from the profile."""
         config = configparser.ConfigParser()
         setting_dict = {}  # type: Dict[str, Any]
 
-        config.read(os.path.join(self.profile_dir, profile, 'settings'))
+        if profile:
+            path = os.path.join(self.profile_dir, profile, 'settings')
+        else:
+            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+
+        config.read(path)
 
         try:
             for setting in config['settings']:
@@ -874,7 +847,7 @@ class ObjectManager():
     """Shared management for modules and themes."""
 
     @staticmethod
-    def list_object(full_path: str) -> Optional[Dict[str, Dict[str, str]]]:
+    def list_object(full_path: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return the identifier, name, source and metadata of an object."""
         if not os.path.isdir(full_path):
             return None
@@ -882,7 +855,7 @@ class ObjectManager():
         location = os.path.basename(full_path)
 
         try:
-            source = UpdateManager.get_remote_url(full_path)
+            source = UpdateManager.get_remote_url(full_path)  # type: Optional[str]
         except Exception:
             source = None
 
@@ -892,6 +865,14 @@ class ObjectManager():
         except (FileNotFoundError, json.decoder.JSONDecodeError):
             print("Object {} lacks a correctly formatted metadata.json file".format(location))
             return None
+
+        try:
+            with open(os.path.join(full_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                metadata.update(json.load(metadata_json_i18n))
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
+            print("Object {} has no metadata_{}.json file".format(location,
+                  LocaleManager.find_best_locale(Settings.get('locale')).name()))
 
         # Ensure the required metadata is set
         if 'id' not in metadata:
@@ -924,20 +905,21 @@ class ObjectManager():
         return {"source": source, "metadata": metadata}
 
     @staticmethod
-    def list_objects(core_directory: str) -> Dict[str, Dict[str, Dict[str, str]]]:
+    def list_objects(core_directory: str) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of objects together with their identifier, name, source and metadata."""
         objects = {}
 
         for directory in os.listdir(core_directory):
             dir_object = ObjectManager.list_object(os.path.join(core_directory, directory))
-            if dir_object:
-                objects[dir_object['metadata']['id']] = dir_object
+            if dir_object and isinstance(dir_object['metadata'], dict) and 'id' in dir_object['metadata']:
+                object_id = dir_object['metadata']['id']
+                objects[object_id] = dir_object
             else:
                 # Remove corrupted entry (FIXME: Temporary?)
                 print("Removing corrupted object at {}".format(os.path.join(core_directory, directory)))
                 try:
                     rmtree(os.path.join(core_directory, directory))
-                except Exception as e:
+                except Exception:
                     pass
 
         return objects
@@ -953,13 +935,13 @@ class ModuleManager():
         self.module_dependencies_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
                                                     'module_dependencies')
 
-    def _pip_install(self, identifier: str) -> int:
+    def _pip_install(self, identifier: str) -> Optional[str]:
         """Install module dependencies using pip."""
         module_requirements_path = os.path.join(self.module_dir, identifier.replace('.', '_'), 'requirements.txt')
         module_dependencies_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
 
         if not os.path.isfile(module_requirements_path):
-            return 0
+            return None
 
         try:
             os.mkdir(module_dependencies_path)
@@ -974,8 +956,12 @@ class ModuleManager():
                        'install',
                        '--isolated']
 
-        # FIXME: Cheap hack to work around Debian's faultily-patched pip (unless (mini)conda is used)
-        if "conda" not in sys.version and os.path.isfile('/etc/debian_version'):
+        # FIXME: Cheap hack to work around Debian's faultily-patched pip
+        # We try to prevent false positives by checking for (mini)conda or a venv
+        if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
+                'Debian' in open('/etc/issue.net', 'r').read() and
+                not hasattr(sys, 'real_prefix') and
+                not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
             pip_command += ['--system']
 
         pip_command += ['--upgrade',
@@ -984,15 +970,13 @@ class ModuleManager():
                         '-r',
                         module_requirements_path]
 
-        returncode = 0
-
         # Actually run the pip command
         try:
-            check_call(pip_command)
+            check_output(pip_command, universal_newlines=True)
         except CalledProcessError as e:
-            returncode = e.returncode
+            return e.output
 
-        return returncode
+        return None
 
     def load_module(self, window: 'Window', module: Dict[str, Any]) -> bool:
         """Load a module and attach it to the main window."""
@@ -1027,12 +1011,17 @@ class ModuleManager():
             "contextMenuModel", vm.context_menu_model_list)
         module_context.setContextProperty(
             "contextMenuEnabled", False)
+        module_context.setContextProperty(
+            "searchInputFieldEmpty", True)
 
         # Prepare module
         try:
             module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
         except ImportError as e1:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e1))
+            Logger.log_critical(
+                module['metadata']['name'],
+                str(e1),
+                traceback.format_exc())
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1042,7 +1031,10 @@ class ModuleManager():
         try:
             Module = getattr(module_import, 'Module')
         except AttributeError as e2:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module['metadata']['name'], e2))
+            Logger.log_critical(
+                module['metadata']['name'],
+                str(e2),
+                traceback.format_exc())
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1060,7 +1052,10 @@ class ModuleManager():
         try:
             module_code = Module()
         except TypeError as e3:
-            Logger.log_error(None, "Failed to load module {}: {}".format(module.metadata.id, e3))
+            Logger.log_critical(
+                module['metadata']['name'],
+                str(e3),
+                traceback.format_exc())
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1094,10 +1089,9 @@ class ModuleManager():
                     return False
 
         # Prefill API version and locale
-        locale_manager = LocaleManager()
-        locale = locale_manager.find_best_locale(Settings.get('locale')).name()
+        locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 7, 0]
+        module['settings']['_api_version'] = [0, 8, 0]
         module['settings']['_locale'] = locale
 
         # Start the module in the background
@@ -1160,7 +1154,7 @@ class ModuleManager():
         # Save active modules
         ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
 
-    def list_modules(self) -> Dict[str, Dict[str, Dict[str, str]]]:
+    def list_modules(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.module_dir)
 
@@ -1220,9 +1214,7 @@ class ModuleManager():
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             try:
                 rmtree(module_path)
@@ -1234,10 +1226,10 @@ class ModuleManager():
         if verbose:
             Logger.log(None, '⇩⇩ {}'.format(name))
 
-        pip_exit_code = self._pip_install(identifier)
-        if pip_exit_code != 0:
+        pip_error_output = self._pip_install(identifier)
+        if pip_error_output is not None:
             if verbose:
-                Logger.log_error(None, '⇩⇩ {}: {}'.format(name, pip_exit_code))
+                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
 
             try:
                 rmtree(module_path)
@@ -1266,6 +1258,13 @@ class ModuleManager():
                 name = json.load(metadata_json)['name']
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
+
+        try:
+            with open(os.path.join(module_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
 
         if verbose:
             Logger.log(None, '♻ {}'.format(name))
@@ -1298,6 +1297,13 @@ class ModuleManager():
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
 
+        try:
+            with open(os.path.join(module_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
+
         if verbose:
             Logger.log(None, '⇩ {}'.format(name))
 
@@ -1310,19 +1316,17 @@ class ModuleManager():
 
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             return False
 
         if verbose:
             Logger.log(None, '⇩⇩ {}'.format(name))
 
-        pip_exit_code = self._pip_install(identifier)
-        if pip_exit_code != 0:
+        pip_error_output = self._pip_install(identifier)
+        if pip_error_output is not None:
             if verbose:
-                Logger.log_error(None, '⇩⇩ {}: {}'.format(name, pip_exit_code))
+                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
 
             return False
 
@@ -1347,11 +1351,19 @@ class UpdateManager():
 
     def __init__(self) -> None:
         """Initialize the UpdateManager and store the version info of Pext."""
+        self.version = "Unknown"
+        version = None
         try:
-            self.version = UpdateManager.get_version(os.path.dirname(AppFile.get_path()))
+            version = UpdateManager.get_version(os.path.dirname(AppFile.get_path()))
         except Exception:
+            pass
+
+        if not version:
             with open(os.path.join(AppFile.get_path(), 'VERSION')) as version_file:
-                self.version = version_file.read().strip()
+                version = version_file.read().strip()
+
+        if version:
+            self.version = version
 
         if 'APPIMAGE' in os.environ:
             self.appimageupdate = appimageupdate.Updater(os.environ['APPIMAGE'])
@@ -1399,8 +1411,7 @@ class UpdateManager():
     @staticmethod
     def get_version(directory: str) -> Optional[str]:
         """Get the version of the git-managed directory."""
-        from git_describe import describe
-        return describe(directory)
+        return porcelain.describe(directory)
 
     @staticmethod
     def get_last_updated(directory: str) -> Optional[datetime]:
@@ -1414,8 +1425,8 @@ class UpdateManager():
         if 'APPIMAGE' in os.environ:
             return "APPIMAGE" if self.appimageupdate.check_for_changes() else None
 
-        with urlopen('https://pext.hackerchick.me/version/stable') as update_url:
-            available_version = update_url.readline().decode("utf-8").strip()
+        r = requests.get('https://pext.io/version/stable')
+        available_version = r.text.splitlines()[0].strip()
 
         # Normalize own version
         if self.version.find('+') != -1:
@@ -1451,9 +1462,7 @@ class ModuleThreadInitializer(threading.Thread):
         try:
             threading.Thread.run(self)
         except Exception as e:
-            self.queue.put(
-                [Action.critical_error, "Exception thrown: {}".format(e)])
-            traceback.print_exc()
+            self.queue.put([Action.critical_error, str(e), traceback.format_exc()])
 
 
 class ViewModel():
@@ -1482,7 +1491,7 @@ class ViewModel():
         self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
-        self.selection_thread = None  # type: threading.Thread
+        self.selection_thread = None  # type: Optional[threading.Thread]
 
     def make_selection(self) -> None:
         """Make a selection if no selection is currently being processed.
@@ -1583,6 +1592,7 @@ class ViewModel():
 
         if QQmlProperty.read(self.search_input_model, "text") != "":
             QQmlProperty.write(self.search_input_model, "text", "")
+            self.context.setContextProperty("searchInputFieldEmpty", True)
             return
 
         if self.selection_thread and self.selection_thread.is_alive():
@@ -1613,6 +1623,7 @@ class ViewModel():
         visible in the search bar.
         """
         search_string = QQmlProperty.read(self.search_input_model, "text").lower()
+        self.context.setContextProperty("searchInputFieldEmpty", not search_string)
 
         # Don't search if nothing changed
         if not new_entries and search_string == self.last_search:
@@ -1748,12 +1759,12 @@ class ViewModel():
 
         self.update_context_info_panel()
 
-    def _get_entry(self, include_context=False, shorten_command=False) -> Dict:
+    def _get_entry(self, include_context=False) -> Dict:
         """Get info on the entry that's currently focused."""
         if include_context and self.context.contextProperty("contextMenuEnabled"):
             current_index = QQmlProperty.read(self.context_menu_model, "currentIndex")
 
-            selected_entry = self._get_entry(shorten_command=shorten_command)
+            selected_entry = self._get_entry()
 
             selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
 
@@ -1763,6 +1774,7 @@ class ViewModel():
             return {'type': SelectionType.none, 'value': None, 'context_option': None}
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
+        selected_command = None
 
         if self.result_list_model_command_mode:
             try:
@@ -1770,24 +1782,18 @@ class ViewModel():
             except IndexError:
                 entry = self.filtered_entry_list[current_index - len(self.filtered_command_list)]
                 return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
+        elif current_index >= len(self.filtered_entry_list):
+            selected_command = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
 
-            selected_command_split = selected_command.split(" ", 1)
+        if selected_command:
             command_typed = QQmlProperty.read(self.search_input_model, "text")
-            command_typed_split = command_typed.split(" ", 1)
 
-            if shorten_command:
-                command_typed = selected_command_split[0]
+            if command_typed.startswith(selected_command + " "):
+                args = command_typed.split(selected_command + " ", 1)[-1]
             else:
-                try:
-                    command_typed = selected_command_split[0] + " " + command_typed_split[1]
-                except IndexError:
-                    command_typed = selected_command_split[0]
+                args = ""
 
-            return {'type': SelectionType.command, 'value': command_typed, 'context_option': None}
-
-        if current_index >= len(self.filtered_entry_list):
-            entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
-            return {'type': SelectionType.command, 'value': entry, 'context_option': None}
+            return {'type': SelectionType.command, 'value': selected_command, 'args': args, 'context_option': None}
         else:
             entry = self.filtered_entry_list[current_index]
             return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
@@ -1815,6 +1821,7 @@ class ViewModel():
             "resultListModelDepth", len(self.selection))
 
         QQmlProperty.write(self.search_input_model, "text", "")
+        self.context.setContextProperty("searchInputFieldEmpty", True)
         self.search(new_entries=True, manual=True)
         self._clear_queue()
         self.window.update()
@@ -1837,7 +1844,7 @@ class ViewModel():
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             return
 
-        current_entry = self._get_entry(shorten_command=True)
+        current_entry = self._get_entry()
 
         try:
             if current_entry['type'] == SelectionType.entry:
@@ -1866,7 +1873,7 @@ class ViewModel():
             self.extra_info_last_entry_type = None
             return
 
-        current_entry = self._get_entry(shorten_command=True)
+        current_entry = self._get_entry()
 
         # Prevent updating the list unnecessarily often
         if (current_entry['value'] == self.extra_info_last_entry
@@ -1943,6 +1950,14 @@ class Window(QMainWindow):
         """Initialize the window."""
         super().__init__(parent)
 
+        # Ask for accessibility access to autotype and focus-fix on macOS
+        if platform.system() == 'Darwin':
+            self.acc = accessibility.create_systemwide_ref()
+            self.acc.set_timeout(300)
+
+        # Text to type on close if needed
+        self.output_queue = []  # type: List[str]
+
         # Save settings
         self.locale_manager = locale_manager
 
@@ -1966,8 +1981,11 @@ class Window(QMainWindow):
             "themesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'themes'))
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
+        self.context.setContextProperty("defaultProfile", ProfileManager.default_profile_name())
         self.context.setContextProperty("currentProfile", Settings.get('profile'))
         self.context.setContextProperty("currentLocale", self.locale_manager.get_current_locale(system_if_unset=False))
+        self.context.setContextProperty("currentLocaleCode",
+                                        LocaleManager.find_best_locale(Settings.get('locale')).name())
         self.context.setContextProperty("locales", self.locale_manager.get_locales())
 
         # Load the main UI
@@ -1976,7 +1994,7 @@ class Window(QMainWindow):
         self.window = self.engine.rootObjects()[0]
 
         # Override quit and minimize
-        self.window.closing.connect(self.quit)
+        self.window.confirmedClose.connect(self.quit)
         self.window.windowStateChanged.connect(self._process_window_state)
 
         # Give QML the module info
@@ -2023,8 +2041,6 @@ class Window(QMainWindow):
             QObject, "menuInstallModule")
         menu_manage_modules_shortcut = self.window.findChild(
             QObject, "menuManageModules")
-        menu_update_all_modules_shortcut = self.window.findChild(
-            QObject, "menuUpdateAllModules")
 
         menu_load_theme_shortcut = self.window.findChild(
             QObject, "menuLoadTheme")
@@ -2032,8 +2048,6 @@ class Window(QMainWindow):
             QObject, "menuInstallTheme")
         menu_manage_themes_shortcut = self.window.findChild(
             QObject, "menuManageThemes")
-        menu_update_all_themes_shortcut = self.window.findChild(
-            QObject, "menuUpdateAllThemes")
 
         menu_load_profile_shortcut = self.window.findChild(
             QObject, "menuLoadProfile")
@@ -2042,6 +2056,15 @@ class Window(QMainWindow):
 
         menu_change_language_shortcut = self.window.findChild(
             QObject, "menuChangeLanguage")
+
+        self.menu_output_default_clipboard = self.window.findChild(
+            QObject, "menuOutputDefaultClipboard")
+        menu_output_selection_clipboard = self.window.findChild(
+            QObject, "menuOutputSelectionClipboard")
+        menu_output_find_buffer = self.window.findChild(
+            QObject, "menuOutputFindBuffer")
+        self.menu_output_auto_type = self.window.findChild(
+            QObject, "menuOutputAutoType")
 
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
@@ -2058,10 +2081,16 @@ class Window(QMainWindow):
             QObject, "menuMinimizeNormallyManually")
         menu_minimize_to_tray_manually_shortcut = self.window.findChild(
             QObject, "menuMinimizeToTrayManually")
+        menu_enable_global_hotkey_shortcut = self.window.findChild(
+            QObject, "menuEnableGlobalHotkey")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
+        menu_install_quick_action_service = self.window.findChild(
+            QObject, "menuInstallQuickActionService")
         self.menu_enable_update_check_shortcut = self.window.findChild(
             QObject, "menuEnableUpdateCheck")
+        self.menu_enable_object_update_check_shortcut = self.window.findChild(
+            QObject, "menuEnableObjectUpdateCheck")
 
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
@@ -2077,8 +2106,6 @@ class Window(QMainWindow):
         menu_manage_modules_shortcut.uninstallModuleRequest.connect(
             self._menu_uninstall_module)
         menu_manage_modules_shortcut.updateModuleRequest.connect(self._menu_update_module)
-        menu_update_all_modules_shortcut.updateAllModulesRequest.connect(
-            self._menu_update_all_modules)
 
         menu_load_theme_shortcut.loadThemeRequest.connect(self._menu_switch_theme)
         menu_install_theme_shortcut.installThemeRequest.connect(
@@ -2086,8 +2113,6 @@ class Window(QMainWindow):
         menu_manage_themes_shortcut.uninstallThemeRequest.connect(
             self._menu_uninstall_theme)
         menu_manage_themes_shortcut.updateThemeRequest.connect(self._menu_update_theme)
-        menu_update_all_themes_shortcut.updateAllThemesRequest.connect(
-            self._menu_update_all_themes)
 
         menu_load_profile_shortcut.loadProfileRequest.connect(self._menu_switch_profile)
         menu_manage_profiles_shortcut.createProfileRequest.connect(self._menu_create_profile)
@@ -2095,6 +2120,11 @@ class Window(QMainWindow):
         menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
 
         menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
+
+        self.menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
+        menu_output_selection_clipboard.toggled.connect(self._menu_output_selection_clipboard)
+        menu_output_find_buffer.toggled.connect(self._menu_output_find_buffer)
+        self.menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
 
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
@@ -2104,14 +2134,30 @@ class Window(QMainWindow):
         menu_minimize_to_tray_shortcut.toggled.connect(self._menu_minimize_to_tray)
         menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
+        menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
+        menu_install_quick_action_service.triggered.connect(self._menu_install_quick_action_service)
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
+        self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
 
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
+        QQmlProperty.write(self.menu_output_default_clipboard,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.DefaultClipboard)
+        QQmlProperty.write(menu_output_selection_clipboard,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.SelectionClipboard)
+        QQmlProperty.write(menu_output_find_buffer,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.FindBuffer)
+        QQmlProperty.write(self.menu_output_auto_type,
+                           "checked",
+                           int(Settings.get('output_mode')) == OutputMode.AutoType)
+
         QQmlProperty.write(menu_sort_module_shortcut,
                            "checked",
                            int(Settings.get('sort_mode')) == SortMode.Module)
@@ -2135,12 +2181,18 @@ class Window(QMainWindow):
                            "checked",
                            int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
 
+        QQmlProperty.write(menu_enable_global_hotkey_shortcut,
+                           "checked",
+                           Settings.get('global_hotkey_enabled'))
         QQmlProperty.write(menu_show_tray_icon_shortcut,
                            "checked",
                            Settings.get('tray'))
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
                            Settings.get('update_check'))
+        QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
+                           "checked",
+                           Settings.get('object_update_check'))
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -2158,14 +2210,14 @@ class Window(QMainWindow):
         elif not Settings.get('background'):
             self.show()
 
-            if USE_INTERNAL_UPDATER and Settings.get('update_check') is None:
+            if Settings.get('update_check') is None:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
                 permission_requests.updatePermissionRequestAccepted.connect(
-                    lambda: self._menu_toggle_update_check(True, after_permission_request=True))
+                    lambda: self._menu_update_check_dialog_result(True))
                 permission_requests.updatePermissionRequestRejected.connect(
-                    lambda: self._menu_toggle_update_check(False))
+                    lambda: self._menu_update_check_dialog_result(False))
 
                 permission_requests.updatePermissionRequest.emit()
 
@@ -2190,13 +2242,12 @@ class Window(QMainWindow):
         if platform.system() != 'Darwin':
             return
 
-        applescript_command = ['tell application "System Events"',
-                               'tell process "Finder"',
-                               'activate',
-                               'keystroke tab using {command down}',
-                               'end tell',
-                               'end tell']
-        Popen(['osascript', '-e', '\n'.join(applescript_command)])
+        keyboard_device = keyboard.Controller()
+
+        keyboard_device.press(keyboard.Key.cmd)
+        keyboard_device.press(keyboard.Key.tab)
+        keyboard_device.release(keyboard.Key.tab)
+        keyboard_device.release(keyboard.Key.cmd)
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2266,10 +2317,12 @@ class Window(QMainWindow):
             return None
 
     def _go_up(self) -> None:
-        try:
-            self._get_current_element()['vm'].go_up()
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].go_up()
+            except TypeError:
+                pass
 
     def _open_tab(self, identifier: str, name: str, settings: str) -> None:
         module_settings = {}
@@ -2341,12 +2394,12 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_all_modules(self) -> None:
+    def _menu_update_all_modules(self, verbose=False) -> None:
         functions = [
             {
                 'name': self.module_manager.update_all_modules,
                 'args': (),
-                'kwargs': {'verbose': True}
+                'kwargs': {'verbose': verbose}
             }, {
                 'name': self._update_modules_info_qml,
                 'args': (),
@@ -2470,12 +2523,12 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_update_all_themes(self) -> None:
+    def _menu_update_all_themes(self, verbose=False) -> None:
         functions = [
             {
                 'name': self.theme_manager.update_all_themes,
                 'args': (),
-                'kwargs': {'verbose': True}
+                'kwargs': {'verbose': False}
             }, {
                 'name': self._update_themes_info_qml,
                 'args': (),
@@ -2487,6 +2540,28 @@ class Window(QMainWindow):
     def _menu_change_language(self, lang_code: str) -> None:
         Settings.set('locale', lang_code)
         self._menu_restart_pext()
+
+    def _menu_output_default_clipboard(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.DefaultClipboard)
+
+    def _menu_output_selection_clipboard(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.SelectionClipboard)
+
+    def _menu_output_find_buffer(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_mode', OutputMode.FindBuffer)
+
+    def _menu_output_auto_type(self, enabled: bool) -> None:
+        if enabled:
+            if platform.system() == 'Darwin':
+                if not accessibility.is_enabled() or not accessibility.is_trusted():
+                    QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                    QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
+                    return
+
+            Settings.set('output_mode', OutputMode.AutoType)
 
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
@@ -2522,6 +2597,9 @@ class Window(QMainWindow):
         if enabled:
             Settings.set('minimize_mode', MinimizeMode.TrayManualOnly)
 
+    def _menu_enable_global_hotkey_shortcut(self, enabled: bool) -> None:
+        Settings.set('global_hotkey_enabled', enabled)
+
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
         Settings.set('tray', enabled)
         try:
@@ -2529,42 +2607,63 @@ class Window(QMainWindow):
         except AttributeError:
             pass
 
+    def _menu_install_quick_action_service(self) -> None:
+        new_path = os.path.join(tempfile.gettempdir(), 'Pext.workflow')
+        try:
+            rmtree(new_path)
+        except IOError:
+            pass
+        copytree(os.path.join(AppFile.get_path(), 'Pext.workflow'), new_path)
+        Popen(['open', new_path])
+
+    def _menu_update_check_dialog_result(self, accepted: bool) -> None:
+        self._menu_toggle_object_update_check(True)
+        self._menu_toggle_update_check(True, True)
+
     def _menu_toggle_update_check(self, enabled: bool, after_permission_request=False) -> None:
         Settings.set('update_check', enabled)
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
                            Settings.get('update_check'))
 
-        # Immediately save update status to file
-        ConfigRetriever.save_updatecheck_permission(Settings.get('update_check'))
-
         # macOS breaks if we show the update dialog immediately after accepting
         # checking for updates so we need this workaround
-        if after_permission_request:
+        if enabled and after_permission_request:
             self._menu_restart_pext()
 
         # Check for updates immediately after toggling true
         # This is also toggled on app launch because we bind before we toggle
-        if Settings.get('update_check'):
-            self._menu_check_updates(verbose=False, manual=False)
+        self._menu_check_updates(verbose=False, manual=False)
+
+    def _menu_toggle_object_update_check(self, enabled: bool) -> None:
+        Settings.set('object_update_check', enabled)
+        QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
+                           "checked",
+                           Settings.get('object_update_check'))
 
     def _search(self) -> None:
-        try:
-            self._get_current_element()['vm'].search(manual=True)
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].search(manual=True)
+            except TypeError:
+                pass
 
     def _select(self) -> None:
-        try:
-            self._get_current_element()['vm'].select()
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].select()
+            except TypeError:
+                pass
 
     def _tab_complete(self) -> None:
-        try:
-            self._get_current_element()['vm'].tab_complete()
-        except TypeError:
-            pass
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].tab_complete()
+            except TypeError:
+                pass
 
     def _update_modules_info_qml(self) -> None:
         modules = self.module_manager.list_modules()
@@ -2604,23 +2703,28 @@ class Window(QMainWindow):
                 Logger.log(None, '✔⇩ Pext')
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
-        if not USE_INTERNAL_UPDATER:
-            return
-
         # Set a timer to run this function again in an hour
         if not manual:
             t = threading.Timer(3600, self._menu_check_updates, None, {'verbose': False, 'manual': False})
             t.daemon = True
             t.start()
 
-        # Check if it's been over 24 hours or this is a manual check
-        last_update_check = ConfigRetriever.get_last_update_check_time()
-        if manual or last_update_check is None or (datetime.now() - last_update_check).total_seconds() > (86400):
-            threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
-            ConfigRetriever.set_last_update_check_time(datetime.now())
+        # Check if it's been over 24 hours or this is a manual/first check
+        last_update_check = Settings.get('last_update_check')
+
+        if manual or last_update_check is None or (time.time() - float(last_update_check) > 86400):
+            if USE_INTERNAL_UPDATER:
+                if manual or Settings.get('update_check'):
+                    threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
+
+            if manual or Settings.get('object_update_check'):
+                self._menu_update_all_modules(verbose)
+                self._menu_update_all_themes(verbose)
+
+            Settings.set('last_update_check', time.time())
 
     def _show_homepage(self) -> None:
-        webbrowser.open('https://pext.hackerchick.me/')
+        webbrowser.open('https://pext.io/')
 
     def _core_update_appimage_start(self) -> None:
         """Start self-update through AppImageUpdate."""
@@ -2639,7 +2743,7 @@ class Window(QMainWindow):
             self._menu_restart_pext(new_exec=appimageupdate.path_to_new_file())
 
     def _show_download_page(self) -> None:
-        webbrowser.open('https://pext.hackerchick.me/download')
+        webbrowser.open('https://pext.io/download')
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""
@@ -2650,22 +2754,45 @@ class Window(QMainWindow):
 
     def close(self, manual=False, force_tray=False) -> None:
         """Close the window."""
-        if (force_tray
-                or Settings.get('minimize_mode') == MinimizeMode.Tray
-                or (manual and Settings.get('minimize_mode') == MinimizeMode.TrayManualOnly)):
+        if force_tray:
             if self.tray:
                 self.tray.show()
 
             self.window.hide()
         else:
-            self.window.showMinimized()
+            if (not manual
+                    and Settings.get('minimize_mode') in [MinimizeMode.NormalManualOnly, MinimizeMode.TrayManualOnly]):
+                return
+
+            if Settings.get('minimize_mode') in [MinimizeMode.Normal, MinimizeMode.NormalManualOnly]:
+                self.window.showMinimized()
+            else:
+                self.window.hide()
 
         self._macos_focus_workaround()
+
+        if self.output_queue:
+            time.sleep(0.5)
+            keyboard_device = keyboard.Controller()
+
+            while True:
+                try:
+                    output = self.output_queue.pop(0)
+                except IndexError:
+                    break
+
+                keyboard_device.type(output)
+                if self.output_queue:
+                    keyboard_device.press(keyboard.Key.tab)
+                    keyboard_device.release(keyboard.Key.tab)
 
     def show(self) -> None:
         """Show the window."""
         if self.tray:
-            self.tray.show() if Settings.get('tray') else self.tray.hide()
+            if Settings.get('tray'):
+                self.tray.show()
+            else:
+                self.tray.hide()
 
         if self.window.windowState() == Qt.WindowMinimized:
             self.window.showNormal()
@@ -2707,7 +2834,7 @@ class ThemeManager():
         """Initialize the module manager."""
         self.theme_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'themes')
 
-    def _get_palette_mappings(self) -> Dict[str, int]:
+    def _get_palette_mappings(self) -> Dict[str, Dict[str, str]]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
         for key in dir(QPalette):
             value = getattr(QPalette, key)
@@ -2720,7 +2847,7 @@ class ThemeManager():
 
         return mapping
 
-    def list_themes(self) -> Dict[str, Dict[str, Dict[str, str]]]:
+    def list_themes(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.theme_dir)
 
@@ -2767,9 +2894,7 @@ class ThemeManager():
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             try:
                 rmtree(os.path.join(self.theme_dir, identifier))
@@ -2792,6 +2917,13 @@ class ThemeManager():
                 name = json.load(metadata_json)['name']
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
+
+        try:
+            with open(os.path.join(theme_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
 
         if verbose:
             Logger.log(None, '♻ {}'.format(name))
@@ -2819,6 +2951,13 @@ class ThemeManager():
         except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
             name = identifier
 
+        try:
+            with open(os.path.join(theme_path, "metadata_{}.json".format(
+                      LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
+                name = json.load(metadata_json_i18n)['name']
+        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+            pass
+
         if verbose:
             Logger.log(None, '⇩ {}'.format(name))
 
@@ -2831,9 +2970,7 @@ class ThemeManager():
 
         except Exception as e:
             if verbose:
-                Logger.log_error(None, '⇩ {}: {}'.format(name, e))
-
-            traceback.print_exc()
+                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
 
             return False
 
@@ -2864,10 +3001,7 @@ class Tray():
 
         self.tray.activated.connect(self.icon_clicked)
 
-        if Settings.get('profile') == ProfileManager.default_profile_name():
-            self.tray.setToolTip('Pext')
-        else:
-            self.tray.setToolTip('Pext ({})'.format(Settings.get('profile')))
+        self.tray.setToolTip(QQmlProperty.read(self.window.window, "title"))
 
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
@@ -2883,27 +3017,79 @@ class Tray():
         self.tray.hide()
 
 
+class HotkeyHandler():
+    """Handles global hotkey presses."""
+
+    def __init__(self, needs_main_loop_queue: Queue, window: Window) -> None:
+        """Initialize the global hotkey handler."""
+        self.window = window
+        self.pressed = []  # type: List[Union[keyboard.Key, keyboard.KeyCode]]
+        self.needs_main_loop_queue = needs_main_loop_queue
+
+        listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
+        listener.start()
+
+    def on_press(self, key) -> bool:
+        """Executed when a key is pressed."""
+        if key is None:
+            return True
+
+        if key not in self.pressed:
+            self.pressed.append(key)
+
+        if (len(self.pressed) == 2 and
+                self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`' and
+                Settings.get('global_hotkey_enabled')):
+            self.needs_main_loop_queue.put(self.window.show)
+
+        return True
+
+    def on_release(self, key) -> bool:
+        """Executed when a key is released."""
+        try:
+            self.pressed.remove(key)
+        except KeyError:
+            pass
+
+        return True
+
+
 class Settings():
     """A globally accessible class that stores all Pext's settings."""
 
     __settings = {
         '_launch_app': True,  # Keep track if launching is normal
         'background': False,
-        'clipboard': 'clipboard',
         'locale': None,
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
+        'output_mode': OutputMode.DefaultClipboard,
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
-        'tray': True,
-        'update_check': None  # None = not asked, True/False = permission
+        'global_hotkey_enabled': True,
+        'tray': True
+    }
+
+    __global_settings = {
+        'last_update_check': None,
+        'update_check': None,  # None = not asked, True/False = permission
+        'object_update_check': None  # None = not asked, True/False = permission
     }
 
     @staticmethod
     def get(name, default=None):
         """Return the value of a single setting, falling back to default if None."""
+        try:
+            value = Settings.__global_settings[name]
+            if value is None:
+                return default
+
+            return value
+        except KeyError:
+            pass
+
         value = Settings.__settings[name]
         if value is None:
             return default
@@ -2911,26 +3097,42 @@ class Settings():
         return value
 
     @staticmethod
-    def get_all():
+    def get_all(profile=None):
         """Return all settings."""
-        return Settings.__settings
+        if profile:
+            return Settings.__settings
+        else:
+            return Settings.__global_settings
 
     @staticmethod
     def set(name, value):
         """Set a single setting if this setting is known."""
-        if name not in Settings.__settings:
-            raise NameError('{} is not a key of Settings'.format(name))
+        if name in Settings.__global_settings:
+            profile = None
+        else:
+            profile = Settings.get('profile')
+            if name not in Settings.__settings:
+                raise NameError('{} is not a key of Settings'.format(name))
 
         if Settings.get(name) == value:
             return
 
-        Settings.__settings[name] = value
-        ProfileManager().save_settings(Settings.get('profile'), changed_key=name)
+        if name in Settings.__global_settings:
+            Settings.__global_settings[name] = value
+        else:
+            Settings.__settings[name] = value
+
+        ProfileManager().save_settings(profile, changed_key=name)
 
     @staticmethod
     def update(value):
         """Update the dictionary with new values if any changed."""
         Settings.__settings.update(value)
+
+    @staticmethod
+    def update_global(value):
+        """Update the globals dictionary with new values if any changed."""
+        Settings.__global_settings.update(value)
 
 
 class ModuleOptionParser(argparse.Action):
@@ -2944,7 +3146,13 @@ class ModuleOptionParser(argparse.Action):
         modules = namespace._modules
 
         if self.dest == 'module':
-            modules.append({'name': value, 'settings': {}})
+            module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
+            data = ObjectManager.list_object(os.path.join(module_dir, value.replace('.', '_')))
+            if not data:
+                print("Could not find module {}".format(value))
+                return
+
+            modules.append({'metadata': data['metadata'], 'settings': {}})
             setattr(namespace, '_modules', modules)
         else:
             modules[-1]['settings'][self.dest[len('module-'):]] = value
@@ -2988,8 +3196,8 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='print a list of loadable Qt system styles and exit.')
     parser.add_argument('--style', help='use the given Qt system style for the UI.')
     parser.add_argument('--background', action='store_true', help='do not open the user interface this invocation.')
-    parser.add_argument('--clipboard', '-c', choices=['clipboard', 'selection'],
-                        help='choose the clipboard to copy entries to.')
+    parser.add_argument('--output', choices=['default-clipboard', 'x11-selection-clipboard', 'macos-findbuffer'],
+                        help='choose the location to output entries to.')
     parser.add_argument('--module', '-m', action=ModuleOptionParser,
                         help='name the module to use. This option may be given multiple times. '
                         'When this option is given, the profile module list will be overwritten.')
@@ -3038,7 +3246,7 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                 # Probably already added
                 pass
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     return args
 
 
@@ -3054,7 +3262,8 @@ def _load_settings(args: argparse.Namespace) -> None:
     except OSError:
         pass
 
-    # Load all from profile
+    # Load all settings
+    Settings.update_global(ProfileManager().retrieve_settings(None))
     Settings.update(ProfileManager().retrieve_settings(str(Settings.get('profile'))))
 
     # Then, check for the rest
@@ -3084,14 +3293,28 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.background:
         Settings.set('background', True)
 
-    if args.clipboard:
-        Settings.set('clipboard', args.clipboard)
+    if args.output:
+        if args.output == 'default-clipboard':
+            Settings.set('output_mode', OutputMode.DefaultClipboard)
+        elif args.output == 'x11-selection-clipboard':
+            Settings.set('output_mode', OutputMode.SelectionClipboard)
+        elif args.output == 'macos-findbuffer':
+            Settings.set('output_mode', OutputMode.FindBuffer)
+        elif args.output == 'autotype':
+            Settings.set('output_mode', OutputMode.AutoType)
 
     if args.install_module:
         for metadata_url in args.install_module:
             try:
-                with urlopen(metadata_url) as unparsed_metadata:
-                    metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
+                metadata = requests.get(metadata_url).json()
+
+                try:
+                    r = requests.get(re.sub(r'\.json$', '{}_.json'
+                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
+                                     ''))
+                    metadata.update(r.json())
+                except Exception:
+                    pass
 
                 if not ModuleManager().install_module(metadata['git_urls'][0],
                                                       metadata['id'],
@@ -3136,8 +3359,15 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.install_theme:
         for metadata_url in args.install_theme:
             try:
-                with urlopen(metadata_url) as unparsed_metadata:
-                    metadata = json.loads(unparsed_metadata.read().decode('utf-8'))
+                metadata = requests.get(metadata_url).json()
+
+                try:
+                    r = requests.get(re.sub(r'\.json$', '{}_.json'
+                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
+                                     ''))
+                    metadata.update(r.json())
+                except Exception:
+                    pass
 
                 if not ThemeManager().install_theme(metadata['git_urls'][0],
                                                     metadata['id'],
@@ -3213,10 +3443,6 @@ def _load_settings(args: argparse.Namespace) -> None:
     if '_modules' in args:
         Settings.set('modules', args._modules)
 
-    # See if automatic update checks are allowed
-    if ConfigRetriever.get_updatecheck_permission_asked():
-        Settings.set('update_check', ConfigRetriever.get_updatecheck_permission())
-
 
 def _shut_down(window: Window) -> None:
     """Clean up."""
@@ -3284,7 +3510,7 @@ def main() -> None:
 
     # Load the locale
     locale_manager = LocaleManager()
-    locale_manager.load_locale(app, locale_manager.find_best_locale(Settings.get('locale')))
+    locale_manager.load_locale(app, LocaleManager.find_best_locale(Settings.get('locale')))
 
     # Load the app icon
     # KDE doesn't support svg in the system tray and macOS makes the png in
@@ -3311,11 +3537,6 @@ def main() -> None:
         theme = theme_manager.load_theme(theme_identifier)
         theme_manager.apply_theme_to_app(theme, app)
 
-    # Check if clipboard is supported
-    if Settings.get('clipboard') == 'selection' and not app.clipboard().supportsSelection():
-        print("Requested clipboard type is not supported")
-        sys.exit(3)
-
     # Get a window
     window = Window(locale_manager)
 
@@ -3330,8 +3551,12 @@ def main() -> None:
     if not platform.system() == 'Windows':
         signal.signal(signal.SIGUSR1, signal_handler.handle)
 
+    # Start handling the global hotkey
+    needs_main_loop_queue = Queue()  # type: Queue[Callable[[], None]]
+    HotkeyHandler(needs_main_loop_queue, window)
+
     # Create a main loop
-    main_loop = MainLoop(app, window)
+    main_loop = MainLoop(app, window, needs_main_loop_queue)
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
