@@ -1,5 +1,9 @@
 #! /bin/bash
 
+# appimageupdate deps
+sudo apt-get update
+sudo apt-get install desktop-files-utils
+
 # install Python 3.6
 sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt-get update
