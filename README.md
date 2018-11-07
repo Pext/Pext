@@ -1,5 +1,9 @@
 # Pext
 
+<a href="https://repology.org/metapackage/pext/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.21" alt="Packaging status" align="right">
+</a>
+
 ![Lilly the leoger](/logo.png)
 
 [![Linux & macOS Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
@@ -8,10 +12,6 @@
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 
 ## Contents
-
-<a href="https://repology.org/metapackage/pext/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.21" alt="Packaging status" align="right">
-</a>
 
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
