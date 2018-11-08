@@ -183,7 +183,6 @@ Item {
 
                 property int normalEntries: resultListModelNormalEntries
                 property int commandEntries: resultListModelCommandEntries
-                property bool commandMode: resultListModelCommandMode
                 property bool hasEntries: resultListModelHasEntries
                 property int depth: resultListModelDepth
 
@@ -204,11 +203,7 @@ Item {
                                 text: display
                                 textFormat: Text.PlainText
                                 font.italic:
-                                    if (!resultListModelCommandMode) {
-                                        index >= resultListModelNormalEntries
-                                    } else {
-                                        index < resultListModelCommandEntries
-                                    }
+                                    index >= resultListModelNormalEntries
                                 color: {
                                     if (resultList.currentIndex == index) {
                                         if (contextMenu.visible) {

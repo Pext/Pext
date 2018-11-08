@@ -115,6 +115,18 @@ ApplicationWindow {
         }
     }
 
+    Item {
+        objectName: "commandArgsDialog"
+
+        signal showCommandArgsDialog()
+        signal commandArgsRequestAccepted(string args)
+
+        onShowCommandArgsDialog: {
+            var commandArgsDialog = Qt.createComponent("CommandArgsDialog.qml");
+            commandArgsDialog.createObject(applicationWindow,
+                 {"requestAccepted": commandArgsRequestAccepted});
+        }
+    }
 
     Item {
         objectName: "errorDialog"
@@ -238,6 +250,11 @@ ApplicationWindow {
     Shortcut {
         sequence: "Ctrl+."
         onActivated: openContextMenu();
+    }
+
+    Shortcut {
+        objectName: "argsShortcut"
+        sequence: "Ctrl+Return"
     }
 
     Shortcut {

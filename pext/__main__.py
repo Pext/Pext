@@ -1535,8 +1535,6 @@ class ViewModel():
         self.filtered_command_list = []  # type: List
         self.result_list_model_list = QStringListModel()
         self.result_list_model_max_index = -1
-        self.result_list_model_command_mode = False
-        self.result_list_model_command_mode_new = True
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
         self.context_menu_model_list = QStringListModel()
@@ -1727,9 +1725,6 @@ class ViewModel():
             self.context.setContextProperty(
                 "resultListModelCommandEntries", len(self.sorted_filtered_command_list))
 
-            self.context.setContextProperty(
-                "resultListModelCommandMode", False)
-
             # Keep existing selection, otherwise ensure something is selected
             try:
                 current_index = combined_list.index(current_match)
@@ -1745,12 +1740,8 @@ class ViewModel():
 
             return
 
-        search_strings = search_string.split(" ")
-
         # If longer and no new entries, only filter existing list
-        if (len(self.last_search) > 0 and len(search_string) > len(self.last_search)
-                and not self.result_list_model_command_mode):
-
+        if len(self.last_search) > 0 and len(search_string) > len(self.last_search):
             filter_entry_list = self.sorted_filtered_entry_list
             filter_command_list = self.sorted_filtered_command_list
         else:
@@ -1760,37 +1751,15 @@ class ViewModel():
         self.filtered_entry_list = []
         self.filtered_command_list = []
 
-        activate_command_mode = False
+        for entry in filter_entry_list:
+            if search_string in entry.lower():
+                self.filtered_entry_list.append(entry)
 
         for command in filter_command_list:
-            if search_strings[0] in command:
-                if search_strings[0] == command.split(" ", 1)[0] and len(search_string) >= len(self.last_search):
-                    activate_command_mode = True
-                    if manual and self.result_list_model_command_mode:
-                        self.result_list_model_command_mode_new = False
-                    self.result_list_model_command_mode = True
-
+            if search_string in command.lower():
                 self.filtered_command_list.append(command)
 
-        if not activate_command_mode:
-            self.result_list_model_command_mode = False
-            self.result_list_model_command_mode_new = True
-
-        if self.result_list_model_command_mode:
-            for entry in filter_entry_list:
-                if all(search_string in str(entry).lower() for search_string in search_strings[1:]):
-                    self.filtered_entry_list.append(entry)
-
-            combined_list = self.filtered_command_list + self.filtered_entry_list
-        else:
-            for entry in filter_entry_list:
-                if all(search_string in str(entry).lower() for search_string in search_strings):
-                    self.filtered_entry_list.append(entry)
-
-            combined_list = self.filtered_entry_list + self.filtered_command_list
-
-        self.context.setContextProperty(
-            "resultListModelCommandMode", self.result_list_model_command_mode)
+        combined_list = self.filtered_entry_list + self.filtered_command_list
 
         self.context.setContextProperty(
             "resultListModelNormalEntries", len(self.filtered_entry_list))
@@ -1800,13 +1769,10 @@ class ViewModel():
         self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
 
         # Keep existing selection, otherwise ensure something is selected
-        if manual and self.result_list_model_command_mode and self.result_list_model_command_mode_new:
+        try:
+            current_index = combined_list.index(current_match)
+        except ValueError:
             current_index = 0
-        else:
-            try:
-                current_index = combined_list.index(current_match)
-            except ValueError:
-                current_index = 0
 
         QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
@@ -1830,31 +1796,18 @@ class ViewModel():
             return {'type': SelectionType.none, 'value': None, 'context_option': None}
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
-        selected_command = None
 
-        if self.result_list_model_command_mode:
-            try:
-                selected_command = self.filtered_command_list[current_index]
-            except IndexError:
-                entry = self.filtered_entry_list[current_index - len(self.filtered_command_list)]
-                return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
-        elif current_index >= len(self.filtered_entry_list):
-            selected_command = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
-
-        if selected_command:
-            command_typed = QQmlProperty.read(self.search_input_model, "text")
-
-            if command_typed.startswith(selected_command + " "):
-                args = command_typed.split(selected_command + " ", 1)[-1]
-            else:
-                args = ""
-
-            return {'type': SelectionType.command, 'value': selected_command, 'args': args, 'context_option': None}
+        if current_index >= len(self.filtered_entry_list):
+            # Selection is a command
+            selection_type = SelectionType.command
+            entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
         else:
+            selection_type = SelectionType.entry
             entry = self.filtered_entry_list[current_index]
-            return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
 
-    def select(self) -> None:
+        return {'type': selection_type, 'value': entry, 'context_option': None}
+
+    def select(self, command_args=None) -> None:
         """Notify the module of our selection entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             return
@@ -1869,7 +1822,10 @@ class ViewModel():
         self.context_menu_entries = {}
         self.context_menu_commands = {}
 
-        self.selection.append(self._get_entry(include_context=True))
+        selection = self._get_entry(include_context=True)
+        if command_args:
+            selection["args"] = command_args
+        self.selection.append(selection)
 
         self.context.setContextProperty(
             "contextMenuEnabled", False)
@@ -1968,32 +1924,38 @@ class ViewModel():
         search bar to the longest possible common completion.
         """
         current_input = QQmlProperty.read(self.search_input_model, "text")
+        combined_list = self.filtered_entry_list + self.filtered_command_list
 
-        possibles = current_input.split(" ", 1)
-        command = self._get_longest_common_string(
-            [command.split(" ", 1)[0] for command in self.command_list],
-            start=possibles[0])
-        # If we didn't complete the command, see if we can complete the text
-        if command is None or len(command) == len(possibles[0]):
-            if command is None:
-                command = ""  # We string concat this later
-            else:
-                command += " "
+        entry = self._get_longest_common_string(
+                [entry.lower() for entry in combined_list],
+                start=current_input.lower())
+        if entry is None or len(entry) <= len(current_input):
+            self.queue.put(
+                [Action.add_error, "No tab completion possible"])
+            return
 
-            start = possibles[1] if len(possibles) > 1 else ""
-            entry = self._get_longest_common_string([list_entry for list_entry in self.filtered_entry_list
-                                                     if list_entry not in self.command_list],
-                                                    start=start)
-
-            if entry is None or len(entry) <= len(start):
-                self.queue.put(
-                    [Action.add_error, "No tab completion possible"])
-                return
-        else:
-            entry = " "  # Add an extra space to simplify typing for the user
-
-        QQmlProperty.write(self.search_input_model, "text", command + entry)
+        QQmlProperty.write(self.search_input_model, "text", entry)
         self.search()
+
+    def input_args(self) -> None:
+        """Open dialog that allows the user to input command arguments."""
+        if (len(self.filtered_command_list) == 0 and
+            len(self.filtered_entry_list) == 0):
+            self.queue.put(
+                [Action.add_error, "No selected entry"])
+            return
+
+        selected_entry = self._get_entry(include_context=True)
+        if selected_entry["type"] != SelectionType.command:
+            self.queue.put(
+                [Action.add_error, "Selected entry is not a command"])
+            return
+
+        args_request = self.window.window.findChild(QObject, "commandArgsDialog")
+        args_request.commandArgsRequestAccepted.connect(
+            lambda args: self.select(args))
+
+        args_request.showCommandArgsDialog.emit()
 
 
 class Window():
@@ -2080,12 +2042,14 @@ class Window():
         escape_shortcut = self.window.findChild(QObject, "escapeShortcut")
         back_button = self.window.findChild(QObject, "backButton")
         tab_shortcut = self.window.findChild(QObject, "tabShortcut")
+        args_shortcut = self.window.findChild(QObject, "argsShortcut")
 
         self.search_input_model.textChanged.connect(self._search)
         self.search_input_model.accepted.connect(self._select)
         escape_shortcut.activated.connect(self._go_up)
         back_button.clicked.connect(self._go_up)
         tab_shortcut.activated.connect(self._tab_complete)
+        args_shortcut.activated.connect(self._input_args)
 
         # Find menu entries
         menu_reload_active_module_shortcut = self.window.findChild(
@@ -2733,6 +2697,14 @@ class Window():
         if element:
             try:
                 element['vm'].tab_complete()
+            except TypeError:
+                pass
+
+    def _input_args(self) -> None:
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].input_args()
             except TypeError:
                 pass
 
