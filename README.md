@@ -80,6 +80,8 @@ pip3 install git+https://github.com/Pext/Pext.git --user
 
 On some systems, you may need to use pip instead of pip3.
 
+On some systems, you may need to add `~/.local/bin` to your $PATH if you want to launch Pext from the terminal: `echo "export PATH=$HOME/.local/bin:$PATH" >> ~/.profile`.
+
 Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ### macOS
