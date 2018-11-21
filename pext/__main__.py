@@ -58,7 +58,7 @@ from dulwich import porcelain
 from dulwich.repo import Repo
 from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QStyleFactory, QSystemTrayIcon
+from PyQt5.QtWidgets import QApplication, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor
 
@@ -545,7 +545,6 @@ class MainLoop():
             tab['vm'].search(new_entries=True)
             tab['entries_processed'] = 0
 
-        self.window.update()
         tab['queue'].task_done()
 
     def run(self) -> None:
@@ -1600,7 +1599,6 @@ class ViewModel():
                 "resultListModelDepth", len(self.selection))
 
             self._clear_queue()
-            self.window.update()
 
             self.make_selection()
         else:
@@ -1815,7 +1813,6 @@ class ViewModel():
         self.context.setContextProperty("searchInputFieldEmpty", True)
         self.search(new_entries=True, manual=True)
         self._clear_queue()
-        self.window.update()
 
         self.make_selection()
 
@@ -1934,13 +1931,11 @@ class ViewModel():
         self.search()
 
 
-class Window(QMainWindow):
+class Window():
     """The main Pext window."""
 
     def __init__(self, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
-        super().__init__(parent)
-
         # Ask for accessibility access to autotype and focus-fix on macOS
         if platform.system() == 'Darwin':
             self.acc = accessibility.create_systemwide_ref()
@@ -1955,7 +1950,7 @@ class Window(QMainWindow):
         self.tab_bindings = []  # type: List[Dict]
         self.tray = None  # type: Optional[Tray]
 
-        self.engine = QQmlApplicationEngine(self)
+        self.engine = QQmlApplicationEngine(None)
 
         # Set QML variables
         self.context = self.engine.rootContext()
@@ -2771,7 +2766,6 @@ class Window(QMainWindow):
             self.window.show()
 
         self.window.raise_()
-        self.activateWindow()
 
     def toggle_visibility(self, force_tray=False) -> None:
         """Toggle window visibility."""
