@@ -31,10 +31,12 @@ ApplicationWindow {
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
-    minimumWidth: 800
-    minimumHeight: 600
+    minimumWidth: FORCE_FULLSCREEN ? Screen.width : 800
+    minimumHeight: FORCE_FULLSCREEN ? Screen.height : 600
     x: (Screen.width - width) / 2
     y: (Screen.height - height) / 2
+
+    flags: Qt.Window
 
     signal confirmedClose()
 
@@ -45,8 +47,6 @@ ApplicationWindow {
             {"confirmedClose": confirmedClose,
              "platform": platform});
     }
-
-    flags: Qt.Window
 
     SystemPalette { id: palette; colorGroup: SystemPalette.Active }
 

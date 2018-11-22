@@ -60,7 +60,7 @@ from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import QApplication, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
-from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtGui import QPalette, QColor, QWindow
 
 if platform.system() == 'Darwin':
     import accessibility  # NOQA
@@ -1934,7 +1934,7 @@ class ViewModel():
 class Window():
     """The main Pext window."""
 
-    def __init__(self, locale_manager: LocaleManager, parent=None) -> None:
+    def __init__(self, app: QApplication, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
         # Ask for accessibility access to autotype and focus-fix on macOS
         if platform.system() == 'Darwin':
@@ -1950,10 +1950,13 @@ class Window():
         self.tab_bindings = []  # type: List[Dict]
         self.tray = None  # type: Optional[Tray]
 
+        self.app = app
         self.engine = QQmlApplicationEngine(None)
 
         # Set QML variables
         self.context = self.engine.rootContext()
+        self.context.setContextProperty(
+            "FORCE_FULLSCREEN", self.app.platformName() in ['webgl', 'vnc'])
         self.context.setContextProperty(
             "USE_INTERNAL_UPDATER", USE_INTERNAL_UPDATER)
         self.context.setContextProperty(
@@ -1978,6 +1981,12 @@ class Window():
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
 
         self.window = self.engine.rootObjects()[0]
+
+        # Some hacks to make Qt WebGL streaming work
+        if self.app.platformName() == 'webgl':
+            self.parent_window = QWindow()
+            self.parent_window.setVisibility(QWindow.FullScreen)
+            self.window.setParent(self.parent_window)
 
         # Override quit and minimize
         self.window.confirmedClose.connect(self.quit)
@@ -2720,6 +2729,9 @@ class Window():
 
     def close(self, manual=False, force_tray=False) -> None:
         """Close the window."""
+        if self.app.platformName() in ['webgl', 'vnc']:
+            return
+
         if force_tray:
             if self.tray:
                 self.tray.show()
@@ -3503,7 +3515,7 @@ def main() -> None:
         theme_manager.apply_theme_to_app(theme, app)
 
     # Get a window
-    window = Window(locale_manager)
+    window = Window(app, locale_manager)
 
     # Give the logger a reference to the window
     Logger.bind_window(window)
