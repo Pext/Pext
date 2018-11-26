@@ -135,7 +135,7 @@ For command line options, use `--help`.
 
 If you need support or just want to chat with our community, we have the following options:
 
-- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
+- IRC: #pext on FreeNode ([webchat](http://webchat.freenode.net/?channels=%23pext&uio=MTY9dHJ1ZQ79))
 - Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
 - Telegram: [@PextTool](https://t.me/PextTool)
 
