@@ -73,7 +73,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
