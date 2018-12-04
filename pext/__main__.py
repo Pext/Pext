@@ -129,32 +129,52 @@ class OutputMode(IntEnum):
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
-    __config_home = None
+    __config_data_path = None
+    __config_temp_path = None
 
     @staticmethod
-    def set_home_path(path: Optional[str]) -> None:
+    def set_data_path(path: Optional[str]) -> None:
         """Set the root configuration directory for Pext to store in and load from."""
-        ConfigRetriever.__config_home = path
+        ConfigRetriever.__config_data_path = path
 
     @staticmethod
-    def get_setting(variable: str) -> str:
-        """Get a specific configuration setting."""
-        if ConfigRetriever.__config_home:
-            config_home = os.path.expanduser(ConfigRetriever.__config_home)
-            if os.path.isdir(config_home):
-                config = {'config_path': config_home}
-            else:
-                raise NotADirectoryError('{} is not a directory.'.format(config_home))
+    def make_portable(portable: Optional[bool]) -> None:
+        """Make changes to locations so that Pext can be considered portable."""
+        if not portable:
+            return
+
+        if not ConfigRetriever.__config_data_path:
+            ConfigRetriever.__config_data_path = os.path.join(AppFile.get_path(), 'pext_data')
+
+        ConfigRetriever.__config_temp_path = os.path.join(ConfigRetriever.__config_data_path, 'pext_temp')
+
+    @staticmethod
+    def get_path() -> str:
+        """Get the config path."""
+        if ConfigRetriever.__config_data_path:
+            config_data_path = os.path.expanduser(ConfigRetriever.__config_data_path)
+            os.makedirs(config_data_path, exist_ok=True)
+            return config_data_path
+
+        # Fall back to default config location
+        try:
+            config_data_path = os.environ['XDG_CONFIG_HOME']
+        except Exception:
+            config_data_path = os.path.join(os.path.expanduser('~'), '.config')
+
+        os.makedirs(config_data_path, exist_ok=True)
+        return os.path.join(config_data_path, 'pext')
+
+    @staticmethod
+    def get_temp_path() -> str:
+        """Get the temp path."""
+        if ConfigRetriever.__config_temp_path:
+            temp_path = os.path.expanduser(ConfigRetriever.__config_temp_path)
         else:
-            # Fall back to default config location
-            try:
-                config_home = os.environ['XDG_CONFIG_HOME']
-            except Exception:
-                config_home = os.path.join(os.path.expanduser('~'), '.config')
+            temp_path = tempfile.gettempdir()
 
-            config = {'config_path': os.path.join(config_home, 'pext')}
-
-        return config[variable]
+        os.makedirs(temp_path, exist_ok=True)
+        return temp_path
 
 
 class RunConseq():
@@ -664,8 +684,8 @@ class ProfileManager():
 
     def __init__(self) -> None:
         """Initialize the profile manager."""
-        self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
-        self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
+        self.profile_dir = os.path.join(ConfigRetriever.get_path(), 'profiles')
+        self.module_dir = os.path.join(ConfigRetriever.get_path(), 'modules')
         self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
                                'global_hotkey_enabled', 'last_update_check', 'update_check', 'object_update_check']
 
@@ -676,7 +696,7 @@ class ProfileManager():
         else:
             uid = str(os.getuid())
 
-        return os.path.join(tempfile.gettempdir(), '{}_pext_{}.pid'.format(uid, profile))
+        return os.path.join(ConfigRetriever.get_temp_path(), '{}_pext_{}.pid'.format(uid, profile))
 
     @staticmethod
     def lock_profile(profile: str) -> None:
@@ -807,7 +827,7 @@ class ProfileManager():
         if profile:
             path = os.path.join(self.profile_dir, profile, 'settings')
         else:
-            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+            path = os.path.join(ConfigRetriever.get_path(), 'settings')
 
         with open(path, 'w') as configfile:
             config.write(configfile)
@@ -820,7 +840,7 @@ class ProfileManager():
         if profile:
             path = os.path.join(self.profile_dir, profile, 'settings')
         else:
-            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+            path = os.path.join(ConfigRetriever.get_path(), 'settings')
 
         config.read(path)
 
@@ -926,9 +946,9 @@ class ModuleManager():
 
     def __init__(self) -> None:
         """Initialize the module manager."""
-        self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
+        self.module_dir = os.path.join(ConfigRetriever.get_path(),
                                        'modules')
-        self.module_dependencies_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
+        self.module_dependencies_dir = os.path.join(ConfigRetriever.get_path(),
                                                     'module_dependencies')
 
     def _pip_install(self, identifier: str) -> Optional[str]:
@@ -977,12 +997,12 @@ class ModuleManager():
     def load_module(self, window: 'Window', module: Dict[str, Any]) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
-        module_path = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
+        module_path = os.path.join(ConfigRetriever.get_path(), 'modules')
         if module_path not in sys.path:
             sys.path.append(module_path)
 
         # Append module dependencies path if not yet appended
-        module_dependencies_path = os.path.join(ConfigRetriever.get_setting('config_path'),
+        module_dependencies_path = os.path.join(ConfigRetriever.get_path(),
                                                 'module_dependencies',
                                                 module['metadata']['id'].replace('.', '_'))
         if module_dependencies_path not in sys.path:
@@ -1965,9 +1985,9 @@ class Window():
             "systemPlatform", platform.system())
 
         self.context.setContextProperty(
-            "modulesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'modules'))
+            "modulesPath", os.path.join(ConfigRetriever.get_path(), 'modules'))
         self.context.setContextProperty(
-            "themesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'themes'))
+            "themesPath", os.path.join(ConfigRetriever.get_path(), 'themes'))
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
         self.context.setContextProperty("defaultProfile", ProfileManager.default_profile_name())
@@ -2600,7 +2620,7 @@ class Window():
             pass
 
     def _menu_install_quick_action_service(self) -> None:
-        new_path = os.path.join(tempfile.gettempdir(), 'Pext.workflow')
+        new_path = os.path.join(ConfigRetriever.get_temp_path(), 'Pext.workflow')
         try:
             rmtree(new_path)
         except IOError:
@@ -2809,7 +2829,7 @@ class ThemeManager():
 
     def __init__(self) -> None:
         """Initialize the module manager."""
-        self.theme_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'themes')
+        self.theme_dir = os.path.join(ConfigRetriever.get_path(), 'themes')
 
     def _get_palette_mappings(self) -> Dict[str, Dict[str, str]]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
@@ -3123,7 +3143,7 @@ class ModuleOptionParser(argparse.Action):
         modules = namespace._modules
 
         if self.dest == 'module':
-            module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
+            module_dir = os.path.join(ConfigRetriever.get_path(), 'modules')
             data = ObjectManager.list_object(os.path.join(module_dir, value.replace('.', '_')))
             if not data:
                 print("Could not find module {}".format(value))
@@ -3165,7 +3185,7 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='The Python-based extendable tool.')
     parser.add_argument('-v', '--version', action='version',
                         version='Pext {}'.format(UpdateManager().get_core_version()))
-    parser.add_argument('--config', help='use given directory to store settings and data.')
+    parser.add_argument('--data-path', help='use given directory to store settings and data.')
     parser.add_argument('--locale', help='load the given locale.')
     parser.add_argument('--list-locales', action='store_true',
                         help='print a list of the available locales.')
@@ -3202,6 +3222,10 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='create a tray icon (this is the default).')
     parser.add_argument('--no-tray', action='store_false', dest='tray', default=None,
                         help='do not create a tray icon.')
+    parser.add_argument('--portable', action='store_true', dest='portable', default=None,
+                        help='load and store everything in a local directory.')
+    parser.add_argument('--no-portable', action='store_false', dest='portable', default=None,
+                        help='load and store everything in the user directory.')
 
     # Remove weird macOS-added parameter
     # https://stackoverflow.com/questions/10242115/os-x-strange-psn-command-line-parameter-when-launched-from-finder
@@ -3439,12 +3463,13 @@ def main() -> None:
     # Parse arguments
     args = _parse_args(sys.argv[1:])
 
+    # Load configuration
+    ConfigRetriever.set_data_path(args.data_path)
+    ConfigRetriever.make_portable(args.portable)
+
     # Lock profile or call existing profile if running
     _init_persist(args.profile if args.profile else ProfileManager.default_profile_name(),
                   args.background if args.background else False)
-
-    # Load configuration
-    ConfigRetriever.set_home_path(args.config)
 
     # Ensure our necessary directories exist
     for directory in ['modules',
@@ -3453,18 +3478,10 @@ def main() -> None:
                       'profiles',
                       os.path.join('profiles', ProfileManager.default_profile_name())]:
         try:
-            os.makedirs(os.path.join(ConfigRetriever.get_setting('config_path'), directory))
+            os.makedirs(os.path.join(ConfigRetriever.get_path(), directory))
         except OSError:
             # Probably already exists, that's okay
             pass
-
-    # Delete old system theme hack if exists
-    # TODO: Remove later
-    try:
-        rmtree(os.path.join(ConfigRetriever.get_setting('config_path'), 'themes', "pext_theme_system"))
-    except FileNotFoundError:
-        # Probably already deleted
-        pass
 
     _load_settings(args)
     del args

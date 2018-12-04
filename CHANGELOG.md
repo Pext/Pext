@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Added
+- --portable flag to make Pext behave more self-contained
+
+### Changed
+- --config flag has been renamed to --data-path
+
 ## [0.21] - 2018-11-02
 ### API changes
 - Bump API version to 0.9.0
