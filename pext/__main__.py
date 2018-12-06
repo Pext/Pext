@@ -686,7 +686,7 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(ConfigRetriever.get_path(), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_path(), 'modules')
-        self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
+        self.saved_settings = ['_window_geometry', 'locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
                                'global_hotkey_enabled', 'last_update_check', 'update_check', 'object_update_check']
 
     @staticmethod
@@ -2233,6 +2233,17 @@ class Window():
 
                 permission_requests.updatePermissionRequest.emit()
 
+        # Set remembered geometry
+        if not self.app.platformName() in ['webgl', 'vnc']:
+            geometry = Settings.get('_window_geometry')
+            try:
+                self.window.setGeometry(*[int(geopoint) for geopoint in geometry.split(';')])
+            except Exception as e:
+                if geometry:
+                    print("Invalid geometry: {}".format(e))
+                screen_size = self.window.screen().size()
+                self.window.setGeometry((screen_size.width() - 800) / 2, (screen_size.height() - 600) / 2, 800, 600)
+
         # Start binding the modules
         if len(Settings.get('modules')) > 0:
             for module in Settings.get('modules'):
@@ -2808,6 +2819,8 @@ class Window():
 
     def quit(self) -> None:
         """Quit."""
+        geometry = self.window.geometry()
+        Settings.set('_window_geometry', "{};{};{};{}".format(geometry.x(), geometry.y(), geometry.width(), geometry.height()))
         sys.exit(0)
         self.quit()
 
@@ -3056,6 +3069,7 @@ class Settings():
 
     __settings = {
         '_launch_app': True,  # Keep track if launching is normal
+        '_window_geometry': None,
         'background': False,
         'locale': None,
         'modules': [],
@@ -3087,7 +3101,11 @@ class Settings():
         except KeyError:
             pass
 
-        value = Settings.__settings[name]
+        try:
+            value = Settings.__settings[name]
+        except KeyError:
+            value = None
+
         if value is None:
             return default
 

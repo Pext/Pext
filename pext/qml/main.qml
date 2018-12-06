@@ -33,8 +33,8 @@ ApplicationWindow {
     property int margin: 10
     minimumWidth: FORCE_FULLSCREEN ? Screen.width : 800
     minimumHeight: FORCE_FULLSCREEN ? Screen.height : 600
-    x: (Screen.width - width) / 2
-    y: (Screen.height - height) / 2
+    width: FORCE_FULLSCREEN ? Screen.width : 800
+    height: FORCE_FULLSCREEN ? Screen.height : 600
 
     flags: Qt.Window
 

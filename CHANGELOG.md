@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - --config flag has been renamed to --data-path
+- Remember the geometry of the main window
+
+### Fixed
+- Sizing issues when moving to another monitor
+- Window not being resizeable
 
 ## [0.21] - 2018-11-02
 ### API changes
