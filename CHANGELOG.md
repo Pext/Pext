@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- Portable builds for Linux and macOS
 - --portable flag to make Pext behave more self-contained
 
 ### Changed
