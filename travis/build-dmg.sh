@@ -96,7 +96,7 @@ popd
 # generate .dmg
 if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
   mv "$BUILD_DIR"/Pext.app Pext-portable-$VERSION.app
-  zip -r Pext-portable-$VERSION.zip Pext-portable-*.app
+  zip -r Pext-portable-$VERSION.app.zip Pext-portable-*.app
 else
   git clone -b patch-2 --single-branch https://github.com/TheLastProject/create-dmg.git
   pushd create-dmg
