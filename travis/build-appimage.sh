@@ -46,8 +46,17 @@ for path in /etc/ssl/ca-bundle.pem \
     fi
 done
 
-exec "$APPDIR"/usr/bin/python -m pext "$@"
 EAT
+
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+cat >> AppRun.sh <<\EAT
+  exec "$APPDIR"/usr/bin/python -m pext "$@"
+EAT
+else
+cat >> AppRun.sh <<\EAT
+  exec "$APPDIR"/usr/bin/python -m pext --portable "$@"
+EAT
+fi
 
 chmod +x AppRun.sh
 
@@ -72,7 +81,11 @@ if [ "$TRAVIS_TAG" != "" ]; then
     APPIMAGEUPDATE_TAG=latest
 fi
 
-export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync"
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+  export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext-portable-*x86_64.AppImage.zsync"
+else
+  export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync"
+fi
 
 chmod +x linuxdeploy*.{sh,AppImage}
 
@@ -99,7 +112,11 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 ls -al AppDir/
 
 python "$REPO_ROOT/setup.py" || true
-export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+  export VERSION=portable-$(cat "$REPO_ROOT/pext/VERSION")
+else
+  export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+fi
 
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool*.AppImage

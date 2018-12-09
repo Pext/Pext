@@ -57,11 +57,20 @@ cp -R ~/miniconda/envs/Pext/* Pext.app/Contents/Resources/
 cp -R "$OLD_CWD"/* Pext.app/Contents/Resources/Pext/
 
 # create entry script
-cat <<'EOF' >> Pext.app/Contents/MacOS/Pext
+cat > Pext.app/Contents/MacOS/Pext <<\EAT
 #!/usr/bin/env bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-$DIR/../Resources/bin/python $DIR/../Resources/Pext/pext $@
-EOF
+EAT
+
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+cat >> Pext.app/Contents/MacOS/Pext <<\EAT
+  $DIR/../Resources/bin/python $DIR/../Resources/Pext/pext --portable $@
+EAT
+else
+cat >> Pext.app/Contents/MacOS/Pext <<\EAT
+  $DIR/../Resources/bin/python $DIR/../Resources/Pext/pext $@
+EAT
+fi
 
 # make executable
 chmod a+x Pext.app/Contents/MacOS/Pext
@@ -85,9 +94,12 @@ popd
 popd
 
 # generate .dmg
-git clone -b patch-2 --single-branch https://github.com/TheLastProject/create-dmg.git
-pushd create-dmg
-bash ./create-dmg --volname "Pext $VERSION" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext-$VERSION.dmg "$BUILD_DIR"/
-
-# move dmg to old CWD
-mv Pext*.dmg "$OLD_CWD"/
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+  mv "$BUILD_DIR"/Pext.app "$OLD_CWD"/Pext-portable-$VERSION.app
+else
+  git clone -b patch-2 --single-branch https://github.com/TheLastProject/create-dmg.git
+  pushd create-dmg
+  bash ./create-dmg --volname "Pext $VERSION" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext-$VERSION.dmg "$BUILD_DIR"/
+  # move dmg to old CWD
+  mv Pext*.dmg "$OLD_CWD"/
+fi

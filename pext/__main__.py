@@ -686,8 +686,17 @@ class ProfileManager():
         """Initialize the profile manager."""
         self.profile_dir = os.path.join(ConfigRetriever.get_path(), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_path(), 'modules')
-        self.saved_settings = ['_window_geometry', 'locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
-                               'global_hotkey_enabled', 'last_update_check', 'update_check', 'object_update_check']
+        self.saved_settings = ['_window_geometry',
+                               'locale',
+                               'minimize_mode',
+                               'output_mode',
+                               'sort_mode',
+                               'theme',
+                               'tray',
+                               'global_hotkey_enabled',
+                               'last_update_check',
+                               'update_check',
+                               'object_update_check']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -2820,7 +2829,8 @@ class Window():
     def quit(self) -> None:
         """Quit."""
         geometry = self.window.geometry()
-        Settings.set('_window_geometry', "{};{};{};{}".format(geometry.x(), geometry.y(), geometry.width(), geometry.height()))
+        Settings.set('_window_geometry',
+                     "{};{};{};{}".format(geometry.x(), geometry.y(), geometry.width(), geometry.height()))
         sys.exit(0)
         self.quit()
 
