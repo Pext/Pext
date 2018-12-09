@@ -30,7 +30,7 @@ script:
 
 after_success:
   - if [ "$TRAVIS_BRANCH" != "master" ]; then export TRAVIS_EVENT_TYPE=pull_request; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" -a "$PEXT_BUILD_PORTABLE" -eq 1 ]; then bash upload.sh Pext*.app; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" -a "$PEXT_BUILD_PORTABLE" -eq 1 ]; then bash upload.sh Pext*.zip; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$PEXT_BUILD_PORTABLE" -eq 0 ]; then bash upload.sh Pext*.dmg; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash upload.sh Pext*.AppImage*; fi
 
