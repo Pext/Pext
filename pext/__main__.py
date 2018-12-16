@@ -383,10 +383,12 @@ class MainLoop():
         elif action[0] in [Action.ask_question, Action.ask_question_default_yes, Action.ask_question_default_no]:
             question_dialog = self.window.window.findChild(QObject, "questionDialog")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                question_dialog.questionAccepted.connect(
-                    lambda: tab['vm'].module.process_response(True, action[2] if len(action) > 2 else None))
-                question_dialog.questionRejected.connect(
-                    lambda: tab['vm'].module.process_response(False, action[2] if len(action) > 2 else None))
+                question_dialog.questionAccepted.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(True, arg),
+                    arg=(action[2] if len(action) > 2 else None)))
+                question_dialog.questionRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(False, arg),
+                    arg=(action[2] if len(action) > 2 else None)))
             else:
                 question_dialog.questionAccepted.connect(
                     lambda: tab['vm'].module.process_response(True))
@@ -398,11 +400,12 @@ class MainLoop():
         elif action[0] == Action.ask_input:
             input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput,
-                                                                        action[3] if len(action) > 3 else None))
-                input_request.inputRequestRejected.connect(
-                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
+                input_request.inputRequestAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                input_request.inputRequestRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
                     lambda userinput: tab['vm'].module.process_response(userinput))
@@ -415,11 +418,12 @@ class MainLoop():
         elif action[0] == Action.ask_input_password:
             input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput,
-                                                                        action[3] if len(action) > 3 else None))
-                input_request.inputRequestRejected.connect(
-                        lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
+                input_request.inputRequestAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                input_request.inputRequestRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
                     lambda userinput: tab['vm'].module.process_response(userinput))
@@ -432,11 +436,12 @@ class MainLoop():
         elif action[0] == Action.ask_input_multi_line:
             input_request = self.window.window.findChild(QObject, "inputRequests")
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput,
-                                                                        action[3] if len(action) > 3 else None))
-                input_request.inputRequestRejected.connect(
-                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
+                input_request.inputRequestAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                input_request.inputRequestRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
                     lambda userinput: tab['vm'].module.process_response(userinput))
