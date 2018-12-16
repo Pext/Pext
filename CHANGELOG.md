@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - --config flag has been renamed to --data-path
 - Remember the geometry of the main window
+- The tray icon menu now lists all loaded modules for easier switching
 
 ### Fixed
 - Sizing issues when moving to another monitor

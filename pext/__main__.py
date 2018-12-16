@@ -41,6 +41,7 @@ import tempfile
 from datetime import datetime
 from distutils.util import strtobool
 from enum import IntEnum
+from functools import partial
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from pkg_resources import parse_version
@@ -58,7 +59,7 @@ from dulwich import porcelain
 from dulwich.repo import Repo
 from pynput import keyboard
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
-from PyQt5.QtWidgets import QApplication, QStyleFactory, QSystemTrayIcon
+from PyQt5.QtWidgets import QApplication, QAction, QMenu, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor, QWindow
 
@@ -1168,7 +1169,9 @@ class ModuleManager():
 
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
             tab_count = QQmlProperty.read(window.tabs, "count")
-            if tab_id + 1 < tab_count:
+            if tab_count == 1:
+                QQmlProperty.write(window.tabs, "currentIndex", "-1")
+            elif tab_id + 1 < tab_count:
                 QQmlProperty.write(window.tabs, "currentIndex", tab_id + 1)
             else:
                 QQmlProperty.write(window.tabs, "currentIndex", "0")
@@ -1178,6 +1181,9 @@ class ModuleManager():
 
         # Save active modules
         ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
+
+        # Ensure a proper refresh on the UI side
+        window.tabs.currentIndexChanged.emit()
 
     def list_modules(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
@@ -2284,6 +2290,9 @@ class Window():
     def _bind_context(self) -> None:
         """Bind the context for the module."""
         current_tab = QQmlProperty.read(self.tabs, "currentIndex")
+        if current_tab < 0:
+            return
+
         element = self.tab_bindings[current_tab]
 
         # Only initialize once, ensure filter is applied
@@ -2819,6 +2828,10 @@ class Window():
 
         self.window.raise_()
 
+    def switch_tab(self, tab_id) -> None:
+        """Switch the active tab."""
+        QQmlProperty.write(self.tabs, "currentIndex", tab_id)
+
     def toggle_visibility(self, force_tray=False) -> None:
         """Toggle window visibility."""
         if self.window.windowState() == Qt.WindowMinimized or not self.window.isVisible():
@@ -3018,10 +3031,28 @@ class Tray():
         self.window = window
 
         self.tray = QSystemTrayIcon(app_icon)
-
         self.tray.activated.connect(self.icon_clicked)
-
         self.tray.setToolTip(QQmlProperty.read(self.window.window, "title"))
+
+        self.window.tabs.currentIndexChanged.connect(self._update_context_menu)
+        self._update_context_menu()
+
+    def _update_context_menu(self) -> None:
+        """Update the context menu to list the loaded modules."""
+        tray_menu = QMenu()
+        tray_menu_item = QAction(QQmlProperty.read(self.window.window, "title"), tray_menu)
+        tray_menu_item.triggered.connect(self.window.show)
+        tray_menu.addAction(tray_menu_item)
+        if len(self.window.tab_bindings) > 0:
+            tray_menu.addSeparator()
+
+        for tab_id, tab in enumerate(self.window.tab_bindings):
+            tray_menu_item = QAction(tab['metadata']['name'], tray_menu)
+            tray_menu_item.triggered.connect(partial(
+                lambda tab_id: [self.window.switch_tab(tab_id), self.window.show()], tab_id=tab_id))  # type: ignore
+            tray_menu.addAction(tray_menu_item)
+
+        self.tray.setContextMenu(tray_menu)
 
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
