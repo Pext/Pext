@@ -3061,7 +3061,7 @@ class Tray():
 
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
-        if reason == 3:
+        if reason == 3 and platform.system() != "Darwin":
             self.window.toggle_visibility(force_tray=True)
 
     def show(self) -> None:
