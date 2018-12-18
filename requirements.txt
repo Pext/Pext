@@ -1,0 +1,5 @@
+dulwich==0.19.9
+pynput==1.4
+pyqt5==5.11.3
+requests==2.21.0
+accessibility==0.4.0; sys.platform == 'darwin'
