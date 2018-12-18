@@ -6,7 +6,7 @@ build: off
 after_test:
   - conda create -n Pext python --yes
   - activate Pext
-  - pip install dulwich PyQt5 pynput requests
+  - pip install -r requirements.txt
   - deactivate
   - mkdir ..\Build
   - mkdir ..\Build\Pext

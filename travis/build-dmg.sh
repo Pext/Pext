@@ -40,7 +40,7 @@ conda create -n Pext python --yes
 source activate Pext
 
 # install dependencies
-pip install PyQt5 dulwich pynput accessibility requests
+pip install -r requirements.txt
 
 # leave conda env
 source deactivate
