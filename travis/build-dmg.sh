@@ -40,7 +40,7 @@ conda create -n Pext python --yes
 source activate Pext
 
 # install dependencies
-pip install -r requirements.txt
+pip install -r "$OLD_CWD"/requirements.txt
 
 # leave conda env
 source deactivate
