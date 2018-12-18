@@ -42,7 +42,7 @@ if sys.platform == 'linux':
     extra_deps = []
 elif sys.platform == 'darwin':
     extra_options = dict()
-    extra_deps = ['accessibility']
+    extra_deps = ['accessibility=0.4.0']
 else:
     extra_options = dict()
     extra_deps = []
@@ -51,10 +51,10 @@ setup(
     name='Pext',
     version=version,
     install_requires=[
-        'dulwich',
-        'pynput',
-        'pyqt5',
-        'requests'
+        'dulwich=0.19.9',
+        'pynput=1.4',
+        'pyqt5=5.11.3',
+        'requests=2.21.0'
     ] + extra_deps,
     description='Python-based extendable tool',
     long_description='A Python-based application that uses modules for extendability',
