@@ -1122,8 +1122,9 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 8, 0]
+        module['settings']['_api_version'] = [0, 9, 0]
         module['settings']['_locale'] = locale
+        module['settings']['_portable'] = Settings.get('_portable')
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
@@ -3116,6 +3117,7 @@ class Settings():
     __settings = {
         '_launch_app': True,  # Keep track if launching is normal
         '_window_geometry': None,
+        '_portable': False,
         'background': False,
         'locale': None,
         'modules': [],
@@ -3503,6 +3505,9 @@ def _load_settings(args: argparse.Namespace) -> None:
 
     if args.tray is not None:
         Settings.set('tray', args.tray)
+
+    if args.portable:
+        Settings.set('_portable', args.portable)
 
     # Set up the parsed modules
     if '_modules' in args:

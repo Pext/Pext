@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Portable builds for Linux and macOS
-- --portable flag to make Pext behave more self-contained
+- --portable flag to make Pext behave more self-contained, readable by modules in settings
 
 ### Changed
 - --config flag has been renamed to --data-path
@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Sizing issues when moving to another monitor
 - Window not being resizeable
+- API version still being reported as 0.8.0 internally
 
 ## [0.21] - 2018-11-02
 ### API changes
