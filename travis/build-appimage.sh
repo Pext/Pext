@@ -50,11 +50,11 @@ EAT
 
 if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
 cat >> AppRun.sh <<\EAT
-  exec "$APPDIR"/usr/bin/python -m pext "$@"
+  exec "$APPDIR"/usr/bin/python -m pext --portable "$@"
 EAT
 else
 cat >> AppRun.sh <<\EAT
-  exec "$APPDIR"/usr/bin/python -m pext --portable "$@"
+  exec "$APPDIR"/usr/bin/python -m pext "$@"
 EAT
 fi
 
