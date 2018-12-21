@@ -145,7 +145,11 @@ class ConfigRetriever():
             return
 
         if not ConfigRetriever.__config_data_path:
-            ConfigRetriever.__config_data_path = os.path.join(AppFile.get_path(), 'pext_data')
+            if 'APPIMAGE' in os.environ:
+                base_path = os.path.dirname(os.path.abspath(os.environ['APPIMAGE']))
+            else:
+                base_path = AppFile.get_path()
+            ConfigRetriever.__config_data_path = os.path.join(base_path, 'pext_data')
 
         ConfigRetriever.__config_temp_path = os.path.join(ConfigRetriever.__config_data_path, 'pext_temp')
 

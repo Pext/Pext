@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- AppImage trying to store data inside itself in portable mode
+
 ## [0.22] - 2018-12-19
 ### Added
 - Portable builds for Linux and macOS
