@@ -60,7 +60,7 @@ Simply put:
 
 #### Arch
 
-Pext is available as [pext](https://aur.archlinux.org/packages/pext/) and [pext-git](https://aur.archlinux.org/packages/pext-git/). These packages are maintained by [Ivan Semkin](https://github.com/vanyasem).
+Pext is available as [pext](https://aur.archlinux.org/packages/pext/) and [pext-git](https://aur.archlinux.org/packages/pext-git/). These packages are maintained by [Abhishek Mudgal](https://github.com/abhishek9650).
 
 #### Other distros
 
