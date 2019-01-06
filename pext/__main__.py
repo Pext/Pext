@@ -62,6 +62,8 @@ from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import QApplication, QAction, QMenu, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor, QWindow
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 if platform.system() == 'Darwin':
     import accessibility  # NOQA
@@ -312,6 +314,26 @@ class Logger():
         if Logger.status_queue:
             QQmlProperty.write(Logger.status_queue, "entriesLeftForeground", count[0])
             QQmlProperty.write(Logger.status_queue, "entriesLeftBackground", count[1])
+
+
+class PextFileSystemEventHandler(FileSystemEventHandler):
+    """Watches the file system to ensure state changes when relevant."""
+
+    def __init__(self, window: 'Window', modules_path: str):
+        """Initialize filesystem event handler."""
+        self.window = window
+        self.modules_path = modules_path
+
+    def on_deleted(self, event):
+        """Unload modules on deletion."""
+        if not event.is_directory:
+            return
+
+        if event.src_path.startswith(self.modules_path):
+            for tab_id, tab in enumerate(self.window.tab_bindings):
+                if event.src_path == os.path.join(self.modules_path, tab['metadata']['id'].replace('.', '_')):
+                    print("Module {} was removed, sending unload event".format(tab['metadata']['id']))
+                    self.window.module_manager.unload_module(self.window, tab_id)
 
 
 class MainLoop():
@@ -3631,6 +3653,12 @@ def main() -> None:
 
     # Give the window a reference to the tray
     window.bind_tray(tray)
+
+    # Start watching for uninstalls
+    event_handler = PextFileSystemEventHandler(window, os.path.join(ConfigRetriever.get_path(), 'modules'))
+    observer = Observer()
+    observer.schedule(event_handler, os.path.join(ConfigRetriever.get_path(), 'modules'), recursive=True)
+    observer.start()
 
     # And run...
     main_loop.run()

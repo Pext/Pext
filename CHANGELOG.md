@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Packaging changes
+- New dependency: [watchdog](https://pypi.org/project/watchdog/)
+
+### Chamged
+- Modules are now automatically unloaded after uninstallation
+
 ### Fixed
 - AppImage trying to store data inside itself in portable mode
 
