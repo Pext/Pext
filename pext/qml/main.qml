@@ -809,9 +809,6 @@ ApplicationWindow {
             Layout.fillHeight: true
 
             Button {
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-
                 enabled: tabs.count > 0 && tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
 
                 width: 60
@@ -820,9 +817,6 @@ ApplicationWindow {
             }
 
             TextField {
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-
                 enabled: tabs.count > 0
                 placeholderText: tabs.count > 0 ? qsTr("Type to search") : ""
                 id: searchInput
@@ -931,8 +925,6 @@ ApplicationWindow {
 
                 property var entriesLeftForeground
                 property var entriesLeftBackground
-
-                anchors.right: parent.right
 
                 text: entriesLeftForeground || entriesLeftBackground ?
                       qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :

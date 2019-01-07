@@ -68,7 +68,7 @@ Dialog {
                     Text {
                         y: 150
                         color: palette.text
-                        width: parent.parent.width
+                        width: parent.width
                         wrapMode: Text.Wrap
                         text:
                             "<h1>Pext " + version + "</h1><br>" +
@@ -88,7 +88,7 @@ Dialog {
             ScrollView {
                 Text {
                     color: palette.text
-                    width: parent.parent.width
+                    width: parent.width
                     wrapMode: Text.Wrap
                     text: "<a href='https://hosted.weblate.org/engage/pext/'>"
                           + qsTr("Want to help translate Pext? Please click here.")

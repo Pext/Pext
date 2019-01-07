@@ -51,9 +51,7 @@ Dialog {
 
         ScrollView {
             width: parent.width
-
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Layout.fillWidth: true
 
             ListView {
                 id: settingsList
