@@ -10,6 +10,8 @@
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/73oaa4x1spa5vumx/branch/master?svg=true)](https://ci.appveyor.com/project/TheLastProject/pext/branch/master)
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Pext/Pext.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Pext/Pext/context:python)
+[![Known Vulnerabilities](https://snyk.io/test/github/Pext/Pext/badge.svg)](https://snyk.io/test/github/Pext/Pext)
 
 ## Contents
 
