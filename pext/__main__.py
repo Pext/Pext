@@ -1969,8 +1969,6 @@ class ViewModel():
         """
         current_input = QQmlProperty.read(self.search_input_model, "text")
 
-        start = current_input
-
         possibles = current_input.split(" ", 1)
         command = self._get_longest_common_string(
             [command.split(" ", 1)[0] for command in self.command_list],
