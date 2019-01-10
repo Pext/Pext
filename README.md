@@ -37,9 +37,9 @@ Depending on the module you choose, what entries are shown and what happens when
 
 Several modules are available for effortless install right within Pext.
 
-![Pext running the radiobrowser module with info panel](/screenshots/pext_radiobrowser_infopanel.png)
-![Pext running the openweathermap module with context menu](/screenshots/pext_openweathermap_contextmenu.png)
-![Pext running the emoji module](/screenshots/pext_emoji.png)
+![Pext running the moji module](https://pext.io/pext-emojis.PNG)
+![Pext running the applauncher module](https://pext.io/pext-applauncher.PNG)
+![Pext running the weather module](https://pext.io/pext-weather.PNG)
 
 ## How it works
 
@@ -154,7 +154,6 @@ Under artwork and documentation fall:
 - All files in the following directories:
   - docs/
   - pext/images/
-  - screenshots/
   - .github/
 - All Markdown files in the root directory.
 - logo.png
