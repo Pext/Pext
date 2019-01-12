@@ -23,14 +23,15 @@ import QtQuick.Dialogs 1.2
 import QtQuick.Layouts 1.0
 
 Dialog {
-    title: qsTr("Command arguments")
+    title: qsTr("Arguments for %1").arg(command)
     standardButtons: StandardButton.Ok | StandardButton.Cancel
 
+    property var command
     property var requestAccepted
 
     ColumnLayout {
         Label {
-            text: qsTr("Enter arguments")
+            text: qsTr("Enter arguments for %1").arg(command)
         }
 
         TextField {

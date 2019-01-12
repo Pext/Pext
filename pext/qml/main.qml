@@ -118,13 +118,14 @@ ApplicationWindow {
     Item {
         objectName: "commandArgsDialog"
 
-        signal showCommandArgsDialog()
+        signal showCommandArgsDialog(string command)
         signal commandArgsRequestAccepted(string args)
 
         onShowCommandArgsDialog: {
             var commandArgsDialog = Qt.createComponent("CommandArgsDialog.qml");
             commandArgsDialog.createObject(applicationWindow,
-                 {"requestAccepted": commandArgsRequestAccepted});
+                 {"command": command,
+                  "requestAccepted": commandArgsRequestAccepted});
         }
     }
 

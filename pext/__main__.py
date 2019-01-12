@@ -1951,16 +1951,17 @@ class ViewModel():
                 # is not a command
                 QQmlProperty.write(self.result_list_model, "currentIndex",
                                    len(self.filtered_entry_list))
+                selected_entry = self._get_entry(include_context=True)
             else:
                 self.queue.put(
                     [Action.add_error, "Selected entry is not a command"])
-            return
+                return
 
         args_request = self.window.window.findChild(QObject, "commandArgsDialog")
         args_request.commandArgsRequestAccepted.connect(
             lambda args: self.select(args))
 
-        args_request.showCommandArgsDialog.emit()
+        args_request.showCommandArgsDialog.emit(selected_entry["value"])
 
 
 class Window():
