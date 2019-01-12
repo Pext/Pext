@@ -1938,8 +1938,7 @@ class ViewModel():
 
     def input_args(self) -> None:
         """Open dialog that allows the user to input command arguments."""
-        if (len(self.filtered_command_list) == 0 and
-            len(self.filtered_entry_list) == 0):
+        if (len(self.filtered_command_list) == 0 and len(self.filtered_entry_list) == 0):
             self.queue.put(
                 [Action.add_error, "No selected entry"])
             return

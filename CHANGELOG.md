@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Chamged
 - Modules are now automatically unloaded after uninstallation
+- Passing arguments to modules is now done with Ctrl+Enter instead of typing it with the search bar
 
 ### Fixed
 - AppImage trying to store data inside itself in portable mode
