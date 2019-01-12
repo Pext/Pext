@@ -1807,7 +1807,7 @@ class ViewModel():
 
         return {'type': selection_type, 'value': entry, 'context_option': None}
 
-    def select(self, command_args=None) -> None:
+    def select(self, command_args="") -> None:
         """Notify the module of our selection entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
             return
@@ -1823,8 +1823,7 @@ class ViewModel():
         self.context_menu_commands = {}
 
         selection = self._get_entry(include_context=True)
-        if command_args:
-            selection["args"] = command_args
+        selection["args"] = command_args
         self.selection.append(selection)
 
         self.context.setContextProperty(
