@@ -1954,7 +1954,7 @@ class ViewModel():
                 selected_entry = self._get_entry(include_context=True)
             else:
                 self.queue.put(
-                    [Action.add_error, "Selected entry is not a command"])
+                    [Action.add_error, "No command available for current filter"])
                 return
 
         args_request = self.window.window.findChild(QObject, "commandArgsDialog")
