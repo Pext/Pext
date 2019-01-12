@@ -1946,8 +1946,14 @@ class ViewModel():
 
         selected_entry = self._get_entry(include_context=True)
         if selected_entry["type"] != SelectionType.command:
-            self.queue.put(
-                [Action.add_error, "Selected entry is not a command"])
+            if len(self.filtered_command_list) > 0:
+                # Jump to the first command in case the current selection
+                # is not a command
+                QQmlProperty.write(self.result_list_model, "currentIndex",
+                                   len(self.filtered_entry_list))
+            else:
+                self.queue.put(
+                    [Action.add_error, "Selected entry is not a command"])
             return
 
         args_request = self.window.window.findChild(QObject, "commandArgsDialog")
