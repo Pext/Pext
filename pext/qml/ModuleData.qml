@@ -180,6 +180,7 @@ Item {
                 signal entryClicked()
                 signal openContextMenu()
                 signal openBaseMenu()
+                signal openArgumentsInput()
 
                 property int normalEntries: resultListModelNormalEntries
                 property int commandEntries: resultListModelCommandEntries
@@ -236,7 +237,11 @@ Item {
                                 if (mouse.button == Qt.LeftButton) {
                                     resultList.entryClicked();
                                 } else {
-                                    resultList.openContextMenu();
+                                    if (index >= resultListModelNormalEntries) {
+                                        resultList.openArgumentsInput();
+                                    } else {
+                                        resultList.openContextMenu();
+                                    }
                                 }
                             }
                         }

@@ -2321,6 +2321,7 @@ class Window():
         result_list_model.entryClicked.connect(element['vm'].select)
         result_list_model.openBaseMenu.connect(element['vm'].show_context_base)
         result_list_model.openContextMenu.connect(element['vm'].show_context)
+        result_list_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.entryClicked.connect(element['vm'].select)
         context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
 
