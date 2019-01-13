@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Argumenten voor %1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer argumenten in voor %1</translation>
     </message>
 </context>
 <context>
@@ -162,7 +162,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="115"/>
         <source>This module does not seem to support %1.</source>
-        <translation>Deze module lijkt %1 niet te ondersteunen.</translation>
+        <translation>Deze module lijkt geen ondersteuning te hebben voor %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
@@ -200,7 +200,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation>Er zijn geen modules gevonden in deze pakketbron.</translation>
+        <translation>Er zijn geen modules aangetroffen in deze pakketbron.</translation>
     </message>
 </context>
 <context>
@@ -228,7 +228,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
         <source>This module does not seem to support %1.</source>
-        <translation>Deze module lijkt %1 niet te ondersteunen.</translation>
+        <translation>Deze module lijkt geen ondersteuning te hebben voor %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
@@ -266,7 +266,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation>Voer de metagegevens-URL is van de te installeren module:</translation>
+        <translation>Voer de metagegevens-URL in van de te installeren module:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -320,7 +320,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation>Let op: Pext zal opnieuw starten om over te schakelen naar het nieuwe profiel.</translation>
+        <translation>Let op: Pext wordt opnieuw gestart met het nieuwe profiel.</translation>
     </message>
 </context>
 <context>
@@ -343,7 +343,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>Let op: Pext zal opnieuw starten om het nieuwe thema toe te passen.</translation>
+        <translation>Let op: Pext wordt opnieuw gestart met het nieuwe thema.</translation>
     </message>
 </context>
 <context>
@@ -401,7 +401,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/ManageDialog.qml" line="146"/>
         <source>Uninstall</source>
-        <translation>Deïnstalleren</translation>
+        <translation>Verwijderen</translation>
     </message>
 </context>
 <context>
@@ -810,62 +810,62 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="897"/>
         <source>Hotkey reference</source>
-        <translation type="unfinished"></translation>
+        <translation>Sneltoetshulp</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="898"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: haal Pext naar voren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="899"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: open een nieuw tabblad</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="900"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: herlaad het actieve tabblad</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="901"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: sluit het actieve tabblad</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="902"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: schakel over naar het volgende tabblad</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="903"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: schakel over naar het vorige tabblad</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="904"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: vervolledig de invoer</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="905"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / linkermuisknop: activeer het gemarkeerde item</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="906"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / rechtermuisknop: voer argumenten in voor de gemarkeerde opdracht</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="907"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / rechtermuisknop: open het contextmenu</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="908"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: ga terug / minimaliseer Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="937"/>
