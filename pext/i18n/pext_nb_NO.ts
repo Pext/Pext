@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Argumenter for %1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv inn argumenter for %1</translation>
     </message>
 </context>
 <context>
@@ -810,62 +810,62 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="897"/>
         <source>Hotkey reference</source>
-        <translation type="unfinished"></translation>
+        <translation>Snarveisreferanse</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="898"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Hev Pext til forgrunnen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="899"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Åpne ny fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="900"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Gjeninnlast aktiv fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="901"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Lukk aktiv fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="902"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Bytt til neste fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="903"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Bytt til forrige fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="904"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Fullfør inndata</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="905"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Venstre museknapp: Aktiver framhevet oppføring</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="906"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Høyre museknapp: Skriv inn argumenter for framhevet kommando</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="907"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Høyre museknapp: Åpne bindeleddsmeny</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="908"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Gå tilbake / minimer Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="937"/>
