@@ -86,30 +86,35 @@ Dialog {
         Tab {
             title: qsTr("Translators")
             ScrollView {
-                Text {
-                    color: palette.text
-                    width: parent.width
-                    wrapMode: Text.Wrap
-                    text: "<a href='https://hosted.weblate.org/engage/pext/'>"
-                          + qsTr("Want to help translate Pext? Please click here.")
-                          + "</a><br><h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:")
-                          + "</h3><br>";
+                Item {
+                    height: childrenRect.height
+                    width: parent.parent.width
     
-                    Component.onCompleted: {
-                          for (var lang in translators) {
-                              text += "<b>" + Object.keys(locales).filter(function(key) { return locales[key] === lang })[0] + "</b><br>";
-                              for (var translatorData in translators[lang]) {
-                                  text += translators[lang][translatorData]["name"]
-                                  if (translators[lang][translatorData]["email"]) {
-                                      text += " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;";
+                    Text {
+                        color: palette.text
+                        width: parent.width
+                        wrapMode: Text.Wrap
+                        text: "<a href='https://hosted.weblate.org/engage/pext/'>"
+                              + qsTr("Want to help translate Pext? Please click here.")
+                              + "</a><br><h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:")
+                              + "</h3><br>";
+
+                        Component.onCompleted: {
+                              for (var lang in translators) {
+                                  text += "<b>" + Object.keys(locales).filter(function(key) { return locales[key] === lang })[0] + "</b><br>";
+                                  for (var translatorData in translators[lang]) {
+                                      text += translators[lang][translatorData]["name"]
+                                      if (translators[lang][translatorData]["email"]) {
+                                          text += " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;";
+                                      }
+                                      text += "<br>";
                                   }
                                   text += "<br>";
                               }
-                              text += "<br>";
-                          }
-                    }
+                        }
 
-                    onLinkActivated: Qt.openUrlExternally(link)
+                        onLinkActivated: Qt.openUrlExternally(link)
+                    }
                 }
             }
         }
