@@ -234,11 +234,13 @@ ApplicationWindow {
     }
 
     Shortcut {
+        id: escapeShortcut
         objectName: "escapeShortcut"
         sequence: "Escape"
     }
 
     Shortcut {
+        id: tabShortcut
         objectName: "tabShortcut"
         sequence: "Tab"
     }
@@ -249,11 +251,13 @@ ApplicationWindow {
     }
 
     Shortcut {
+        id: contextMenuShortcut
         sequence: "Ctrl+."
         onActivated: openContextMenu();
     }
 
     Shortcut {
+        id: argsShortcut
         objectName: "argsShortcut"
         sequence: "Ctrl+Return"
     }
@@ -299,11 +303,13 @@ ApplicationWindow {
     }
 
     Shortcut {
+        id: nextTabShortcut
         sequence: "Ctrl+Tab"
         onActivated: nextTab()
     }
 
     Shortcut {
+        id: previousTabShortcut
         sequence: "Ctrl+Shift+Tab" // StandardKey.PreviousChild does not work on my machine
         onActivated: prevTab()
     }
@@ -373,6 +379,7 @@ ApplicationWindow {
             title: qsTr("&Module")
 
             MenuItem {
+                id: menuReloadActiveModule
                 objectName: "menuReloadActiveModule"
                 text: qsTr("Reload active module")
                 shortcut: StandardKey.Refresh
@@ -866,66 +873,45 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
 
-        GridLayout {
-            flow: applicationWindow.width > applicationWindow.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
+        Image {
+            id: logo
+            visible: tabs.count == 0
+            asynchronous: true
+            source: "../images/scalable/logo.svg"
+            fillMode: Image.Pad
+            horizontalAlignment: Image.AlignHCenter
+            verticalAlignment: Image.AlignVCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumHeight: sourceSize.height
+            Layout.minimumWidth: sourceSize.width
+        }
+
+        TextEdit {
+            objectName: "introScreen"
             visible: tabs.count == 0
 
-            TextEdit {
-                text: "<h2>" + qsTr("Design philosophy") + "</h2>" +
-                      "<p>" + qsTr("Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.") + "</p>"
+            text: "<h2>" + qsTr("Hotkey reference") + "</h2><ul>" +
+                  (platform != 'Darwin' ? ("<li>" + qsTr("<kbd>%1</kbd>: Move Pext to the foreground").arg("Ctrl+`") + "</li>") : "") +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Open a new tab").arg(menuLoadModule.shortcut) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Reload active tab").arg(menuReloadActiveModule.shortcut) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Close active tab").arg(menuCloseActiveModule.shortcut) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Switch to next tab").arg(nextTabShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Switch to previous tab").arg(previousTabShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Complete input").arg(tabShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Left mouse button: Activate highlighted entry").arg("Return") + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Enter arguments for highlighted command").arg(argsShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu").arg(contextMenuShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li></ul>"
 
-                color: palette.text
-                textFormat: TextEdit.RichText
-                readOnly: true
-                selectByMouse: false
-                wrapMode: TextEdit.Wrap
-                horizontalAlignment: TextEdit.AlignHCenter
-                verticalAlignment: TextEdit.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
-
-            Image {
-                id: logo
-                visible: if (parent.flow == GridLayout.LeftToRight) {
-                    return applicationWindow.width > 3 * sourceSize.width
-                } else {
-                    return applicationWindow.height > 4 * sourceSize.height
-                }
-                asynchronous: true
-                source: "../images/scalable/logo.svg"
-                fillMode: Image.Pad
-                horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.minimumHeight: sourceSize.height + 50
-                Layout.minimumWidth: sourceSize.width + 50
-            }
-
-            Rectangle {
-                visible: !logo.visible
-                width: 50
-            }
-
-            TextEdit {
-                objectName: "introScreen"
-
-                property int modulesInstalledCount
-
-                text: "<h2>" + qsTr("Getting started") + "</h2>" +
-                      "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab. When you are done with a tab, you can always close it by pressing <kbd>%2</kbd>. You currently have %n module(s) installed. You can manage modules in the Module menu.", "", modulesInstalledCount).arg(menuLoadModule.shortcut).arg(menuCloseActiveModule.shortcut) + "</p>"
-
-                color: palette.text
-                textFormat: TextEdit.RichText
-                readOnly: true
-                selectByMouse: false
-                wrapMode: TextEdit.Wrap
-                horizontalAlignment: TextEdit.AlignHCenter
-                verticalAlignment: TextEdit.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
+            color: palette.text
+            textFormat: TextEdit.RichText
+            readOnly: true
+            selectByMouse: false
+            wrapMode: TextEdit.Wrap
+            verticalAlignment: TextEdit.AlignVCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
         }
     }
 
