@@ -257,6 +257,12 @@ ApplicationWindow {
     }
 
     Shortcut {
+        id: enterShortcut
+        enabled: false
+        sequence: "Return"
+    }
+
+    Shortcut {
         id: argsShortcut
         objectName: "argsShortcut"
         sequence: "Ctrl+Return"
@@ -304,13 +310,13 @@ ApplicationWindow {
 
     Shortcut {
         id: nextTabShortcut
-        sequence: "Ctrl+Tab"
+        sequence: platform == 'Darwin' ? "Meta+Tab" : "Ctrl+Tab" // QTBUG-15746 and QTBUG-7001
         onActivated: nextTab()
     }
 
     Shortcut {
         id: previousTabShortcut
-        sequence: "Ctrl+Shift+Tab" // StandardKey.PreviousChild does not work on my machine
+        sequence: platform == 'Darwin' ? "Meta+Shift+Tab" : "Ctrl+Shift+Tab" // QTBUG-15746 and QTBUG-7001
         onActivated: prevTab()
     }
 
@@ -899,7 +905,7 @@ ApplicationWindow {
                   "<li>" + qsTr("<kbd>%1</kbd>: Switch to next tab").arg(nextTabShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd>: Switch to previous tab").arg(previousTabShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd>: Complete input").arg(tabShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd> / Left mouse button: Activate highlighted entry").arg("Return") + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Left mouse button: Activate highlighted entry").arg(enterShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Enter arguments for highlighted command").arg(argsShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu").arg(contextMenuShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li></ul>"
