@@ -98,9 +98,8 @@ if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
   mv "$BUILD_DIR"/Pext.app Pext-portable-$VERSION.app
   zip -r Pext-portable-$VERSION.app.zip Pext-portable-*.app
 else
-  git clone -b patch-2 --single-branch https://github.com/TheLastProject/create-dmg.git
-  pushd create-dmg
-  bash ./create-dmg --volname "Pext $VERSION" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext-$VERSION.dmg "$BUILD_DIR"/
+  brew install create-dmg
+  create-dmg --hdiutil-verbose --volname "Pext $VERSION" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext-$VERSION.dmg "$BUILD_DIR"/
   # move dmg to old CWD
   mv Pext*.dmg "$OLD_CWD"/
 fi
