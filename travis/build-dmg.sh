@@ -100,6 +100,4 @@ if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
 else
   brew install create-dmg
   create-dmg --hdiutil-verbose --volname "Pext $VERSION" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext-$VERSION.dmg "$BUILD_DIR"/
-  # move dmg to old CWD
-  mv Pext*.dmg "$OLD_CWD"/
 fi
