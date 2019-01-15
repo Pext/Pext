@@ -179,6 +179,14 @@ ApplicationWindow {
         tab.item.children[0].children[2].contentItem.openContextMenu();
     }
 
+    function openArgumentsInput() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        tab.item.children[0].children[2].contentItem.openArgumentsInput();
+    }
+
     function moveUp() {
         getActiveList().decrementCurrentIndex();
     }
@@ -253,7 +261,15 @@ ApplicationWindow {
     Shortcut {
         id: contextMenuShortcut
         sequence: "Ctrl+."
-        onActivated: openContextMenu();
+        onActivated: {
+            var listView = getActiveList();
+
+            if (listView.currentIndex >= listView.normalEntries) {
+                openArgumentsInput();
+            } else {
+                openContextMenu();
+            }
+        }
     }
 
     Shortcut {
@@ -907,7 +923,7 @@ ApplicationWindow {
                   "<li>" + qsTr("<kbd>%1</kbd>: Complete input").arg(tabShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Left mouse button: Activate highlighted entry").arg(enterShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Enter arguments for highlighted command").arg(argsShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu").arg(contextMenuShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu / enter arguments").arg(contextMenuShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li></ul>"
 
             color: palette.text

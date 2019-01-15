@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Modules are now automatically unloaded after uninstallation
 - Passing arguments to modules is now done with Ctrl+Enter instead of typing it with the search bar
 - The start screen now shows a hotkey reference
+- The UI now shows what hotkey will activate what entry
+- Ctrl+. can now also be used to enter arguments
 
 ### Fixed
 - AppImage trying to store data inside itself in portable mode

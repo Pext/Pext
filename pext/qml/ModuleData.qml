@@ -26,6 +26,18 @@ Item {
     id: contentRow
     height: parent.height
 
+    Shortcut {
+        id: enterShortcut
+        enabled: false
+        sequence: "Return"
+    }
+
+    Shortcut {
+        id: argsShortcut
+        enabled: false
+        sequence: "Ctrl+Return"
+    }
+
     GridLayout {
         id: moduleDataGrid
         anchors.fill: parent
@@ -201,7 +213,15 @@ Item {
                             Text {
                                 id: text
                                 objectName: "text"
-                                text: display
+                                text: {
+                                    var prefix = "";
+                                    if (resultList.currentIndex === index) {
+                                        prefix = "(" + (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText) + ") ";
+                                    } else if (resultList.currentIndex < resultListModelNormalEntries && resultListModelNormalEntries === index) {
+                                        prefix = "(" + argsShortcut.nativeText + ") ";
+                                    }
+                                    return prefix + display;
+                                }
                                 textFormat: Text.PlainText
                                 font.italic:
                                     index >= resultListModelNormalEntries
