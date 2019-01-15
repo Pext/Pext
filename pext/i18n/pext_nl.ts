@@ -721,7 +721,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="926"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Rechtermuisknop: open het contextmenu / voer argumenten in</translation>
     </message>
     <message>
         <source>Design philosophy</source>
