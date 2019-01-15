@@ -721,7 +721,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="926"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / høyre museknapp: Åpne bindeleddsmeny / skriv inn argumenter</translation>
     </message>
     <message>
         <source>Design philosophy</source>
