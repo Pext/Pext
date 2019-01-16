@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - AppImage trying to store data inside itself in portable mode
 - Some incorrect hotkeys on macOS
+- Search sometimes missing entries
 
 ## [0.22] - 2018-12-19
 ### Added
