@@ -721,7 +721,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="926"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;／滑鼠右鍵：開啟右鍵選單／輸入參數</translation>
     </message>
     <message>
         <source>Design philosophy</source>
