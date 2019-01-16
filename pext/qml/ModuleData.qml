@@ -212,19 +212,18 @@ Item {
                         Column {
                             Text {
                                 id: text
+                                width: parent.parent.width
                                 objectName: "text"
                                 text: {
-                                    var prefix = "";
+                                    var line = "<table width='100%'><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "<i>" : "") + "</td><td align='right'><code>";
                                     if (resultList.currentIndex === index) {
-                                        prefix = "(" + (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText) + ") ";
+                                        line += (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText);
                                     } else if (resultList.currentIndex < resultListModelNormalEntries && resultListModelNormalEntries === index) {
-                                        prefix = "(" + argsShortcut.nativeText + ") ";
+                                        line += argsShortcut.nativeText;
                                     }
-                                    return prefix + display;
+                                    return line + "</code></td></tr></table>"
                                 }
-                                textFormat: Text.PlainText
-                                font.italic:
-                                    index >= resultListModelNormalEntries
+                                textFormat: Text.RichText
                                 color: {
                                     if (resultList.currentIndex == index) {
                                         if (contextMenu.visible) {
