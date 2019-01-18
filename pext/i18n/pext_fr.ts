@@ -733,11 +733,9 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     </message>
     <message numerus="yes">
         <source>To get started, press &lt;kbd&gt;%1&lt;/kbd&gt; to open a new tab. When you are done with a tab, you can always close it by pressing &lt;kbd&gt;%2&lt;/kbd&gt;. You currently have %n module(s) installed. You can manage modules in the Module menu.</source>
-        <translation type="vanished">
-            <numerusform>Pour commencer, appuyez sur &lt;kbd&gt;%1&lt;/kbd&gt; pour ouvrir un nouvel onglet. Lorsque vous avez terminé avec un onglet, vous pouvez toujours le fermer en appuyant sur &lt;kbd&gt;%2&lt;/kbd&gt;. Vous avez actuellement %n module(s) installé. Vous pouvez gérer les modules dans le menu Module.</numerusform>
-            <numerusform>Pour commencer, appuyez sur &lt;kbd&gt;%1&lt;/ kbd&gt; pour ouvrir un nouvel onglet. Lorsque vous avez terminé avec un onglet, vous pouvez toujours le fermer en appuyant sur &lt;kbd&gt;%2&lt;/kbd&gt;. Vous avez actuellement %n module(s) installé. Vous pouvez gérer les modules dans le menu Module.</numerusform>
-        </translation>
-    </message>
+        <translation><numerusform>Pour commencer, appuyez sur &lt;kbd&gt;%1&lt;/kbd&gt; pour ouvrir un nouvel onglet. Lorsque vous avez terminé avec un onglet, vous pouvez toujours le fermer en appuyant sur &lt;kbd&gt;%2&lt;/kbd&gt;. Vous avez actuellement %n module(s) installé. Vous pouvez gérer les modules dans le menu Module.</numerusform>
+        <numerusform>Pour commencer, appuyez sur &lt;kbd&gt;%1&lt;/kbd&gt; pour ouvrir un nouvel onglet. Lorsque vous avez terminé avec un onglet, vous pouvez toujours le fermer en appuyant sur &lt;kbd&gt;%2&lt;/kbd&gt;. Vous avez actuellement %n module(s) installé. Vous pouvez gérer les modules dans le menu Module.</numerusform>
+        </translation></message>
     <message>
         <location filename="../qml/main.qml" line="446"/>
         <source>Manage modules</source>
