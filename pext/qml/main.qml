@@ -261,15 +261,7 @@ ApplicationWindow {
     Shortcut {
         id: contextMenuShortcut
         sequence: "Ctrl+."
-        onActivated: {
-            var listView = getActiveList();
-
-            if (listView.currentIndex >= listView.normalEntries) {
-                openArgumentsInput();
-            } else {
-                openContextMenu();
-            }
-        }
+        onActivated: openContextMenu();
     }
 
     Shortcut {
