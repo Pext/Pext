@@ -83,13 +83,13 @@ find . -type d -iname '__pycache__' -print0 | xargs -0 rm -r
 rm -rf lib/cmake/
 rm -rf include/
 rm -rf share/{gtk-,}doc
-rm lib/python3.7/site-packages/PyQt5/QtWebEngine*
-rm -r lib/python3.7/site-packages/PyQt5/Qt/translations/qtwebengine*
-#rm lib/python3.7/site-packages/PyQt5/Qt/resources/qtwebengine*
-rm -r lib/python3.7/site-packages/PyQt5/Qt/qml/QtWebEngine*
-rm -r lib/python3.7/site-packages/PyQt5/Qt/plugins/webview/libqtwebview*
-#rm lib/python3.7/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess*
-#rm lib/python3.7/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
+rm lib/python3.7/site-packages/PyQt5/QtWebEngine* || true
+rm -r lib/python3.7/site-packages/PyQt5/Qt/translations/qtwebengine* || true
+rm lib/python3.7/site-packages/PyQt5/Qt/resources/qtwebengine* || true
+rm -r lib/python3.7/site-packages/PyQt5/Qt/qml/QtWebEngine* || true
+rm -r lib/python3.7/site-packages/PyQt5/Qt/plugins/webview/libqtwebview* || true
+rm lib/python3.7/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess* || true
+rm lib/python3.7/site-packages/PyQt5/Qt/lib/libQt5WebEngine* || true
 popd
 popd
 
