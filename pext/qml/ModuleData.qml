@@ -68,6 +68,7 @@ Item {
                 objectName: "contextMenuModel"
 
                 signal entryClicked()
+                signal openArgumentsInput()
                 signal closeContextMenu()
 
                 model: contextMenuModel
@@ -99,6 +100,8 @@ Item {
                             onClicked: {
                                 if (mouse.button == Qt.LeftButton) {
                                     contextMenu.entryClicked();
+                                } else if (mouse.button == Qt.RightButton && resultList.currentIndex >= resultListModelNormalEntries) {
+                                    contextMenu.openArgumentsInput();
                                 } else {
                                     contextMenu.closeContextMenu();
                                 }
@@ -256,11 +259,7 @@ Item {
                                 if (mouse.button == Qt.LeftButton) {
                                     resultList.entryClicked();
                                 } else {
-                                    if (index >= resultListModelNormalEntries) {
-                                        resultList.openArgumentsInput();
-                                    } else {
-                                        resultList.openContextMenu();
-                                    }
+                                    resultList.openContextMenu();
                                 }
                             }
                         }

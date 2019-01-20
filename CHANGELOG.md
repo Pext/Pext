@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Passing arguments to modules is now done with Ctrl+Enter instead of typing it with the search bar
 - The start screen now shows a hotkey reference
 - The UI now shows what hotkey will activate what entry
+- Right click / Ctrl+Return a context menu entry to activate command input mode if available
 
 ### Fixed
 - AppImage trying to store data inside itself in portable mode

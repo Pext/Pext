@@ -1936,7 +1936,7 @@ class ViewModel():
             return
 
         selected_entry = self._get_entry(include_context=True)
-        if selected_entry["type"] != SelectionType.command:
+        if not self.context.contextProperty("contextMenuEnabled") and selected_entry["type"] != SelectionType.command:
             if len(self.filtered_command_list) > 0:
                 # Jump to the first command in case the current selection
                 # is not a command
@@ -2315,6 +2315,7 @@ class Window():
         result_list_model.openContextMenu.connect(element['vm'].show_context)
         result_list_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.entryClicked.connect(element['vm'].select)
+        context_menu_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
 
         # Enable info pane
