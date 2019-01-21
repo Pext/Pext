@@ -218,7 +218,7 @@ Item {
                                 width: parent.parent.width
                                 objectName: "text"
                                 text: {
-                                    var line = "<table width='100%'><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
+                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
                                     if (resultList.currentIndex === index) {
                                         line += (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText);
                                     } else if (resultList.currentIndex < resultListModelNormalEntries && resultListModelNormalEntries === index) {
@@ -270,6 +270,7 @@ Item {
                 }
 
                 highlightMoveDuration: 250
+
             }
         }
 
