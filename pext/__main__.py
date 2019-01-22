@@ -48,9 +48,9 @@ from pkg_resources import parse_version
 from shutil import copytree, rmtree
 from subprocess import check_output, CalledProcessError, Popen
 try:
-    from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+    from typing import Any, Callable, Dict, List, Optional, Union
 except ImportError:
-    from backports.typing import Any, Callable, Dict, List, Optional, Tuple, Union  # type: ignore  # noqa: F401
+    from backports.typing import Any, Callable, Dict, List, Optional, Union  # type: ignore  # noqa: F401
 from queue import Queue, Empty
 
 import requests
