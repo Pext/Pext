@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Packaging changes
 - New dependency: [watchdog](https://pypi.org/project/watchdog/)
 
+### Added
+- Searches can now be regular expressions. These need to be formatted as /search_string/flags
+
 ### Chamged
 - Modules are now automatically unloaded after uninstallation
 - Passing arguments to modules is now done with Ctrl+Enter instead of typing it with the search bar

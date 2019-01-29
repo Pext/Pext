@@ -1676,12 +1676,15 @@ class ViewModel():
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
-        search_string = QQmlProperty.read(self.search_input_model, "text").lower().split(' ')
+        search_string = QQmlProperty.read(self.search_input_model, "text")
         self.context.setContextProperty("searchInputFieldEmpty", not search_string)
 
         # Don't search if nothing changed
         if not new_entries and search_string == self.last_search:
             return
+
+        # Enable checking for changes next time
+        self.last_search = search_string
 
         # TODO: Enable searching in context menu
         if manual:
@@ -1733,9 +1736,6 @@ class ViewModel():
 
             QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
-            # Enable checking for changes next time
-            self.last_search = search_string
-
             self.update_context_info_panel()
 
             return
@@ -1743,21 +1743,43 @@ class ViewModel():
         self.filtered_entry_list = []
         self.filtered_command_list = []
 
-        for entry in self.sorted_entry_list:
-            lower_entry = entry.lower()
-            for search_string_part in search_string:
-                if search_string_part not in lower_entry:
-                    break
-            else:
-                self.filtered_entry_list.append(entry)
+        # Regex matching
+        if search_string.startswith('/'):
+            try:
+                # /search_string/python_flags
+                regex_parts = search_string.split('/', 2)
+                if len(regex_parts) > 2 and regex_parts[2]:
+                    regex_search = "(?{}){}".format(regex_parts[2], regex_parts[1])
+                else:
+                    regex_search = regex_parts[1]
 
-        for command in self.sorted_command_list:
-            lower_command = command.lower()
-            for search_string_part in search_string:
-                if search_string_part not in lower_command:
-                    break
-            else:
-                self.filtered_command_list.append(command)
+                regex_match = re.compile(regex_search)
+            except re.error:
+                return
+
+            for entry in self.sorted_entry_list:
+                if regex_match.match(entry):
+                    self.filtered_entry_list.append(entry)
+            for command in self.sorted_command_list:
+                if regex_match.match(command):
+                    self.filtered_command_list.append(command)
+        # Regular string matching
+        else:
+            list_match = search_string.lower().split(' ')
+            for entry in self.sorted_entry_list:
+                lower_entry = entry.lower()
+                for search_string_part in list_match:
+                    if search_string_part not in lower_entry:
+                        break
+                else:
+                    self.filtered_entry_list.append(entry)
+            for command in self.sorted_command_list:
+                lower_command = command.lower()
+                for search_string_part in list_match:
+                    if search_string_part not in lower_command:
+                        break
+                else:
+                    self.filtered_command_list.append(command)
 
         combined_list = self.filtered_entry_list + self.filtered_command_list
 
@@ -1775,9 +1797,6 @@ class ViewModel():
             current_index = 0
 
         QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
-
-        # Enable checking for changes next time
-        self.last_search = search_string
 
         self.update_context_info_panel()
 
