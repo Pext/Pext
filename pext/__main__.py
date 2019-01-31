@@ -308,13 +308,6 @@ class Logger():
 
             Logger.last_update = current_time
 
-    @staticmethod
-    def set_queue_count(count: List[int]) -> None:
-        """Show the queue size on screen."""
-        if Logger.status_queue:
-            QQmlProperty.write(Logger.status_queue, "entriesLeftForeground", count[0])
-            QQmlProperty.write(Logger.status_queue, "entriesLeftBackground", count[1])
-
 
 class PextFileSystemEventHandler(FileSystemEventHandler):
     """Watches the file system to ensure state changes when relevant."""
@@ -613,20 +606,19 @@ class MainLoop():
             Logger.show_next_message()
 
             current_tab = QQmlProperty.read(self.window.tabs, "currentIndex")
-            queue_size = [0, 0]
 
             all_empty = True
             for tab_id, tab in enumerate(self.window.tab_bindings):
                 if not tab['init']:
                     continue
 
+                tab['vm'].context.setContextProperty(
+                    "unprocessedCount", tab['queue'].qsize())
                 if tab_id == current_tab:
-                    queue_size[0] = tab['queue'].qsize()
                     active_tab = True
                     tab['vm'].context.setContextProperty(
                         "resultListModelHasEntries", True if tab['vm'].entry_list or tab['vm'].command_list else False)
                 else:
-                    queue_size[1] += tab['queue'].qsize()
                     active_tab = False
 
                 try:
@@ -641,8 +633,6 @@ class MainLoop():
                 except Exception as e:
                     print('WARN: Module {} caused exception {}'.format(tab['metadata']['name'], e))
                     traceback.print_exc()
-
-            Logger.set_queue_count(queue_size)
 
             if all_empty:
                 if self.window.window.isVisible():
@@ -1065,6 +1055,8 @@ class ModuleManager():
         module_context.setContextProperty(
             "resultListModelDepth", 0)
         module_context.setContextProperty(
+            "unprocessedCount", 0)
+        module_context.setContextProperty(
             "contextMenuModel", vm.context_menu_model_list)
         module_context.setContextProperty(
             "contextMenuEnabled", False)
@@ -1187,6 +1179,10 @@ class ModuleManager():
 
         # Save active modules
         ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
+
+        # First module? Enforce load
+        if len(window.tab_bindings) == 1:
+            window.tabs.currentIndexChanged.emit()
 
         return True
 
@@ -2397,9 +2393,6 @@ class Window():
 
         module = {'metadata': {'id': identifier, 'name': name}, 'settings': module_settings}
         self.module_manager.load_module(self, module)
-        # First module? Enforce load
-        if len(self.tab_bindings) == 1:
-            self.tabs.currentIndexChanged.emit()
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:

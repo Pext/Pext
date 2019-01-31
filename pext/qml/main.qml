@@ -941,13 +941,30 @@ ApplicationWindow {
             Label {
                 objectName: "statusQueue"
 
-                property var entriesLeftForeground
-                property var entriesLeftBackground
+                text: {
+                    var unprocessedForeground = 0;
+                    var unprocessedBackground = 0;
+                    var hasEntriesForeground = true;
+                    for (var i = 0; i < tabs.count; i++) {
+                        var tab = tabs.getTab(i);
+                        if (tab == null || tab.item == null || tab.item.children[0] == null) { continue; };
+                        var unprocessedCount = tab.item.children[0].children[2].contentItem.unprocessedQueueCount;
+                        if (i == tabs.currentIndex) {
+                            unprocessedForeground = unprocessedCount;
+                            hasEntriesForeground = tab.item.children[0].children[2].contentItem.hasEntries;
+                        } else {
+                            unprocessedBackground += unprocessedCount;
+                        }
+                    }
 
-                text: entriesLeftForeground || entriesLeftBackground ?
-                      qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
-                      tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && !tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.hasEntries ?
-                      qsTr("Waiting") : qsTr("Ready")
+                    if (unprocessedForeground > 0 || unprocessedBackground > 0) {
+                        return qsTr("Processing: %1 (%2)").arg(unprocessedForeground).arg(unprocessedBackground);
+                    } else if (hasEntriesForeground) {
+                        return qsTr("Ready");
+                    } else {
+                       qsTr("Waiting");
+                    }
+                }
             }
         }
     }

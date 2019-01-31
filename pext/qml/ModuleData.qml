@@ -171,7 +171,8 @@ Item {
             TextEdit {
                 visible: resultList.hasEntries && resultList.normalEntries == 0 && resultList.commandEntries == 0 && !searchInputFieldEmpty
 
-                text: "<h2>" + qsTr("No results") + "</h2>"
+                text: "<h2>" + qsTr("No results") + "</h2>" +
+                      (resultList.unprocessedQueueCount > 0 ? ("<p>" + qsTr("Still processing %1 module requests...").arg(resultList.unprocessedQueueCount) + "</p>") : "")
 
                 anchors.centerIn: parent
                 color: palette.text
@@ -201,6 +202,7 @@ Item {
                 property int commandEntries: resultListModelCommandEntries
                 property bool hasEntries: resultListModelHasEntries
                 property int depth: resultListModelDepth
+                property int unprocessedQueueCount: unprocessedCount
 
                 model: resultListModel
 

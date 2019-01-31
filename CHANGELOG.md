@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Searches can now be regular expressions. These need to be formatted as /search_string/flags
+- Information when module requests are still being processed when showing no results screen
 
 ### Chamged
 - Modules are now automatically unloaded after uninstallation
