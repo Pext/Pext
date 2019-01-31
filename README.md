@@ -66,7 +66,7 @@ Pext is available as [pext](https://aur.archlinux.org/packages/pext/) and [pext-
 
 #### Other distros
 
-We recommend the AppImages under GitHub releases, but you can also install from PyPI.
+We recommend the AppImages under [GitHub releases](https://github.com/Pext/Pext/releases), but you can also install from PyPI.
 
 For the stable version (PyPI):
 
