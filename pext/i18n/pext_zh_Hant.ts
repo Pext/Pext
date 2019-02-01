@@ -442,7 +442,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="175"/>
         <source>Still processing %1 module requests...</source>
-        <translation type="unfinished"></translation>
+        <translation>仍在處理 %1 模組請求……</translation>
     </message>
 </context>
 <context>
