@@ -67,6 +67,7 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/mast
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
+export CONDA_PYTHON_VERSION="3.6"  # PyOpenGL doesn't work with Python 3.7 yet
 export PIP_REQUIREMENTS="."
 
 mkdir -p AppDir/usr/share/metainfo/
