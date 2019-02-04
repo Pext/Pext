@@ -77,9 +77,13 @@ class Module():
     def run(self, tempdir: str, argv: List[str]) -> None:
         """Run the module in the current directory in a new Pext instance."""
         # Prepare vars
-        module_path = os.path.join(tempdir, 'pext', 'modules', 'pext_module_development')
+        with open(os.path.join(os.getcwd(), "metadata.json"), 'r') as metadata_json:
+            metadata = json.load(metadata_json)
+            module_name = metadata['id']
+
+        module_path = os.path.join(tempdir, 'pext', 'modules', module_name.replace('.', '_'))
         module_requirements_path = os.path.join(module_path, 'requirements.txt')
-        module_dependencies_path = os.path.join(tempdir, 'pext', 'module_dependencies')
+        module_dependencies_path = os.path.join(tempdir, 'pext', 'module_dependencies', module_name.replace('.', '_'))
 
         # Copy module to there
         print('Copying resources...')
@@ -95,11 +99,16 @@ class Module():
             pip_command = [sys.executable,
                            '-m',
                            'pip',
-                           'install']
+                           'install',
+                           '--isolated']
 
             # FIXME: Cheap hack to work around Debian's faultily-patched pip
-            if os.path.isfile('/etc/debian_version'):
-                pip_command += ['--system']
+            # We try to prevent false positives by checking for (mini)conda or a venv
+            if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
+                    'Debian' in open('/etc/issue.net', 'r').read() and
+                    not hasattr(sys, 'real_prefix') and
+                    not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
+                        pip_command += ['--system']
 
             pip_command += ['--upgrade',
                             '--target',
@@ -136,7 +145,7 @@ class Module():
             sys.executable,
             os.path.join(AppFile().get_path('..'), 'pext')] +
             ['--module',
-             'pext_module_development',
+             module_name,
              '--profile',
              'none'] + argv)
 
@@ -177,7 +186,11 @@ class Theme():
     def run(self, tempdir: str, argv: List[str]) -> None:
         """Run the theme in the current directory in a new Pext instance."""
         # Prepare vars
-        theme_path = os.path.join(tempdir, 'pext', 'themes', 'pext_theme_development')
+        with open(os.path.join(os.getcwd(), "metadata.json"), 'r') as metadata_json:
+            metadata = json.load(metadata_json)
+            theme_name = metadata['id']
+
+        theme_path = os.path.join(tempdir, 'pext', 'themes', theme_name.replace('.', '_'))
 
         # Copy module to there
         print('Copying resources...')
@@ -191,7 +204,7 @@ class Theme():
             sys.executable,
             os.path.join(AppFile().get_path('..'), 'pext')] +
             ['--theme',
-             'pext_theme_development',
+             theme_name,
              '--profile',
              'none'] + argv)
 
@@ -218,7 +231,7 @@ def run(argv: List[str]) -> None:
 
         classInstance.init(directory)
     elif (argv[1] == "run"):
-        tempdir = '.pext_temp'
+        tempdir = os.path.join(os.getcwd(), '.pext_temp')
 
         # Make sure there are no leftover files
         try:
