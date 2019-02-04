@@ -1091,7 +1091,16 @@ class ModuleManager():
             return False
 
         # Ensure the module implements the base
-        assert issubclass(Module, ModuleBase)
+        if not issubclass(Module, ModuleBase):
+            Logger.log_critical(
+                module['metadata']['name'],
+                "Module's Module class does not implement ModuleBase",
+                None)
+
+            # Remove module dependencies path
+            sys.path.remove(module_dependencies_path)
+
+            return False
 
         # Set up a queue so that the module can communicate with the main
         # thread
