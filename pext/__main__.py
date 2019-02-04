@@ -3400,12 +3400,12 @@ def _load_settings(args: argparse.Namespace) -> None:
                 metadata = requests.get(metadata_url).json()
 
                 try:
-                    r = requests.get(re.sub(r'\.json$', '{}_.json'
-                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
-                                     ''))
+                    translated_metadata_url = re.sub(r'\.json$', '_{}.json'.format(
+                        LocaleManager.find_best_locale(Settings.get('locale')).name()), metadata_url)
+                    r = requests.get(translated_metadata_url)
                     metadata.update(r.json())
-                except Exception:
-                    pass
+                except json.decoder.JSONDecodeError:
+                    print("Could not parse localized metadata file {}, ignoring...".format(translated_metadata_url))
 
                 if not ModuleManager().install_module(metadata['git_urls'][0],
                                                       metadata['id'],
@@ -3453,12 +3453,12 @@ def _load_settings(args: argparse.Namespace) -> None:
                 metadata = requests.get(metadata_url).json()
 
                 try:
-                    r = requests.get(re.sub(r'\.json$', '{}_.json'
-                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
-                                     ''))
+                    translated_metadata_url = re.sub(r'\.json$', '_{}.json'.format(
+                        LocaleManager.find_best_locale(Settings.get('locale')).name()), metadata_url)
+                    r = requests.get(translated_metadata_url)
                     metadata.update(r.json())
-                except Exception:
-                    pass
+                except json.decoder.JSONDecodeError:
+                    print("Could not parse localized metadata file {}, ignoring...".format(translated_metadata_url))
 
                 if not ThemeManager().install_theme(metadata['git_urls'][0],
                                                     metadata['id'],
