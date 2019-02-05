@@ -150,6 +150,19 @@ Item {
                         color: palette.highlight
                         objectName: "headerText"
 
+                        text: {
+                            var text = "";
+                            for (var i = 0; i < resultList.tree.length; i++) {
+                                for (var j = 0; j < i; j++) {
+                                    text += " ";
+                                }
+                                text += resultList.tree[i];
+                                if (i < resultList.tree.length - 1) {
+                                    text += "\n";
+                                }
+                            }
+                            return text;
+                        }
                         textFormat: Text.PlainText
                     }
                 }
@@ -201,7 +214,7 @@ Item {
                 property int normalEntries: resultListModelNormalEntries
                 property int commandEntries: resultListModelCommandEntries
                 property bool hasEntries: resultListModelHasEntries
-                property int depth: resultListModelDepth
+                property variant tree: resultListModelTree
                 property int unprocessedQueueCount: unprocessedCount
 
                 model: resultListModel
@@ -220,7 +233,7 @@ Item {
                                 width: parent.parent.width
                                 objectName: "text"
                                 text: {
-                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
+                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + "&nbsp;".repeat(resultList.tree.length) + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
                                     if (resultList.currentIndex === index) {
                                         line += (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText);
                                     } else if (resultList.currentIndex < resultListModelNormalEntries && resultListModelNormalEntries === index) {

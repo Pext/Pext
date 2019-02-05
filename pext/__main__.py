@@ -490,7 +490,7 @@ class MainLoop():
                 tab['vm'].selection = []
 
             tab['vm'].context.setContextProperty(
-                "resultListModelDepth", len(tab['vm'].selection))
+                "resultListModelTree", [part['value'] for part in tab['vm'].selection])
 
             tab['vm'].make_selection()
 
@@ -499,7 +499,7 @@ class MainLoop():
             tab['vm'].selection = []
 
             tab['vm'].context.setContextProperty(
-                "resultListModelDepth", len(tab['vm'].selection))
+                "resultListModelTree", [part['value'] for part in tab['vm'].selection])
 
             tab['vm'].module.selection_made(tab['vm'].selection)
 
@@ -1053,7 +1053,7 @@ class ModuleManager():
         module_context.setContextProperty(
             "resultListModelCommandMode", False)
         module_context.setContextProperty(
-            "resultListModelDepth", 0)
+            "resultListModelTree", [])
         module_context.setContextProperty(
             "unprocessedCount", 0)
         module_context.setContextProperty(
@@ -1666,7 +1666,7 @@ class ViewModel():
             self.search(new_entries=True)
 
             self.context.setContextProperty(
-                "resultListModelDepth", len(self.selection))
+                "resultListModelTree", [part['value'] for part in self.selection])
 
             self._clear_queue()
 
@@ -1853,7 +1853,7 @@ class ViewModel():
         self.context.setContextProperty(
             "contextMenuEnabled", False)
         self.context.setContextProperty(
-            "resultListModelDepth", len(self.selection))
+            "resultListModelTree", [part['value'] for part in self.selection])
 
         QQmlProperty.write(self.search_input_model, "text", "")
         self.context.setContextProperty("searchInputFieldEmpty", True)

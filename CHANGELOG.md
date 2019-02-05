@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The start screen now shows a hotkey reference
 - The UI now shows what hotkey will activate what entry
 - Right click / Ctrl+Return a context menu entry to activate command input mode if available
+- The selection tree is now shown at the header location
 
 ### Fixed
 - AppImage trying to store data inside itself in portable mode
