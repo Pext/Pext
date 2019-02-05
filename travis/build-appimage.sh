@@ -62,7 +62,7 @@ chmod +x AppRun.sh
 
 # get linuxdeploy and its conda plugin
 wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/master/linuxdeploy-plugin-conda.sh
+wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/a8cb42da6fb523c65ecb862ac67786c701c9e441/linuxdeploy-plugin-conda.sh
 
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
