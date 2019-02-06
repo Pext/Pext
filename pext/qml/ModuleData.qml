@@ -143,12 +143,22 @@ Item {
 
             Item {
                 width: parent.width
-                visible: headerText.text
+                visible: headerText.text || treeText.text
+
                 Column {
+                    id: headerHolder
+                    objectName: "headerHolder"
+
                     Text {
                         id: headerText
-                        color: palette.highlight
                         objectName: "headerText"
+
+                        color: palette.highlight
+                        textFormat: Text.PlainText
+                    }
+                    Text {
+                        id: treeText
+                        objectName: "treeText"
 
                         text: {
                             var text = "";
@@ -163,11 +173,12 @@ Item {
                             }
                             return text;
                         }
+                        color: palette.highlight
                         textFormat: Text.PlainText
                     }
                 }
                 MouseArea {
-                    anchors.fill: headerText.parent
+                    anchors.fill: headerHolder
                     acceptedButtons: Qt.RightButton
 
                     onClicked: {
@@ -201,7 +212,7 @@ Item {
 
             ListView {
                 visible: resultList.hasEntries
-                anchors.topMargin: headerText.text ? headerText.height : 0
+                anchors.topMargin: headerHolder.height
                 clip: true
                 id: resultList
                 objectName: "resultListModel"

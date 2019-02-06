@@ -1149,7 +1149,7 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 9, 0]
+        module['settings']['_api_version'] = [0, 10, 0]
         module['settings']['_locale'] = locale
         module['settings']['_portable'] = Settings.get('_portable')
 
