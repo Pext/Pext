@@ -1,4 +1,4 @@
-dulwich==0.19.10
+dulwich==0.19.11
 pynput==1.4
 pyqt5==5.11.3
 requests==2.21.0
