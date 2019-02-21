@@ -108,7 +108,7 @@ class Module():
                     'Debian' in open('/etc/issue.net', 'r').read() and
                     not hasattr(sys, 'real_prefix') and
                     not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
-                        pip_command += ['--system']
+                pip_command += ['--system']
 
             pip_command += ['--upgrade',
                             '--target',
