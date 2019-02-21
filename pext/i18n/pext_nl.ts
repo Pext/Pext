@@ -442,9 +442,9 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="199"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Nog steeds bezig met verwerken van %1 moduleverzoek(en)…</numerusform>
+            <numerusform>Nog steeds bezig met verwerken van %1 moduleverzoeken…</numerusform>
         </translation>
     </message>
 </context>
