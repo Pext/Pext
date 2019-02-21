@@ -435,14 +435,17 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="174"/>
+        <location filename="../qml/ModuleData.qml" line="198"/>
         <source>No results</source>
         <translation>Aucun résultat</translation>
     </message>
-    <message>
-        <location filename="../qml/ModuleData.qml" line="175"/>
-        <source>Still processing %1 module requests...</source>
-        <translation>En cours de traitement de %1 demandes de modules...</translation>
+    <message numerus="yes">
+        <location filename="../qml/ModuleData.qml" line="199"/>
+        <source>Still processing %1 module request(s)…</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>

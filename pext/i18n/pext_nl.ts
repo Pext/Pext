@@ -435,14 +435,17 @@ Weet je zeker dat je wilt afsluiten?</translation>
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="174"/>
+        <location filename="../qml/ModuleData.qml" line="198"/>
         <source>No results</source>
         <translation>Geen resultaten</translation>
     </message>
-    <message>
-        <location filename="../qml/ModuleData.qml" line="175"/>
-        <source>Still processing %1 module requests...</source>
-        <translation>Nog steeds bezig met verwerken van %1 moduleverzoeken...</translation>
+    <message numerus="yes">
+        <location filename="../qml/ModuleData.qml" line="199"/>
+        <source>Still processing %1 module request(s)…</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>

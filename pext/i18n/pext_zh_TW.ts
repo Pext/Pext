@@ -435,14 +435,16 @@ Are you sure you want to quit?</source>
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="174"/>
+        <location filename="../qml/ModuleData.qml" line="198"/>
         <source>No results</source>
         <translation>沒有結果</translation>
     </message>
-    <message>
-        <location filename="../qml/ModuleData.qml" line="175"/>
-        <source>Still processing %1 module requests...</source>
-        <translation>仍在處理 %1 模組請求……</translation>
+    <message numerus="yes">
+        <location filename="../qml/ModuleData.qml" line="199"/>
+        <source>Still processing %1 module request(s)…</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>

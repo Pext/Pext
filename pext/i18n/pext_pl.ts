@@ -435,14 +435,18 @@ Czy na pewno chcesz wyjść?</translation>
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="174"/>
+        <location filename="../qml/ModuleData.qml" line="198"/>
         <source>No results</source>
         <translation>Brak rezultatów</translation>
     </message>
-    <message>
-        <location filename="../qml/ModuleData.qml" line="175"/>
-        <source>Still processing %1 module requests...</source>
-        <translation type="unfinished"></translation>
+    <message numerus="yes">
+        <location filename="../qml/ModuleData.qml" line="199"/>
+        <source>Still processing %1 module request(s)…</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
     </message>
 </context>
 <context>
