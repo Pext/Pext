@@ -442,7 +442,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/ModuleData.qml" line="175"/>
         <source>Still processing %1 module requests...</source>
-        <translation type="unfinished"></translation>
+        <translation>En cours de traitement de %1 demandes de modules...</translation>
     </message>
 </context>
 <context>

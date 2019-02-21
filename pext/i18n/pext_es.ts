@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Argumentos para% 1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Introduce argumentos para% 1</translation>
     </message>
 </context>
 <context>
@@ -442,7 +442,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/ModuleData.qml" line="175"/>
         <source>Still processing %1 module requests...</source>
-        <translation type="unfinished"></translation>
+        <translation>Todavía procesando %1 solicitudes de módulo ...</translation>
     </message>
 </context>
 <context>
@@ -722,7 +722,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="918"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2 / Botón derecho del ratón: abrir menú contextual / ingresar argumentos</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="438"/>
@@ -737,7 +737,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="383"/>
@@ -797,57 +797,57 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="908"/>
         <source>Hotkey reference</source>
-        <translation type="unfinished"></translation>
+        <translation>Referencia de teclas de acceso rápido</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="909"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: Mueve Pext al primer plano</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="910"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: abre una nueva pestaña</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="911"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: Volver a cargar la pestaña activa</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="912"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: Cerrar pestaña activa</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="913"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: Cambie a la siguiente pestaña</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="914"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: cambia a la pestaña anterior</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="915"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: entrada completa</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="916"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2 / Botón izquierdo del ratón: activar entrada resaltada</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="917"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2 / Botón derecho del mouse: ingrese argumentos para el comando resaltado</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="919"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt; 1% 1 &lt;/kbd&gt; 2: Volver / minimizar Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="961"/>
