@@ -196,7 +196,7 @@ Item {
                 visible: resultList.hasEntries && resultList.normalEntries == 0 && resultList.commandEntries == 0 && !searchInputFieldEmpty
 
                 text: "<h2>" + qsTr("No results") + "</h2>" +
-                      (resultList.unprocessedQueueCount > 0 ? ("<p>" + qsTr("Still processing %1 module requests...").arg(resultList.unprocessedQueueCount) + "</p>") : "")
+                      (resultList.unprocessedQueueCount > 0 ? ("<p>" + qsTr("Still processing %1 module requests…").arg(resultList.unprocessedQueueCount) + "</p>") : "")
 
                 anchors.centerIn: parent
                 color: palette.text
