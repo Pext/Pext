@@ -443,7 +443,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
         <location filename="../qml/ModuleData.qml" line="199"/>
         <source>Still processing %1 module request(s)…</source>
         <translation>
-            <numerusform>Nog steeds bezig met verwerken van %1 moduleverzoek(en)…</numerusform>
+            <numerusform>Nog steeds bezig met verwerken van %1 moduleverzoek…</numerusform>
             <numerusform>Nog steeds bezig met verwerken van %1 moduleverzoeken…</numerusform>
         </translation>
     </message>
