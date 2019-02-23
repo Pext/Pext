@@ -12,6 +12,8 @@
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 [![Known Vulnerabilities](https://snyk.io/test/github/Pext/Pext/badge.svg)](https://snyk.io/test/github/Pext/Pext)
 
+[![Matrix](https://img.shields.io/matrix/pext:matrix.org.svg)](https://riot.im/app/#/room/#pext:matrix.org)
+
 ## Contents
 
 - [Introduction](#introduction)
@@ -137,9 +139,9 @@ For command line options, use `--help`.
 
 If you need support or just want to chat with our community, we have the following options:
 
-- IRC: #pext on FreeNode ([webchat](http://webchat.freenode.net/?channels=%23pext&uio=MTY9dHJ1ZQ79))
 - Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
 - Telegram: [@PextTool](https://t.me/PextTool)
+- IRC: #pext on FreeNode ([webchat](http://webchat.freenode.net/?channels=%23pext&uio=MTY9dHJ1ZQ79))
 
 All these channels are linked to each other, so there is no need to worry about missing out.
 
