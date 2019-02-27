@@ -122,5 +122,9 @@ wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appima
 chmod +x appimagetool*.AppImage
 ./appimagetool*.AppImage AppDir -u "$UPD_INFO"
 
+# Print version to test if the AppImage runs at all
+chmod +x Pext*.AppImage*
+./Pext*.AppImage* --version
+
 # move AppImage back to old CWD
 mv Pext*.AppImage* "$OLD_CWD"/
