@@ -443,8 +443,8 @@ Er du sikker på at du vil avslutte?</translation>
         <location filename="../qml/ModuleData.qml" line="199"/>
         <source>Still processing %1 module request(s)…</source>
         <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+            <numerusform>Behandler fremdeles %1 modulforespørsel…</numerusform>
+            <numerusform>Behandler fremdeles %1 modulforespørsler…</numerusform>
         </translation>
     </message>
 </context>

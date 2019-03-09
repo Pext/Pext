@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Аргументы для %1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Увядзіце аргументы для %1</translation>
     </message>
 </context>
 <context>
@@ -442,10 +442,10 @@ Are you sure you want to quit?</source>
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="199"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Усё яшчэ апрацоўвае %1 запыт модуля…</numerusform>
+            <numerusform>Усё яшчэ апрацоўвае %1 запыты модуляў…</numerusform>
+            <numerusform>Усё яшчэ апрацоўвае %1 запытаў модуляў…</numerusform>
         </translation>
     </message>
 </context>

@@ -442,8 +442,8 @@ Are you sure you want to quit?</source>
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="199"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>仍在處理 %1 模組請求……</numerusform>
         </translation>
     </message>
 </context>

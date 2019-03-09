@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation>Argumentos para% 1</translation>
+        <translation>Argumentos para %1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation>Introduce argumentos para% 1</translation>
+        <translation>Introduce argumentos para %1</translation>
     </message>
 </context>
 <context>
