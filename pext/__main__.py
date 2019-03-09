@@ -329,6 +329,32 @@ class PextFileSystemEventHandler(FileSystemEventHandler):
                     self.window.module_manager.unload_module(self.window, tab_id)
 
 
+class Translation():
+    """Retrieves translations for Python code.
+
+    This works by reading values from QML.
+    """
+
+    __window = None
+
+    @staticmethod
+    def bind_window(window: 'Window') -> None:
+        """Give the translator access to the translations stored in the window."""
+        Translation.__window = window
+
+    @staticmethod
+    def get(string_id: str) -> str:
+        """Return the translated value."""
+        if Translation.__window:
+            translation = QQmlProperty.read(Translation.__window.window, 'tr_{}'.format(string_id))
+            if translation:
+                return translation
+
+            return "TRANSLATION MISSING: {}".format(string_id)
+
+        return "TRANSLATION SYSTEM NOT YET AVAILABLE: {}".format(string_id)
+
+
 class MainLoop():
     """Main application loop.
 
@@ -1094,7 +1120,7 @@ class ModuleManager():
         if not issubclass(Module, ModuleBase):
             Logger.log_critical(
                 module['metadata']['name'],
-                "Module's Module class does not implement ModuleBase",
+                Translation.get("module_class_does_not_implement_modulebase"),
                 None)
 
             # Remove module dependencies path
@@ -1141,7 +1167,7 @@ class ModuleManager():
                 else:
                     Logger.log_error(
                         None,
-                        "Failed to load module {}: {} function has {} parameters (excluding self), expected {}"
+                        Translation.get("module_failed_load_wrong_param_count")
                         .format(module['metadata']['name'], name, param_length, required_param_length))
 
                     return False
@@ -1271,18 +1297,21 @@ class ModuleManager():
 
         if os.path.exists(module_path):
             if verbose:
-                Logger.log(None, '✔⇩ {}'.format(name))
+                Logger.log(None, Translation.get("already_installed").format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩ {} ({})'.format(name, url))
+            Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download").format(name, e),
+                    traceback.format_exc())
 
             try:
                 rmtree(module_path)
@@ -1292,12 +1321,15 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger.log(None, '⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("downloading_dependencies").format(name))
 
         pip_error_output = self._pip_install(identifier)
         if pip_error_output is not None:
             if verbose:
-                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download_dependencies").format(name),
+                    pip_error_output)
 
             try:
                 rmtree(module_path)
@@ -1312,7 +1344,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("installed").format(name))
 
         return True
 
@@ -1335,13 +1367,13 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, '♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalling").format(name))
 
         try:
             rmtree(module_path)
         except FileNotFoundError:
             if verbose:
-                Logger.log(None, '✔♻ {}'.format(name))
+                Logger.log(None, Translation.get("already_uninstalled").format(name))
 
             return False
 
@@ -1351,7 +1383,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, '✔♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalled").format(name))
 
         return True
 
@@ -1373,33 +1405,39 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, '⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updating").format(name))
 
         try:
             if not UpdateManager.update(module_path):
                 if verbose:
-                    Logger.log(None, '⏩{}'.format(name))
+                    Logger.log(None, Translation.get("already_up_to_date").format(name))
 
                 return False
 
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download_update").format(name, e),
+                    traceback.format_exc())
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updating_dependencies").format(name))
 
         pip_error_output = self._pip_install(identifier)
         if pip_error_output is not None:
             if verbose:
-                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_update_dependencies").format(name),
+                    pip_error_output)
 
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updated").format(name))
 
         return True
 
@@ -2755,12 +2793,12 @@ class Window():
 
     def _menu_check_updates_actually_check(self, verbose=True) -> None:
         if verbose:
-            Logger.log(None, '⇩ Pext')
+            Logger.log(None, Translation.get("checking_for_pext_updates"))
 
         try:
             new_version = UpdateManager().check_core_update()
         except Exception as e:
-            Logger.log_error(None, '⇩ Pext: {}'.format(e))
+            Logger.log_error(None, Translation.get("failed_to_check_for_pext_updates").format(e))
             traceback.print_exc()
 
             return
@@ -2770,7 +2808,7 @@ class Window():
             self.update_available_requests.showUpdateAvailableDialog.emit()
         else:
             if verbose:
-                Logger.log(None, '✔⇩ Pext')
+                Logger.log(None, Translation.get("pext_is_already_up_to_date"))
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
         # Set a timer to run this function again in an hour
@@ -2932,7 +2970,7 @@ class ThemeManager():
                                      palette_mappings['colour_roles'][colour_role],
                                      QColor(*colour_code_list))
                 except KeyError as e:
-                    print("Theme contained an unknown key, {}, skipping.".format(e))
+                    print("Theme contained an unknown key, {}, skipping".format(e))
 
         return palette
 
@@ -2946,18 +2984,21 @@ class ThemeManager():
 
         if os.path.exists(theme_path):
             if verbose:
-                Logger.log(None, '✔⇩ {}'.format(name))
+                Logger.log(None, Translation.get("already_installed").format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩ {} ({})'.format(name, url))
+            Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download").format(name, e),
+                    traceback.format_exc())
 
             try:
                 rmtree(os.path.join(self.theme_dir, identifier))
@@ -2967,7 +3008,7 @@ class ThemeManager():
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩ {}'.format(name))
+            Logger.log(None, Translation.get("installed").format(name))
 
         return True
 
@@ -2989,18 +3030,18 @@ class ThemeManager():
             pass
 
         if verbose:
-            Logger.log(None, '♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalling").format(name))
 
         try:
             rmtree(theme_path)
         except FileNotFoundError:
             if verbose:
-                Logger.log(None, '✔♻ {}'.format(name))
+                Logger.log(None, Translation.get("already_uninstalled").format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '✔♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalled").format(name))
 
         return True
 
@@ -3022,23 +3063,26 @@ class ThemeManager():
             pass
 
         if verbose:
-            Logger.log(None, '⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updating").format(name))
 
         try:
             if not UpdateManager.update(theme_path):
                 if verbose:
-                    Logger.log(None, '⏩{}'.format(name))
+                    Logger.log(None, Translation.get("already_up_to_date").format(name))
 
                 return False
 
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download_update").format(name, e),
+                    traceback.format_exc())
 
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updated").format(name))
 
         return True
 
@@ -3629,6 +3673,9 @@ def main() -> None:
 
     # Give the logger a reference to the window
     Logger.bind_window(window)
+
+    # Give the translator a reference to the window
+    Translation.bind_window(window)
 
     # Clean up on exit
     atexit.register(_shut_down, window)

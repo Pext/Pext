@@ -968,4 +968,25 @@ ApplicationWindow {
             }
         }
     }
+
+    property string tr_module_class_does_not_implement_modulebase: qsTr("Module's Module class does not implement ModuleBase")
+    property string tr_module_failed_load_wrong_param_count: qsTr("Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}")
+    property string tr_already_installed: qsTr("{0} is already installed")
+    property string tr_downloading_from_url: qsTr("Downloading {0} from {1}")
+    property string tr_failed_to_download: qsTr("Failed to download {0}: {1}")
+    property string tr_downloading_depencencies: qsTr("Downloading dependencies for {0}")
+    property string tr_failed_to_download_depencencies: qsTr("Failed to download dependencies for {0}")
+    property string tr_installed: qsTr("Installed {0}")
+    property string tr_uninstalling: qsTr("Uninstalling {0}")
+    property string tr_already_uninstalled: qsTr("{0} is already uninstalled")
+    property string tr_uninstalled: qsTr("Uninstalled {0}")
+    property string tr_updating: qsTr("Updating {0}")
+    property string tr_already_up_to_date: qsTr("{0} is already up to date")
+    property string tr_failed_to_download_update: qsTr("Failed to download update for {0}: {1}")
+    property string tr_updating_depencencies: qsTr("Updating dependencies for {0}")
+    property string tr_failed_to_update_depencencies: qsTr("Failed to update dependencies for {0}")
+    property string tr_updated: qsTr("Updated {0}")
+    property string tr_checking_for_pext_updates: qsTr("Checking for Pext updates")
+    property string tr_failed_to_check_for_pext_updates: qsTr("Failed to check for Pext updates: {0}")
+    property string tr_pext_is_already_up_to_date: qsTr("Pext is already up-to-date")
 }
