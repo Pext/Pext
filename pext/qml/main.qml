@@ -989,4 +989,5 @@ ApplicationWindow {
     property string tr_checking_for_pext_updates: qsTr("Checking for Pext updates")
     property string tr_failed_to_check_for_pext_updates: qsTr("Failed to check for Pext updates: {0}")
     property string tr_pext_is_already_up_to_date: qsTr("Pext is already up-to-date")
+    property string tr_data_copied_to_clipboard: qsTr("Data copied to clipboard")
 }

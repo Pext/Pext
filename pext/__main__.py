@@ -509,6 +509,8 @@ class MainLoop():
 
                 self.app.clipboard().setText(str(action[1]), mode)
 
+                Logger.log(tab['metadata']['name'], Translation.get("data_copied_to_clipboard"))
+
         elif action[0] == Action.set_selection:
             if len(action) > 1:
                 tab['vm'].selection = action[1]
