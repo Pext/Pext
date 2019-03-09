@@ -730,107 +730,107 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="972"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation type="unfinished"></translation>
+        <translation>De moduleklasse van de module bevat geen ModuleBase-implementatie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="973"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan module &apos;{0}&apos; niet laden: functie &apos;{1}&apos; bevat de parameters &apos;{2}&apos; (m.u.v. zichzelf), terwijl &apos;{3}&apos; verwacht werd</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="974"/>
         <source>{0} is already installed</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;{0}&apos; is al geïnstalleerd</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="975"/>
         <source>Downloading {0} from {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met downloaden van {0} van {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="976"/>
         <source>Failed to download {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan &apos;{0}&apos; niet downloaden: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="977"/>
         <source>Downloading dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met downloaden van afhankelijkheden voor {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="978"/>
         <source>Failed to download dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan afhankelijkheden voor &apos;{0}&apos; niet downloaden</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Installed {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;{0}&apos; is geïnstalleerd</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
         <source>Uninstalling {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met deïnstalleren van &apos;{0}&apos;</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>{0} is already uninstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;{0}&apos; is al gedeïnstalleerd</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>Uninstalled {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;{0}&apos; is gedeïnstalleerd</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>Updating {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met bijwerken van &apos;{0}&apos;...</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>{0} is already up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;{0}&apos; is actueel</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan update van &apos;{0}&apos; niet downloaden: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="986"/>
         <source>Updating dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met bijwerken van afhankelijkheden voor &apos;{0}&apos;...</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="987"/>
         <source>Failed to update dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan afhankelijkheden van &apos;{0}&apos; niet bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="988"/>
         <source>Updated {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} is bijgewerkt</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="989"/>
         <source>Checking for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met controleren op Pext-updates...</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="990"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan niet controleren op Pext-updates: {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="991"/>
         <source>Pext is already up-to-date</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext is al actueel</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="992"/>
         <source>Data copied to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Gegevens gekopieerd naar klembord</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="438"/>
