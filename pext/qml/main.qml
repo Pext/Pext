@@ -163,14 +163,6 @@ ApplicationWindow {
         return tab.item.children[0].children[0].visible;
     }
 
-    function openBaseMenu() {
-        var tab = tabs.getTab(tabs.currentIndex);
-        if (typeof tab === "undefined")
-            return;
-
-        tab.item.children[0].children[2].contentItem.openBaseMenu();
-    }
-
     function openContextMenu() {
         var tab = tabs.getTab(tabs.currentIndex);
         if (typeof tab === "undefined")
@@ -251,11 +243,6 @@ ApplicationWindow {
         id: tabShortcut
         objectName: "tabShortcut"
         sequence: "Tab"
-    }
-
-    Shortcut {
-        sequence: "Ctrl+Shift+."
-        onActivated: openBaseMenu();
     }
 
     Shortcut {

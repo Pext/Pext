@@ -350,9 +350,10 @@ class Action(Enum):
                               "video": ["on", "off"]}])
 
     set_base_context:
-        Introduced in API version 0.6.
+        Introduced in API version 0.6.0.
+        Changed in API version 0.11.0.
 
-        Set the base context, reachable by right-clicking the header text or Ctrl+Shift+..
+        Set the base context options, added after each entry-specific context options.
 
         Example: self.q.put([Action.set_base_context, ["Mute", "Stop"]])
 
@@ -412,6 +413,8 @@ class SelectionType(Enum):
         Introduced in API version 0.6.
 
         The selection is not relevant to any entry or command.
+
+        Used for the base context options.
     """
 
     entry = 0

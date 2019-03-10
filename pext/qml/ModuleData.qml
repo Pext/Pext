@@ -71,7 +71,8 @@ Item {
                 signal openArgumentsInput()
                 signal closeContextMenu()
 
-                model: contextMenuModel
+                /* TODO: Add separator */
+                model: contextMenuModelFull
 
                 delegate: Component {
                     Item {

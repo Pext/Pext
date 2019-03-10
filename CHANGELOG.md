@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### API changes
 - Bump API version to 0.10.0 so that modules can hide the header if it was used to show the tree
+- Bump API version to 0.11.0 due to change in how a base context option is returned
 
 ### Added
 - Searches can now be regular expressions. These need to be formatted as /search_string/flags
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The UI now shows what hotkey will activate what entry
 - Right click / Ctrl+Return a context menu entry to activate command input mode if available
 - The selection tree is now shown below the header location
+- The "base" context menu is now merged with the entry-specific one and shown below the entry-specific options
 
 ### Fixed
 - AppImage trying to store data inside itself in portable mode

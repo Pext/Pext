@@ -611,6 +611,8 @@ class MainLoop():
             else:
                 tab['vm'].context_menu_base = []
 
+            tab['vm'].context_menu_model_base_list.setStringList(str(entry) for entry in tab['vm'].context_menu_base)
+
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
@@ -1085,7 +1087,7 @@ class ModuleManager():
         module_context.setContextProperty(
             "unprocessedCount", 0)
         module_context.setContextProperty(
-            "contextMenuModel", vm.context_menu_model_list)
+            "contextMenuModelFull", vm.context_menu_model_list_full)
         module_context.setContextProperty(
             "contextMenuEnabled", False)
         module_context.setContextProperty(
@@ -1583,12 +1585,13 @@ class ViewModel():
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
         self.context_menu_model_list = QStringListModel()
+        self.context_menu_model_base_list = QStringListModel()
+        self.context_menu_model_list_full = QStringListModel()
         self.extra_info_entries = {}  # type: Dict[str, str]
         self.extra_info_commands = {}  # type: Dict[str, str]
         self.context_menu_entries = {}  # type: Dict[str, List[str]]
         self.context_menu_commands = {}  # type: Dict[str, List[str]]
         self.context_menu_base = []  # type: List[str]
-        self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
         self.selection_thread = None  # type: Optional[threading.Thread]
@@ -1685,7 +1688,6 @@ class ViewModel():
         is empty, we tell the window to hide/close itself.
         """
         if self.context.contextProperty("contextMenuEnabled"):
-            self.context_menu_base_open = False
             self.context.setContextProperty(
                 "contextMenuEnabled", False)
             return
@@ -1733,7 +1735,6 @@ class ViewModel():
 
         # TODO: Enable searching in context menu
         if manual:
-            self.context_menu_base_open = False
             self.context.setContextProperty(
                 "contextMenuEnabled", False)
 
@@ -1852,12 +1853,15 @@ class ViewModel():
 
             selected_entry = self._get_entry()
 
-            selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
+            # Return entry-specific option if selected, otherwise base option
+            try:
+                selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
+            except IndexError:
+                return {'type': SelectionType.none,
+                        'value': None,
+                        'context_option': self.context_menu_model_list_full.stringList()[current_index]}
 
             return selected_entry
-
-        if self.context.contextProperty("contextMenuEnabled") and self.context_menu_base_open:
-            return {'type': SelectionType.none, 'value': None, 'context_option': None}
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
@@ -1902,17 +1906,6 @@ class ViewModel():
 
         self.make_selection()
 
-    def show_context_base(self) -> None:
-        """Show the base context menu."""
-        if not QQmlProperty.read(self.header_text, "text"):
-            return
-
-        self.context_menu_base_open = True
-
-        self.context_menu_model_list.setStringList(str(entry) for entry in self.context_menu_base)
-        self.context.setContextProperty(
-            "contextMenuEnabled", True)
-
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
         if len(self.filtered_entry_list + self.filtered_command_list) == 0:
@@ -1928,7 +1921,9 @@ class ViewModel():
                 self.context_menu_model_list.setStringList(
                     str(entry) for entry in self.context_menu_commands[current_entry['value']])
 
-            self.context_menu_base_open = False
+            self.context_menu_model_list_full.setStringList(
+                self.context_menu_model_list.stringList() + self.context_menu_model_base_list.stringList())
+
             self.context.setContextProperty(
                 "contextMenuEnabled", True)
         except KeyError:
@@ -1936,7 +1931,6 @@ class ViewModel():
 
     def hide_context(self) -> None:
         """Hide the context menu."""
-        self.context_menu_base_open = False
         self.context.setContextProperty(
             "contextMenuEnabled", False)
 
@@ -2383,7 +2377,6 @@ class Window():
 
         # Enable mouse selection support
         result_list_model.entryClicked.connect(element['vm'].select)
-        result_list_model.openBaseMenu.connect(element['vm'].show_context_base)
         result_list_model.openContextMenu.connect(element['vm'].show_context)
         result_list_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.entryClicked.connect(element['vm'].select)
