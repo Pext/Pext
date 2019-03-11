@@ -178,14 +178,6 @@ Item {
                         textFormat: Text.PlainText
                     }
                 }
-                MouseArea {
-                    anchors.fill: headerHolder
-                    acceptedButtons: Qt.RightButton
-
-                    onClicked: {
-                        resultList.openBaseMenu();
-                    }
-                }
             }
 
             BusyIndicator {
@@ -220,7 +212,6 @@ Item {
 
                 signal entryClicked()
                 signal openContextMenu()
-                signal openBaseMenu()
                 signal openArgumentsInput()
 
                 property int normalEntries: resultListModelNormalEntries
