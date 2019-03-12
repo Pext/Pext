@@ -730,107 +730,107 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="972"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulens modulklasse implementerer ikke ModuleBase</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="973"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation type="unfinished"></translation>
+        <translation>Klarte ikke å laste inn modul {0}: {1} funksjon har {2} parameter (unntagen seg selv), forventet {3}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="974"/>
         <source>{0} is already installed</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} er allerede installert</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="975"/>
         <source>Downloading {0} from {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Laster ned {0} fra {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="976"/>
         <source>Failed to download {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Klarte ikke å laste ned {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="977"/>
         <source>Downloading dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Laster ned avhengigheter for {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="978"/>
         <source>Failed to download dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Klarte ikke å laste ned avhengigheter for {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Installed {0}</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Installerte {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
         <source>Uninstalling {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Avinstallerer {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>{0} is already uninstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} er allerede avinstallert</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>Uninstalled {0}</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Avinstallert {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>Updating {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Oppdaterer {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>{0} is already up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} er allerede oppdatert</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Klarte ikke å laste ned oppdatering for {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="986"/>
         <source>Updating dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Oppdaterer avhengigheter for {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="987"/>
         <source>Failed to update dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Klarte ikke å oppdatere avhengigheter for {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="988"/>
         <source>Updated {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Oppdaterte {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="989"/>
         <source>Checking for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Ser etter Pext-oppdateringer</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="990"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Klarte ikke å se etter Pext-oppdateringer: {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="991"/>
         <source>Pext is already up-to-date</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext er allerde oppdatert</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="992"/>
         <source>Data copied to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Data kopiert til utklippstavle</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="438"/>

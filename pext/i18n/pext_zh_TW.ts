@@ -729,107 +729,107 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="972"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation type="unfinished"></translation>
+        <translation>模組的 Module 類別沒有實作 ModuleBase</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="973"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation type="unfinished"></translation>
+        <translation>載入模組 {0} 失敗：{1} 函式有 {2} 個參數（不包含自己），但應該要有 {3} 個</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="974"/>
         <source>{0} is already installed</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} 已安裝</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="975"/>
         <source>Downloading {0} from {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>正在從 {1} 下載 {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="976"/>
         <source>Failed to download {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>下載 {0} 失敗：{1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="977"/>
         <source>Downloading dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>正在下載 {0} 的依賴關係</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="978"/>
         <source>Failed to download dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>下載 {0} 的依賴關係失敗</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Installed {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>已安裝 {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
         <source>Uninstalling {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>正在解除安裝 {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>{0} is already uninstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} 已經解除安裝</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>Uninstalled {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>已解除安裝 {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>Updating {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>正在更新 {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>{0} is already up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} 已為最新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>下載 {0} 的更新失敗：{1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="986"/>
         <source>Updating dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>正在更新 {0} 的依賴關禧</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="987"/>
         <source>Failed to update dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>更新 {0} 的依賴關禧失敗</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="988"/>
         <source>Updated {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>已更新 {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="989"/>
         <source>Checking for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>正在檢查 Pext 更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="990"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>檢查 Pext 更新失敗：{0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="991"/>
         <source>Pext is already up-to-date</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext 已為最新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="992"/>
         <source>Data copied to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>資料已複製到剪貼簿</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="438"/>
