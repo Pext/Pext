@@ -303,8 +303,18 @@ class Logger():
 
             QQmlProperty.write(Logger.status_text, "text", statusbar_message)
 
-            if Logger.window.tray:
-                Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
+            if platform.system() == 'Darwin':
+                Popen(['osacript',
+                       '-e',
+                       'display',
+                       'notification',
+                       message['message'],
+                       'with',
+                       'title',
+                       'Pext'])
+            else:
+                if Logger.window.tray:
+                    Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
 
             Logger.last_update = current_time
 
