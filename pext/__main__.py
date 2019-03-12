@@ -499,6 +499,8 @@ class MainLoop():
             # Copy the given data to the user-chosen clipboard
             if Settings.get('output_mode') == OutputMode.AutoType:
                 self.window.output_queue.append(str(action[1]))
+
+                Logger.log(tab['metadata']['name'], Translation.get("data_queued_for_typing"))
             else:
                 if Settings.get('output_mode') == OutputMode.SelectionClipboard:
                     mode = QClipboard.Selection
