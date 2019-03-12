@@ -830,7 +830,7 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Data queued for typing</source>
-        <translation type="unfinished"></translation>
+        <translation>Data queued for typing</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
