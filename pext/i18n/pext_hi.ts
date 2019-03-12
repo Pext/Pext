@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation>% 1 के लिए तर्क</translation>
+        <translation>%1 के लिए तर्क</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation>% 1 के लिए तर्क दर्ज करें</translation>
+        <translation>%1 के लिए तर्क दर्ज करें</translation>
     </message>
 </context>
 <context>
