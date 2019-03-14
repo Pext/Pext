@@ -1879,20 +1879,18 @@ class ViewModel():
 
     def select(self, command_args="") -> None:
         """Notify the module of our selection entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+        if not self.filtered_entry_list and not self.filtered_command_list:
             return
 
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
-        self.entry_list = []
-        self.command_list = []
-        self.extra_info_entries = {}
-        self.extra_info_commands = {}
-        self.context_menu_entries = {}
-        self.context_menu_commands = {}
-
         selection = self._get_entry(include_context=True)
+        if (selection['type'] == SelectionType.command
+                and selection['context_option'] == Translation.get("enter_arguments")):
+            self.input_args()
+            return
+
         selection["args"] = command_args
         self.selection.append(selection)
 
@@ -1900,6 +1898,13 @@ class ViewModel():
             "contextMenuEnabled", False)
         self.context.setContextProperty(
             "resultListModelTree", [part['value'] for part in self.selection])
+
+        self.entry_list = []
+        self.command_list = []
+        self.extra_info_entries = {}
+        self.extra_info_commands = {}
+        self.context_menu_entries = {}
+        self.context_menu_commands = {}
 
         QQmlProperty.write(self.search_input_model, "text", "")
         self.context.setContextProperty("searchInputFieldEmpty", True)
@@ -1910,26 +1915,40 @@ class ViewModel():
 
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+        if not self.filtered_entry_list and not self.filtered_command_list:
             return
 
         current_entry = self._get_entry()
 
+        entry_list = []  # type: List[str]
+
+        # Get all menu-specific entries
         try:
             if current_entry['type'] == SelectionType.entry:
-                self.context_menu_model_list.setStringList(
-                    str(entry) for entry in self.context_menu_entries[current_entry['value']])
+                entry_list = [str(entry) for entry in self.context_menu_entries[current_entry['value']]]
             else:
-                self.context_menu_model_list.setStringList(
-                    str(entry) for entry in self.context_menu_commands[current_entry['value']])
-
-            self.context_menu_model_list_full.setStringList(
-                self.context_menu_model_list.stringList() + self.context_menu_model_base_list.stringList())
-
-            self.context.setContextProperty(
-                "contextMenuEnabled", True)
+                entry_list = [str(entry) for entry in self.context_menu_commands[current_entry['value']]]
         except KeyError:
-            pass  # No menu available, do nothing
+            pass
+
+        if not entry_list and not self.context_menu_base:
+            if current_entry['type'] == SelectionType.command:
+                self.input_args()
+                return
+
+            Logger.log(None, Translation.get("no_context_menu_available"))
+            return
+
+        # Option 0 for commands is entering arguments if command
+        if current_entry['type'] == SelectionType.command:
+            entry_list.insert(0, Translation.get("enter_arguments"))
+
+        self.context_menu_model_list.setStringList(entry_list)
+        self.context_menu_model_list_full.setStringList(
+            self.context_menu_model_list.stringList() + self.context_menu_model_base_list.stringList())
+
+        self.context.setContextProperty(
+            "contextMenuEnabled", True)
 
     def hide_context(self) -> None:
         """Hide the context menu."""
@@ -1938,7 +1957,7 @@ class ViewModel():
 
     def update_context_info_panel(self, request_update=True) -> None:
         """Update the context info panel with the info panel data of the currently selected entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+        if not self.filtered_entry_list and not self.filtered_command_list:
             QQmlProperty.write(self.context_info_panel, "text", "")
             self.extra_info_last_entry_type = None
             return
@@ -1998,7 +2017,7 @@ class ViewModel():
 
     def input_args(self) -> None:
         """Open dialog that allows the user to input command arguments."""
-        if (len(self.filtered_command_list) == 0 and len(self.filtered_entry_list) == 0):
+        if not self.filtered_command_list and not self.filtered_entry_list:
             self.queue.put(
                 [Action.add_error, "No selected entry"])
             return

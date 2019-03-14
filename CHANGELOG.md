@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Information when module requests are still being processed when showing no results screen
 - Notification on copying data to clipboard
 
-### Chamged
+### Changed
 - Modules are now automatically unloaded after uninstallation
 - Passing arguments to modules is now done with Ctrl+Enter instead of typing it with the search bar
 - The start screen now shows a hotkey reference
@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Right click / Ctrl+Return a context menu entry to activate command input mode if available
 - The selection tree is now shown below the header location
 - The "base" context menu is now merged with the entry-specific one and shown below the entry-specific options
+- Command menu now has an "enter arguments" entry
 
 ### Fixed
 - AppImage trying to store data inside itself in portable mode

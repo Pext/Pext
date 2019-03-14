@@ -101,8 +101,6 @@ Item {
                             onClicked: {
                                 if (mouse.button == Qt.LeftButton) {
                                     contextMenu.entryClicked();
-                                } else if (mouse.button == Qt.RightButton && resultList.currentIndex >= resultListModelNormalEntries) {
-                                    contextMenu.openArgumentsInput();
                                 } else {
                                     contextMenu.closeContextMenu();
                                 }

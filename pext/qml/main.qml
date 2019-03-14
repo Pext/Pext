@@ -978,4 +978,6 @@ ApplicationWindow {
     property string tr_pext_is_already_up_to_date: qsTr("Pext is already up-to-date")
     property string tr_data_queued_for_typing: qsTr("Data queued for typing")
     property string tr_data_copied_to_clipboard: qsTr("Data copied to clipboard")
+    property string tr_enter_arguments: qsTr("Enter arguments")
+    property string tr_no_context_menu_available: qsTr("No context menu available")
 }
