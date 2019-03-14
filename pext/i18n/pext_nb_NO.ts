@@ -840,27 +840,27 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>Enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv inn argumenter</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>No context menu available</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen bindeleddsmeny tilgjengelig</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>No tab completion possible</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen tabulatorfullføring tilgjengelig</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>No entry selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen oppføring valgt</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>No command available for current filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingen kommando tilgjengelig for nåværende filter</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
