@@ -2009,7 +2009,7 @@ class ViewModel():
                 start=current_input.lower())
         if entry is None or len(entry) <= len(current_input):
             self.queue.put(
-                [Action.add_error, "No tab completion possible"])
+                [Action.add_error, Translation.get("no_tab_completion_possible")])
             return
 
         QQmlProperty.write(self.search_input_model, "text", entry)
@@ -2019,7 +2019,7 @@ class ViewModel():
         """Open dialog that allows the user to input command arguments."""
         if not self.filtered_command_list and not self.filtered_entry_list:
             self.queue.put(
-                [Action.add_error, "No selected entry"])
+                [Action.add_error, Translation.get("no_entry_selected")])
             return
 
         selected_entry = self._get_entry(include_context=True)
@@ -2032,7 +2032,7 @@ class ViewModel():
                 selected_entry = self._get_entry(include_context=True)
             else:
                 self.queue.put(
-                    [Action.add_error, "No command available for current filter"])
+                    [Action.add_error, Translation.get("no_command_available_for_current_filter")])
                 return
 
         args_request = self.window.window.findChild(QObject, "commandArgsDialog")
