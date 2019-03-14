@@ -435,12 +435,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="191"/>
+        <location filename="../qml/ModuleData.qml" line="189"/>
         <source>No results</source>
         <translation>Geen resultaten</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/ModuleData.qml" line="192"/>
+        <location filename="../qml/ModuleData.qml" line="190"/>
         <source>Still processing %1 module request(s)…</source>
         <translation>
             <numerusform>Nog steeds bezig met verwerken van %1 moduleverzoek…</numerusform>
@@ -836,6 +836,31 @@ Weet je zeker dat je wilt afsluiten?</translation>
         <location filename="../qml/main.qml" line="980"/>
         <source>Data copied to clipboard</source>
         <translation>Gegevens gekopieerd naar klembord</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="981"/>
+        <source>Enter arguments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="982"/>
+        <source>No context menu available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="983"/>
+        <source>No tab completion possible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="984"/>
+        <source>No entry selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="985"/>
+        <source>No command available for current filter</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>

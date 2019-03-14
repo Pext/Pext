@@ -435,12 +435,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="191"/>
+        <location filename="../qml/ModuleData.qml" line="189"/>
         <source>No results</source>
         <translation>Aucun résultat</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/ModuleData.qml" line="192"/>
+        <location filename="../qml/ModuleData.qml" line="190"/>
         <source>Still processing %1 module request(s)…</source>
         <translation>
             <numerusform>En train de traiter %1 demande de module…</numerusform>
@@ -836,6 +836,31 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
         <location filename="../qml/main.qml" line="980"/>
         <source>Data copied to clipboard</source>
         <translation>Données copiées dans le presse-papier</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="981"/>
+        <source>Enter arguments</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="982"/>
+        <source>No context menu available</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="983"/>
+        <source>No tab completion possible</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="984"/>
+        <source>No entry selected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="985"/>
+        <source>No command available for current filter</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
