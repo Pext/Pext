@@ -840,27 +840,27 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>Enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer argumenten in</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>No context menu available</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechtermuisknopmenu is niet beschikbaar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>No tab completion possible</source>
-        <translation type="unfinished"></translation>
+        <translation>Tabvervollediging is niet beschikbaar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>No entry selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen item geselecteerd</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>No command available for current filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen opdracht beschikbaar voor huidig filter</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
