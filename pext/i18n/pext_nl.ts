@@ -830,7 +830,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Data queued for typing</source>
-        <translation type="unfinished"></translation>
+        <translation>Gegevens in wachtrij voor typen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>

@@ -830,7 +830,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Data queued for typing</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Data på hold for skriving</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>

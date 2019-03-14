@@ -830,7 +830,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Data queued for typing</source>
-        <translation type="unfinished"></translation>
+        <translation>Données en attente de transposition</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
