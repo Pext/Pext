@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Аргументы для %1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Введите аргументы для %1</translation>
     </message>
 </context>
 <context>
@@ -47,7 +47,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -56,7 +56,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы собираетесь выйти из Pext.
+
+Это остановит работу всех модулей.
+
+Вы точно хотите выйти?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -65,7 +69,11 @@ Are you sure you want to quit?</source>
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Вы собираетесь выйти из Pext.
+
+Это остановит работу всех модулей и глобальные горячие клавиши не будут работать до того момента, как вы перезапустите Pext.
+
+Вы точно хотите выйти?</translation>
     </message>
 </context>
 <context>
@@ -73,12 +81,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -86,7 +94,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
@@ -434,10 +442,10 @@ Are you sure you want to quit?</source>
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="190"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Все еще обрабатывается %1 запрос модуля…</numerusform>
+            <numerusform>Все еще обрабатываются %1 запросов модуля(ей)…</numerusform>
+            <numerusform>Все еще обрабатываются %1 запросов модуля(ей)…</numerusform>
         </translation>
     </message>
 </context>
@@ -485,7 +493,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
@@ -713,147 +721,147 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="820"/>
         <source>Install quick action service</source>
-        <translation type="unfinished"></translation>
+        <translation>Установить сервис быстрого действия</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="905"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;/ Правая кнопка мыши: Открыть контекстное меню / ввести аргументы</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="959"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation type="unfinished"></translation>
+        <translation>Модуль Module класса не реализует ModuleBase</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="960"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation type="unfinished"></translation>
+        <translation>Ошибка при загрузке модуля {0}: {1} функция имела параметры {2} (исключая себя), ожидалось {3}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="961"/>
         <source>{0} is already installed</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} уже установлен(а)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="962"/>
         <source>Downloading {0} from {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Загружается {0} из {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="963"/>
         <source>Failed to download {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Не получилось загрузить {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="964"/>
         <source>Downloading dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Загрузка зависимостей для {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="965"/>
         <source>Failed to download dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Не получилось скачать зависимости для {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="966"/>
         <source>Installed {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Установлено {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="967"/>
         <source>Uninstalling {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Удаляется {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="968"/>
         <source>{0} is already uninstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} уже удален(а)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="969"/>
         <source>Uninstalled {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Удален(а) {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="970"/>
         <source>Updating {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновляется {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="971"/>
         <source>{0} is already up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} уже обновлен(а)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="972"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Не получилось скачать обновление для {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="973"/>
         <source>Updating dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновляются зависимости для {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="974"/>
         <source>Failed to update dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Не получилось обновить зависимости для {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="975"/>
         <source>Updated {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновлено {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="976"/>
         <source>Checking for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Проверка обновлений Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="977"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Не удалось проверить наличии обновлений Pext: {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="978"/>
         <source>Pext is already up-to-date</source>
-        <translation type="unfinished"></translation>
+        <translation>Установлен Pext последней версии</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Data queued for typing</source>
-        <translation type="unfinished"></translation>
+        <translation>Данные в очереди для ввода</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
         <source>Data copied to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Данные скопированы в буфер обмена</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>Enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>Введите аргументы</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>No context menu available</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет контекстного меню</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>No tab completion possible</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет возможности завершить вкладку</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>No entry selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Не выбрано ни одной записи</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>No command available for current filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Нет команды для текущего фильтра</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
@@ -863,12 +871,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="370"/>
@@ -928,57 +936,57 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="895"/>
         <source>Hotkey reference</source>
-        <translation type="unfinished"></translation>
+        <translation>Горячая клавиша</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="896"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Переместить Pext на передний план</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="897"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Открыть новую вкладку</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="898"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Перезагрузить активную вкладку</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="899"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Закрыть активную вкладку</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="900"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Переключиться на следующую вкладку</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="901"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Переключиться на прошлую вкладку</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="902"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Полный ввод</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="903"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Левая кнопка мыши: Активировать выделенную запись</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="904"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Правая кнопка мыши: Ввести аргументы для выделенной команды</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="906"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Вернуться / свернуть Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="948"/>
