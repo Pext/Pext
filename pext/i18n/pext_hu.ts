@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Argumentumok a(z) %1 parancshoz</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Adja meg az argumentumokat a(z) %1 parancshoz</translation>
     </message>
 </context>
 <context>
@@ -81,12 +81,12 @@ Biztosan ki szeretne lépni?</translation>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -94,12 +94,12 @@ Biztosan ki szeretne lépni?</translation>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -442,8 +442,9 @@ Biztosan ki szeretne lépni?</translation>
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="190"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>%1 kérés feldolgozása folyamatban…</numerusform>
+            <numerusform>%1 kérés feldolgozása folyamatban…</numerusform>
         </translation>
     </message>
 </context>
@@ -491,12 +492,12 @@ Biztosan ki szeretne lépni?</translation>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -724,142 +725,142 @@ Biztosan ki szeretne lépni?</translation>
     <message>
         <location filename="../qml/main.qml" line="905"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Jobbklikk: Kontextus menü megnyitása / argumentumok megadása</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="959"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation type="unfinished"></translation>
+        <translation>Module&apos;s Module class does not implement ModuleBase</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="960"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} modul betöltése sikertelen: {1} function has {2} parameters (excluding self), expected {3}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="961"/>
         <source>{0} is already installed</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} már telepítve van</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="962"/>
         <source>Downloading {0} from {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} letöltése a {1} címről</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="963"/>
         <source>Failed to download {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} letöltése sikertelen: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="964"/>
         <source>Downloading dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} függőségeinek letöltése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="965"/>
         <source>Failed to download dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} függőségeinek letöltése sikertelen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="966"/>
         <source>Installed {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} telepítve</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="967"/>
         <source>Uninstalling {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} eltávolítása</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="968"/>
         <source>{0} is already uninstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} már el van távolítva</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="969"/>
         <source>Uninstalled {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} eltávolítva</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="970"/>
         <source>Updating {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} frissítése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="971"/>
         <source>{0} is already up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} már naprakész</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="972"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} frissítésének letöltése sikertelen: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="973"/>
         <source>Updating dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} függőségeinek letöltése sikertelen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="974"/>
         <source>Failed to update dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem sikerült frissíteni a(z) {0} függőségeit</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="975"/>
         <source>Updated {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} frissítve</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="976"/>
         <source>Checking for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext frissítések keresése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="977"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext frissítések keresése sikertelen: {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="978"/>
         <source>Pext is already up-to-date</source>
-        <translation type="unfinished"></translation>
+        <translation>A Pext már naprakész</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Data queued for typing</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorban álló adatok</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
         <source>Data copied to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Vágólapra másolt adatok</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>Enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>Argumentumok megadása</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>No context menu available</source>
-        <translation type="unfinished"></translation>
+        <translation>Kontextus menü nem elérhető</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>No tab completion possible</source>
-        <translation type="unfinished"></translation>
+        <translation>Kiegészítés nem lehetséges</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>No entry selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs kijelölt bejegyzés</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>No command available for current filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs elérhető parancs a jelenlegi szűrőhöz</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
@@ -869,12 +870,12 @@ Biztosan ki szeretne lépni?</translation>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext (%1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="370"/>
@@ -934,57 +935,57 @@ Biztosan ki szeretne lépni?</translation>
     <message>
         <location filename="../qml/main.qml" line="895"/>
         <source>Hotkey reference</source>
-        <translation type="unfinished"></translation>
+        <translation>Gyorsbillentyű referencia</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="896"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: A Pext előtérbe helyezése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="897"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Új lap nyitása</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="898"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Aktív lap újratöltése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="899"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Aktív lap bezárása</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="900"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Következő lapra váltás</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="901"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Előző lapra váltás</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="902"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Bemenet kiegészítése</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="903"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Balklikk: Kiemelt bejegyzés aktiválása</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="904"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Jobbklikk: Argumentumok megadása a kiemelt parancshoz</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="906"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Vissza / Pext minimalizálása</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="948"/>
