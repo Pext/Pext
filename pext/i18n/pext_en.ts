@@ -9,22 +9,22 @@
         <translation>About Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="51"/>
+        <location filename="../qml/AboutDialog.qml" line="52"/>
         <source>Copyright</source>
         <translation>Copyright</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="83"/>
+        <location filename="../qml/AboutDialog.qml" line="84"/>
         <source>Translators</source>
         <translation>Translators</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="94"/>
+        <location filename="../qml/AboutDialog.qml" line="95"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Want to help translate Pext? Please click here.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="95"/>
+        <location filename="../qml/AboutDialog.qml" line="96"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>The Pext team would like to thank the following users for translating Pext:</translation>
     </message>

@@ -9,22 +9,22 @@
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="51"/>
+        <location filename="../qml/AboutDialog.qml" line="52"/>
         <source>Copyright</source>
         <translation>Szerzői jogok</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="83"/>
+        <location filename="../qml/AboutDialog.qml" line="84"/>
         <source>Translators</source>
         <translation>Fordítók</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="94"/>
+        <location filename="../qml/AboutDialog.qml" line="95"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Szeretne segíteni a Pext fordításában? Kérjük, kattintson ide.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="95"/>
+        <location filename="../qml/AboutDialog.qml" line="96"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>A Pext csapat szeretné megköszönni a következő felhasználóknak a Pext fordítását:</translation>
     </message>
@@ -443,7 +443,6 @@ Biztosan ki szeretne lépni?</translation>
         <location filename="../qml/ModuleData.qml" line="190"/>
         <source>Still processing %1 module request(s)…</source>
         <translation>
-            <numerusform>%1 kérés feldolgozása folyamatban…</numerusform>
             <numerusform>%1 kérés feldolgozása folyamatban…</numerusform>
         </translation>
     </message>
