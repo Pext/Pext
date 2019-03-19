@@ -442,9 +442,9 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="190"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>Todavía procesando% 1 módulo de solicitud(s)…</numerusform>
+            <numerusform>Todavía procesando% 1 solicitudes de módulo…</numerusform>
         </translation>
     </message>
 </context>
@@ -730,137 +730,139 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="959"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation type="unfinished"></translation>
+        <translation>Did you mean: Modules Module class does not implement ModuleBase
+51/5000
+La clase Module del módulo no implementa ModuleBase</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="960"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al cargar el módulo {0}: la función {1} tiene {2} parámetros (excluyendo el self), se esperaba {3}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="961"/>
         <source>{0} is already installed</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} ya está instalado</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="962"/>
         <source>Downloading {0} from {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Descargando {0} de {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="963"/>
         <source>Failed to download {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al descargar {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="964"/>
         <source>Downloading dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Descargando dependencias para {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="965"/>
         <source>Failed to download dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al descargar las dependencias para {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="966"/>
         <source>Installed {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Instalado {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="967"/>
         <source>Uninstalling {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Desinstalando {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="968"/>
         <source>{0} is already uninstalled</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} ya está desinstalado</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="969"/>
         <source>Uninstalled {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Desinstalado {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="970"/>
         <source>Updating {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizando {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="971"/>
         <source>{0} is already up to date</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} ya está actualizado</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="972"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al descargar la actualización para {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="973"/>
         <source>Updating dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizando dependencias para {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="974"/>
         <source>Failed to update dependencies for {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al actualizar las dependencias para {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="975"/>
         <source>Updated {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizado {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="976"/>
         <source>Checking for Pext updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Buscando actualizaciones de Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="977"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al verificar las actualizaciones de Pext: {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="978"/>
         <source>Pext is already up-to-date</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext ya está actualizado</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="979"/>
         <source>Data queued for typing</source>
-        <translation type="unfinished"></translation>
+        <translation>Datos en cola para escribir</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="980"/>
         <source>Data copied to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Datos copiados al portapapeles</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="981"/>
         <source>Enter arguments</source>
-        <translation type="unfinished"></translation>
+        <translation>Introducir argumentos</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="982"/>
         <source>No context menu available</source>
-        <translation type="unfinished"></translation>
+        <translation>No hay menú contextual disponible</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="983"/>
         <source>No tab completion possible</source>
-        <translation type="unfinished"></translation>
+        <translation>No es posible completar la pestaña</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="984"/>
         <source>No entry selected</source>
-        <translation type="unfinished"></translation>
+        <translation>Ninguna entrada seleccionada</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="985"/>
         <source>No command available for current filter</source>
-        <translation type="unfinished"></translation>
+        <translation>No hay comando disponible para el filtro actual</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
