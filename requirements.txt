@@ -1,6 +1,6 @@
 dulwich==0.19.11
 pynput==1.4
-pyqt5==5.12
+pyqt5==5.12.1
 requests==2.21.0
 watchdog==0.9.0
 accessibility==0.4.0; sys.platform == 'darwin'
