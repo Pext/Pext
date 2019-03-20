@@ -741,6 +741,7 @@ class ProfileManager():
         self.profile_dir = os.path.join(ConfigRetriever.get_path(), 'profiles')
         self.module_dir = os.path.join(ConfigRetriever.get_path(), 'modules')
         self.saved_settings = ['_window_geometry',
+                               'turbo_mode',
                                'locale',
                                'minimize_mode',
                                'output_mode',
@@ -1848,6 +1849,10 @@ class ViewModel():
 
         self.update_context_info_panel()
 
+        # Turbo mode: Select entry if only entry left
+        if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty():
+            self.select(force_args=True)
+
     def _get_entry(self, include_context=False) -> Dict:
         """Get info on the entry that's currently focused."""
         if include_context and self.context.contextProperty("contextMenuEnabled"):
@@ -1877,7 +1882,7 @@ class ViewModel():
 
         return {'type': selection_type, 'value': entry, 'context_option': None}
 
-    def select(self, command_args="") -> None:
+    def select(self, command_args="", force_args=False) -> None:
         """Notify the module of our selection entry."""
         if not self.filtered_entry_list and not self.filtered_command_list:
             return
@@ -1886,10 +1891,10 @@ class ViewModel():
             return
 
         selection = self._get_entry(include_context=True)
-        if (selection['type'] == SelectionType.command
-                and selection['context_option'] == Translation.get("enter_arguments")):
-            self.input_args()
-            return
+        if selection['type'] == SelectionType.command:
+            if force_args or selection['context_option'] == Translation.get("enter_arguments"):
+                self.input_args()
+                return
 
         selection["args"] = command_args
         self.selection.append(selection)
@@ -2159,6 +2164,9 @@ class Window():
         menu_manage_profiles_shortcut = self.window.findChild(
             QObject, "menuManageProfiles")
 
+        menu_turbo_mode_shortcut = self.window.findChild(
+            QObject, "menuTurboMode")
+
         menu_change_language_shortcut = self.window.findChild(
             QObject, "menuChangeLanguage")
 
@@ -2224,6 +2232,8 @@ class Window():
         menu_manage_profiles_shortcut.renameProfileRequest.connect(self._menu_rename_profile)
         menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
 
+        menu_turbo_mode_shortcut.toggled.connect(self._menu_toggle_turbo_mode)
+
         menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
 
         self.menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
@@ -2250,6 +2260,10 @@ class Window():
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
+        QQmlProperty.write(menu_turbo_mode_shortcut,
+                           "checked",
+                           Settings.get('turbo_mode'))
+
         QQmlProperty.write(self.menu_output_default_clipboard,
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.DefaultClipboard)
@@ -2653,6 +2667,12 @@ class Window():
             }
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    def _menu_toggle_turbo_mode(self, enabled: bool) -> None:
+        Settings.set('turbo_mode', enabled)
+        if enabled:
+            for tab in self.tab_bindings:
+                tab['vm'].search(new_entries=True)
 
     def _menu_change_language(self, lang_code: str) -> None:
         Settings.set('locale', lang_code)
@@ -3203,6 +3223,7 @@ class Settings():
         '_window_geometry': None,
         '_portable': False,
         'background': False,
+        'turbo_mode': False,
         'locale': None,
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
@@ -3376,6 +3397,10 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='load and store everything in a local directory.')
     parser.add_argument('--no-portable', action='store_false', dest='portable', default=None,
                         help='load and store everything in the user directory.')
+    parser.add_argument('--turbo', action='store_true', dest='turbo_mode', default=None,
+                        help='automatically select entries when expecting the user to want to (possibly dangerous).')
+    parser.add_argument('--no-turbo', action='store_false', dest='turbo_mode', default=None,
+                        help='do not automatically select entries (safer).')
 
     # Remove weird macOS-added parameter
     # https://stackoverflow.com/questions/10242115/os-x-strange-psn-command-line-parameter-when-launched-from-finder
@@ -3592,6 +3617,9 @@ def _load_settings(args: argparse.Namespace) -> None:
 
     if args.portable:
         Settings.set('_portable', args.portable)
+
+    if args.turbo_mode is not None:
+        Settings.set('turbo_mode', args.turbo_mode)
 
     # Set up the parsed modules
     if '_modules' in args:

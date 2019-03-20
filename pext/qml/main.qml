@@ -620,6 +620,12 @@ ApplicationWindow {
         Menu {
             title: platform == 'Darwin' ? "Settings" : qsTr("&Settings")
 
+            MenuItem {
+                objectName: "menuTurboMode"
+                text: qsTr("Turbo Mode")
+                checkable: true
+            }
+
             Menu {
                 id: menuChangeLanguage
                 objectName: "menuChangeLanguage"

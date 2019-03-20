@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Added
+- Turbo mode where Pext auto-selects options whenever reasonably confident
+
 ## [0.23] - 2019-03-19
 ### Packaging changes
 - New dependency: [watchdog](https://pypi.org/project/watchdog/)
