@@ -6,27 +6,27 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Über Pext</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="51"/>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>Urheberrecht</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="83"/>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>Übersetzer</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="94"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation type="unfinished"></translation>
+        <translation>Möchten Sie helfen, Pext zu übersetzen? Klicken Sie bitte hier.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="95"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation type="unfinished"></translation>
+        <translation>Das Pext-Team möchte die folgenden Benutzer danken für die Übersetzung von Pext:</translation>
     </message>
 </context>
 <context>
@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Argumente für %1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Argumente für %1 eingeben</translation>
     </message>
 </context>
 <context>
@@ -47,7 +47,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -56,7 +56,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext wird von Ihnen beendet.
+
+Dadurch wird jede ausgeführte Modul beendet.
+
+Sind Sie sicher, dass Sie Pext beenden möchten?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -65,7 +69,11 @@ Are you sure you want to quit?</source>
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext wird von Ihnen beendet.
+
+Dadurch wird jede ausgeführte Modul beendet, und die globale Hotkeys werden nicht funktionieren, bis Pext manuell neu gestartet wird.
+
+Sind Sie sicher, dass Sie Pext beenden möchten?</translation>
     </message>
 </context>
 <context>
@@ -73,12 +81,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -86,12 +94,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -99,87 +107,87 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulinstallation</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Themeninstallation</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulquelle:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Theme source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Themenquelle:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Module aus dieser Quelle verfügbar.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No themes available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Themen aus dieser Quelle verfügbar.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="71"/>
         <source>Unsupported repository format (expected version %1, not %2).</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht unterstütztes Repository-Format (erwartete Version %1 anstatt %2).</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="79"/>
         <source>Module:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modul:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
         <source>Download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Download Quelle:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>This module is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Modul ist bereits installiert.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Theme ist bereits installiert.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="115"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Modul unterstützt %1 nicht.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>Details:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="131"/>
         <source>Creator: </source>
-        <translation type="unfinished"></translation>
+        <translation>Erstellt von: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="138"/>
         <source>Description: </source>
-        <translation type="unfinished"></translation>
+        <translation>Beschreibung: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="145"/>
         <source>License: </source>
-        <translation type="unfinished"></translation>
+        <translation>Lizenz: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="152"/>
         <source>Only install modules from people you trust.</source>
-        <translation type="unfinished"></translation>
+        <translation>Installieren Sie nur Module von Menschen, denen Sie vertrauen.</translation>
     </message>
 </context>
 <context>
@@ -187,12 +195,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="24"/>
         <source>No modules found</source>
-        <translation type="unfinished"></translation>
+        <translation>Keine Module gefunden</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositoryNoModulesAvailableDialog.qml" line="27"/>
         <source>No modules were found in this repository.</source>
-        <translation type="unfinished"></translation>
+        <translation>In diesem Repository wurden keine Module gefunden.</translation>
     </message>
 </context>
 <context>
@@ -200,47 +208,47 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulinstallation</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="35"/>
         <source>Choose the module to install:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie das zu installierende Modul aus:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>Wählen Sie die bevorzugte Download-Quelle:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
         <source>You already have this module installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Sie haben dieses Modul bereits installiert.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="61"/>
         <source>This module does not seem to support %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Modul unterstützt %1 nicht.</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
         <source>Module information:</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulinformationen:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
-        <translation type="unfinished"></translation>
+        <translation>Entwickler: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
         <source>Description: </source>
-        <translation type="unfinished"></translation>
+        <translation>Beschreibung: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
         <source>License: </source>
-        <translation type="unfinished"></translation>
+        <translation>Lizenz: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
