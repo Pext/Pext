@@ -989,4 +989,5 @@ ApplicationWindow {
     property string tr_no_tab_completion_possible: qsTr("No tab completion possible")
     property string tr_no_entry_selected: qsTr("No entry selected")
     property string tr_no_command_available_for_current_filter: qsTr("No command available for current filter")
+    property string tr_pynput_is_unavailable: qsTr("Pynput is unavailable")
 }
