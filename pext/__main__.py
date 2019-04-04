@@ -2335,7 +2335,7 @@ class Window():
         elif not Settings.get('background'):
             self.show()
 
-            if Settings.get('update_check') is None:
+            if Settings.get('update_check') is None and USE_INTERNAL_UPDATER:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 

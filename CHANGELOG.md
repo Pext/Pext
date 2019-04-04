@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Turbo mode where Pext auto-selects options whenever reasonably confident
 
+### Fixed
+- Don't crash if pynput fails to import
+- User asked for internal update checker if disable in constants
+
 ## [0.23] - 2019-03-19
 ### Packaging changes
 - New dependency: [watchdog](https://pypi.org/project/watchdog/)
