@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Don't crash if pynput fails to import
 - User asked for internal update checker if disable in constants
+- Add repeat polyfill to prevent rendering issues on systems with older Qt versions
 
 ## [0.23] - 2019-03-19
 ### Packaging changes
