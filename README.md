@@ -115,7 +115,6 @@ For command line options, use `--help`.
 - Tab: Tab-complete the current input
 - Enter / Left mouse button: Select entry or run command
 - Ctrl+Enter: Run command with arguments
-- Ctrl+Shift+. / Right mouse button on header: Open state menu
 - Ctrl+. / Right mouse button on any item: Open context menu
 - Ctrl+J / Down arrow: Go one entry down
 - Ctrl+H / Up arrow: Go one entry up
