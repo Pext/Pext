@@ -967,7 +967,7 @@ ApplicationWindow {
     property string tr_already_installed: qsTr("{0} is already installed")
     property string tr_downloading_from_url: qsTr("Downloading {0} from {1}")
     property string tr_failed_to_download: qsTr("Failed to download {0}: {1}")
-    property string tr_downloading_depencencies: qsTr("Downloading dependencies for {0}")
+    property string tr_downloading_dependencies: qsTr("Downloading dependencies for {0}")
     property string tr_failed_to_download_depencencies: qsTr("Failed to download dependencies for {0}")
     property string tr_installed: qsTr("Installed {0}")
     property string tr_uninstalling: qsTr("Uninstalling {0}")
@@ -989,4 +989,5 @@ ApplicationWindow {
     property string tr_no_tab_completion_possible: qsTr("No tab completion possible")
     property string tr_no_entry_selected: qsTr("No entry selected")
     property string tr_no_command_available_for_current_filter: qsTr("No command available for current filter")
+    property string tr_pynput_is_unavailable: qsTr("Pynput is unavailable")
 }

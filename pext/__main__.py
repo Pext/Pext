@@ -57,7 +57,7 @@ import requests
 
 from dulwich import porcelain
 from dulwich.repo import Repo
-from pynput import keyboard
+
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import QApplication, QAction, QMenu, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
@@ -67,6 +67,13 @@ from watchdog.observers import Observer
 
 if platform.system() == 'Darwin':
     import accessibility  # NOQA
+
+pynput_error = None
+try:
+    from pynput import keyboard
+except Exception:
+    pynput_error = traceback.format_exc()
+    traceback.print_exc()
 
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 warn_no_openGL_linux = False
@@ -2268,7 +2275,7 @@ class Window():
             QObject, "menuMinimizeNormallyManually")
         menu_minimize_to_tray_manually_shortcut = self.window.findChild(
             QObject, "menuMinimizeToTrayManually")
-        menu_enable_global_hotkey_shortcut = self.window.findChild(
+        self.menu_enable_global_hotkey_shortcut = self.window.findChild(
             QObject, "menuEnableGlobalHotkey")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
@@ -2323,7 +2330,7 @@ class Window():
         menu_minimize_to_tray_shortcut.toggled.connect(self._menu_minimize_to_tray)
         menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
-        menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
+        self.menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
         menu_install_quick_action_service.triggered.connect(self._menu_install_quick_action_service)
         self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
@@ -2374,7 +2381,7 @@ class Window():
                            "checked",
                            int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
 
-        QQmlProperty.write(menu_enable_global_hotkey_shortcut,
+        QQmlProperty.write(self.menu_enable_global_hotkey_shortcut,
                            "checked",
                            Settings.get('global_hotkey_enabled'))
         QQmlProperty.write(menu_show_tray_icon_shortcut,
@@ -2403,7 +2410,7 @@ class Window():
         elif not Settings.get('background'):
             self.show()
 
-            if Settings.get('update_check') is None:
+            if Settings.get('update_check') is None and USE_INTERNAL_UPDATER:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
@@ -2443,7 +2450,7 @@ class Window():
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
-        if platform.system() != 'Darwin':
+        if platform.system() != 'Darwin' or pynput_error:
             return
 
         keyboard_device = keyboard.Controller()
@@ -2766,6 +2773,12 @@ class Window():
 
     def _menu_output_auto_type(self, enabled: bool) -> None:
         if enabled:
+            if pynput_error:
+                Logger.log_critical(None, Translation.get("pynput_is_unavailable"), pynput_error)
+                QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
+                return
+
             if platform.system() == 'Darwin':
                 if not accessibility.is_enabled() or not accessibility.is_trusted():
                     QQmlProperty.write(self.menu_output_auto_type, "checked", False)
@@ -2809,6 +2822,11 @@ class Window():
             Settings.set('minimize_mode', MinimizeMode.TrayManualOnly)
 
     def _menu_enable_global_hotkey_shortcut(self, enabled: bool) -> None:
+        if enabled and pynput_error:
+            Logger.log_critical(None, Translation.get("pynput_is_unavailable"), pynput_error)
+            QQmlProperty.write(self.menu_enable_global_hotkey_shortcut, "checked", False)
+            return
+
         Settings.set('global_hotkey_enabled', enabled)
 
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
@@ -3261,8 +3279,9 @@ class HotkeyHandler():
         self.pressed = []  # type: List[Union[keyboard.Key, keyboard.KeyCode]]
         self.needs_main_loop_queue = needs_main_loop_queue
 
-        listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
-        listener.start()
+        if not pynput_error:
+            listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
+            listener.start()
 
     def on_press(self, key) -> bool:
         """Executed when a key is pressed."""
