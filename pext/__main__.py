@@ -1691,8 +1691,7 @@ class ViewModel():
         is empty, we tell the window to hide/close itself.
         """
         if self.context.contextProperty("contextMenuEnabled"):
-            self.context.setContextProperty(
-                "contextMenuEnabled", False)
+            self.hide_context()
             return
 
         if QQmlProperty.read(self.search_input_model, "text") != "":
@@ -1736,61 +1735,109 @@ class ViewModel():
         # Enable checking for changes next time
         self.last_search = search_string
 
-        # TODO: Enable searching in context menu
-        if manual:
-            self.context.setContextProperty(
-                "contextMenuEnabled", False)
+        current_match = None
+        current_index = 0
 
-        # Sort if sorting is enabled
-        if Settings.get('sort_mode') != SortMode.Module:
-            reverse = Settings.get('sort_mode') == SortMode.Descending
-            self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
-            self.sorted_command_list = sorted(self.command_list, reverse=reverse)
-            self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
-            self.sorted_filtered_command_list = sorted(self.filtered_command_list, reverse=reverse)
+        # If context menu is open, search in context menu
+        if self.context.contextProperty("contextMenuEnabled"):
+            current_entry = self._get_entry()
+            try:
+                if current_entry['type'] == SelectionType.entry:
+                    entry_list = [str(entry) for entry in self.context_menu_entries[current_entry['value']]]
+                else:
+                    entry_list = [str(entry) for entry in self.context_menu_commands[current_entry['value']]]
+            except KeyError:
+                entry_list = []
+
+            if current_entry['type'] == SelectionType.command:
+                entry_list.insert(0, Translation.get("enter_arguments"))
+
+            # Sort if sorting is enabled
+            if Settings.get('sort_mode') != SortMode.Module:
+                reverse = Settings.get('sort_mode') == SortMode.Descending
+                self.sorted_context_list = sorted(entry_list, reverse=reverse)
+                self.sorted_context_base_list = sorted(self.context_menu_base, reverse=reverse)
+            else:
+                self.sorted_context_list = entry_list
+                self.sorted_context_base_list = self.context_menu_base
+
+            # Get current match
+            try:
+                current_match = self.context_menu_model_list_full.stringList()[
+                        QQmlProperty.read(self.context_menu_model, "currentIndex")]
+            except IndexError:
+                pass
+        # Else, search in normal list
         else:
-            self.sorted_entry_list = self.entry_list
-            self.sorted_command_list = self.command_list
-            self.sorted_filtered_entry_list = self.filtered_entry_list
-            self.sorted_filtered_command_list = self.filtered_command_list
+            # Sort if sorting is enabled
+            if Settings.get('sort_mode') != SortMode.Module:
+                reverse = Settings.get('sort_mode') == SortMode.Descending
+                self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
+                self.sorted_command_list = sorted(self.command_list, reverse=reverse)
+                self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
+                self.sorted_filtered_command_list = sorted(self.filtered_command_list, reverse=reverse)
+            else:
+                self.sorted_entry_list = self.entry_list
+                self.sorted_command_list = self.command_list
+                self.sorted_filtered_entry_list = self.filtered_entry_list
+                self.sorted_filtered_command_list = self.filtered_command_list
 
-        # Get current match
-        try:
-            current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model,
-                                                                                       "currentIndex")]
-        except IndexError:
-            current_match = None
+            # Get current match
+            try:
+                current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model,
+                                                                                           "currentIndex")]
+            except IndexError:
+                pass
 
         # If empty, show all
         if len(search_string) == 0 and not new_entries:
-            self.filtered_entry_list = self.entry_list
-            self.filtered_command_list = self.command_list
-            self.sorted_filtered_entry_list = self.sorted_entry_list
-            self.sorted_filtered_command_list = self.sorted_command_list
+            if self.context.contextProperty("contextMenuEnabled"):
+                self.filtered_context_list = entry_list
+                self.filtered_context_base_list = self.context_menu_base
+                self.sorted_filtered_context_list = self.sorted_context_list
+                self.sorted_filtered_context_base_list = self.sorted_context_base_list
 
-            combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
+                combined_list = self.sorted_filtered_context_list + self.sorted_filtered_context_base_list
 
-            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+                self.context_menu_model_list.setStringList(str(entry) for entry in self.sorted_filtered_context_list)
+                self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
+            else:
+                self.filtered_entry_list = self.entry_list
+                self.filtered_command_list = self.command_list
+                self.sorted_filtered_entry_list = self.sorted_entry_list
+                self.sorted_filtered_command_list = self.sorted_command_list
 
-            self.context.setContextProperty(
-                "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
-            self.context.setContextProperty(
-                "resultListModelCommandEntries", len(self.sorted_filtered_command_list))
+                combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
+
+                self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+
+                self.context.setContextProperty(
+                    "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
+                self.context.setContextProperty(
+                    "resultListModelCommandEntries", len(self.sorted_filtered_command_list))
 
             # Keep existing selection, otherwise ensure something is selected
-            try:
-                current_index = combined_list.index(current_match)
-            except ValueError:
-                current_index = 0
+            if current_match:
+                try:
+                    current_index = combined_list.index(current_match)
+                except ValueError:
+                    current_index = 0
 
-            QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
+            if self.context.contextProperty("contextMenuEnabled"):
+                QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
+            else:
+                QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
-            self.update_context_info_panel()
+                self.update_context_info_panel()
 
             return
 
-        self.filtered_entry_list = []
-        self.filtered_command_list = []
+        if self.context.contextProperty("contextMenuEnabled"):
+            self.filtered_context_list = []
+            self.filtered_context_base_list = []
+        else:
+            self.filtered_entry_list = []
+            self.filtered_command_list = []
 
         # Regex matching
         if search_string.startswith('/'):
@@ -1806,48 +1853,72 @@ class ViewModel():
             except re.error:
                 return
 
-            for entry in self.sorted_entry_list:
-                if regex_match.match(entry):
-                    self.filtered_entry_list.append(entry)
-            for command in self.sorted_command_list:
-                if regex_match.match(command):
-                    self.filtered_command_list.append(command)
+            def check_regex_match(entries, regex) -> List[str]:
+                return_list = []
+                for entry in entries:
+                    if regex.match(entry):
+                        return_list.append(entry)
+
+                return return_list
+
+            if self.context.contextProperty("contextMenuEnabled"):
+                self.filtered_context_list = check_regex_match(self.sorted_context_list, regex_match)
+                self.filtered_context_base_list = check_regex_match(self.sorted_context_base_list, regex_match)
+            else:
+                self.filtered_entry_list = check_regex_match(self.sorted_entry_list, regex_match)
+                self.filtered_command_list = check_regex_match(self.sorted_command_list, regex_match)
         # Regular string matching
         else:
             list_match = search_string.lower().split(' ')
-            for entry in self.sorted_entry_list:
-                lower_entry = entry.lower()
-                for search_string_part in list_match:
-                    if search_string_part not in lower_entry:
-                        break
-                else:
-                    self.filtered_entry_list.append(entry)
-            for command in self.sorted_command_list:
-                lower_command = command.lower()
-                for search_string_part in list_match:
-                    if search_string_part not in lower_command:
-                        break
-                else:
-                    self.filtered_command_list.append(command)
 
-        combined_list = self.filtered_entry_list + self.filtered_command_list
+            def check_list_match(entries, string_list) -> List[str]:
+                return_list = []
+                for entry in entries:
+                    lower_entry = entry.lower()
+                    for search_string_part in string_list:
+                        if search_string_part not in lower_entry:
+                            break
+                    else:
+                        return_list.append(entry)
 
-        self.context.setContextProperty(
-            "resultListModelNormalEntries", len(self.filtered_entry_list))
-        self.context.setContextProperty(
-            "resultListModelCommandEntries", len(self.filtered_command_list))
+                return return_list
 
-        self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+            if self.context.contextProperty("contextMenuEnabled"):
+                self.filtered_context_list = check_list_match(self.sorted_context_list, list_match)
+                self.filtered_context_base_list = check_list_match(self.sorted_context_base_list, list_match)
+            else:
+                self.filtered_entry_list = check_list_match(self.sorted_entry_list, list_match)
+                self.filtered_command_list = check_list_match(self.sorted_command_list, list_match)
+
+        if self.context.contextProperty("contextMenuEnabled"):
+            combined_list = self.filtered_context_list + self.filtered_context_base_list
+        else:
+            combined_list = self.filtered_entry_list + self.filtered_command_list
+
+            self.context.setContextProperty(
+                "resultListModelNormalEntries", len(self.filtered_entry_list))
+            self.context.setContextProperty(
+                "resultListModelCommandEntries", len(self.filtered_command_list))
+
+        if self.context.contextProperty("contextMenuEnabled"):
+            self.context_menu_model_list.setStringList(str(entry) for entry in self.filtered_context_list)
+            self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
+        else:
+            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
 
         # Keep existing selection, otherwise ensure something is selected
-        try:
-            current_index = combined_list.index(current_match)
-        except ValueError:
-            current_index = 0
+        if current_match:
+            try:
+                current_index = combined_list.index(current_match)
+            except ValueError:
+                current_index = 0
 
-        QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
+        if self.context.contextProperty("contextMenuEnabled"):
+            QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
+        else:
+            QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
-        self.update_context_info_panel()
+            self.update_context_info_panel()
 
         # Turbo mode: Select entry if only entry left
         if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty():
@@ -1861,12 +1932,15 @@ class ViewModel():
             selected_entry = self._get_entry()
 
             # Return entry-specific option if selected, otherwise base option
-            try:
-                selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
-            except IndexError:
+            if current_index >= len(self.filtered_context_list):
+                # Selection is a base entry
                 return {'type': SelectionType.none,
                         'value': None,
-                        'context_option': self.context_menu_model_list_full.stringList()[current_index]}
+                        'context_option': self.filtered_context_base_list[
+                            current_index - len(self.filtered_context_list)]
+                        }
+            else:
+                selected_entry['context_option'] = self.filtered_context_list[current_index]
 
             return selected_entry
 
@@ -1920,23 +1994,20 @@ class ViewModel():
 
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
-        if not self.filtered_entry_list and not self.filtered_command_list:
-            return
-
         current_entry = self._get_entry()
 
-        entry_list = []  # type: List[str]
+        entries = 0
 
         # Get all menu-specific entries
         try:
             if current_entry['type'] == SelectionType.entry:
-                entry_list = [str(entry) for entry in self.context_menu_entries[current_entry['value']]]
+                entries += len(self.context_menu_entries[current_entry['value']])
             else:
-                entry_list = [str(entry) for entry in self.context_menu_commands[current_entry['value']]]
+                entries += len(self.context_menu_commands[current_entry['value']])
         except KeyError:
             pass
 
-        if not entry_list and not self.context_menu_base:
+        if not entries and not self.context_menu_base:
             if current_entry['type'] == SelectionType.command:
                 self.input_args()
                 return
@@ -1944,21 +2015,24 @@ class ViewModel():
             Logger.log(None, Translation.get("no_context_menu_available"))
             return
 
-        # Option 0 for commands is entering arguments if command
-        if current_entry['type'] == SelectionType.command:
-            entry_list.insert(0, Translation.get("enter_arguments"))
-
-        self.context_menu_model_list.setStringList(entry_list)
-        self.context_menu_model_list_full.setStringList(
-            self.context_menu_model_list.stringList() + self.context_menu_model_base_list.stringList())
-
+        QQmlProperty.write(self.context_menu_model, "currentIndex", 0)
         self.context.setContextProperty(
             "contextMenuEnabled", True)
+
+        if QQmlProperty.read(self.search_input_model, "text") != "":
+            QQmlProperty.write(self.search_input_model, "text", "")
+            self.context.setContextProperty("searchInputFieldEmpty", True)
+        self.search(new_entries=True)
 
     def hide_context(self) -> None:
         """Hide the context menu."""
         self.context.setContextProperty(
             "contextMenuEnabled", False)
+
+        if QQmlProperty.read(self.search_input_model, "text") != "":
+            QQmlProperty.write(self.search_input_model, "text", "")
+            self.context.setContextProperty("searchInputFieldEmpty", True)
+        self.search()
 
     def update_context_info_panel(self, request_update=True) -> None:
         """Update the context info panel with the info panel data of the currently selected entry."""
