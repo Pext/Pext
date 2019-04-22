@@ -53,6 +53,12 @@ except ImportError:
     from backports.typing import Any, Callable, Dict, List, Optional, Union  # type: ignore  # noqa: F401
 from queue import Queue, Empty
 
+try:
+    import certifi  # NOQA
+except Exception as e:
+    print('Could not import certifi: {}'.format(e))
+    traceback.print_exc()
+
 import requests
 
 from dulwich import porcelain
