@@ -1797,7 +1797,7 @@ class ViewModel():
                 pass
 
         # If empty, show all
-        if len(search_string) == 0 and not new_entries:
+        if not search_string and not new_entries:
             if self.context.contextProperty("contextMenuEnabled"):
                 self.filtered_context_list = entry_list
                 self.filtered_context_base_list = self.context_menu_base
@@ -1928,7 +1928,7 @@ class ViewModel():
             self.update_context_info_panel()
 
         # Turbo mode: Select entry if only entry left
-        if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty():
+        if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty() and search_string:
             self.select(force_args=True)
 
     def _get_entry(self, include_context=False) -> Dict:
