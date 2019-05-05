@@ -58,9 +58,10 @@ import requests
 from dulwich import porcelain
 from dulwich.repo import Repo
 
-from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
+from PyQt5.QtCore import QSortFilterProxyModel, QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import QApplication, QAction, QMenu, QStyleFactory, QSystemTrayIcon
-from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
+from PyQt5.Qt import QAbstractTableModel, QClipboard, QIcon, QModelIndex, QObject, QQmlApplicationEngine, \
+                     QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QPalette, QColor, QWindow
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
@@ -391,34 +392,50 @@ class MainLoop():
             Logger.log_error(tab['metadata']['name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
-            tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
+            row_count = tab['vm'].result_list_model_list_model.rowCount()
+            tab['vm'].result_list_model_list_model.insertRows(row_count, 1)
+            tab['vm'].result_list_model_list_model.setData(row_count, action[1], 0)
+            tab['vm'].result_list_model_list_model.setData(row_count, SelectionType.entry, 1)
 
         elif action[0] == Action.prepend_entry:
-            tab['vm'].entry_list = [action[1]] + tab['vm'].entry_list
+            tab['vm'].result_list_model_list_model.insertRows(0, 1)
+            tab['vm'].result_list_model_list_model.setData(0, action[1], 0)
+            tab['vm'].result_list_model_list_model.setData(0, SelectionType.entry, 1)
 
         elif action[0] == Action.remove_entry:
-            tab['vm'].entry_list.remove(action[1])
+            # FIXME: Implement
+            pass
+            # tab['vm'].entry_list.remove(action[1])
 
         elif action[0] == Action.replace_entry_list:
+            tab['vm'].result_list_model_list_model.setRowCount(0, clean=True)
             if len(action) > 1:
-                tab['vm'].entry_list = action[1]
-            else:
-                tab['vm'].entry_list = []
+                for index, entry in enumerate(action[1]):
+                    tab['vm'].result_list_model_list_model.insertRows(index, 1)
+                    tab['vm'].result_list_model_list_model.setData(index, entry, 0)
+                    tab['vm'].result_list_model_list_model.setData(index, SelectionType.entry, 1)
 
         elif action[0] == Action.add_command:
-            tab['vm'].command_list = tab['vm'].command_list + [action[1]]
+            row_count = tab['vm'].result_list_model_list_model.rowCount()
+            tab['vm'].result_list_model_list_model.insertRows(row_count, 1)
+            tab['vm'].result_list_model_list_model.setData(row_count, action[1], 0)
+            tab['vm'].result_list_model_list_model.setData(row_count, SelectionType.command, 1)
 
         elif action[0] == Action.prepend_command:
-            tab['vm'].command_list = [action[1]] + tab['vm'].command_list
+            tab['vm'].result_list_model_list_model.insertRows(0, 1)
+            tab['vm'].result_list_model_list_model.setData(0, action[1], 0)
+            tab['vm'].result_list_model_list_model.setData(0, SelectionType.command, 1)
 
         elif action[0] == Action.remove_command:
             tab['vm'].command_list.remove(action[1])
 
         elif action[0] == Action.replace_command_list:
+            tab['vm'].result_list_model_list_model.setRowCount(0, clean=True)
             if len(action) > 1:
-                tab['vm'].command_list = action[1]
-            else:
-                tab['vm'].command_list = []
+                for index, entry in enumerate(action[1]):
+                    tab['vm'].result_list_model_list_model.insertRows(index, 1)
+                    tab['vm'].result_list_model_list_model.setData(index, entry, 0)
+                    tab['vm'].result_list_model_list_model.setData(index, SelectionType.command, 1)
 
         elif action[0] == Action.set_header:
             if len(action) > 1:
@@ -540,6 +557,12 @@ class MainLoop():
 
             tab['vm'].module.selection_made(tab['vm'].selection)
 
+        elif action[0] == Action.set_entry_action_description:
+            if len(action) > 2:
+                tab['vm'].result_list_model_list_model.setForFirstResult(str(action[1]), str(action[2]), 1)
+            else:
+                tab['vm'].result_list_model_list_model.setForFirstResult(str(action[1]), "", 1)
+
         elif action[0] == Action.set_entry_info:
             if len(action) > 2:
                 tab['vm'].extra_info_entries[str(action[1])] = str(action[2])
@@ -558,6 +581,12 @@ class MainLoop():
                 tab['vm'].extra_info_entries = {}
 
             tab['vm'].update_context_info_panel(request_update=False)
+
+        elif action[0] == Action.set_command_action_description:
+            if len(action) > 2:
+                tab['vm'].result_list_model_list_model.setForFirstResult(str(action[1]), str(action[2]), 1)
+            else:
+                tab['vm'].result_list_model_list_model.setForFirstResult(str(action[1]), "", 1)
 
         elif action[0] == Action.set_command_info:
             if len(action) > 2:
@@ -655,8 +684,6 @@ class MainLoop():
                     "unprocessedCount", tab['queue'].qsize())
                 if tab_id == current_tab:
                     active_tab = True
-                    tab['vm'].context.setContextProperty(
-                        "resultListModelHasEntries", True if tab['vm'].entry_list or tab['vm'].command_list else False)
                 else:
                     active_tab = False
 
@@ -1085,10 +1112,6 @@ class ModuleManager():
         module_context.setContextProperty(
             "resultListModel", vm.result_list_model_list)
         module_context.setContextProperty(
-            "resultListModelNormalEntries", len(vm.filtered_entry_list))
-        module_context.setContextProperty(
-            "resultListModelCommandEntries", len(vm.filtered_command_list))
-        module_context.setContextProperty(
             "resultListModelHasEntries", False)
         module_context.setContextProperty(
             "resultListModelCommandMode", False)
@@ -1189,7 +1212,7 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 11, 0]
+        module['settings']['_api_version'] = [0, 12, 0]
         module['settings']['_locale'] = locale
         module['settings']['_portable'] = Settings.get('_portable')
 
@@ -1579,6 +1602,94 @@ class ModuleThreadInitializer(threading.Thread):
             self.queue.put([Action.critical_error, str(e), traceback.format_exc()])
 
 
+class EntryModel(QAbstractTableModel):
+    """Manage all Pext entries."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        super(EntryModel, self).__init__(*args, **kwargs)
+        self.list = []  # List[Optional[SelectionType], str, Optional[str]]
+
+    def flags(self, index: QModelIndex) -> int:
+        if not index.isValid():
+            return Qt.ItemFlag.ItemIsEditable
+
+        return super(EntryModel, self).flags(index) | Qt.ItemFlag.ItemIsEditable
+
+    def rowCount(self, parent=QModelIndex()) -> int:
+        if parent.isValid():
+            return 0
+
+        return len(self.list)
+
+    def columnCount(self, parent=QModelIndex()) -> int:
+        if parent.isValid():
+            return 0
+
+        return 3
+
+    def insertRows(self, row: int, count: int, parent=QModelIndex()) -> bool:
+        if row > self.rowCount() or count < 1:
+            return False
+
+        self.beginInsertRows(parent, row, row + count - 1)
+
+        for i in range(0, count):
+            self.list.insert(row + i, [None, "", None])
+
+        self.endInsertRows()
+
+        return True
+
+    def removeRows(self, row: int, count: int, parent=QModelIndex()) -> bool:
+        if row > self.rowCount() or count < 1:
+            return False
+
+        self.beginRemoveRows(parent, row, row + count - 1)
+
+        for _ in range(0, count):
+            self.list.pop(row)
+
+        self.endRemoveRows()
+
+        return True
+
+    def setRowCount(self, count: int, clean=False) -> bool:
+        if clean:
+            self.removeRows(0, self.rowCount())
+            self.insertRows(0, count)
+            return True
+
+        current_count = self.rowCount()
+        diff = count - current_count
+        if diff < 0:
+            self.removeRows(current_count - diff, abs(diff))
+        elif diff > 0:
+            self.insertRows(current_count, diff)
+
+        return True
+
+    def data(self, index: QModelIndex, role: int) -> List[Any]:
+        try:
+            index = index.row()
+        except Exception:
+            pass
+
+        return self.list[index][role]
+
+    def setData(self, index: int, value: Any, role: int) -> bool:
+        try:
+            self.list[index][role] = value
+        except IndexError:
+            print("FAILED FOR {} WHEN TRYING TO ADD {}".format(index, value))
+            return False
+
+        # FIXME: Make this work
+        model_index = QModelIndex().siblingAtRow(index)
+        self.dataChanged.emit(model_index, model_index, [role])
+
+        return True
+
+
 class ViewModel():
     """Manage the communication between user interface and module."""
 
@@ -1586,11 +1697,11 @@ class ViewModel():
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
-        self.command_list = []  # type: List
-        self.entry_list = []  # type: List
-        self.filtered_entry_list = []  # type: List
-        self.filtered_command_list = []  # type: List
-        self.result_list_model_list = QStringListModel()
+        self.result_list_model_list_model = EntryModel()
+        self.result_list_model_list = QSortFilterProxyModel()
+        self.result_list_model_list.setSourceModel(self.result_list_model_list_model)
+        self.result_list_model_list.setFilterCaseSensitivity(Qt.CaseInsensitive)
+
         self.result_list_model_max_index = -1
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
@@ -1711,8 +1822,7 @@ class ViewModel():
 
         if len(self.selection) > 0:
             self.selection.pop()
-            self.entry_list = []
-            self.command_list = []
+            self.result_list_model_list_model.setRowCount(0, clean=True)
 
             self.search(new_entries=True)
 
@@ -1726,6 +1836,9 @@ class ViewModel():
             self.window.close(manual=True)
 
     def search(self, new_entries=False, manual=False) -> None:
+        search_string = QQmlProperty.read(self.search_input_model, "text")
+        self.result_list_model_list.setFilterFixedString(search_string)
+        return
         """Filter the entry list.
 
         Filter the list of entries in the screen, setting the filtered list
@@ -1777,22 +1890,16 @@ class ViewModel():
         # Else, search in normal list
         else:
             # Sort if sorting is enabled
+            # TODO: Reimplement
             if Settings.get('sort_mode') != SortMode.Module:
                 reverse = Settings.get('sort_mode') == SortMode.Descending
-                self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
-                self.sorted_command_list = sorted(self.command_list, reverse=reverse)
-                self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
-                self.sorted_filtered_command_list = sorted(self.filtered_command_list, reverse=reverse)
             else:
-                self.sorted_entry_list = self.entry_list
-                self.sorted_command_list = self.command_list
-                self.sorted_filtered_entry_list = self.filtered_entry_list
-                self.sorted_filtered_command_list = self.filtered_command_list
+                pass
 
             # Get current match
             try:
-                current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model,
-                                                                                           "currentIndex")]
+                current_match = self.result_list_model_list.data(
+                        QQmlProperty.read(self.result_list_model, "currentIndex"), 0)
             except IndexError:
                 pass
 
@@ -1809,15 +1916,6 @@ class ViewModel():
                 self.context_menu_model_list.setStringList(str(entry) for entry in self.sorted_filtered_context_list)
                 self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
             else:
-                self.filtered_entry_list = self.entry_list
-                self.filtered_command_list = self.command_list
-                self.sorted_filtered_entry_list = self.sorted_entry_list
-                self.sorted_filtered_command_list = self.sorted_command_list
-
-                combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
-
-                self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
-
                 self.context.setContextProperty(
                     "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
                 self.context.setContextProperty(
@@ -1894,24 +1992,20 @@ class ViewModel():
                 self.filtered_context_list = check_list_match(self.sorted_context_list, list_match)
                 self.filtered_context_base_list = check_list_match(self.sorted_context_base_list, list_match)
             else:
-                self.filtered_entry_list = check_list_match(self.sorted_entry_list, list_match)
-                self.filtered_command_list = check_list_match(self.sorted_command_list, list_match)
+                # FIXME: Reimplement
+                pass
 
         if self.context.contextProperty("contextMenuEnabled"):
             combined_list = self.filtered_context_list + self.filtered_context_base_list
         else:
             combined_list = self.filtered_entry_list + self.filtered_command_list
 
-            self.context.setContextProperty(
-                "resultListModelNormalEntries", len(self.filtered_entry_list))
-            self.context.setContextProperty(
-                "resultListModelCommandEntries", len(self.filtered_command_list))
-
         if self.context.contextProperty("contextMenuEnabled"):
             self.context_menu_model_list.setStringList(str(entry) for entry in self.filtered_context_list)
             self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
         else:
-            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+            # FIXME: Reimplement
+            pass
 
         # Keep existing selection, otherwise ensure something is selected
         if current_match:
@@ -1953,21 +2047,13 @@ class ViewModel():
 
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
 
-        if current_index >= len(self.filtered_entry_list):
-            # Selection is a command
-            selection_type = SelectionType.command
-            entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
-        else:
-            selection_type = SelectionType.entry
-            entry = self.filtered_entry_list[current_index]
-
-        return {'type': selection_type, 'value': entry, 'context_option': None}
+        q_index = self.result_list_model_list.index(current_index, 0)
+        return {'type': self.result_list_model_list.data(q_index, 1),
+                'value': self.result_list_model_list.data(q_index, 0),
+                'context_option': None}
 
     def select(self, command_args="", force_args=False) -> None:
         """Notify the module of our selection entry."""
-        if not self.filtered_entry_list and not self.filtered_command_list:
-            return
-
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
@@ -1985,8 +2071,6 @@ class ViewModel():
         self.context.setContextProperty(
             "resultListModelTree", [part['value'] for part in self.selection])
 
-        self.entry_list = []
-        self.command_list = []
         self.extra_info_entries = {}
         self.extra_info_commands = {}
         self.context_menu_entries = {}
@@ -2043,6 +2127,7 @@ class ViewModel():
 
     def update_context_info_panel(self, request_update=True) -> None:
         """Update the context info panel with the info panel data of the currently selected entry."""
+        return
         if not self.filtered_entry_list and not self.filtered_command_list:
             QQmlProperty.write(self.context_info_panel, "text", "")
             self.extra_info_last_entry_type = None

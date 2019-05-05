@@ -186,7 +186,7 @@ Item {
             }
 
             TextEdit {
-                visible: resultList.hasEntries && resultList.normalEntries == 0 && resultList.commandEntries == 0 && !searchInputFieldEmpty
+                visible: false
 
                 text: "<h2>" + qsTr("No results") + "</h2>" +
                       (resultList.unprocessedQueueCount > 0 ? ("<p>" + qsTr("Still processing %1 module request(s)…", "", resultList.unprocessedQueueCount) + "</p>") : "")
@@ -204,7 +204,7 @@ Item {
             }
 
             ListView {
-                visible: resultList.hasEntries
+                visible: true
                 anchors.topMargin: headerHolder.height
                 clip: true
                 id: resultList
@@ -214,9 +214,6 @@ Item {
                 signal openContextMenu()
                 signal openArgumentsInput()
 
-                property int normalEntries: resultListModelNormalEntries
-                property int commandEntries: resultListModelCommandEntries
-                property bool hasEntries: resultListModelHasEntries
                 property variant tree: resultListModelTree
                 property int unprocessedQueueCount: unprocessedCount
 
@@ -227,7 +224,7 @@ Item {
 
                 delegate: Component {
                     Item {
-                        property variant itemData: model.modelData
+                        property variant itemData: model
                         width: parent.width
                         height: text.height
                         Column {
@@ -236,11 +233,11 @@ Item {
                                 width: parent.parent.width
                                 objectName: "text"
                                 text: {
-                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + "&nbsp;".repeat(resultList.tree.length) + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
+                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= 0 ? "<i>" : "") + "&nbsp;".repeat(resultList.tree.length) + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= 0 ? "</i>" : "") + "</td><td align='right'><code>";
                                     if (resultList.currentIndex === index) {
-                                        line += (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText);
-                                    } else if (resultList.currentIndex < resultListModelNormalEntries && resultListModelNormalEntries === index) {
-                                        line += argsShortcut.nativeText;
+                                        line += "<b>" + decoration + "</b> " + (resultList.currentIndex < 0 ? enterShortcut.nativeText : argsShortcut.nativeText);
+                                    } else if (resultList.currentIndex < 0 && 0 === index) {
+                                        line += "<b>" + decoration + "</b> " + argsShortcut.nativeText;
                                     }
                                     return line + "</code></td></tr></table>"
                                 }

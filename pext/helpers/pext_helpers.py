@@ -262,6 +262,16 @@ class Action(Enum):
 
         Example: self.q.put([Action.close])
 
+    set_entry_action_description:
+        Introduced in API version 0.12.0.
+
+        Set the description of the action that will be executed when the user selects the entry.
+
+        key -- the entry to set it for
+        value -- the value to set it to
+
+        Example: self.q.put([Action.set_entry_action_description, "Radio 0", "Tune in"])
+
     set_entry_info:
         Introduced in API version 0.3.1.
 
@@ -280,6 +290,16 @@ class Action(Enum):
         Example: self.q.put([Action.set_entry_info,
                              {"Audio settings": "Change the audio settings",
                               "Video settings": "Change the video settings"}])
+
+    set_command_action_description:
+        Introduced in API version 0.12.0.
+
+        Set the description of the action that will be executed when the user selects the command.
+
+        key -- the command to set it for
+        value -- the value to set it to
+
+        Example: self.q.put([Action.set_command_action_description, "generate", "Generate random value"])
 
     set_command_info:
         Introduced in API version 0.3.1.
@@ -379,16 +399,18 @@ class Action(Enum):
     copy_to_clipboard = 19
     set_selection = 20
     close = 21
-    set_entry_info = 22
-    replace_entry_info_dict = 23
-    set_command_info = 24
-    replace_command_info_dict = 25
-    set_base_info = 26
-    set_entry_context = 27
-    replace_entry_context_dict = 28
-    set_command_context = 29
-    replace_command_context_dict = 30
-    set_base_context = 31
+    set_entry_action_description = 22
+    set_entry_info = 23
+    replace_entry_info_dict = 24
+    set_command_action_description = 25
+    set_command_info = 26
+    replace_command_info_dict = 27
+    set_base_info = 28
+    set_entry_context = 29
+    replace_entry_context_dict = 30
+    set_command_context = 31
+    replace_command_context_dict = 32
+    set_base_context = 33
 
 
 class SelectionType(Enum):
