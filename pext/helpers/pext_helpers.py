@@ -64,21 +64,25 @@ class Action(Enum):
 
     add_entry
         Introduced in API version 0.1.0.
+        Changed in API version 0.13.0.
 
         Add an entry to the entry list.
 
         entry -- the entry
+        action -- a short description of the default action when selecting
 
-        Example: self.q.put([Action.add_entry, "Audio settings"])
+        Example: self.q.put([Action.add_entry, "Audio settings", "Open"])
 
     prepend_entry
         Introduced in API version 0.1.0.
+        Changed in API version 0.13.0.
 
         Prepend an entry to the entry list.
 
         entry -- the entry
+        action -- a short description of the default action when selecting
 
-        Example: self.q.put([Action.prepend_entry, "Audio settings"])
+        Example: self.q.put([Action.prepend_entry, "Audio settings", "Open"])
 
     remove_entry
         Introduced in API version 0.1.0.

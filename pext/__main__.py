@@ -58,7 +58,7 @@ import requests
 from dulwich import porcelain
 from dulwich.repo import Repo
 
-from PyQt5.QtCore import QSortFilterProxyModel, QStringListModel, QLocale, QTranslator, Qt
+from PyQt5.QtCore import QSortFilterProxyModel, QStringListModel, QLocale, QRegularExpression, QTranslator, Qt
 from PyQt5.QtWidgets import QApplication, QAction, QMenu, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QAbstractTableModel, QClipboard, QIcon, QModelIndex, QObject, QQmlApplicationEngine, \
                      QQmlComponent, QQmlContext, QQmlProperty, QUrl
@@ -394,13 +394,15 @@ class MainLoop():
         elif action[0] == Action.add_entry:
             row_count = tab['vm'].result_list_model_list_model.rowCount()
             tab['vm'].result_list_model_list_model.insertRows(row_count, 1)
-            tab['vm'].result_list_model_list_model.setData(row_count, action[1], 0)
-            tab['vm'].result_list_model_list_model.setData(row_count, SelectionType.entry, 1)
+            tab['vm'].result_list_model_list_model.setData(row_count, action[1], EntryModel.TextRole)
+            tab['vm'].result_list_model_list_model.setData(row_count, SelectionType.entry, EntryModel.SelectionTypeRole)
+            tab['vm'].result_list_model_list_model.setData(row_count, action[2] if len(action) > 2 else "", EntryModel.ActionDescription)
 
         elif action[0] == Action.prepend_entry:
             tab['vm'].result_list_model_list_model.insertRows(0, 1)
-            tab['vm'].result_list_model_list_model.setData(0, action[1], 0)
-            tab['vm'].result_list_model_list_model.setData(0, SelectionType.entry, 1)
+            tab['vm'].result_list_model_list_model.setData(0, action[1], EntryModel.TextRole)
+            tab['vm'].result_list_model_list_model.setData(0, SelectionType.entry, EntryModel.SelectionTypeRole)
+            tab['vm'].result_list_model_list_model.setData(0, action[2] if len(action) > 2 else "", EntryModel.ActionDescription)
 
         elif action[0] == Action.remove_entry:
             # FIXME: Implement
@@ -408,34 +410,40 @@ class MainLoop():
             # tab['vm'].entry_list.remove(action[1])
 
         elif action[0] == Action.replace_entry_list:
-            tab['vm'].result_list_model_list_model.setRowCount(0, clean=True)
+            tab['vm'].result_list_model_list_model.removeType(SelectionType.entry)
             if len(action) > 1:
                 for index, entry in enumerate(action[1]):
                     tab['vm'].result_list_model_list_model.insertRows(index, 1)
-                    tab['vm'].result_list_model_list_model.setData(index, entry, 0)
-                    tab['vm'].result_list_model_list_model.setData(index, SelectionType.entry, 1)
+                    tab['vm'].result_list_model_list_model.setData(index, entry, EntryModel.TextRole)
+                    tab['vm'].result_list_model_list_model.setData(index, SelectionType.entry, EntryModel.SelectionTypeRole)
+                    # FIXME: Support action description in replace list
+                    tab['vm'].result_list_model_list_model.setData(index, "", EntryModel.ActionDescription)
 
         elif action[0] == Action.add_command:
             row_count = tab['vm'].result_list_model_list_model.rowCount()
             tab['vm'].result_list_model_list_model.insertRows(row_count, 1)
-            tab['vm'].result_list_model_list_model.setData(row_count, action[1], 0)
-            tab['vm'].result_list_model_list_model.setData(row_count, SelectionType.command, 1)
+            tab['vm'].result_list_model_list_model.setData(row_count, action[1], EntryModel.TextRole)
+            tab['vm'].result_list_model_list_model.setData(row_count, SelectionType.command, EntryModel.SelectionTypeRole)
+            tab['vm'].result_list_model_list_model.setData(row_count, action[2] if len(action) > 2 else "", EntryModel.ActionDescription)
 
         elif action[0] == Action.prepend_command:
             tab['vm'].result_list_model_list_model.insertRows(0, 1)
-            tab['vm'].result_list_model_list_model.setData(0, action[1], 0)
-            tab['vm'].result_list_model_list_model.setData(0, SelectionType.command, 1)
+            tab['vm'].result_list_model_list_model.setData(0, action[1], EntryModel.TextRole)
+            tab['vm'].result_list_model_list_model.setData(0, SelectionType.command, EntryModel.SelectionTypeRole)
+            tab['vm'].result_list_model_list_model.setData(0, action[2] if len(action) > 2 else "", EntryModel.ActionDescription)
 
         elif action[0] == Action.remove_command:
             tab['vm'].command_list.remove(action[1])
 
         elif action[0] == Action.replace_command_list:
-            tab['vm'].result_list_model_list_model.setRowCount(0, clean=True)
+            tab['vm'].result_list_model_list_model.removeType(SelectionType.command)
             if len(action) > 1:
                 for index, entry in enumerate(action[1]):
                     tab['vm'].result_list_model_list_model.insertRows(index, 1)
-                    tab['vm'].result_list_model_list_model.setData(index, entry, 0)
-                    tab['vm'].result_list_model_list_model.setData(index, SelectionType.command, 1)
+                    tab['vm'].result_list_model_list_model.setData(index, entry, EntryModel.TextRole)
+                    tab['vm'].result_list_model_list_model.setData(index, SelectionType.command, EntryModel.SelectionTypeRole)
+                    # FIXME: Support action description in replace list
+                    tab['vm'].result_list_model_list_model.setData(index, "", EntryModel.ActionDescription)
 
         elif action[0] == Action.set_header:
             if len(action) > 1:
@@ -1212,7 +1220,7 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 12, 0]
+        module['settings']['_api_version'] = [0, 13, 0]
         module['settings']['_locale'] = locale
         module['settings']['_portable'] = Settings.get('_portable')
 
@@ -1605,9 +1613,13 @@ class ModuleThreadInitializer(threading.Thread):
 class EntryModel(QAbstractTableModel):
     """Manage all Pext entries."""
 
+    TextRole = 0
+    SelectionTypeRole = 1
+    ActionDescription = 2
+
     def __init__(self, *args, **kwargs) -> None:
         super(EntryModel, self).__init__(*args, **kwargs)
-        self.list = []  # List[Optional[SelectionType], str, Optional[str]]
+        self.list = []  # List[str, SelectionType, str]
 
     def flags(self, index: QModelIndex) -> int:
         if not index.isValid():
@@ -1668,6 +1680,11 @@ class EntryModel(QAbstractTableModel):
 
         return True
 
+    def removeType(self, type: SelectionType):
+        for index, value in enumerate(self.list):
+            if value[0] == type:
+                self.removeRows(index, 1)
+
     def data(self, index: QModelIndex, role: int) -> List[Any]:
         try:
             index = index.row()
@@ -1684,7 +1701,7 @@ class EntryModel(QAbstractTableModel):
             return False
 
         # FIXME: Make this work
-        model_index = QModelIndex().siblingAtRow(index)
+        model_index = self.index(index, 0)
         self.dataChanged.emit(model_index, model_index, [role])
 
         return True
@@ -1836,193 +1853,18 @@ class ViewModel():
             self.window.close(manual=True)
 
     def search(self, new_entries=False, manual=False) -> None:
+        """ Filter the search results."""
         search_string = QQmlProperty.read(self.search_input_model, "text")
-        self.result_list_model_list.setFilterFixedString(search_string)
-        return
-        """Filter the entry list.
+        # This will return a regexp that makes sure every searched word exists
+        # (?=.*This.*)(?=.*is.*)(?=.*our.*)(?=.*search.*).+
+        words = search_string.split(" ")
+        regexp = "{}.+".format("".join(map(lambda word: "(?=.*{}.*)".format(word), words)))
 
-        Filter the list of entries in the screen, setting the filtered list
-        to the entries containing one or more words of the string currently
-        visible in the search bar.
-        """
-        search_string = QQmlProperty.read(self.search_input_model, "text")
-        self.context.setContextProperty("searchInputFieldEmpty", not search_string)
-
-        # Don't search if nothing changed
-        if not new_entries and search_string == self.last_search:
-            return
-
-        # Enable checking for changes next time
-        self.last_search = search_string
-
-        current_match = None
-        current_index = 0
-
-        # If context menu is open, search in context menu
-        if self.context.contextProperty("contextMenuEnabled"):
-            current_entry = self._get_entry()
-            try:
-                if current_entry['type'] == SelectionType.entry:
-                    entry_list = [str(entry) for entry in self.context_menu_entries[current_entry['value']]]
-                else:
-                    entry_list = [str(entry) for entry in self.context_menu_commands[current_entry['value']]]
-            except KeyError:
-                entry_list = []
-
-            if current_entry['type'] == SelectionType.command:
-                entry_list.insert(0, Translation.get("enter_arguments"))
-
-            # Sort if sorting is enabled
-            if Settings.get('sort_mode') != SortMode.Module:
-                reverse = Settings.get('sort_mode') == SortMode.Descending
-                self.sorted_context_list = sorted(entry_list, reverse=reverse)
-                self.sorted_context_base_list = sorted(self.context_menu_base, reverse=reverse)
-            else:
-                self.sorted_context_list = entry_list
-                self.sorted_context_base_list = self.context_menu_base
-
-            # Get current match
-            try:
-                current_match = self.context_menu_model_list_full.stringList()[
-                        QQmlProperty.read(self.context_menu_model, "currentIndex")]
-            except IndexError:
-                pass
-        # Else, search in normal list
-        else:
-            # Sort if sorting is enabled
-            # TODO: Reimplement
-            if Settings.get('sort_mode') != SortMode.Module:
-                reverse = Settings.get('sort_mode') == SortMode.Descending
-            else:
-                pass
-
-            # Get current match
-            try:
-                current_match = self.result_list_model_list.data(
-                        QQmlProperty.read(self.result_list_model, "currentIndex"), 0)
-            except IndexError:
-                pass
-
-        # If empty, show all
-        if not search_string and not new_entries:
-            if self.context.contextProperty("contextMenuEnabled"):
-                self.filtered_context_list = entry_list
-                self.filtered_context_base_list = self.context_menu_base
-                self.sorted_filtered_context_list = self.sorted_context_list
-                self.sorted_filtered_context_base_list = self.sorted_context_base_list
-
-                combined_list = self.sorted_filtered_context_list + self.sorted_filtered_context_base_list
-
-                self.context_menu_model_list.setStringList(str(entry) for entry in self.sorted_filtered_context_list)
-                self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
-            else:
-                self.context.setContextProperty(
-                    "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
-                self.context.setContextProperty(
-                    "resultListModelCommandEntries", len(self.sorted_filtered_command_list))
-
-            # Keep existing selection, otherwise ensure something is selected
-            if current_match:
-                try:
-                    current_index = combined_list.index(current_match)
-                except ValueError:
-                    current_index = 0
-
-            if self.context.contextProperty("contextMenuEnabled"):
-                QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
-            else:
-                QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
-
-                self.update_context_info_panel()
-
-            return
-
-        if self.context.contextProperty("contextMenuEnabled"):
-            self.filtered_context_list = []
-            self.filtered_context_base_list = []
-        else:
-            self.filtered_entry_list = []
-            self.filtered_command_list = []
-
-        # Regex matching
-        if search_string.startswith('/'):
-            try:
-                # /search_string/python_flags
-                regex_parts = search_string.split('/', 2)
-                if len(regex_parts) > 2 and regex_parts[2]:
-                    regex_search = "(?{}){}".format(regex_parts[2], regex_parts[1])
-                else:
-                    regex_search = regex_parts[1]
-
-                regex_match = re.compile(regex_search)
-            except re.error:
-                return
-
-            def check_regex_match(entries, regex) -> List[str]:
-                return_list = []
-                for entry in entries:
-                    if regex.match(entry):
-                        return_list.append(entry)
-
-                return return_list
-
-            if self.context.contextProperty("contextMenuEnabled"):
-                self.filtered_context_list = check_regex_match(self.sorted_context_list, regex_match)
-                self.filtered_context_base_list = check_regex_match(self.sorted_context_base_list, regex_match)
-            else:
-                self.filtered_entry_list = check_regex_match(self.sorted_entry_list, regex_match)
-                self.filtered_command_list = check_regex_match(self.sorted_command_list, regex_match)
-        # Regular string matching
-        else:
-            list_match = search_string.lower().split(' ')
-
-            def check_list_match(entries, string_list) -> List[str]:
-                return_list = []
-                for entry in entries:
-                    lower_entry = entry.lower()
-                    for search_string_part in string_list:
-                        if search_string_part not in lower_entry:
-                            break
-                    else:
-                        return_list.append(entry)
-
-                return return_list
-
-            if self.context.contextProperty("contextMenuEnabled"):
-                self.filtered_context_list = check_list_match(self.sorted_context_list, list_match)
-                self.filtered_context_base_list = check_list_match(self.sorted_context_base_list, list_match)
-            else:
-                # FIXME: Reimplement
-                pass
-
-        if self.context.contextProperty("contextMenuEnabled"):
-            combined_list = self.filtered_context_list + self.filtered_context_base_list
-        else:
-            combined_list = self.filtered_entry_list + self.filtered_command_list
-
-        if self.context.contextProperty("contextMenuEnabled"):
-            self.context_menu_model_list.setStringList(str(entry) for entry in self.filtered_context_list)
-            self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
-        else:
-            # FIXME: Reimplement
-            pass
-
-        # Keep existing selection, otherwise ensure something is selected
-        if current_match:
-            try:
-                current_index = combined_list.index(current_match)
-            except ValueError:
-                current_index = 0
-
-        if self.context.contextProperty("contextMenuEnabled"):
-            QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
-        else:
-            QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
-
-            self.update_context_info_panel()
+        re = QRegularExpression(regexp, QRegularExpression.CaseInsensitiveOption|QRegularExpression.DotMatchesEverythingOption)
+        self.result_list_model_list.setFilterRegularExpression(re)
 
         # Turbo mode: Select entry if only entry left
-        if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty() and search_string:
+        if Settings.get('turbo_mode') and self.result_list_model_list.rowCount() == 1 and self.queue.empty() and search_string:
             self.select(force_args=True)
 
     def _get_entry(self, include_context=False) -> Dict:
@@ -2062,6 +1904,9 @@ class ViewModel():
             if force_args or selection['context_option'] == Translation.get("enter_arguments"):
                 self.input_args()
                 return
+
+        # Remove everything in list
+        self.result_list_model_list_model.setRowCount(0, clean=True)
 
         selection["args"] = command_args
         self.selection.append(selection)

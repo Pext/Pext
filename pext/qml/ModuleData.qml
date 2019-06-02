@@ -181,7 +181,7 @@ Item {
             }
 
             BusyIndicator {
-                visible: !resultList.hasEntries && searchInputFieldEmpty
+                visible: !resultList.count && searchInputFieldEmpty
                 anchors.centerIn: parent
             }
 
@@ -235,9 +235,9 @@ Item {
                                 text: {
                                     var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= 0 ? "<i>" : "") + "&nbsp;".repeat(resultList.tree.length) + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= 0 ? "</i>" : "") + "</td><td align='right'><code>";
                                     if (resultList.currentIndex === index) {
-                                        line += "<b>" + decoration + "</b> " + (resultList.currentIndex < 0 ? enterShortcut.nativeText : argsShortcut.nativeText);
+                                        line += "<b>" + edit + "</b> " + (resultList.currentIndex < 0 ? enterShortcut.nativeText : argsShortcut.nativeText);
                                     } else if (resultList.currentIndex < 0 && 0 === index) {
-                                        line += "<b>" + decoration + "</b> " + argsShortcut.nativeText;
+                                        line += "<b>" + edit + "</b> " + argsShortcut.nativeText;
                                     }
                                     return line + "</code></td></tr></table>"
                                 }
