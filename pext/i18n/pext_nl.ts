@@ -875,7 +875,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="993"/>
         <source>PyAutoGUI is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>PyAutoGUI is niet beschikbaar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
