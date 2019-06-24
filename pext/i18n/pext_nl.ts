@@ -625,7 +625,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="625"/>
         <source>Turbo Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Turbomodus</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="633"/>
@@ -870,7 +870,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="992"/>
         <source>Pynput is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>Pynput is niet beschikbaar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
