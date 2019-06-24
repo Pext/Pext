@@ -65,8 +65,15 @@ from PyQt5.QtGui import QPalette, QColor, QWindow
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
+pyautogui_error = None
 if platform.system() == 'Darwin':
     import accessibility  # NOQA
+    # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
+    try:
+        from pyautogui import hotkey, typewrite
+    except Exception:
+        pyautogui_error = traceback.format_exc()
+        traceback.print_exc()
 
 pynput_error = None
 try:
@@ -2450,15 +2457,10 @@ class Window():
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
-        if platform.system() != 'Darwin' or pynput_error:
+        if platform.system() != 'Darwin' or pyautogui_error:
             return
 
-        keyboard_device = keyboard.Controller()
-
-        keyboard_device.press(keyboard.Key.cmd)
-        keyboard_device.press(keyboard.Key.tab)
-        keyboard_device.release(keyboard.Key.tab)
-        keyboard_device.release(keyboard.Key.cmd)
+        hotkey('command', 'tab')
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
@@ -2773,7 +2775,13 @@ class Window():
 
     def _menu_output_auto_type(self, enabled: bool) -> None:
         if enabled:
-            if pynput_error:
+            if platform.system() == 'Darwin' and pyautogui_error:
+                Logger.log_critical(None, Translation.get("pyautogui_is_unavailable"), pyautogui_error)
+                QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
+                return
+
+            if platform.system() != 'Darwin' and pynput_error:
                 Logger.log_critical(None, Translation.get("pynput_is_unavailable"), pynput_error)
                 QQmlProperty.write(self.menu_output_auto_type, "checked", False)
                 QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
@@ -3004,10 +3012,18 @@ class Window():
                 except IndexError:
                     break
 
-                keyboard_device.type(output)
+                if platform.system() == "Darwin":
+                    # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
+                    typewrite(output)
+                else:
+                    keyboard_device.type(output)
+
                 if self.output_queue:
-                    keyboard_device.press(keyboard.Key.tab)
-                    keyboard_device.release(keyboard.Key.tab)
+                    if platform.system() == "Darwin":
+                        hotkey('tab')
+                    else:
+                        keyboard_device.press(keyboard.Key.tab)
+                        keyboard_device.release(keyboard.Key.tab)
 
     def show(self) -> None:
         """Show the window."""

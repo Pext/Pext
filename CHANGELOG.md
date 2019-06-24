@@ -6,14 +6,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Packaging changes
+- New macOS dependency: [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
+
 ### Added
 - Turbo mode where Pext auto-selects options whenever reasonably confident
 
 ### Fixed
 - Context menus are now searchable
 - Don't crash if pynput fails to import
-- User asked for internal update checker if disable in constants
+- User asked for internal update checker if disabled in constants
 - Add repeat polyfill to prevent rendering issues on systems with older Qt versions
+- Fix autotype on macOS
 
 ## [0.23] - 2019-03-19
 ### Packaging changes

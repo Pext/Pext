@@ -875,6 +875,11 @@ La clase Module del módulo no implementa ModuleBase</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="993"/>
+        <source>PyAutoGUI is unavailable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="425"/>
         <source>Manage modules</source>
         <translation>Administrar módulos</translation>

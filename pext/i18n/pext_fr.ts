@@ -873,6 +873,11 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../qml/main.qml" line="993"/>
+        <source>PyAutoGUI is unavailable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../qml/main.qml" line="425"/>
         <source>Manage modules</source>
         <translation>Gérer les modules</translation>
