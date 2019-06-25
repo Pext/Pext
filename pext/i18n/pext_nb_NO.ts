@@ -875,7 +875,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="993"/>
         <source>PyAutoGUI is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>PyAutoGUI er ikke tilgjengelig</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
