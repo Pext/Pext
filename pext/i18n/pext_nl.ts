@@ -840,7 +840,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="986"/>
         <source>All queued data has been typed</source>
-        <translation type="unfinished"></translation>
+        <translation>Alle gegevens in de wachtrij zijn getypt</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="987"/>
