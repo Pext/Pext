@@ -839,41 +839,46 @@ Weet je zeker dat je wilt afsluiten?</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="986"/>
+        <source>All queued data has been typed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="987"/>
         <source>Data copied to clipboard</source>
         <translation>Gegevens gekopieerd naar klembord</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="987"/>
+        <location filename="../qml/main.qml" line="988"/>
         <source>Enter arguments</source>
         <translation>Voer argumenten in</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="988"/>
+        <location filename="../qml/main.qml" line="989"/>
         <source>No context menu available</source>
         <translation>Rechtermuisknopmenu is niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="989"/>
+        <location filename="../qml/main.qml" line="990"/>
         <source>No tab completion possible</source>
         <translation>Tabvervollediging is niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="990"/>
+        <location filename="../qml/main.qml" line="991"/>
         <source>No entry selected</source>
         <translation>Geen item geselecteerd</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="991"/>
+        <location filename="../qml/main.qml" line="992"/>
         <source>No command available for current filter</source>
         <translation>Geen opdracht beschikbaar voor huidig filter</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="992"/>
+        <location filename="../qml/main.qml" line="993"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput is niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="993"/>
+        <location filename="../qml/main.qml" line="994"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI is niet beschikbaar</translation>
     </message>

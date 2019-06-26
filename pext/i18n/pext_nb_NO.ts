@@ -839,41 +839,46 @@ Er du sikker på at du vil avslutte?</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="986"/>
+        <source>All queued data has been typed</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="987"/>
         <source>Data copied to clipboard</source>
         <translation>Data kopiert til utklippstavle</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="987"/>
+        <location filename="../qml/main.qml" line="988"/>
         <source>Enter arguments</source>
         <translation>Skriv inn argumenter</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="988"/>
+        <location filename="../qml/main.qml" line="989"/>
         <source>No context menu available</source>
         <translation>Ingen bindeleddsmeny tilgjengelig</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="989"/>
+        <location filename="../qml/main.qml" line="990"/>
         <source>No tab completion possible</source>
         <translation>Ingen tabulatorfullføring tilgjengelig</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="990"/>
+        <location filename="../qml/main.qml" line="991"/>
         <source>No entry selected</source>
         <translation>Ingen oppføring valgt</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="991"/>
+        <location filename="../qml/main.qml" line="992"/>
         <source>No command available for current filter</source>
         <translation>Ingen kommando tilgjengelig for nåværende filter</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="992"/>
+        <location filename="../qml/main.qml" line="993"/>
         <source>Pynput is unavailable</source>
         <translation type="unfinished">Pynput er ikke tilgjengelig</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="993"/>
+        <location filename="../qml/main.qml" line="994"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI er ikke tilgjengelig</translation>
     </message>

@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Turbo mode where Pext auto-selects options whenever reasonably confident
 
+### Changed
+- Notification when typing has completed
+
 ### Fixed
 - Context menus are now searchable
 - Don't crash if pynput fails to import

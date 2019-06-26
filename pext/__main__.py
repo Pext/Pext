@@ -3010,6 +3010,7 @@ class Window():
                 try:
                     output = self.output_queue.pop(0)
                 except IndexError:
+                    Logger.log(None, Translation.get("queued_data_typed"))
                     break
 
                 if platform.system() == "Darwin":
