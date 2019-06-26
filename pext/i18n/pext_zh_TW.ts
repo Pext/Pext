@@ -874,7 +874,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="993"/>
         <source>PyAutoGUI is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>PyAutoGUI 不可用</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
