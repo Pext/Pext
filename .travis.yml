@@ -1,5 +1,6 @@
 sudo: required
 language: generic
+dist: xenial
 
 env:
   - PEXT_BUILD_PORTABLE=0
