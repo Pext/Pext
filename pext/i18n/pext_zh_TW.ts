@@ -839,7 +839,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="986"/>
         <source>All queued data has been typed</source>
-        <translation type="unfinished"></translation>
+        <translation>已輸入所有在佇列中的資料</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="987"/>

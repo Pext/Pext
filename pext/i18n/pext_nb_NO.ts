@@ -840,7 +840,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="986"/>
         <source>All queued data has been typed</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">All data i kø har blitt skrevet inn</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="987"/>
