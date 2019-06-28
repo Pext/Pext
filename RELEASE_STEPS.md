@@ -1,16 +1,14 @@
 **This documentation is for maintainers. If you're an user, please ignore it.**
 
-``<VERSION>`` is the release version (example: 0.1)  
+``<VERSION>`` is the release version (example: 0.1.0)  
 ``<DATE>`` is the release date as YYYY-MM-DD (example: 2015-12-22)
 
 # When releasing, do the following:
 ## i18n
 1. Press "Commit" on Weblate to ensure all translations are pushed to the i18n branch
-2. ```git fetch```
-3. Merge i18n branch
-4. Check for new translatable strings (``lupdate-qt5 pext/pext.pro``)
-5. If new translatable strings, push to i18n branch and DO NOT RELEASE (unless important)
-6. Compile translations (``lrelease-qt5 pext/pext.pro``)
+2. Merge Weblate pull request
+3. Check for new translatable strings (``lupdate-qt5 pext/pext.pro``)
+4. Compile translations (``lrelease-qt5 pext/pext.pro``)
 
 ## Cleanup
 1. ```git clean -dfx``` to delete all untracked files and directories
