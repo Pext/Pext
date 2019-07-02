@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2018 Sylvia van Os <sylvia@hackerchick.me> -->
+<!-- Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me> -->
 <component type="desktop-application">
   <id>io.pext.pext</id>
   <metadata_license>CC0-1.0</metadata_license>
