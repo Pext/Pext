@@ -554,12 +554,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="386"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Overschakelen naar volgende ingeladen module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="394"/>
         <source>Switch to previous loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Overschakelen naar vorige ingeladen module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="405"/>
