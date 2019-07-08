@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Changed
+- Tab hotkeys changed from `Alt+<number>` to `Ctrl+<number>` on non-Linux for consistency with other applications
+
+### Fixed
+- Ctrl+Tab and Ctrl+Shift+Tab not working on macOS
+- Module menu options which aren't usable in current context are now correctly grayed out
+
 ## [0.24.0] - 2019-06-28
 ### Packaging changes
 - New macOS dependency: [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)

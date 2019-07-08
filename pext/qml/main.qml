@@ -303,65 +303,67 @@ ApplicationWindow {
         onActivated: pageDown()
     }
 
+    // Actual trigger is in menu due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
     Shortcut {
         id: nextTabShortcut
         sequence: platform == 'Darwin' ? "Meta+Tab" : "Ctrl+Tab" // QTBUG-15746 and QTBUG-7001
-        onActivated: nextTab()
+        enabled: false
     }
 
+    // Actual trigger is in menu due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
     Shortcut {
         id: previousTabShortcut
         sequence: platform == 'Darwin' ? "Meta+Shift+Tab" : "Ctrl+Shift+Tab" // QTBUG-15746 and QTBUG-7001
-        onActivated: prevTab()
+        enabled: false
     }
 
     Shortcut {
-        sequence: "Alt+1"
+        sequence: platform == 'Linux' ? "Alt+1" : "Ctrl+1"
         onActivated: switchTab(0)
     }
 
     Shortcut {
-        sequence: "Alt+2"
+        sequence: platform == 'Linux' ? "Alt+2" : "Ctrl+2"
         onActivated: switchTab(1)
     }
 
     Shortcut {
-        sequence: "Alt+3"
+        sequence: platform == 'Linux' ? "Alt+3" : "Ctrl+3"
         onActivated: switchTab(2)
     }
 
     Shortcut {
-        sequence: "Alt+4"
+        sequence: platform == 'Linux' ? "Alt+4" : "Ctrl+4"
         onActivated: switchTab(3)
     }
 
     Shortcut {
-        sequence: "Alt+5"
+        sequence: platform == 'Linux' ? "Alt+5" : "Ctrl+5"
         onActivated: switchTab(4)
     }
 
     Shortcut {
-        sequence: "Alt+6"
+        sequence: platform == 'Linux' ? "Alt+6" : "Ctrl+6"
         onActivated: switchTab(5)
     }
 
     Shortcut {
-        sequence: "Alt+7"
+        sequence: platform == 'Linux' ? "Alt+7" : "Ctrl+7"
         onActivated: switchTab(6)
     }
 
     Shortcut {
-        sequence: "Alt+8"
+        sequence: platform == 'Linux' ? "Alt+8" : "Ctrl+8"
         onActivated: switchTab(7)
     }
 
     Shortcut {
-        sequence: "Alt+9"
+        sequence: platform == 'Linux' ? "Alt+9" : "Ctrl+9"
         onActivated: switchTab(8)
     }
 
     Shortcut {
-        sequence: "Alt+0"
+        sequence: platform == 'Linux' ? "Alt+0" : "Ctrl+0"
         onActivated: switchTab(9)
     }
 
@@ -379,11 +381,30 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Module")
 
+            // Has to be in menu for macOS due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
+            MenuItem {
+                text: qsTr("Switch to next loaded module")
+                shortcut: platform == 'Darwin' ? "Meta+Tab" : "Ctrl+Tab" // QTBUG-15746 and QTBUG-7001
+                onTriggered: nextTab()
+                enabled: tabs.count > 1
+            }
+
+            // Has to be in menu for macOS due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
+            MenuItem {
+                text: qsTr("Switch to previous loaded module")
+                shortcut: platform == 'Darwin' ? "Meta+Shift+Tab" : "Ctrl+Shift+Tab" // QTBUG-15746 and QTBUG-7001
+                onTriggered: prevTab()
+                enabled: tabs.count > 1
+            }
+
+            MenuSeparator { }
+
             MenuItem {
                 id: menuReloadActiveModule
                 objectName: "menuReloadActiveModule"
                 text: qsTr("Reload active module")
                 shortcut: StandardKey.Refresh
+                enabled: tabs.count
             }
 
             MenuItem {
@@ -391,6 +412,7 @@ ApplicationWindow {
                 objectName: "menuCloseActiveModule"
                 text: qsTr("Close active module")
                 shortcut: StandardKey.Close
+                enabled: tabs.count
             }
 
             MenuSeparator { }
