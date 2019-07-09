@@ -554,12 +554,12 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="386"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bytt til neste innlastet modul</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="394"/>
         <source>Switch to previous loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Bytt til forrige innlastede modul</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="405"/>
