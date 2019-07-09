@@ -383,7 +383,7 @@ ApplicationWindow {
 
             // Has to be in menu for macOS due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
             MenuItem {
-                text: qsTr("Switch to next loaded module")
+                text: qsTr("Switch to the next loadable module")
                 shortcut: platform == 'Darwin' ? "Meta+Tab" : "Ctrl+Tab" // QTBUG-15746 and QTBUG-7001
                 onTriggered: nextTab()
                 enabled: tabs.count > 1
@@ -391,7 +391,7 @@ ApplicationWindow {
 
             // Has to be in menu for macOS due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
             MenuItem {
-                text: qsTr("Switch to previous loaded module")
+                text: qsTr("Switch to the previously loaded module")
                 shortcut: platform == 'Darwin' ? "Meta+Shift+Tab" : "Ctrl+Shift+Tab" // QTBUG-15746 and QTBUG-7001
                 onTriggered: prevTab()
                 enabled: tabs.count > 1
