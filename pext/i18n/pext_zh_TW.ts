@@ -553,12 +553,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="386"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>切換到下一個已載入的模組</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="394"/>
         <source>Switch to previous loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>切換到前一個已載入的模組</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="405"/>
