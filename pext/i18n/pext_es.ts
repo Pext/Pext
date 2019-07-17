@@ -554,12 +554,12 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="386"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar al siguiente módulo cargado</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="394"/>
         <source>Switch to previous loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Cambiar al módulo cargado anterior</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="405"/>
@@ -635,7 +635,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="647"/>
         <source>Turbo Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo Turbo</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="655"/>
@@ -852,7 +852,7 @@ La clase Module del módulo no implementa ModuleBase</translation>
     <message>
         <location filename="../qml/main.qml" line="1008"/>
         <source>All queued data has been typed</source>
-        <translation type="unfinished"></translation>
+        <translation>Todos los datos en cola han sido escritos</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1009"/>
@@ -887,12 +887,12 @@ La clase Module del módulo no implementa ModuleBase</translation>
     <message>
         <location filename="../qml/main.qml" line="1015"/>
         <source>Pynput is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>Pynput no está disponible</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1016"/>
         <source>PyAutoGUI is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>PyAutoGUI no está disponible</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="447"/>
