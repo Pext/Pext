@@ -3344,7 +3344,7 @@ class Settings():
         'theme': None,
         'global_hotkey_enabled': True,
         'tray': True
-    }
+    }  # type: Dict[str, Any]
 
     __global_settings = {
         'last_update_check': None,
