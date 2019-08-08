@@ -6,6 +6,7 @@
 
 ![Lilly the leoger](/logo.png)
 
+[![reuse compliant](https://reuse.software/badge/reuse-compliant.svg)](https://reuse.software)
 [![Linux & macOS Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/73oaa4x1spa5vumx/branch/master?svg=true)](https://ci.appveyor.com/project/TheLastProject/pext/branch/master)
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
@@ -148,7 +149,7 @@ We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## License
 
-Pext is licensed under the [GNU GPLv3+](LICENSE), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSE-CCBYSA).
+Pext is licensed under the [GNU GPLv3+](LICENSES/GPL-3.0-or-later.txt), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSES/CC-BY-SA-4.0.txt).
 
 Under artwork and documentation fall:
 
