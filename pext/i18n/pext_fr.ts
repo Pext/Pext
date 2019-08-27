@@ -60,7 +60,7 @@ Are you sure you want to quit?</source>
 
 Cela arrêtera tout module en cours d&apos;exécution.
 
-Êtes-vous sûr de vouloir quitter?</translation>
+Êtes-vous sûr de vouloir quitter ?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -73,7 +73,7 @@ Are you sure you want to quit?</source>
 
 Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier global ne fonctionnera pas tant que vous n&apos;aurez pas redémarré Pext manuellement.
 
-Êtes-vous sûr de vouloir quitter?</translation>
+Êtes-vous sûr de vouloir quitter ?</translation>
     </message>
 </context>
 <context>
@@ -523,7 +523,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation>Une nouvelle version de Pext est disponible. Voulez-vous ouvrir la page de téléchargement?</translation>
+        <translation>Une nouvelle version de Pext est disponible. Voulez-vous ouvrir la page de téléchargement ?</translation>
     </message>
 </context>
 <context>
