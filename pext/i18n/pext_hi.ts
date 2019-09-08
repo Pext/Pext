@@ -554,12 +554,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="386"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>अगले लोड किए गए मॉड्यूल पर जाएं</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="394"/>
         <source>Switch to previous loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>पिछले लोड किए गए मॉड्यूल पर जाएँ</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="405"/>
