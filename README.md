@@ -11,7 +11,6 @@
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/73oaa4x1spa5vumx/branch/master?svg=true)](https://ci.appveyor.com/project/TheLastProject/pext/branch/master)
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
-[![Known Vulnerabilities](https://snyk.io/test/github/Pext/Pext/badge.svg)](https://snyk.io/test/github/Pext/Pext)
 
 [![Matrix](https://img.shields.io/matrix/pext:matrix.org.svg)](https://riot.im/app/#/room/#pext:matrix.org)
 
