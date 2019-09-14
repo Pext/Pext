@@ -89,7 +89,7 @@ Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md) (not r
 
 ### macOS
 
-A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). If you use [Homebrew](https://brew.sh), you can use `brew cask install pext` on the command line.
+A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases).
 
 Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
