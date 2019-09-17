@@ -9,13 +9,11 @@ Welcome to Pext's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Installation
 
    installation.rst
 
 .. toctree::
    :maxdepth: 2
-   :caption: Compiling from source
 
    compiling.rst
 
