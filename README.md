@@ -19,10 +19,7 @@
 
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
-- [Installation](#installation)
-  - [GNU/Linux](#gnulinux)
-  - [macOS](#macos)
-  - [Windows](#windows)
+- [Installation](https://pext.readthedocs.io/en/latest/installation.html)
 - [Usage](#usage)
 - [Hotkeys](#hotkeys)
 - [Community](#community)
@@ -55,50 +52,6 @@ Simply put:
 - Search (for something)
 - Select (with Enter)
 - Hide (automatically)
-
-## Installation
-
-**Note: If you run into any issues, please check out the troubleshooting section near the end of this document before reporting a bug.**
-
-### GNU/Linux
-
-#### Arch
-
-Pext is available as [pext](https://aur.archlinux.org/packages/pext/) and [pext-git](https://aur.archlinux.org/packages/pext-git/). These packages are maintained by [Agesly Danzig](https://github.com/agesly).
-
-#### Other distros
-
-We recommend the AppImages under [GitHub releases](https://github.com/Pext/Pext/releases), but you can also install from PyPI.
-
-For the stable version (PyPI):
-
-```sh
-pip3 install pext --user
-```
-
-For the git version (PyPI):
-
-```sh
-pip3 install git+https://github.com/Pext/Pext.git --user
-```
-
-On some systems, you may need to use pip instead of pip3.
-
-On some systems, you may need to add `~/.local/bin` to your $PATH if you want to launch Pext from the terminal: `echo "export PATH=$HOME/.local/bin:$PATH" >> ~/.profile`.
-
-Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
-
-### macOS
-
-A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). If you use [Homebrew](https://brew.sh), you can use `brew cask install pext` on the command line.
-
-Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
-
-### Windows
-
-A Windows installer is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases).
-
-Alternatively, see See [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ## Usage
 
