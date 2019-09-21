@@ -143,6 +143,14 @@ class OutputMode(IntEnum):
     AutoType = 3
 
 
+class OutputSeparator(IntEnum):
+    """A list of possible separators to put between entries in the output queue."""
+
+    None_ = 0
+    Tab = 1
+    Enter = 2
+
+
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
@@ -764,6 +772,7 @@ class ProfileManager():
                                'locale',
                                'minimize_mode',
                                'output_mode',
+                               'output_separator',
                                'sort_mode',
                                'theme',
                                'tray',
@@ -2274,6 +2283,13 @@ class Window():
         self.menu_output_auto_type = self.window.findChild(
             QObject, "menuOutputAutoType")
 
+        menu_output_separator_none = self.window.findChild(
+            QObject, "menuOutputSeparatorNone")
+        menu_output_separator_enter = self.window.findChild(
+            QObject, "menuOutputSeparatorEnter")
+        menu_output_separator_tab = self.window.findChild(
+            QObject, "menuOutputSeparatorTab")
+
         menu_sort_module_shortcut = self.window.findChild(
             QObject, "menuSortModule")
         menu_sort_ascending_shortcut = self.window.findChild(
@@ -2336,6 +2352,10 @@ class Window():
         menu_output_find_buffer.toggled.connect(self._menu_output_find_buffer)
         self.menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
 
+        menu_output_separator_none.toggled.connect(self._menu_output_separator_none)
+        menu_output_separator_enter.toggled.connect(self._menu_output_separator_enter)
+        menu_output_separator_tab.toggled.connect(self._menu_output_separator_tab)
+
         menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
         menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
         menu_sort_descending_shortcut.toggled.connect(self._menu_sort_descending)
@@ -2371,6 +2391,16 @@ class Window():
         QQmlProperty.write(self.menu_output_auto_type,
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.AutoType)
+
+        QQmlProperty.write(menu_output_separator_none,
+                           "checked",
+                           int(Settings.get('output_separator')) == OutputSeparator.None_)
+        QQmlProperty.write(menu_output_separator_enter,
+                           "checked",
+                           int(Settings.get('output_separator')) == OutputSeparator.Enter)
+        QQmlProperty.write(menu_output_separator_tab,
+                           "checked",
+                           int(Settings.get('output_separator')) == OutputSeparator.Tab)
 
         QQmlProperty.write(menu_sort_module_shortcut,
                            "checked",
@@ -2806,6 +2836,18 @@ class Window():
 
             Settings.set('output_mode', OutputMode.AutoType)
 
+    def _menu_output_separator_none(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_separator', OutputSeparator.None_)
+
+    def _menu_output_separator_enter(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_separator', OutputSeparator.Enter)
+
+    def _menu_output_separator_tab(self, enabled: bool) -> None:
+        if enabled:
+            Settings.set('output_separator', OutputSeparator.Tab)
+
     def _menu_sort_module(self, enabled: bool) -> None:
         if enabled:
             Settings.set('sort_mode', SortMode.Module)
@@ -3031,11 +3073,23 @@ class Window():
                     keyboard_device.type(output)
 
                 if self.output_queue:
+                    separator_key = Settings.get('output_separator')
+                    if separator_key == OutputSeparator.None_:
+                        continue
+
                     if platform.system() == "Darwin":
-                        hotkey('tab')
+                        if separator_key == OutputSeparator.Tab:
+                            hotkey('tab')
+                        elif separator_key == OutputSeparator.Enter:
+                            hotkey('return')
                     else:
-                        keyboard_device.press(keyboard.Key.tab)
-                        keyboard_device.release(keyboard.Key.tab)
+                        if separator_key == OutputSeparator.Tab:
+                            key = keyboard.Key.tab
+                        elif separator_key == OutputSeparator.Enter:
+                            key = keyboard.Key.enter
+
+                        keyboard_device.press(key)
+                        keyboard_device.release(key)
 
     def show(self) -> None:
         """Show the window."""
@@ -3350,6 +3404,7 @@ class Settings():
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
         'output_mode': OutputMode.DefaultClipboard,
+        'output_separator': OutputSeparator.Tab,
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,

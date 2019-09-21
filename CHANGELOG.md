@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Shift+Return hotkey to explicitly disable minimizing when making a selection
+- Ability to choose separator between output entries in queue (if more than one string will be output)
 
 ## [0.24.1] - 2019-09-08
 ### Changed

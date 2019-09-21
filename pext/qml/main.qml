@@ -736,6 +736,36 @@ ApplicationWindow {
                     checkable: true
                     exclusiveGroup: menuOutputGroup
                 }
+
+                Menu {
+                    title: qsTr("Separator between output queue entries")
+
+                    ExclusiveGroup {
+                        id: menuOutputSeparatorGroup
+                        objectName: "menuOutputSeparatorGroup"
+                    }
+    
+                    MenuItem {
+                        objectName: "menuOutputSeparatorNone"
+                        text: qsTr("Nothing")
+                        checkable: true
+                        exclusiveGroup: menuOutputSeparatorGroup
+                    }
+
+                    MenuItem {
+                        objectName: "menuOutputSeparatorEnter"
+                        text: enterShortcut.nativeText
+                        checkable: true
+                        exclusiveGroup: menuOutputSeparatorGroup
+                    }
+
+                    MenuItem {
+                        objectName: "menuOutputSeparatorTab"
+                        text: tabShortcut.nativeText
+                        checkable: true
+                        exclusiveGroup: menuOutputSeparatorGroup
+                    }
+                }
             }
 
             Menu {
