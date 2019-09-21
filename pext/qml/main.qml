@@ -171,6 +171,14 @@ ApplicationWindow {
         tab.item.children[0].children[2].contentItem.openContextMenu();
     }
 
+    function selectExplicitNoMinimize() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        tab.item.children[0].children[2].contentItem.selectExplicitNoMinimize();
+    }
+
     function openArgumentsInput() {
         var tab = tabs.getTab(tabs.currentIndex);
         if (typeof tab === "undefined")
@@ -255,6 +263,12 @@ ApplicationWindow {
         id: enterShortcut
         enabled: false
         sequence: "Return"
+    }
+
+    Shortcut {
+        id: noMinimizeShortcut
+        sequence: "Shift+Return"
+        onActivated: selectExplicitNoMinimize()
     }
 
     Shortcut {

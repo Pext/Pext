@@ -539,7 +539,12 @@ class MainLoop():
             tab['vm'].make_selection()
 
         elif action[0] == Action.close:
-            self.window.close()
+            # Don't close if the user explicitly requested to not close after last input
+            if not tab['vm'].minimize_disabled:
+                self.window.close()
+
+            tab['vm'].minimize_disabled = False
+
             tab['vm'].selection = []
 
             tab['vm'].context.setContextProperty(
@@ -1612,8 +1617,9 @@ class ViewModel():
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
         self.selection_thread = None  # type: Optional[threading.Thread]
+        self.minimize_disabled = False
 
-    def make_selection(self) -> None:
+    def make_selection(self, disable_minimize=False) -> None:
         """Make a selection if no selection is currently being processed.
 
         Running the selection making in another thread prevents it from locking
@@ -1623,6 +1629,7 @@ class ViewModel():
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
+        self.minimize_disabled = disable_minimize
         self.selection_thread = threading.Thread(target=self.module.selection_made, args=(self.selection,))
         self.selection_thread.start()
 
@@ -1970,7 +1977,7 @@ class ViewModel():
 
         return {'type': selection_type, 'value': entry, 'context_option': None}
 
-    def select(self, command_args="", force_args=False) -> None:
+    def select(self, command_args="", force_args=False, disable_minimize=False) -> None:
         """Notify the module of our selection entry."""
         if not self.filtered_entry_list and not self.filtered_command_list:
             return
@@ -2004,7 +2011,7 @@ class ViewModel():
         self.search(new_entries=True, manual=True)
         self._clear_queue()
 
-        self.make_selection()
+        self.make_selection(disable_minimize=disable_minimize)
 
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
@@ -2495,9 +2502,13 @@ class Window():
 
         # Enable mouse selection support
         result_list_model.entryClicked.connect(element['vm'].select)
+        result_list_model.selectExplicitNoMinimize.connect(
+                    lambda: element['vm'].select(disable_minimize=True))
         result_list_model.openContextMenu.connect(element['vm'].show_context)
         result_list_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.entryClicked.connect(element['vm'].select)
+        context_menu_model.selectExplicitNoMinimize.connect(
+                    lambda: element['vm'].select(disable_minimize=True))
         context_menu_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
 
@@ -3319,7 +3330,7 @@ class HotkeyHandler():
         """Executed when a key is released."""
         try:
             self.pressed.remove(key)
-        except KeyError:
+        except ValueError:
             pass
 
         return True

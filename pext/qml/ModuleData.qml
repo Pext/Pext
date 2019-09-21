@@ -70,6 +70,7 @@ Item {
                 objectName: "contextMenuModel"
 
                 signal entryClicked()
+                signal selectExplicitNoMinimize()
                 signal openArgumentsInput()
                 signal closeContextMenu()
 
@@ -211,6 +212,7 @@ Item {
                 objectName: "resultListModel"
 
                 signal entryClicked()
+                signal selectExplicitNoMinimize()
                 signal openContextMenu()
                 signal openArgumentsInput()
 

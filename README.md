@@ -68,6 +68,7 @@ For command line options, use `--help`.
 - Escape: Go one level up
 - Tab: Tab-complete the current input
 - Enter / Left mouse button: Select entry or run command
+- Shift+Enter: Select entry or run command but explicitly disable minimizing
 - Ctrl+Enter: Run command with arguments
 - Ctrl+. / Right mouse button on any item: Open context menu
 - Ctrl+J / Down arrow: Go one entry down
