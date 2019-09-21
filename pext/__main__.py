@@ -3415,7 +3415,7 @@ class Settings():
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
         'output_mode': OutputMode.DefaultClipboard,
-        'output_separator': OutputSeparator.Tab,
+        'output_separator': OutputSeparator.Enter,
         'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
