@@ -863,41 +863,46 @@ Are you sure you want to quit?</source>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1053"/>
+        <source>Data queued for clipboard</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1054"/>
         <source>Data copied to clipboard</source>
         <translation>資料已複製到剪貼簿</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1054"/>
+        <location filename="../qml/main.qml" line="1055"/>
         <source>Enter arguments</source>
         <translation>輸入參數</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1055"/>
+        <location filename="../qml/main.qml" line="1056"/>
         <source>No context menu available</source>
         <translation>沒有可用的右鍵選單</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1056"/>
+        <location filename="../qml/main.qml" line="1057"/>
         <source>No tab completion possible</source>
         <translation>無法使用 Tab 鍵補完</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1057"/>
+        <location filename="../qml/main.qml" line="1058"/>
         <source>No entry selected</source>
         <translation>沒有已選取的項目</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1058"/>
+        <location filename="../qml/main.qml" line="1059"/>
         <source>No command available for current filter</source>
         <translation>目前的過濾器沒有可用的指令</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1059"/>
+        <location filename="../qml/main.qml" line="1060"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput 不可用</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1060"/>
+        <location filename="../qml/main.qml" line="1061"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI 不可用</translation>
     </message>

@@ -865,41 +865,46 @@ Are you sure you want to quit?</source>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1053"/>
-        <source>Data copied to clipboard</source>
+        <source>Data queued for clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1054"/>
-        <source>Enter arguments</source>
+        <source>Data copied to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1055"/>
-        <source>No context menu available</source>
+        <source>Enter arguments</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1056"/>
-        <source>No tab completion possible</source>
+        <source>No context menu available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1057"/>
-        <source>No entry selected</source>
+        <source>No tab completion possible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1058"/>
-        <source>No command available for current filter</source>
+        <source>No entry selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1059"/>
-        <source>Pynput is unavailable</source>
+        <source>No command available for current filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1060"/>
+        <source>Pynput is unavailable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1061"/>
         <source>PyAutoGUI is unavailable</source>
         <translation type="unfinished"></translation>
     </message>
