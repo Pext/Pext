@@ -675,12 +675,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="741"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation>Scheidingsteken tussen uitvoeritems in de wachtrij</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="750"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Niets</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="772"/>
