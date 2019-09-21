@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Shift+Return hotkey to explicitly disable minimizing when making a selection
 - Ability to choose separator between output entries in queue (if more than one string will be output)
 
+### Changed
+- Text to copy to clipboard is now queued until minimizing too
+
 ## [0.24.1] - 2019-09-08
 ### Changed
 - Tab hotkeys changed from `Alt+<number>` to `Ctrl+<number>` on non-Linux for consistency with other applications

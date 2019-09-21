@@ -519,21 +519,11 @@ class MainLoop():
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
+            self.window.output_queue.append(str(action[1]))
             if Settings.get('output_mode') == OutputMode.AutoType:
-                self.window.output_queue.append(str(action[1]))
-
                 Logger.log(tab['metadata']['name'], Translation.get("data_queued_for_typing"))
             else:
-                if Settings.get('output_mode') == OutputMode.SelectionClipboard:
-                    mode = QClipboard.Selection
-                elif Settings.get('output_mode') == OutputMode.FindBuffer:
-                    mode = QClipboard.FindBuffer
-                else:
-                    mode = QClipboard.Clipboard
-
-                self.app.clipboard().setText(str(action[1]), mode)
-
-                Logger.log(tab['metadata']['name'], Translation.get("data_copied_to_clipboard"))
+                Logger.log(tab['metadata']['name'], Translation.get("data_queued_for_clipboard"))
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
@@ -3056,40 +3046,61 @@ class Window():
         self._macos_focus_workaround()
 
         if self.output_queue:
-            time.sleep(0.5)
-            keyboard_device = keyboard.Controller()
+            output_mode = Settings.get('output_mode')
+            if output_mode == OutputMode.AutoType:
+                time.sleep(0.5)
+                keyboard_device = keyboard.Controller()
 
-            while True:
-                try:
-                    output = self.output_queue.pop(0)
-                except IndexError:
-                    Logger.log(None, Translation.get("queued_data_typed"))
-                    break
-
-                if platform.system() == "Darwin":
-                    # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
-                    typewrite(output)
-                else:
-                    keyboard_device.type(output)
-
-                if self.output_queue:
-                    separator_key = Settings.get('output_separator')
-                    if separator_key == OutputSeparator.None_:
-                        continue
+                while True:
+                    try:
+                        output = self.output_queue.pop(0)
+                    except IndexError:
+                        Logger.log(None, Translation.get("queued_data_typed"))
+                        break
 
                     if platform.system() == "Darwin":
-                        if separator_key == OutputSeparator.Tab:
-                            hotkey('tab')
-                        elif separator_key == OutputSeparator.Enter:
-                            hotkey('return')
+                        # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
+                        typewrite(output)
                     else:
-                        if separator_key == OutputSeparator.Tab:
-                            key = keyboard.Key.tab
-                        elif separator_key == OutputSeparator.Enter:
-                            key = keyboard.Key.enter
+                        keyboard_device.type(output)
 
-                        keyboard_device.press(key)
-                        keyboard_device.release(key)
+                    if self.output_queue:
+                        separator_key = Settings.get('output_separator')
+                        if separator_key == OutputSeparator.None_:
+                            continue
+
+                        if platform.system() == "Darwin":
+                            if separator_key == OutputSeparator.Tab:
+                                hotkey('tab')
+                            elif separator_key == OutputSeparator.Enter:
+                                hotkey('return')
+                        else:
+                            if separator_key == OutputSeparator.Tab:
+                                key = keyboard.Key.tab
+                            elif separator_key == OutputSeparator.Enter:
+                                key = keyboard.Key.enter
+
+                            keyboard_device.press(key)
+                            keyboard_device.release(key)
+            else:
+                if output_mode == OutputMode.SelectionClipboard:
+                    mode = QClipboard.Selection
+                elif output_mode == OutputMode.FindBuffer:
+                    mode = QClipboard.FindBuffer
+                else:
+                    mode = QClipboard.Clipboard
+
+                separator_key = Settings.get('output_separator')
+                if separator_key == OutputSeparator.Tab:
+                    join_string = "\t"
+                elif separator_key == OutputSeparator.Enter:
+                    join_string = os.linesep
+                else:
+                    join_string = ""
+
+                self.app.clipboard().setText(str(join_string.join(self.output_queue)), mode)
+
+                Logger.log(None, Translation.get("data_copied_to_clipboard"))
 
     def show(self) -> None:
         """Show the window."""
