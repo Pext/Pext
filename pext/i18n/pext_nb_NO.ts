@@ -675,12 +675,12 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="741"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation>Inndeler mellom oppføringer i utdatakø</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="750"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Ingenting</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="772"/>
@@ -865,7 +865,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1053"/>
         <source>Data queued for clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Data i kø for utklippstavle</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1054"/>
