@@ -3102,6 +3102,8 @@ class Window():
 
                 Logger.log(None, Translation.get("data_copied_to_clipboard"))
 
+                self.output_queue = []
+
     def show(self) -> None:
         """Show the window."""
         if self.tray:
