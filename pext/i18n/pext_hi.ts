@@ -675,12 +675,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="741"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation>आउटपुट कतार प्रविष्टियों के बीच विभाजक</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="750"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>कुछ नहीं</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="772"/>
@@ -865,7 +865,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1053"/>
         <source>Data queued for clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>क्लिपबोर्ड के लिए डेटा कतारबद्ध है</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1054"/>

@@ -674,12 +674,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="741"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation>輸入佇列項目間的分隔器</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="750"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>沒有東西</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="772"/>
@@ -864,7 +864,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1053"/>
         <source>Data queued for clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>剪貼簿的資料佇列</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1054"/>
