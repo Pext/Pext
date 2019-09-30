@@ -537,18 +537,17 @@ class MainLoop():
             tab['vm'].make_selection()
 
         elif action[0] == Action.close:
-            # Don't close if the user explicitly requested to not close after last input
+            # Don't close and stay on the same depth if the user explicitly requested to not close after last input
             if not tab['vm'].minimize_disabled:
                 self.window.close()
 
+                selection = []  # type: List[Dict[SelectionType, str]]
+            else:
+                selection = tab['vm'].selection[:-1]
+
             tab['vm'].minimize_disabled = False
 
-            tab['vm'].selection = []
-
-            tab['vm'].context.setContextProperty(
-                "resultListModelTree", [part['value'] for part in tab['vm'].selection])
-
-            tab['vm'].module.selection_made(tab['vm'].selection)
+            tab['vm'].queue.put([Action.set_selection, selection])
 
         elif action[0] == Action.set_entry_info:
             if len(action) > 2:
