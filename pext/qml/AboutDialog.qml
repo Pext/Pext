@@ -40,7 +40,8 @@ Dialog {
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
                                "ru": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
-                               "zh_TW": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
+                               "zh_TW": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]},
+                               "ar": [{"name": "Ramy Gamal", "email": "ramyeg26@gmail.com"}]}
 
     TabView {
         width: parent.width
