@@ -28,7 +28,9 @@ Dialog {
     height: 350
     width: 500
 
-    property var translators: {"be": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
+    property var translators: {
+                               "ar": [{"name": "Ramy Gamal", "email": "ramyeg26@gmail.com"}],
+                               "be": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
                                "en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
                                "es": [{"name": "Rose Garcia", "email": "rosegarcia@protonmail.com"},
                                       {"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
