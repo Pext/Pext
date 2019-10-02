@@ -449,6 +449,16 @@ class MainLoop():
 
         elif action[0] in [Action.ask_question, Action.ask_question_default_yes, Action.ask_question_default_no]:
             question_dialog = self.window.window.findChild(QObject, "questionDialog")
+            # Disconnect possibly existing handlers
+            try:
+                question_dialog.questionAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                question_dialog.questionRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
                 question_dialog.questionAccepted.connect(partial(
                     lambda arg: tab['vm'].module.process_response(True, arg),
@@ -466,6 +476,16 @@ class MainLoop():
 
         elif action[0] == Action.ask_input:
             input_request = self.window.window.findChild(QObject, "inputRequests")
+            # Disconnect possibly existing handlers
+            try:
+                input_request.inputRequestAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                input_request.inputRequestRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
                 input_request.inputRequestAccepted.connect(partial(
                     lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
@@ -484,6 +504,16 @@ class MainLoop():
 
         elif action[0] == Action.ask_input_password:
             input_request = self.window.window.findChild(QObject, "inputRequests")
+            # Disconnect possibly existing handlers
+            try:
+                input_request.inputRequestAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                input_request.inputRequestRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
                 input_request.inputRequestAccepted.connect(partial(
                     lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
@@ -502,6 +532,16 @@ class MainLoop():
 
         elif action[0] == Action.ask_input_multi_line:
             input_request = self.window.window.findChild(QObject, "inputRequests")
+            # Disconnect possibly existing handlers
+            try:
+                input_request.inputRequestAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                input_request.inputRequestRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
                 input_request.inputRequestAccepted.connect(partial(
                     lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
@@ -514,6 +554,7 @@ class MainLoop():
                     lambda userinput: tab['vm'].module.process_response(userinput))
                 input_request.inputRequestRejected.connect(
                     lambda: tab['vm'].module.process_response(None))
+
             input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, True,
                                             action[2] if len(action) > 2 else "")
 
@@ -1199,7 +1240,7 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 11, 0]
+        module['settings']['_api_version'] = [0, 11, 1]
         module['settings']['_locale'] = locale
         module['settings']['_portable'] = Settings.get('_portable')
 

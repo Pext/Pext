@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
+- Bump API version to 0.11.0 so that modules can detect request handlers being fixed
+
 ### Added
 - Shift+Return hotkey to explicitly disable minimizing and resetting when making a selection
 - Ability to choose separator between output entries in queue (if more than one string will be output)
@@ -13,6 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Text to copy to clipboard is now queued until minimizing too
 - Default separator is now Enter instead of Tab
+
+### Fixed
+- Module request handlers not being removed properly, causing multiple incorrect requests
 
 ## [0.24.1] - 2019-09-08
 ### Changed
