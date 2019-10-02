@@ -6,27 +6,27 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>عن Pext</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="52"/>
         <source>Copyright</source>
-        <translation type="unfinished"></translation>
+        <translation>حقوق التأليف والنشر</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="84"/>
         <source>Translators</source>
-        <translation type="unfinished"></translation>
+        <translation>المترجمون</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="95"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation type="unfinished"></translation>
+        <translation>هل تريد المساعدة في ترجمة Pext ؟ اضغط هنا.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="96"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation type="unfinished"></translation>
+        <translation>فريق Pext يريد شكر المستخدمين التاليين لترجمة Pext:</translation>
     </message>
 </context>
 <context>
@@ -47,7 +47,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -56,7 +56,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation type="unfinished"></translation>
+        <translation>انت على وشك اغلاق Pext
+
+هذا سوف يوقف من تشغيل أي  عنصر.
+
+هل  انت متأكد من الخروج؟</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -73,7 +77,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
@@ -99,17 +103,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">تركيب المُركب</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Theme Installation</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">تركيب الشكل</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Module source:</source>
-        <translation type="unfinished"></translation>
+        <translation>مصدر المُركب:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
@@ -119,7 +123,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
         <source>No modules available from this source.</source>
-        <translation type="unfinished"></translation>
+        <translation>لا توجد مُركبات جاهزة من هذا المصدر.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
@@ -139,7 +143,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
         <source>Download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>تحميل المصدر:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
@@ -149,7 +153,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
         <source>This theme is already installed.</source>
-        <translation type="unfinished"></translation>
+        <translation>هذا النسق مثبت بالفعل.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="115"/>
@@ -159,22 +163,22 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
         <source>Details:</source>
-        <translation type="unfinished"></translation>
+        <translation>تفاصيل:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="131"/>
         <source>Creator: </source>
-        <translation type="unfinished"></translation>
+        <translation>المُنشئ: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="138"/>
         <source>Description: </source>
-        <translation type="unfinished"></translation>
+        <translation>وصف: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="145"/>
         <source>License: </source>
-        <translation type="unfinished"></translation>
+        <translation>الرخصة: </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="152"/>
@@ -210,7 +214,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation type="unfinished"></translation>
+        <translation>اختر مصدر التحميل المفضل:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
@@ -230,12 +234,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
-        <translation type="unfinished"></translation>
+        <translation>المٌطور: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
         <source>Description: </source>
-        <translation type="unfinished"></translation>
+        <translation>وصف: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
@@ -297,22 +301,22 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation type="unfinished"></translation>
+        <translation>تحميل الملف الشخصي</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation type="unfinished"></translation>
+        <translation>اختر الملف الشخصي للتبديل اليه:</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation type="unfinished"></translation>
+        <translation>افتح نافذة جديدة</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>ملاحظة: سيتم اعادة تشغيل Pext لتبديل الملف الشخصي.</translation>
     </message>
 </context>
 <context>
@@ -388,12 +392,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ManageDialog.qml" line="136"/>
         <source>Update</source>
-        <translation type="unfinished"></translation>
+        <translation>تحديث</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="146"/>
         <source>Uninstall</source>
-        <translation type="unfinished"></translation>
+        <translation>الغاء تثبيت</translation>
     </message>
 </context>
 <context>
@@ -401,27 +405,27 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="26"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation>إدارة الملفات الشخصية</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="44"/>
         <source>Enter profile name</source>
-        <translation type="unfinished"></translation>
+        <translation>ادخل اسم الملف الشخصي</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="48"/>
         <source>Create</source>
-        <translation type="unfinished"></translation>
+        <translation>انشاء</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="80"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation>اعاده تسميه</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="90"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>إزالة</translation>
     </message>
 </context>
 <context>
@@ -429,17 +433,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="192"/>
         <source>No results</source>
-        <translation type="unfinished"></translation>
+        <translation>لا توجد نتائج</translation>
     </message>
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="193"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation>
+            <numerusform>صفر</numerusform>
+            <numerusform>واحد</numerusform>
+            <numerusform>اثنان</numerusform>
+            <numerusform>بعض</numerusform>
+            <numerusform>الكثير من</numerusform>
             <numerusform></numerusform>
         </translation>
     </message>
@@ -475,12 +479,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="24"/>
         <source>Only one profile available</source>
-        <translation type="unfinished"></translation>
+        <translation>يوجد ملف شخصي واحد فقط</translation>
     </message>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation type="unfinished"></translation>
+        <translation>يوجد ملف شخصي واحد فقط. الرجاء انشاء ملف ثان أولاً.</translation>
     </message>
 </context>
 <context>
@@ -488,7 +492,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
@@ -501,12 +505,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="26"/>
         <source>Rename profile</source>
-        <translation type="unfinished"></translation>
+        <translation>إعادة تسمية الملف الشخصي</translation>
     </message>
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="37"/>
         <source>Please choose a new name for this profile.</source>
-        <translation type="unfinished"></translation>
+        <translation>يرجى اختيار اسم جديد لهذا الملف الشخصي.</translation>
     </message>
 </context>
 <context>
@@ -514,12 +518,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="24"/>
         <source>New version available</source>
-        <translation type="unfinished"></translation>
+        <translation>يوجد نسخة جديدة متاحة</translation>
     </message>
     <message>
         <location filename="../qml/UpdateAvailableDialog.qml" line="30"/>
         <source>A new version of Pext is available. Do you want to open the download page?</source>
-        <translation type="unfinished"></translation>
+        <translation>يتوفر إصدار جديد من Pext. هل تريد فتح صفحه التنزيل ؟</translation>
     </message>
 </context>
 <context>
@@ -527,12 +531,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="24"/>
         <source>Update manager</source>
-        <translation type="unfinished"></translation>
+        <translation>مدير التحديث</translation>
     </message>
     <message>
         <location filename="../qml/UpdatePermissionDialog.qml" line="31"/>
         <source>May Pext automatically check for updates? You can change this at any time from the settings menu.</source>
-        <translation type="unfinished"></translation>
+        <translation>هل تريد من Pext التحقق تلقائيا من وجود تحديثات ؟ يمكنك تغيير هذا في اي وقت من قائمه الإعدادات.</translation>
     </message>
 </context>
 <context>
@@ -540,7 +544,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="390"/>
         <source>Quit</source>
-        <translation type="unfinished"></translation>
+        <translation>اغلاق</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="396"/>
