@@ -9,22 +9,22 @@
         <translation>عن Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="52"/>
+        <location filename="../qml/AboutDialog.qml" line="54"/>
         <source>Copyright</source>
         <translation>حقوق التأليف والنشر</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="84"/>
+        <location filename="../qml/AboutDialog.qml" line="86"/>
         <source>Translators</source>
         <translation>المترجمون</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="95"/>
+        <location filename="../qml/AboutDialog.qml" line="97"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>هل تريد المساعدة في ترجمة Pext ؟ اضغط هنا.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="96"/>
+        <location filename="../qml/AboutDialog.qml" line="98"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>فريق Pext يريد شكر المستخدمين التاليين لترجمة Pext:</translation>
     </message>
@@ -90,7 +90,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pext</translation>
     </message>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
@@ -244,7 +244,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
         <source>License: </source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">الرخصة: </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
@@ -625,7 +625,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="639"/>
         <source>Manage profiles</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">إدارة الملفات الشخصية</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="657"/>
@@ -915,7 +915,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="29"/>
