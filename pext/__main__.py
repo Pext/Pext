@@ -575,6 +575,9 @@ class MainLoop():
             tab['vm'].context.setContextProperty(
                 "resultListModelTree", [part['value'] for part in tab['vm'].selection])
 
+            if tab['vm'].selection_thread:
+                tab['vm'].selection_thread.join()
+
             tab['vm'].make_selection()
 
         elif action[0] == Action.close:
