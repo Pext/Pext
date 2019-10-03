@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Text to copy to clipboard is now queued until minimizing too
 - Default separator is now Enter instead of Tab
+- If a selection state change is requested by the module, ensure it is always done
 
 ### Fixed
 - Module request handlers not being removed properly, causing multiple incorrect requests
