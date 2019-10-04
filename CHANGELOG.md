@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.25] - 2019-10-04
 ### API changes
 - Bump API version to 0.11.1 so that modules can detect request handlers being fixed
 
