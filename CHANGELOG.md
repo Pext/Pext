@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### API changes
-- Bump API version to 0.11.0 so that modules can detect request handlers being fixed
+- Bump API version to 0.11.1 so that modules can detect request handlers being fixed
 
 ### Added
 - Shift+Return hotkey to explicitly disable minimizing and resetting when making a selection
