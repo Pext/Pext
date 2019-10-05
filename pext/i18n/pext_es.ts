@@ -675,12 +675,12 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="741"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Separador entre entradas de informacion en espera</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="750"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nada</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="772"/>
@@ -867,7 +867,7 @@ La clase Module del módulo no implementa ModuleBase</translation>
     <message>
         <location filename="../qml/main.qml" line="1053"/>
         <source>Data queued for clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Datos en espera para la tabla</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1054"/>
