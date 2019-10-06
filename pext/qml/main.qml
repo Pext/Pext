@@ -991,6 +991,7 @@ ApplicationWindow {
                   "<li>" + qsTr("<kbd>%1</kbd>: Switch to previous tab").arg(previousTabShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd>: Complete input").arg(tabShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Left mouse button: Activate highlighted entry").arg(enterShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Activate highlighted entry (never minimize)").arg(noMinimizeShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Enter arguments for highlighted command").arg(argsShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu / enter arguments").arg(contextMenuShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li></ul>"

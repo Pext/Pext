@@ -6,8 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### API changes
 - Bump API version to 0.9.0
 - Modules can now ask offer a multiple choice dialog using Action.ask_choice
+
+### Added
+- Explanation on Shift+Return key
 
 ## [0.25] - 2019-10-04
 ### API changes
