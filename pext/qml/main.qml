@@ -99,6 +99,24 @@ ApplicationWindow {
     }
 
     Item {
+        objectName: "choiceDialog"
+
+        signal showChoiceDialog(string moduleName, string question, var choices)
+        signal choiceAccepted(string choice)
+        signal choiceRejected()
+
+        onShowChoiceDialog: {
+            var choiceDialog = Qt.createComponent("ChoiceDialog.qml");
+            choiceDialog.createObject(applicationWindow,
+                {"moduleName": moduleName,
+                 "question": question,
+                 "choices": choices,
+                 "accepted": choiceAccepted,
+                 "rejected": choiceRejected});
+        }
+    }
+
+    Item {
         objectName: "questionDialog"
 
         signal showQuestionDialog(string moduleName, string question)

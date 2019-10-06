@@ -474,6 +474,34 @@ class MainLoop():
 
             question_dialog.showQuestionDialog.emit(tab['metadata']['name'], action[1])
 
+        elif action[0] == Action.ask_choice:
+            choice_dialog = self.window.window.findChild(QObject, "choiceDialog")
+            # Disconnect possibly existing handlers
+            try:
+                choice_dialog.choiceAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                choice_dialog.choiceRejected.disconnect()
+            except TypeError:
+                pass
+
+            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+                choice_dialog.choiceAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                choice_dialog.choiceRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+            else:
+                choice_dialog.choiceAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                choice_dialog.choiceRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+
+            print(action)
+            choice_dialog.showChoiceDialog.emit(tab['metadata']['name'], action[1], action[2])
+
         elif action[0] == Action.ask_input:
             input_request = self.window.window.findChild(QObject, "inputRequests")
             # Disconnect possibly existing handlers
@@ -1243,7 +1271,7 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 11, 1]
+        module['settings']['_api_version'] = [0, 12, 0]
         module['settings']['_locale'] = locale
         module['settings']['_portable'] = Settings.get('_portable')
 
