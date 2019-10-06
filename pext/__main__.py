@@ -499,7 +499,6 @@ class MainLoop():
                 choice_dialog.choiceRejected.connect(
                     lambda: tab['vm'].module.process_response(None))
 
-            print(action)
             choice_dialog.showChoiceDialog.emit(tab['metadata']['name'], action[1], action[2])
 
         elif action[0] == Action.ask_input:
