@@ -32,6 +32,9 @@
 1. ```python3 setup.py sdist bdist_wheel```
 2. ```twine upload dist/*```
 
+## Open Build Service (OBS)
+1. Update the version number in the _service file
+
 ## Matrix
 1. Change the room topic: `Pext - Python-based Extendable Tool - https://pext.io/ - Latest release: <VERSION> (released <DATE>)`
 
