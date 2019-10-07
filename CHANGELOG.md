@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - TRANSLATION MISSING: failed_to_update_dependencies
+- Global hotkey not working
 
 ## [0.25] - 2019-10-04
 ### API changes

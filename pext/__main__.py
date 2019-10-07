@@ -48,9 +48,9 @@ from pkg_resources import parse_version
 from shutil import copytree, rmtree
 from subprocess import check_output, CalledProcessError, Popen
 try:
-    from typing import Any, Callable, Dict, List, Optional, Union
+    from typing import Any, Callable, Dict, List, Optional, Set, Union
 except ImportError:
-    from backports.typing import Any, Callable, Dict, List, Optional, Union  # type: ignore  # noqa: F401
+    from backports.typing import Any, Callable, Dict, List, Optional, Set, Union  # type: ignore  # noqa: F401
 from queue import Queue, Empty
 
 import requests
@@ -3441,8 +3441,16 @@ class HotkeyHandler():
     def __init__(self, needs_main_loop_queue: Queue, window: Window) -> None:
         """Initialize the global hotkey handler."""
         self.window = window
-        self.pressed = []  # type: List[Union[keyboard.Key, keyboard.KeyCode]]
+        self.modifiers = set()  # type: Set[Union[keyboard.Key, keyboard.KeyCode]]
+        self.backtick = keyboard.KeyCode(char='`')
         self.needs_main_loop_queue = needs_main_loop_queue
+
+        self.modifier_keys = [
+            keyboard.Key.ctrl,
+            keyboard.Key.shift,
+            keyboard.Key.alt,
+            keyboard.Key.cmd
+        ]
 
         if not pynput_error:
             listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
@@ -3453,12 +3461,12 @@ class HotkeyHandler():
         if key is None:
             return True
 
-        if key not in self.pressed:
-            self.pressed.append(key)
-
-        if (len(self.pressed) == 2 and
-                self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`' and
-                Settings.get('global_hotkey_enabled')):
+        if key in self.modifier_keys:
+            self.modifiers.add(key)
+        elif (key == self.backtick and
+              len(self.modifiers) == 1 and
+              keyboard.Key.ctrl in self.modifiers and
+              Settings.get('global_hotkey_enabled')):
             self.needs_main_loop_queue.put(self.window.show)
 
         return True
@@ -3466,8 +3474,8 @@ class HotkeyHandler():
     def on_release(self, key) -> bool:
         """Executed when a key is released."""
         try:
-            self.pressed.remove(key)
-        except ValueError:
+            self.modifiers.remove(key)
+        except KeyError:
             pass
 
         return True
