@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished">Pext - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -432,7 +432,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="48"/>
         <source>Create</source>
-        <translation>Creëren</translation>
+        <translation>Maken</translation>
     </message>
     <message>
         <location filename="../qml/ManageProfilesDialog.qml" line="80"/>
@@ -497,7 +497,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation>Er is slechts één profiel beschikbaar; creëer een tweede profiel.</translation>
+        <translation>Er is slechts één profiel beschikbaar; maak een tweede profiel aan.</translation>
     </message>
 </context>
 <context>
@@ -763,7 +763,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="994"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: activeer het gemarkeerde item (nooit minimaliseren)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="996"/>
