@@ -1062,7 +1062,7 @@ ApplicationWindow {
     property string tr_already_up_to_date: qsTr("{0} is already up to date")
     property string tr_failed_to_download_update: qsTr("Failed to download update for {0}: {1}")
     property string tr_updating_dependencies: qsTr("Updating dependencies for {0}")
-    property string tr_failed_to_update_depencencies: qsTr("Failed to update dependencies for {0}")
+    property string tr_failed_to_update_dependencies: qsTr("Failed to update dependencies for {0}")
     property string tr_updated: qsTr("Updated {0}")
     property string tr_checking_for_pext_updates: qsTr("Checking for Pext updates")
     property string tr_failed_to_check_for_pext_updates: qsTr("Failed to check for Pext updates: {0}")
