@@ -74,7 +74,7 @@ fi
 
 # compile to single executable (so Catalina doesn't think we are /bin/bash)
 brew install shc
-shc -rf Pext.sh -o Pext
+/usr/local/bin/shc -rf Pext.sh -o Pext
 rm Pext.sh Pext.sh.x.c
 
 # make executable
