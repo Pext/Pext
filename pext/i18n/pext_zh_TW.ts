@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished">Pext - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -762,7 +762,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="994"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;：啟用突顯項目（永不最小化）</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="996"/>
