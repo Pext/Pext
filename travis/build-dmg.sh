@@ -57,25 +57,20 @@ cp -R ~/miniconda/envs/Pext/* Pext.app/Contents/Resources/
 cp -R "$OLD_CWD"/* Pext.app/Contents/Resources/Pext/
 
 # create entry script
-cat > Pext.app/Contents/MacOS/Pext.sh <<\EAT
+cat > Pext.app/Contents/MacOS/Pext <<\EAT
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 EAT
 
 if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
-cat >> Pext.app/Contents/MacOS/Pext.sh <<\EAT
+cat >> Pext.app/Contents/MacOS/Pext <<\EAT
   $DIR/../Resources/bin/python $DIR/../Resources/Pext/pext --portable $@
 EAT
 else
-cat >> Pext.app/Contents/MacOS/Pext.sh <<\EAT
+cat >> Pext.app/Contents/MacOS/Pext <<\EAT
   $DIR/../Resources/bin/python $DIR/../Resources/Pext/pext $@
 EAT
 fi
-
-# compile to single executable (so Catalina doesn't think we are /bin/bash)
-brew install shc
-/usr/local/bin/shc -rf Pext.app/Contents/MacOS/Pext.sh -o Pext.app/Contents/MacOS/Pext
-rm Pext.app/Contents/MacOS/Pext.*
 
 # make executable
 chmod a+x Pext.app/Contents/MacOS/Pext
