@@ -72,7 +72,7 @@ Dialog {
                     }
 
                     TextField {
-                        visible: !modelData.options
+                        visible: modelData.options === undefined
                         placeholderText: modelData.default ? modelData.default : ""
                         width: root.width
                         onEditingFinished: moduleChosenSettings[modelData.name] = text
@@ -80,11 +80,15 @@ Dialog {
 
                     ComboBox {
                         id: settingComboBox
-                        visible: modelData.options
+                        visible: modelData.options !== undefined
                         model: modelData.options
-                        currentIndex: modelData.options.indexOf(modelData.default)
+                        currentIndex: modelData.options !== undefined ? modelData.options.indexOf(modelData.default) : 0
                         width: root.width
-                        onCurrentIndexChanged: moduleChosenSettings[modelData.name] = modelData.options[currentIndex]
+                        onCurrentIndexChanged: {
+                          if (modelData.options !== undefined) {
+                            moduleChosenSettings[modelData.name] = modelData.options[currentIndex];
+                          }
+                        }
                     }
                 }
             }
