@@ -84,7 +84,7 @@ Dialog {
                         model: modelData.options
                         currentIndex: modelData.options.indexOf(modelData.default)
                         width: root.width
-                        onCurrentIndexChanged: moduleChosenSettings[modelData.name] = modelData.options[currentIndex].text
+                        onCurrentIndexChanged: moduleChosenSettings[modelData.name] = modelData.options[currentIndex]
                     }
                 }
             }
