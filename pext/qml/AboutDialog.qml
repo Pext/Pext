@@ -42,7 +42,8 @@ Dialog {
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
                                "ru": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
-                               "zh_TW": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
+                               "zh_TW": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]
+                              }
 
     TabView {
         width: parent.width
@@ -99,8 +100,19 @@ Dialog {
                               + "</h3><br>";
 
                         Component.onCompleted: {
+                              var localeNames = Object.keys(locales).sort();
                               for (var lang in translators) {
-                                  text += "<b>" + Object.keys(locales).filter(function(key) { return locales[key] === lang })[0] + "</b><br>";
+                                  var localeText = null;
+                                  for (var index in localeNames) {
+                                    if (locales[localeNames[index]] === lang) {
+                                      localeText = localeNames[index];
+                                      break;
+                                    }
+                                  }
+                                  if (localeText === null) {
+                                    continue;
+                                  }
+                                  text += "<b>" + localeText + "</b><br>";
                                   for (var translatorData in translators[lang]) {
                                       text += translators[lang][translatorData]["name"]
                                       if (translators[lang][translatorData]["email"]) {
