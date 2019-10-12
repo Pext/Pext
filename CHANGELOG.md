@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### API changes
-- Bump API version to 0.9.0
+- Bump API version to 0.12.0
 - Modules can now ask offer a multiple choice dialog using Action.ask_choice
 
 ### Added
