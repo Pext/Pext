@@ -26,7 +26,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="98"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation>L&apos;équipe Pext aimerait remercier les utilisateurs suivants pour la traduction de Pext:</translation>
+        <translation>L&apos;équipe Pext aimerait remercier les utilisateurs suivants pour la traduction de Pext :</translation>
     </message>
 </context>
 <context>
@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished">Pext - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -130,12 +130,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Module source:</source>
-        <translation>Source du module:</translation>
+        <translation>Source du module :</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="46"/>
         <source>Theme source:</source>
-        <translation>Source du Thème:</translation>
+        <translation>Source du Thème :</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="63"/>
@@ -155,12 +155,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="79"/>
         <source>Module:</source>
-        <translation></translation>
+        <translation>Module :</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
         <source>Download source:</source>
-        <translation>Source de téléchargement:</translation>
+        <translation>Source de téléchargement :</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
@@ -180,7 +180,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
         <source>Details:</source>
-        <translation>Détails:</translation>
+        <translation>Détails :</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="131"/>
@@ -226,12 +226,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="35"/>
         <source>Choose the module to install:</source>
-        <translation>Choisissez le module à installer:</translation>
+        <translation>Choisissez le module à installer :</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation>Choisissez la source de téléchargement préférée:</translation>
+        <translation>Choisissez la source de téléchargement préférée :</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
@@ -246,7 +246,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="67"/>
         <source>Module information:</source>
-        <translation>Information du module:</translation>
+        <translation>Information du module :</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
@@ -261,7 +261,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
         <source>License: </source>
-        <translation></translation>
+        <translation>Licence : </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
@@ -310,7 +310,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="42"/>
         <source>Choose the module to load:</source>
-        <translation>Choisissez le module à charger:</translation>
+        <translation>Choisissez le module à charger :</translation>
     </message>
 </context>
 <context>
@@ -323,7 +323,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
         <source>Choose the profile to switch to:</source>
-        <translation>Choisissez le profil à utiliser pour:</translation>
+        <translation>Choisissez le profil à utiliser pour :</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
@@ -346,7 +346,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation>Choisissez le thème vers lequel basculer:</translation>
+        <translation>Choisissez le thème vers lequel basculer :</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
@@ -394,7 +394,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/ManageDialog.qml" line="93"/>
         <source>License: %1</source>
-        <translation></translation>
+        <translation>Licence : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="101"/>
@@ -688,12 +688,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="759"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation>Séparateur entre les entrées de file d&apos;attente de sortie</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="768"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Rien</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="790"/>
@@ -763,7 +763,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="994"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; : Activer l&apos;entrée en surbrillance (ne jamais minimiser)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="996"/>
@@ -883,7 +883,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1072"/>
         <source>Data queued for clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Données placées en file d&apos;attente pour le presse-papiers</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1073"/>
