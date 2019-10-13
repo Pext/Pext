@@ -9,22 +9,22 @@
         <translation>關於 Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="54"/>
+        <location filename="../qml/AboutDialog.qml" line="55"/>
         <source>Copyright</source>
         <translation>版權</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>Translators</source>
         <translation>翻譯者</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="97"/>
+        <location filename="../qml/AboutDialog.qml" line="98"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>想要協助翻譯 Pext？請點選這裡。</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="98"/>
+        <location filename="../qml/AboutDialog.qml" line="99"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>Pext 想要感謝下列這些翻譯 Pext 的使用者：</translation>
     </message>
@@ -448,12 +448,12 @@ Are you sure you want to quit?</source>
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="192"/>
+        <location filename="../qml/ModuleData.qml" line="194"/>
         <source>No results</source>
         <translation>沒有結果</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/ModuleData.qml" line="193"/>
+        <location filename="../qml/ModuleData.qml" line="195"/>
         <source>Still processing %1 module request(s)…</source>
         <translation>
             <numerusform>仍在處理 %1 模組請求……</numerusform>
@@ -760,11 +760,6 @@ Are you sure you want to quit?</source>
         <translation>安裝快捷動作服務</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="994"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate highlighted entry (never minimize)</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;：啟用突顯項目（永不最小化）</translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="996"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;／滑鼠右鍵：開啟右鍵選單／輸入參數</translation>
@@ -1038,6 +1033,11 @@ Are you sure you want to quit?</source>
         <location filename="../qml/main.qml" line="993"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;／滑鼠左鍵：啟用突顯的項目</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="994"/>
+        <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="995"/>

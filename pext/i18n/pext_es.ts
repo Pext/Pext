@@ -9,22 +9,22 @@
         <translation>Información Acerca de Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="54"/>
+        <location filename="../qml/AboutDialog.qml" line="55"/>
         <source>Copyright</source>
         <translation>Derechos de Autor</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>Translators</source>
         <translation>Traductores</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="97"/>
+        <location filename="../qml/AboutDialog.qml" line="98"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>¿Quieres ayudar a traducir Pext? Presione aquí.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="98"/>
+        <location filename="../qml/AboutDialog.qml" line="99"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>El equipo de Pext quisiera agradecer a los siguientes usuarios por traducir Pext:</translation>
     </message>
@@ -448,12 +448,12 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="192"/>
+        <location filename="../qml/ModuleData.qml" line="194"/>
         <source>No results</source>
         <translation>No hay resultados</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/ModuleData.qml" line="193"/>
+        <location filename="../qml/ModuleData.qml" line="195"/>
         <source>Still processing %1 module request(s)…</source>
         <translation>
             <numerusform>Todavía procesando% 1 módulo de solicitud(s)…</numerusform>
@@ -761,11 +761,6 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
         <translation>Instalar servicio de acción rápida</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="994"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="996"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Botón derecho del ratón: abrir menú contextual / ingresar argumentos</translation>
@@ -1041,6 +1036,11 @@ La clase Module del módulo no implementa ModuleBase</translation>
         <location filename="../qml/main.qml" line="993"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Botón izquierdo del ratón: activar entrada resaltada</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="994"/>
+        <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="995"/>

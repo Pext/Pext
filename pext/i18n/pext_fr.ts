@@ -9,22 +9,22 @@
         <translation>À propos de Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="54"/>
+        <location filename="../qml/AboutDialog.qml" line="55"/>
         <source>Copyright</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="86"/>
+        <location filename="../qml/AboutDialog.qml" line="87"/>
         <source>Translators</source>
         <translation>Traducteurs</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="97"/>
+        <location filename="../qml/AboutDialog.qml" line="98"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Voulez-vous aider à traduire Pext? Cliquez ici s&apos;il vous plaît.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="98"/>
+        <location filename="../qml/AboutDialog.qml" line="99"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>L&apos;équipe Pext aimerait remercier les utilisateurs suivants pour la traduction de Pext :</translation>
     </message>
@@ -448,12 +448,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
 <context>
     <name>ModuleData</name>
     <message>
-        <location filename="../qml/ModuleData.qml" line="192"/>
+        <location filename="../qml/ModuleData.qml" line="194"/>
         <source>No results</source>
         <translation>Aucun résultat</translation>
     </message>
     <message numerus="yes">
-        <location filename="../qml/ModuleData.qml" line="193"/>
+        <location filename="../qml/ModuleData.qml" line="195"/>
         <source>Still processing %1 module request(s)…</source>
         <translation>
             <numerusform>En train de traiter %1 demande de module…</numerusform>
@@ -761,11 +761,6 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
         <translation>Installer un service d&apos;action rapide</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="994"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate highlighted entry (never minimize)</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; : Activer l&apos;entrée en surbrillance (ne jamais minimiser)</translation>
-    </message>
-    <message>
         <location filename="../qml/main.qml" line="996"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / bouton droit de la souris: ouvrir le menu contextuel / entrer des arguments</translation>
@@ -1039,6 +1034,11 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
         <location filename="../qml/main.qml" line="993"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Bouton gauche de la souris: Activer l&apos;entrée sélectionnée</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="994"/>
+        <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="995"/>

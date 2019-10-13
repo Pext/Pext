@@ -94,7 +94,7 @@ Item {
                         }
                         MouseArea {
                             anchors.fill: parent
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            acceptedButtons: Qt.LeftButton | Qt.MidButton | Qt.RightButton
 
                             hoverEnabled: true
 
@@ -104,6 +104,8 @@ Item {
                             onClicked: {
                                 if (mouse.button == Qt.LeftButton) {
                                     contextMenu.entryClicked();
+                                } else if (mouse.button == Qt.MidButton) {
+                                    resultList.selectExplicitNoMinimize();
                                 } else {
                                     contextMenu.closeContextMenu();
                                 }
@@ -268,7 +270,7 @@ Item {
                         MouseArea {
                             enabled: !contextMenuContainer.visible
                             anchors.fill: parent
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            acceptedButtons: Qt.LeftButton | Qt.MidButton | Qt.RightButton
 
                             hoverEnabled: true
 
@@ -278,6 +280,8 @@ Item {
                             onClicked: {
                                 if (mouse.button == Qt.LeftButton) {
                                     resultList.entryClicked();
+                                } else if (mouse.button == Qt.MidButton) {
+                                    resultList.selectExplicitNoMinimize();
                                 } else {
                                     resultList.openContextMenu();
                                 }
