@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### API changes
 - Bump API version to 0.12.0
-- Modules can now ask offer a multiple choice dialog using Action.ask_choice
+- Modules can now offer a multiple choice dialog using Action.ask_choice
 
 ### Added
 - Explanation on Shift+Return key

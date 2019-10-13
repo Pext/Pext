@@ -13,7 +13,6 @@
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 
 [![Matrix](https://img.shields.io/matrix/pext:matrix.org.svg)](https://riot.im/app/#/room/#pext:matrix.org)
-[![OpenCollective](https://opencollective.com/pext/tiers/sponsor/badge.svg?label=sponsor&color=brightgreen)](https://opencollective.com/pext)
 
 ## Contents
 
