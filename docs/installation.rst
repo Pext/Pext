@@ -15,6 +15,12 @@ Alternatively, you may install Pext through pip::
 
   pip install pext
 
+If you are unable to run Pext due to Gatekeeper settings, run the following command to allow running programs from any source::
+
+  sudo spctl --master-disable
+
+You may also need to go to Security & Privacy settings and select "Allow apps downloaded from: Anywhere"
+
 GNU/Linux
 ---------
 
