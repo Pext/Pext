@@ -927,8 +927,6 @@ class ProfileManager():
                     settings[setting] = module['settings'][setting]
             # Append Pext state variables
             for setting in module['vm'].settings:
-                print(setting)
-                print(module['vm'].settings[setting])
                 settings[setting] = module['vm'].settings[setting]
 
             config['{}_{}'.format(number, module['metadata']['id'])] = settings
@@ -1164,7 +1162,7 @@ class ModuleManager():
 
         # Set default for internal settings not loaded from file
         if '__pext_sort_mode' not in module['settings']:
-            module['settings']['__pext_sort_mode'] = SortMode('Module').value
+            module['settings']['__pext_sort_mode'] = SortMode(SortMode.Module).value
 
         view_settings = {}
         module_settings = {}
