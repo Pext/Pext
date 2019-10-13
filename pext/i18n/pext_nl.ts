@@ -1033,7 +1033,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="964"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Middelste muisknop: activeer het gemarkeerde item (nooit minimaliseren)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="965"/>

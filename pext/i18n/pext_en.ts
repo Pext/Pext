@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished">Pext - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -567,12 +567,12 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="418"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Switch to next loaded module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="426"/>
         <source>Switch to previous loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Switch to previous loaded module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="437"/>
@@ -648,7 +648,7 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="679"/>
         <source>Turbo Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Turbo Mode</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="687"/>
@@ -688,12 +688,12 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="759"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation>Separator between output queue entries</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="768"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Nothing</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="790"/>
@@ -868,12 +868,12 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1072"/>
         <source>All queued data has been typed</source>
-        <translation type="unfinished"></translation>
+        <translation>All queued data has been typed</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1073"/>
         <source>Data queued for clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Data queued for clipboard</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1074"/>
@@ -908,12 +908,12 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1080"/>
         <source>Pynput is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>Pynput is unavailable</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1081"/>
         <source>PyAutoGUI is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>PyAutoGUI is unavailable</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="479"/>
@@ -1033,7 +1033,7 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="964"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="965"/>
