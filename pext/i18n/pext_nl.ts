@@ -748,17 +748,17 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1026"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorteren: op module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1028"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorteren: oplopend</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1030"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorteren: aflopend</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1051"/>
