@@ -218,6 +218,9 @@ Item {
                 signal openContextMenu()
                 signal openArgumentsInput()
 
+                signal sortModeChanged()
+                property var pextSortMode: sortMode
+
                 property int normalEntries: resultListModelNormalEntries
                 property int commandEntries: resultListModelCommandEntries
                 property bool hasEntries: resultListModelHasEntries

@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Support for metadata.json files to show a dropdown of choices
 - Support for middle mouse button causing selection without minimization
 
+### Changed
+- Sorting settings are now per loaded module
+
 ### Fixed
 - TRANSLATION MISSING: failed_to_update_dependencies
 - Global hotkey not working

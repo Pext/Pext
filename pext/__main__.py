@@ -230,14 +230,12 @@ class Logger():
 
     window = None
     status_text = None  # type: QObject
-    status_queue = None  # type: QObject
 
     @staticmethod
     def bind_window(window: 'Window') -> None:
         """Give the logger the ability to log info to the main window."""
         Logger.window = window
         Logger.status_text = window.window.findChild(QObject, "statusText")
-        Logger.status_queue = window.window.findChild(QObject, "statusQueue")
 
     @staticmethod
     def _queue_message(module_name: str, message: str, type_name: str) -> None:
@@ -833,7 +831,6 @@ class ProfileManager():
                                'minimize_mode',
                                'output_mode',
                                'output_separator',
-                               'sort_mode',
                                'theme',
                                'tray',
                                'global_hotkey_enabled',
@@ -928,6 +925,11 @@ class ProfileManager():
                 # Only save non-internal variables
                 if setting[0] != "_":
                     settings[setting] = module['settings'][setting]
+            # Append Pext state variables
+            for setting in module['vm'].settings:
+                print(setting)
+                print(module['vm'].settings[setting])
+                settings[setting] = module['vm'].settings[setting]
 
             config['{}_{}'.format(number, module['metadata']['id'])] = settings
 
@@ -1160,9 +1162,28 @@ class ModuleManager():
         if module_dependencies_path not in sys.path:
             sys.path.append(module_dependencies_path)
 
+        # Set default for internal settings not loaded from file
+        if '__pext_sort_mode' not in module['settings']:
+            module['settings']['__pext_sort_mode'] = SortMode('Module').value
+
+        view_settings = {}
+        module_settings = {}
+        for setting in module['settings']:
+            value = module['settings'][setting]
+            if setting.startswith("__pext_"):
+                # Export settings relevant for ViewModel to ViewModel variable
+                view_settings[setting] = value
+            else:
+                # Don't export internal Pext settings to module itself
+                module_settings[setting] = value
+
+        module['settings'] = module_settings
+
         # Prepare viewModel and context
-        vm = ViewModel()
+        vm = ViewModel(view_settings)
         module_context = QQmlContext(window.context)
+        module_context.setContextProperty(
+            "sortMode", vm.sort_mode)
         module_context.setContextProperty(
             "resultListModel", vm.result_list_model_list)
         module_context.setContextProperty(
@@ -1663,10 +1684,11 @@ class ModuleThreadInitializer(threading.Thread):
 class ViewModel():
     """Manage the communication between user interface and module."""
 
-    def __init__(self) -> None:
+    def __init__(self, view_settings) -> None:
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
+        self._settings = {}  # type: Dict[str, Any]
         self.command_list = []  # type: List
         self.entry_list = []  # type: List
         self.filtered_entry_list = []  # type: List
@@ -1687,6 +1709,59 @@ class ViewModel():
         self.extra_info_last_entry_type = None
         self.selection_thread = None  # type: Optional[threading.Thread]
         self.minimize_disabled = False
+
+        self.settings = view_settings
+
+    @property
+    def settings(self):
+        """Return all ViewModel settings."""
+        return self._settings
+
+    @settings.setter
+    def settings(self, settings):
+        """Overwrite ViewModel settings."""
+        self._settings = settings
+
+    @property
+    def sort_mode(self):
+        """Retrieve the current sorting mode as printable name."""
+        try:
+            return SortMode(self._settings['__pext_sort_mode']).name
+        except ValueError:
+            # Maybe mode doesn't exist (anymore)
+            # Return first value
+            for data in SortMode:
+                self.sort_mode = data.value
+                return data.name
+
+    @sort_mode.setter
+    def sort_mode(self, sort_mode):
+        """Set the new sorting mode (by int)."""
+        self._settings['__pext_sort_mode'] = sort_mode
+        try:
+            self.context.setContextProperty("sortMode", self.sort_mode)
+            # Force a resort
+            self.search(new_entries=True)
+        except AttributeError:
+            pass
+
+        # TODO: Save setting to module file
+
+    def next_sort_mode(self):
+        """Calculate and set the next sorting mode available."""
+        want_next = False
+        for data in SortMode:
+            if want_next:
+                self.sort_mode = data.value
+                return
+
+            if data.value == self._settings['__pext_sort_mode']:
+                want_next = True
+
+        # End of list reached
+        for data in SortMode:
+            self.sort_mode = data.value
+            return
 
     def make_selection(self, disable_minimize=False) -> None:
         """Make a selection if no selection is currently being processed.
@@ -1764,6 +1839,9 @@ class ViewModel():
         self.context_menu_model = context_menu_model
         self.base_info_panel = base_info_panel
         self.context_info_panel = context_info_panel
+
+        # Force propagation of settings values to QML
+        self.settings = self._settings
 
     def bind_module(self, module: ModuleBase) -> None:
         """Bind the module.
@@ -1843,8 +1921,8 @@ class ViewModel():
                 entry_list.insert(0, Translation.get("enter_arguments"))
 
             # Sort if sorting is enabled
-            if Settings.get('sort_mode') != SortMode.Module:
-                reverse = Settings.get('sort_mode') == SortMode.Descending
+            if self.settings['__pext_sort_mode'] != SortMode.Module:
+                reverse = self.settings['__pext_sort_mode'] == SortMode.Descending
                 self.sorted_context_list = sorted(entry_list, reverse=reverse)
                 self.sorted_context_base_list = sorted(self.context_menu_base, reverse=reverse)
             else:
@@ -1860,8 +1938,8 @@ class ViewModel():
         # Else, search in normal list
         else:
             # Sort if sorting is enabled
-            if Settings.get('sort_mode') != SortMode.Module:
-                reverse = Settings.get('sort_mode') == SortMode.Descending
+            if self.settings['__pext_sort_mode'] != SortMode.Module:
+                reverse = self.settings['__pext_sort_mode'] == SortMode.Descending
                 self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
                 self.sorted_command_list = sorted(self.command_list, reverse=reverse)
                 self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
@@ -2350,13 +2428,6 @@ class Window():
         menu_output_separator_tab = self.window.findChild(
             QObject, "menuOutputSeparatorTab")
 
-        menu_sort_module_shortcut = self.window.findChild(
-            QObject, "menuSortModule")
-        menu_sort_ascending_shortcut = self.window.findChild(
-            QObject, "menuSortAscending")
-        menu_sort_descending_shortcut = self.window.findChild(
-            QObject, "menuSortDescending")
-
         menu_minimize_normally_shortcut = self.window.findChild(
             QObject, "menuMinimizeNormally")
         menu_minimize_to_tray_shortcut = self.window.findChild(
@@ -2416,10 +2487,6 @@ class Window():
         menu_output_separator_enter.toggled.connect(self._menu_output_separator_enter)
         menu_output_separator_tab.toggled.connect(self._menu_output_separator_tab)
 
-        menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
-        menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
-        menu_sort_descending_shortcut.toggled.connect(self._menu_sort_descending)
-
         menu_minimize_normally_shortcut.toggled.connect(self._menu_minimize_normally)
         menu_minimize_to_tray_shortcut.toggled.connect(self._menu_minimize_to_tray)
         menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
@@ -2461,16 +2528,6 @@ class Window():
         QQmlProperty.write(menu_output_separator_tab,
                            "checked",
                            int(Settings.get('output_separator')) == OutputSeparator.Tab)
-
-        QQmlProperty.write(menu_sort_module_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Module)
-        QQmlProperty.write(menu_sort_ascending_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Ascending)
-        QQmlProperty.write(menu_sort_descending_shortcut,
-                           "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Descending)
 
         QQmlProperty.write(menu_minimize_normally_shortcut,
                            "checked",
@@ -2601,6 +2658,9 @@ class Window():
                     lambda: element['vm'].select(disable_minimize=True))
         context_menu_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
+
+        # Enable changing sort mode
+        result_list_model.sortModeChanged.connect(element['vm'].next_sort_mode)
 
         # Enable info pane
         result_list_model.currentIndexChanged.connect(element['vm'].update_context_info_panel)
@@ -2907,24 +2967,6 @@ class Window():
     def _menu_output_separator_tab(self, enabled: bool) -> None:
         if enabled:
             Settings.set('output_separator', OutputSeparator.Tab)
-
-    def _menu_sort_module(self, enabled: bool) -> None:
-        if enabled:
-            Settings.set('sort_mode', SortMode.Module)
-            for tab in self.tab_bindings:
-                tab['vm'].search(new_entries=True)
-
-    def _menu_sort_ascending(self, enabled: bool) -> None:
-        if enabled:
-            Settings.set('sort_mode', SortMode.Ascending)
-            for tab in self.tab_bindings:
-                tab['vm'].search(new_entries=True)
-
-    def _menu_sort_descending(self, enabled: bool) -> None:
-        if enabled:
-            Settings.set('sort_mode', SortMode.Descending)
-            for tab in self.tab_bindings:
-                tab['vm'].search(new_entries=True)
 
     def _menu_minimize_normally(self, enabled: bool) -> None:
         if enabled:
@@ -3496,7 +3538,6 @@ class Settings():
         'profile': ProfileManager.default_profile_name(),
         'output_mode': OutputMode.DefaultClipboard,
         'output_separator': OutputSeparator.Enter,
-        'sort_mode': SortMode.Module,
         'style': None,
         'theme': None,
         'global_hotkey_enabled': True,

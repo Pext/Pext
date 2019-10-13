@@ -787,36 +787,6 @@ ApplicationWindow {
             }
 
             Menu {
-                title: qsTr("Sorting style")
-
-                ExclusiveGroup {
-                    id: menuSortGroup
-                    objectName: "menuSortGroup"
-                }
-
-                MenuItem {
-                    objectName: "menuSortModule"
-                    text: qsTr("Sort by module choice")
-                    checkable: true
-                    exclusiveGroup: menuSortGroup
-                }
-
-                MenuItem {
-                    objectName: "menuSortAscending"
-                    text: qsTr("Sort ascending")
-                    checkable: true
-                    exclusiveGroup: menuSortGroup
-                }
-
-                MenuItem {
-                    objectName: "menuSortDescending"
-                    text: qsTr("Sort descending")
-                    checkable: true
-                    exclusiveGroup: menuSortGroup
-                }
-            }
-
-            Menu {
                 title: qsTr("Minimizing behaviour")
 
                 ExclusiveGroup {
@@ -1041,6 +1011,37 @@ ApplicationWindow {
                         return qsTr("Ready");
                     } else {
                        qsTr("Waiting");
+                    }
+                }
+            }
+
+            Label {
+                objectName: "statusSortMode"
+
+                text: {
+                    var tab = tabs.getTab(tabs.currentIndex);
+                    if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
+                    var sortMode = tab.item.children[0].children[2].contentItem.pextSortMode;
+                    if (sortMode == 'Module') {
+                        return qsTr("Sort: Module");
+                    } else if (sortMode == 'Ascending') {
+                        return qsTr("Sort: Ascending");
+                    } else if (sortMode == 'Descending') {
+                        return qsTr("Sort: Descending");
+                    } else {
+                        return sortMode;
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton
+
+                    hoverEnabled: true
+
+                    onClicked: {
+                        var tab = tabs.getTab(tabs.currentIndex);
+                        if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
+                        tab.item.children[0].children[2].contentItem.sortModeChanged();
                     }
                 }
             }

@@ -696,226 +696,221 @@ Biztosan ki szeretne lépni?</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="790"/>
-        <source>Sorting style</source>
-        <translation>Rendezés szempontja</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="799"/>
-        <source>Sort by module choice</source>
-        <translation>Rendezés a modul választása szerint</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="806"/>
-        <source>Sort ascending</source>
-        <translation>Rendezés növekvő sorrendben</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="813"/>
-        <source>Sort descending</source>
-        <translation>Rendezés csökkenő sorrendben</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="820"/>
         <source>Minimizing behaviour</source>
         <translation>Minimalizálás típusa</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="829"/>
+        <location filename="../qml/main.qml" line="799"/>
         <source>Minimize normally</source>
         <translation>Általános minimalizálás</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="837"/>
+        <location filename="../qml/main.qml" line="807"/>
         <source>Minimize to tray</source>
         <translation>Minimalizálás a tálcára</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="844"/>
+        <location filename="../qml/main.qml" line="814"/>
         <source>Manual only: Minimize normally</source>
         <translation>Csak kézi: Általános minimalizálás</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="852"/>
+        <location filename="../qml/main.qml" line="822"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Csak kézi: Minimalizálás a tálcára</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="878"/>
+        <location filename="../qml/main.qml" line="848"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
         <translation>Hozza előtérbe a Pextet, ha lenyomja a globális gyorsbillentyűt (%1)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="890"/>
+        <location filename="../qml/main.qml" line="860"/>
         <source>&amp;Help</source>
         <translation>&amp;Segítség</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="904"/>
+        <location filename="../qml/main.qml" line="874"/>
         <source>Check for updates</source>
         <translation>Frissítések keresése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="910"/>
+        <location filename="../qml/main.qml" line="880"/>
         <source>Install quick action service</source>
         <translation>Quick action szolgáltatás telepítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="996"/>
+        <location filename="../qml/main.qml" line="966"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Jobbklikk: Kontextus menü megnyitása / argumentumok megadása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1050"/>
+        <location filename="../qml/main.qml" line="1026"/>
+        <source>Sort: Module</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1028"/>
+        <source>Sort: Ascending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1030"/>
+        <source>Sort: Descending</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1051"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
         <translation>Module&apos;s Module class does not implement ModuleBase</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1051"/>
+        <location filename="../qml/main.qml" line="1052"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
         <translation>{0} modul betöltése sikertelen: {1} function has {2} parameters (excluding self), expected {3}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1052"/>
+        <location filename="../qml/main.qml" line="1053"/>
         <source>{0} is already installed</source>
         <translation>{0} már telepítve van</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1053"/>
+        <location filename="../qml/main.qml" line="1054"/>
         <source>Downloading {0} from {1}</source>
         <translation>{0} letöltése a {1} címről</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1054"/>
+        <location filename="../qml/main.qml" line="1055"/>
         <source>Failed to download {0}: {1}</source>
         <translation>{0} letöltése sikertelen: {1}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1055"/>
+        <location filename="../qml/main.qml" line="1056"/>
         <source>Downloading dependencies for {0}</source>
         <translation>{0} függőségeinek letöltése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1056"/>
+        <location filename="../qml/main.qml" line="1057"/>
         <source>Failed to download dependencies for {0}</source>
         <translation>{0} függőségeinek letöltése sikertelen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1057"/>
+        <location filename="../qml/main.qml" line="1058"/>
         <source>Installed {0}</source>
         <translation>{0} telepítve</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1058"/>
+        <location filename="../qml/main.qml" line="1059"/>
         <source>Uninstalling {0}</source>
         <translation>{0} eltávolítása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1059"/>
+        <location filename="../qml/main.qml" line="1060"/>
         <source>{0} is already uninstalled</source>
         <translation>{0} már el van távolítva</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1060"/>
+        <location filename="../qml/main.qml" line="1061"/>
         <source>Uninstalled {0}</source>
         <translation>{0} eltávolítva</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1061"/>
+        <location filename="../qml/main.qml" line="1062"/>
         <source>Updating {0}</source>
         <translation>{0} frissítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1062"/>
+        <location filename="../qml/main.qml" line="1063"/>
         <source>{0} is already up to date</source>
         <translation>{0} már naprakész</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1063"/>
+        <location filename="../qml/main.qml" line="1064"/>
         <source>Failed to download update for {0}: {1}</source>
         <translation>{0} frissítésének letöltése sikertelen: {1}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1064"/>
+        <location filename="../qml/main.qml" line="1065"/>
         <source>Updating dependencies for {0}</source>
         <translation>{0} függőségeinek letöltése sikertelen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1065"/>
+        <location filename="../qml/main.qml" line="1066"/>
         <source>Failed to update dependencies for {0}</source>
         <translation>Nem sikerült frissíteni a(z) {0} függőségeit</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1066"/>
+        <location filename="../qml/main.qml" line="1067"/>
         <source>Updated {0}</source>
         <translation>{0} frissítve</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1067"/>
+        <location filename="../qml/main.qml" line="1068"/>
         <source>Checking for Pext updates</source>
         <translation>Pext frissítések keresése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1068"/>
+        <location filename="../qml/main.qml" line="1069"/>
         <source>Failed to check for Pext updates: {0}</source>
         <translation>Pext frissítések keresése sikertelen: {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1069"/>
+        <location filename="../qml/main.qml" line="1070"/>
         <source>Pext is already up-to-date</source>
         <translation>A Pext már naprakész</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1070"/>
+        <location filename="../qml/main.qml" line="1071"/>
         <source>Data queued for typing</source>
         <translation>Sorban álló adatok</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1071"/>
+        <location filename="../qml/main.qml" line="1072"/>
         <source>All queued data has been typed</source>
         <translation>Az összes sorban álló adat begépelve</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1072"/>
+        <location filename="../qml/main.qml" line="1073"/>
         <source>Data queued for clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1073"/>
+        <location filename="../qml/main.qml" line="1074"/>
         <source>Data copied to clipboard</source>
         <translation>Vágólapra másolt adatok</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1074"/>
+        <location filename="../qml/main.qml" line="1075"/>
         <source>Enter arguments</source>
         <translation>Argumentumok megadása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1075"/>
+        <location filename="../qml/main.qml" line="1076"/>
         <source>No context menu available</source>
         <translation>Kontextus menü nem elérhető</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1076"/>
+        <location filename="../qml/main.qml" line="1077"/>
         <source>No tab completion possible</source>
         <translation>Kiegészítés nem lehetséges</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1077"/>
+        <location filename="../qml/main.qml" line="1078"/>
         <source>No entry selected</source>
         <translation>Nincs kijelölt bejegyzés</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1078"/>
+        <location filename="../qml/main.qml" line="1079"/>
         <source>No command available for current filter</source>
         <translation>Nincs elérhető parancs a jelenlegi szűrőhöz</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1079"/>
+        <location filename="../qml/main.qml" line="1080"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput nem elérhető</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1080"/>
+        <location filename="../qml/main.qml" line="1081"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI nem elérhető</translation>
     </message>
@@ -945,122 +940,122 @@ Biztosan ki szeretne lépni?</translation>
         <translation>P&amp;rofil</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="859"/>
+        <location filename="../qml/main.qml" line="829"/>
         <source>Automatic updates</source>
         <translation>Automatikus frissítések</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="863"/>
+        <location filename="../qml/main.qml" line="833"/>
         <source>Automatically check for Pext updates</source>
         <translation>A Pext frissítéseinek automatikus keresése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="870"/>
+        <location filename="../qml/main.qml" line="840"/>
         <source>Automatically update modules and themes</source>
         <translation>Modulok és témák automatikus frissítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="884"/>
+        <location filename="../qml/main.qml" line="854"/>
         <source>Always show tray icon</source>
         <translation>Mindig mutassa a tálca ikont</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="894"/>
+        <location filename="../qml/main.qml" line="864"/>
         <source>About</source>
         <translation>Névjegy</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="915"/>
+        <location filename="../qml/main.qml" line="885"/>
         <source>Visit homepage</source>
         <translation>Honlap meglátogatása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="931"/>
+        <location filename="../qml/main.qml" line="901"/>
         <source>Clear</source>
         <translation>Törlés</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="931"/>
+        <location filename="../qml/main.qml" line="901"/>
         <source>Back</source>
         <translation>Vissza</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="937"/>
+        <location filename="../qml/main.qml" line="907"/>
         <source>Type to search</source>
         <translation>Gépeljen a kereséshez</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="985"/>
+        <location filename="../qml/main.qml" line="955"/>
         <source>Hotkey reference</source>
         <translation>Gyorsbillentyű referencia</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="986"/>
+        <location filename="../qml/main.qml" line="956"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: A Pext előtérbe helyezése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="987"/>
+        <location filename="../qml/main.qml" line="957"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Új lap nyitása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="988"/>
+        <location filename="../qml/main.qml" line="958"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Aktív lap újratöltése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="989"/>
+        <location filename="../qml/main.qml" line="959"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Aktív lap bezárása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="990"/>
+        <location filename="../qml/main.qml" line="960"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Következő lapra váltás</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="991"/>
+        <location filename="../qml/main.qml" line="961"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Előző lapra váltás</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="992"/>
+        <location filename="../qml/main.qml" line="962"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Bemenet kiegészítése</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="993"/>
+        <location filename="../qml/main.qml" line="963"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Balklikk: Kiemelt bejegyzés aktiválása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="994"/>
+        <location filename="../qml/main.qml" line="964"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="995"/>
+        <location filename="../qml/main.qml" line="965"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Jobbklikk: Argumentumok megadása a kiemelt parancshoz</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="997"/>
+        <location filename="../qml/main.qml" line="967"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Vissza / Pext minimalizálása</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1039"/>
+        <location filename="../qml/main.qml" line="1009"/>
         <source>Processing: %1 (%2)</source>
         <translation>Feldolgozás: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1041"/>
+        <location filename="../qml/main.qml" line="1011"/>
         <source>Ready</source>
         <translation>Kész</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1043"/>
+        <location filename="../qml/main.qml" line="1013"/>
         <source>Waiting</source>
         <translation>Várakozás</translation>
     </message>
