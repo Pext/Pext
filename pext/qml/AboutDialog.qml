@@ -101,6 +101,11 @@ Dialog {
 
                         Component.onCompleted: {
                               var localeNames = Object.keys(locales).sort();
+                              if (localeNames.length == 0) {
+                                text += "<i>No translations could be loaded. Compile some translations to see translation contributors.</i>"
+                                return;
+                              }
+
                               for (var lang in translators) {
                                   var localeText = null;
                                   for (var index in localeNames) {
