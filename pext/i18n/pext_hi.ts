@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्स्ट</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished"></translation>
+        <translation>पैक्स्ट- %1</translation>
     </message>
 </context>
 <context>
@@ -763,7 +763,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="994"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;:हाइलाइट की गई प्रविष्टि सक्रिय करें (कभी छोटा नहीं करें)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="996"/>
