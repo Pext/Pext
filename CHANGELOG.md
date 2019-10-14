@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Explanation on Shift+Return key
 - Support for metadata.json files to show a dropdown of choices
 - Support for middle mouse button causing selection without minimization
+- Buttons to open a new module or close the currently open module
 
 ### Changed
 - Sorting settings are now per loaded module

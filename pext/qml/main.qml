@@ -895,10 +895,9 @@ ApplicationWindow {
             Layout.fillHeight: true
 
             Button {
-                enabled: tabs.count > 0 && tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
+                enabled: tabs.count > 0 && tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.tree.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
 
-                width: 60
-                text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
+                text: "←"
                 objectName: "backButton"
             }
 
@@ -915,6 +914,17 @@ ApplicationWindow {
                 }
 
                 Layout.fillWidth: true
+            }
+
+            Button {
+                text: "➕"
+                onClicked: menuLoadModule.trigger()
+            }
+
+            Button {
+                visible: tabs.count > 0
+                text: "❌"
+                onClicked: menuCloseActiveModule.trigger()
             }
         }
 
