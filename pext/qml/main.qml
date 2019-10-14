@@ -982,8 +982,51 @@ ApplicationWindow {
             width: parent.width
 
             Label {
+                id: statusText
                 objectName: "statusText"
                 Layout.fillWidth: true
+            }
+
+            Label {
+                visible: statusText.text
+                text: "|"
+            }
+
+            Label {
+                id: statusSortMode
+                objectName: "statusSortMode"
+
+                text: {
+                    var tab = tabs.getTab(tabs.currentIndex);
+                    if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
+                    var sortMode = tab.item.children[0].children[2].contentItem.pextSortMode;
+                    if (sortMode == 'Module') {
+                        return qsTr("Sort: Module");
+                    } else if (sortMode == 'Ascending') {
+                        return qsTr("Sort: Ascending");
+                    } else if (sortMode == 'Descending') {
+                        return qsTr("Sort: Descending");
+                    } else {
+                        return sortMode;
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton
+
+                    hoverEnabled: true
+
+                    onClicked: {
+                        var tab = tabs.getTab(tabs.currentIndex);
+                        if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
+                        tab.item.children[0].children[2].contentItem.sortModeChanged();
+                    }
+                }
+            }
+
+            Label {
+                visible: statusSortMode.text
+                text: "|"
             }
 
             Label {
@@ -1011,37 +1054,6 @@ ApplicationWindow {
                         return qsTr("Ready");
                     } else {
                        qsTr("Waiting");
-                    }
-                }
-            }
-
-            Label {
-                objectName: "statusSortMode"
-
-                text: {
-                    var tab = tabs.getTab(tabs.currentIndex);
-                    if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
-                    var sortMode = tab.item.children[0].children[2].contentItem.pextSortMode;
-                    if (sortMode == 'Module') {
-                        return qsTr("Sort: Module");
-                    } else if (sortMode == 'Ascending') {
-                        return qsTr("Sort: Ascending");
-                    } else if (sortMode == 'Descending') {
-                        return qsTr("Sort: Descending");
-                    } else {
-                        return sortMode;
-                    }
-                }
-                MouseArea {
-                    anchors.fill: parent
-                    acceptedButtons: Qt.LeftButton
-
-                    hoverEnabled: true
-
-                    onClicked: {
-                        var tab = tabs.getTab(tabs.currentIndex);
-                        if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
-                        tab.item.children[0].children[2].contentItem.sortModeChanged();
                     }
                 }
             }
