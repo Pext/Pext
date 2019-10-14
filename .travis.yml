@@ -1,6 +1,7 @@
 sudo: required
 language: generic
 dist: xenial
+osx_image: xcode11.2
 
 env:
   - PEXT_BUILD_PORTABLE=0
