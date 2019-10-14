@@ -33,6 +33,8 @@ Dialog {
     property var moduleSettings: []
     property var moduleChosenSettings: {}
 
+    property var menuInstallModule
+
     ColumnLayout {
         width: parent.width
 
@@ -85,12 +87,19 @@ Dialog {
                         currentIndex: modelData.options !== undefined ? modelData.options.indexOf(modelData.default) : 0
                         width: root.width
                         onCurrentIndexChanged: {
-                          if (modelData.options !== undefined) {
-                            moduleChosenSettings[modelData.name] = modelData.options[currentIndex];
-                          }
+                            if (modelData.options !== undefined) {
+                                moduleChosenSettings[modelData.name] = modelData.options[currentIndex];
+                            }
                         }
                     }
                 }
+            }
+        }
+        Button {
+            text: qsTr("Get more modules")
+            onClicked: {
+                menuInstallModule.trigger();
+                reject();
             }
         }
     }

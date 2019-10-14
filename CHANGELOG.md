@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Sorting settings are now per loaded module
+- If there are no modules or themes, trying to load one will pop up the installation dialog
 
 ### Fixed
 - TRANSLATION MISSING: failed_to_update_dependencies

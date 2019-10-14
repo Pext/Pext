@@ -461,14 +461,14 @@ ApplicationWindow {
 
                 onTriggered: {
                     if (Object.keys(modules).length == 0) {
-                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
-                        noModulesInstalledDialog.createObject(applicationWindow);
+                        menuInstallModuleFromList.trigger();
                     } else {
                         var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
                         loadModuleDialog.createObject(applicationWindow,
                             {"modules": modules,
                              "loadRequest": loadModuleRequest,
-                             "modulesPath": modulesPath});
+                             "modulesPath": modulesPath,
+                             "menuInstallModule": menuInstallModuleFromList});
                     }
                 }
             }
@@ -504,6 +504,7 @@ ApplicationWindow {
                 signal installModuleRequest(string url, string identifier, string name)
 
                 MenuItem {
+                    id: menuInstallModuleFromList
                     text: qsTr("From online module list")
 
                     property var repositories:
@@ -551,15 +552,15 @@ ApplicationWindow {
 
                 onTriggered: {
                     if (Object.keys(themes).length == 0) {
-                        var noThemesInstalledDialog = Qt.createComponent("NoThemesInstalledDialog.qml");
-                        noThemesInstalledDialog.createObject(applicationWindow);
+                        menuInstallThemeFromList.trigger();
                     } else {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
                             {"currentTheme": currentTheme,
                              "themes": themes,
                              "loadRequest": loadThemeRequest,
-                             "themesPath": themesPath});
+                             "themesPath": themesPath,
+                             "menuInstallTheme": menuInstallThemeFromList});
                     }
                 }
             }
@@ -595,6 +596,7 @@ ApplicationWindow {
                 signal installThemeRequest(string url, string identifier, string name)
 
                 MenuItem {
+                    id: menuInstallThemeFromList
                     text: qsTr("From online theme list")
 
                     property var repositories:

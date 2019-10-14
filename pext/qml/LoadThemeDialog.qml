@@ -51,6 +51,14 @@ Dialog {
         Label {
             text: qsTr("Note: Pext will restart to apply the new theme.")
         }
+
+        Button {
+            text: qsTr("Get more themes")
+            onClicked: {
+                menuInstallTheme.trigger();
+                reject();
+            }
+        }
     }
 
     Component.onCompleted: {
