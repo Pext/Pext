@@ -37,6 +37,7 @@ import time
 import traceback
 import webbrowser
 import tempfile
+import psutil
 
 from datetime import datetime
 from distutils.util import strtobool
@@ -861,12 +862,8 @@ class ProfileManager():
             return None
 
         pid = int(open(pidfile, 'r').read())
-        if platform.system() == 'Windows':
-            return True
 
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
+        if not psutil.pid_exists(pid):
             return None
 
         return pid
