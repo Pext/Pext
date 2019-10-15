@@ -67,7 +67,6 @@ from watchdog.observers import Observer
 
 pyautogui_error = None
 if platform.system() == 'Darwin':
-    import accessibility  # NOQA
     # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
     try:
         from pyautogui import hotkey, typewrite
@@ -2292,11 +2291,6 @@ class Window():
 
     def __init__(self, app: QApplication, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
-        # Ask for accessibility access to autotype and focus-fix on macOS
-        if platform.system() == 'Darwin':
-            self.acc = accessibility.create_systemwide_ref()
-            self.acc.set_timeout(300)
-
         # Text to type on close if needed
         self.output_queue = []  # type: List[str]
 
@@ -2945,12 +2939,6 @@ class Window():
                 QQmlProperty.write(self.menu_output_auto_type, "checked", False)
                 QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
                 return
-
-            if platform.system() == 'Darwin':
-                if not accessibility.is_enabled() or not accessibility.is_trusted():
-                    QQmlProperty.write(self.menu_output_auto_type, "checked", False)
-                    QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
-                    return
 
             Settings.set('output_mode', OutputMode.AutoType)
 
