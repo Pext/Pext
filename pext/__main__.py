@@ -863,10 +863,10 @@ class ProfileManager():
             return None
 
         pid = int(open(pidfile, 'r').read())
+
         if not psutil.pid_exists(pid):
-            print(pid)
             return None
-            
+
         return pid
 
     @staticmethod
