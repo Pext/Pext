@@ -3991,6 +3991,11 @@ def main() -> None:
     if Settings.get('style') is not None:
         app.setStyle(QStyleFactory().create(Settings.get('style')))
 
+    # Qt5's default style for macOS seems to have sizing bugs for buttons, so
+    # we force the Fusion theme instead
+    if platform.system() == 'Darwin':
+        app.setStyle(QStyleFactory().create('Fusion'))
+
     theme_identifier = Settings.get('theme')
     if theme_identifier is not None:
         # Qt5's default style for Windows, windowsvista, does not support palettes properly
