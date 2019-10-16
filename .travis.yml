@@ -44,7 +44,7 @@ after_success:
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$PEXT_BUILD_PORTABLE" -eq 1 ]; then bash upload.sh Pext*.zip; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$PEXT_BUILD_PORTABLE" -eq 0 ]; then bash upload.sh Pext*.dmg; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash upload.sh Pext*.AppImage*; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash upload.sh "$REPO_ROOT/pext/VERSION"; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash upload.sh "$TRAVIS_BUILD_DIR/pext/VERSION"; fi
 
 branches:
   except:
