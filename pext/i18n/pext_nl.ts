@@ -315,7 +315,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Meer modules downloaden</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Meer thema&apos;s downloaden</translation>
     </message>
 </context>
 <context>

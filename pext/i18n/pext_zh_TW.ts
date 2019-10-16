@@ -315,7 +315,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>取得更多模組</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>取得更多佈景主題</translation>
     </message>
 </context>
 <context>
@@ -757,17 +757,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1016"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>排序：模組</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1018"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>排序：遞增</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1020"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>排序：遞減</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1075"/>
@@ -1032,7 +1032,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="976"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / 滑鼠中鍵：啟動突顯項目（永不最小化）</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="977"/>
