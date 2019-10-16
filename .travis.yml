@@ -44,6 +44,7 @@ after_success:
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$PEXT_BUILD_PORTABLE" -eq 1 ]; then bash upload.sh Pext*.zip; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" -a "$PEXT_BUILD_PORTABLE" -eq 0 ]; then bash upload.sh Pext*.dmg; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash upload.sh Pext*.AppImage*; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash upload.sh "$REPO_ROOT/pext/VERSION"; fi
 
 branches:
   except:
@@ -51,11 +52,3 @@ branches:
     - /^(?i:continuous)$/
     - # Also, don't build i18n, the only changes are uncompiled translation files
     - i18n
-
-notifications:
-    webhooks:
-        urls:
-            - "https://scalar.vector.im/api/neb/services/hooks/dHJhdmlzLWNpLyU0MFN5bHZpZUxvcnh1JTNBbWF0cml4Lm9yZy8lMjFQcEdURlpIeXVpY3ZQRGVNVUglM0FtYXRyaXgub3Jn"
-        on_success: always
-        on_failure: always
-        on_start: never
