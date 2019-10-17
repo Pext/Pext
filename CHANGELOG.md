@@ -15,12 +15,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Support for metadata.json files to show a dropdown of choices
 - Support for middle mouse button causing selection without minimization
 - Buttons to open a new module or close the currently open module
+- Support for reporting bugs to modules directly
 
 ### Changed
 - Sorting settings are now per loaded module
 - If there are no modules or themes, trying to load one will pop up the installation dialog
 - macOS now also uses Qt's Fusion theme (less native, but less glitches)
 - Update notifications are no longer in a dialog box
+- Nightly versions now check for nightly updates
 
 ### Fixed
 - TRANSLATION MISSING: failed_to_update_dependencies

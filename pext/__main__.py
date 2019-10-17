@@ -52,6 +52,7 @@ try:
     from typing import Any, Callable, Dict, List, Optional, Set, Union
 except ImportError:
     from backports.typing import Any, Callable, Dict, List, Optional, Set, Union  # type: ignore  # noqa: F401
+from urllib.parse import quote_plus
 from queue import Queue, Empty
 
 import requests
@@ -282,16 +283,38 @@ class Logger():
             print(message)
 
     @staticmethod
-    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str]) -> None:
+    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str], metadata=None) -> None:
         """If a window is provided, pop up a window. Otherwise, print."""
         if not module_name:
             module_name = ""
         if not detailed_message:
             detailed_message = ""
 
-        if Logger.window:
-            error_dialog = Logger.window.window.findChild(QObject, "errorDialog")
-            error_dialog.showErrorDialog.emit(module_name, message, detailed_message)
+        if metadata and 'bugtracker' in metadata and 'bugtracker_type' in metadata:
+            if metadata['bugtracker_type'] == "github":
+                bugtracker_url = "".join([
+                    metadata['bugtracker'],
+                    "/issues/new?title=",
+                    quote_plus(message),
+                    "&body=Module%20version%20",
+                    quote_plus(metadata['version']),
+                    "%0APext%20",
+                    quote_plus(UpdateManager().get_core_version()),
+                    "%20on%20",
+                    quote_plus(sys.platform),
+                    "%0A%0A",
+                    quote_plus(detailed_message)
+                ])
+            else:
+                bugtracker_url = metadata['bugtracker']
+        else:
+            bugtracker_url = ""
+
+        if Logger.window and module_name:
+            Logger.window.add_actionable(
+                Translation.get("actionable_error_in_module").format(module_name, message),
+                Translation.get("actionable_report_error_in_module") if bugtracker_url else "",
+                bugtracker_url)
         else:
             print("{}\n{}\n{}".format(module_name, message, detailed_message))
 
@@ -392,7 +415,12 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_critical(tab['metadata']['name'], str(action[1]), str(action[2]) if len(action) > 2 else None)
+            Logger.log_critical(
+                tab['metadata']['name'],
+                str(action[1]),
+                str(action[2]) if len(action) > 2 else None,
+                tab['metadata']
+            )
 
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
@@ -1202,11 +1230,13 @@ class ModuleManager():
         # Prepare module
         try:
             module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
-        except ImportError as e1:
+        except (ImportError, NameError) as e1:
             Logger.log_critical(
                 module['metadata']['name'],
                 str(e1),
-                traceback.format_exc())
+                traceback.format_exc(),
+                module['metadata']
+            )
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1219,7 +1249,9 @@ class ModuleManager():
             Logger.log_critical(
                 module['metadata']['name'],
                 str(e2),
-                traceback.format_exc())
+                traceback.format_exc(),
+                module['metadata']
+            )
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1231,7 +1263,9 @@ class ModuleManager():
             Logger.log_critical(
                 module['metadata']['name'],
                 Translation.get("module_class_does_not_implement_modulebase"),
-                None)
+                None,
+                module['metadata']
+            )
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1249,7 +1283,9 @@ class ModuleManager():
             Logger.log_critical(
                 module['metadata']['name'],
                 str(e3),
-                traceback.format_exc())
+                traceback.format_exc(),
+                module['metadata']
+            )
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1357,6 +1393,10 @@ class ModuleManager():
 
         # Ensure a proper refresh on the UI side
         window.tabs.currentIndexChanged.emit()
+
+    def list_module(self, module_id: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
+        """Return the metadata and source of one single module."""
+        return ObjectManager().list_object(os.path.join(self.module_dir, module_id.replace('.', '_')))
 
     def list_modules(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
@@ -1635,19 +1675,18 @@ class UpdateManager():
 
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
-        r = requests.get('https://pext.io/version/stable')
-        available_version = r.text.splitlines()[0].strip()
-
         # Normalize own version
         if self.version.find('+') != -1:
-            print("Current version is an untagged development version, can only check for stable updates")
-            normalized_version = self.version[:self.version.find('+')]
-        elif self.version.find('-') != -1:
-            normalized_version = self.version[:self.version.find('-', self.version.find('-') + 1)]
+            version = self.version[:self.version.find('+')]
         else:
-            normalized_version = self.version
+            version = self.version
 
-        if parse_version(normalized_version.lstrip('v')) < parse_version(available_version.lstrip('v')):
+        if self.version.find('-') != -1:
+            available_version = requests.get('https://pext.io/version/nightly').text.splitlines()[0].strip()
+        else:
+            available_version = requests.get('https://pext.io/version/stable').text.splitlines()[0].strip()
+
+        if parse_version(version.lstrip('v')) < parse_version(available_version.lstrip('v')):
             return available_version
 
         return None
@@ -2705,7 +2744,8 @@ class Window():
 
             module_settings[key] = value
 
-        module = {'metadata': {'id': identifier, 'name': name}, 'settings': module_settings}
+        metadata = ModuleManager().list_module(identifier)['metadata']  # type: ignore
+        module = {'metadata': metadata, 'settings': module_settings}
         self.module_manager.load_module(self, module)
 
     def _close_tab(self) -> None:
@@ -3113,9 +3153,6 @@ class Window():
 
     def _show_homepage(self) -> None:
         webbrowser.open('https://pext.io/')
-
-    def _show_download_page(self) -> None:
-        webbrowser.open('https://pext.io/download')
 
     def _remove_actionable(self, index: int) -> None:
         self.actionables.pop(index)
