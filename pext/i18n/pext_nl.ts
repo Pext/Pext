@@ -915,22 +915,22 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1160"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext {0} is beschikbaar. Momenteel gebruik je Pext {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1161"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>Ga naar de downloadpagina</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1162"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Er is een fout opgetreden in {0}: {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1163"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>Meld dit als bug</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="481"/>
