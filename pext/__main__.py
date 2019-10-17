@@ -2288,6 +2288,9 @@ class Window():
 
     def __init__(self, app: QApplication, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
+        # Actionable items to show in the UI
+        self.actionables = []  # type: List[Dict]
+
         # Text to type on close if needed
         self.output_queue = []  # type: List[str]
 
@@ -2352,10 +2355,6 @@ class Window():
         self.profile_manager = ProfileManager()
         self._update_profiles_info_qml()
 
-        # Bind update dialog
-        self.update_available_requests = self.window.findChild(QObject, "updateAvailableRequests")
-        self.update_available_requests.updateAvailableDialogAccepted.connect(self._show_download_page)
-
         # Bind global shortcuts
         self.search_input_model = self.window.findChild(
             QObject, "searchInputModel")
@@ -2370,6 +2369,11 @@ class Window():
         back_button.clicked.connect(self._go_up)
         tab_shortcut.activated.connect(self._tab_complete)
         args_shortcut.activated.connect(self._input_args)
+
+        # Bind actionable remove
+        actionable_repeater = self.window.findChild(
+            QObject, "actionableRepeater")
+        actionable_repeater.removeActionable.connect(self._remove_actionable)
 
         # Find menu entries
         menu_reload_active_module_shortcut = self.window.findChild(
@@ -3078,8 +3082,10 @@ class Window():
             return
 
         if new_version:
-            # Show update dialog (already bound at initialization)
-            self.update_available_requests.showUpdateAvailableDialog.emit()
+            self.add_actionable(
+                Translation.get("actionable_update_available").format(new_version, UpdateManager().get_core_version()),
+                Translation.get("actionable_update_available_button"),
+                "https://pext.io/download/")
         else:
             if verbose:
                 Logger.log(None, Translation.get("pext_is_already_up_to_date"))
@@ -3110,6 +3116,20 @@ class Window():
 
     def _show_download_page(self) -> None:
         webbrowser.open('https://pext.io/download')
+
+    def _remove_actionable(self, index: int) -> None:
+        self.actionables.pop(index)
+        QQmlProperty.write(self.window, 'actionables', self.actionables)
+
+    def add_actionable(self, text: str, button_text: str, button_url: str, urgency="medium") -> None:
+        """Add an action to show in the UI."""
+        self.actionables.insert(0, {
+            'text': text,
+            'buttonText': button_text,
+            'buttonUrl': button_url,
+            'urgency': urgency
+        })
+        QQmlProperty.write(self.window, 'actionables', self.actionables)
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""

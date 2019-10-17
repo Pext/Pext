@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.5
+import QtQuick 2.13
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
@@ -35,6 +35,8 @@ ApplicationWindow {
     minimumHeight: FORCE_FULLSCREEN ? Screen.height : 600
     width: FORCE_FULLSCREEN ? Screen.width : 800
     height: FORCE_FULLSCREEN ? Screen.height : 600
+
+    property var actionables: []
 
     flags: Qt.Window
 
@@ -893,6 +895,57 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: margin
 
+        Repeater {
+            id: actionableRepeater
+            objectName: "actionableRepeater"
+            signal removeActionable(int index);
+
+            model: actionables
+            height: childrenRect.height
+
+            Rectangle {
+                color: {
+                    if (modelData.urgency == "high") {
+                        return "red"
+                    } else {
+                        return "#FAFAD2"
+                    }
+                }
+                Layout.fillWidth: true
+                Layout.preferredHeight: row.height
+
+                RowLayout {
+                    id: row
+                    width: parent.width
+                    Layout.preferredHeight: childrenRect.height
+
+                    Text {
+                        text: modelData.text
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                    }
+
+                    Button {
+                        visible: modelData.buttonText
+                        text: modelData.buttonText
+                        onClicked: {
+                            Qt.openUrlExternally(modelData.buttonUrl)
+                            actionableRepeater.removeActionable(index)
+                        }
+                        Layout.fillHeight: true
+                    }
+
+                    Text {
+                        text: "<a href='#' style='text-decoration:none;'>❌</a>"
+                        textFormat: Text.RichText
+                        Layout.fillHeight: true
+                        onLinkActivated: actionableRepeater.removeActionable(index)
+                    }
+                }
+            }
+        }
+
         GridLayout {
             Layout.fillHeight: true
 
@@ -1103,4 +1156,9 @@ ApplicationWindow {
     property string tr_no_command_available_for_current_filter: qsTr("No command available for current filter")
     property string tr_pynput_is_unavailable: qsTr("Pynput is unavailable")
     property string tr_pyautogui_is_unavailable: qsTr("PyAutoGUI is unavailable")
+
+    property string tr_actionable_update_available: qsTr("Pext {0} is available. You are currently running Pext {1}.")
+    property string tr_actionable_update_available_button: qsTr("Open download page")
+    property string tr_actionable_error_in_module: qsTr("An error occured in {0}: {1}.")
+    property string tr_actionable_report_error_in_module: qsTr("Report as bug")
 }
