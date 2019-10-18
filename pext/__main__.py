@@ -1758,14 +1758,15 @@ class ViewModel():
     @property
     def sort_mode(self):
         """Retrieve the current sorting mode as printable name."""
-        try:
-            return SortMode(self._settings['__pext_sort_mode']).name
-        except ValueError:
-            # Maybe mode doesn't exist (anymore)
-            # Return first value
-            for data in SortMode:
-                self.sort_mode = data.value
+        for data in SortMode:
+            if str(data.value) == str(self._settings['__pext_sort_mode']):
                 return data.name
+
+        # Maybe mode doesn't exist (anymore)
+        # Return first value
+        for data in SortMode:
+            self.sort_mode = data.value
+            return data.name
 
     @sort_mode.setter
     def sort_mode(self, sort_mode):
@@ -1777,8 +1778,6 @@ class ViewModel():
             self.search(new_entries=True)
         except AttributeError:
             pass
-
-        # TODO: Save setting to module file
 
     def next_sort_mode(self):
         """Calculate and set the next sorting mode available."""
@@ -3976,6 +3975,9 @@ def _load_settings(args: argparse.Namespace) -> None:
 
 def _shut_down(window: Window) -> None:
     """Clean up."""
+    profile = Settings.get('profile')
+    ProfileManager().save_modules(profile, window.tab_bindings)
+
     for module in window.tab_bindings:
         try:
             module['module'].stop()
@@ -3983,7 +3985,6 @@ def _shut_down(window: Window) -> None:
             print("Failed to cleanly stop module {}: {}".format(module['metadata']['name'], e))
             traceback.print_exc()
 
-    profile = Settings.get('profile')
     ProfileManager.unlock_profile(profile)
 
 
