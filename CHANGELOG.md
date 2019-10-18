@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.26] - 2019-10-18
 ### API changes
 - Bump API version to 0.12.0
 - Modules can now offer a multiple choice dialog using Action.ask_choice
