@@ -914,22 +914,22 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1160"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext {0} 可供升級。您目前正在執行 Pext {1}。</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1161"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>開啟下載頁面</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1162"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>在 {0} 中遇到錯誤：{1}。</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1163"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>回報臭蟲</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="481"/>
