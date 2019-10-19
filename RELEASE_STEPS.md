@@ -5,7 +5,7 @@
 
 # When releasing, do the following:
 ## i18n
-1. Press "Commit" on Weblate to ensure all translations are pushed to the i18n branch
+1. Press "Commit" on Weblate to ensure all translations are up to date
 2. Merge Weblate pull request
 3. Check for new translatable strings (``lupdate-qt5 pext/pext.pro``)
 4. Compile translations (``lrelease-qt5 pext/pext.pro``)
