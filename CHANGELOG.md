@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- Update action being added before translations are available
+
 ## [0.26] - 2019-10-18
 ### API changes
 - Bump API version to 0.12.0

@@ -2525,7 +2525,6 @@ class Window():
         self.menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
         menu_install_quick_action_service.triggered.connect(self._menu_install_quick_action_service)
-        self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
         self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
 
         menu_quit_shortcut.triggered.connect(self.quit)
@@ -2585,6 +2584,10 @@ class Window():
         QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
                            "checked",
                            Settings.get('object_update_check'))
+
+        # We bind the update check after writing the initial value to prevent
+        # instantly triggering the update check
+        self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -3050,7 +3053,6 @@ class Window():
             self._menu_restart_pext()
 
         # Check for updates immediately after toggling true
-        # This is also toggled on app launch because we bind before we toggle
         self._menu_check_updates(verbose=False, manual=False)
 
     def _menu_toggle_object_update_check(self, enabled: bool) -> None:
@@ -4102,6 +4104,9 @@ def main() -> None:
     observer = Observer()
     observer.schedule(event_handler, os.path.join(ConfigRetriever.get_path(), 'modules'), recursive=True)
     observer.start()
+
+    # Start update check
+    window._menu_check_updates(verbose=False, manual=False)
 
     # And run...
     main_loop.run()
