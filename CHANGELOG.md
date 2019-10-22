@@ -5,6 +5,118 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- Update action being added before translations are available
+
+## [0.26] - 2019-10-18
+### API changes
+- Bump API version to 0.12.0
+- Modules can now offer a multiple choice dialog using Action.ask_choice
+
+### Added
+- Explanation on Shift+Return key
+- Support for metadata.json files to show a dropdown of choices
+- Support for middle mouse button causing selection without minimization
+- Buttons to open a new module or close the currently open module
+- Support for reporting bugs to modules directly
+
+### Changed
+- Sorting settings are now per loaded module
+- If there are no modules or themes, trying to load one will pop up the installation dialog
+- macOS now also uses Qt's Fusion theme (less native, but less glitches)
+- Update notifications are no longer in a dialog box
+- Nightly versions now check for nightly updates
+
+### Fixed
+- TRANSLATION MISSING: failed_to_update_dependencies
+- Global hotkey not working
+- Back button remaining grey
+
+## [0.25] - 2019-10-04
+### API changes
+- Bump API version to 0.11.1 so that modules can detect request handlers being fixed
+
+### Added
+- Shift+Return hotkey to explicitly disable minimizing and resetting when making a selection
+- Ability to choose separator between output entries in queue (if more than one string will be output)
+
+### Changed
+- Text to copy to clipboard is now queued until minimizing too
+- Default separator is now Enter instead of Tab
+- If a selection state change is requested by the module, ensure it is always done
+
+### Fixed
+- Module request handlers not being removed properly, causing multiple incorrect requests
+
+## [0.24.1] - 2019-09-08
+### Changed
+- Tab hotkeys changed from `Alt+<number>` to `Ctrl+<number>` on non-Linux for consistency with other applications
+
+### Fixed
+- Ctrl+Tab and Ctrl+Shift+Tab not working on macOS
+- Module menu options which aren't usable in current context are now correctly grayed out
+
+## [0.24.0] - 2019-06-28
+### Packaging changes
+- New macOS dependency: [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
+
+### Added
+- Turbo mode where Pext auto-selects options whenever reasonably confident
+
+### Changed
+- Notification when typing has completed
+
+### Fixed
+- Context menus are now searchable
+- Don't crash if pynput fails to import
+- User asked for internal update checker if disabled in constants
+- Add repeat polyfill to prevent rendering issues on systems with older Qt versions
+- Fix autotype on macOS
+
+## [0.23] - 2019-03-19
+### Packaging changes
+- New dependency: [watchdog](https://pypi.org/project/watchdog/)
+
+### API changes
+- Bump API version to 0.10.0 so that modules can hide the header if it was used to show the tree
+- Bump API version to 0.11.0 due to change in how a base context option is returned
+
+### Added
+- Searches can now be regular expressions. These need to be formatted as /search_string/flags
+- Information when module requests are still being processed when showing no results screen
+- Notification on copying data to clipboard
+
+### Changed
+- Modules are now automatically unloaded after uninstallation
+- Passing arguments to modules is now done with Ctrl+Enter instead of typing it with the search bar
+- The start screen now shows a hotkey reference
+- The UI now shows what hotkey will activate what entry
+- Right click / Ctrl+Return a context menu entry to activate command input mode if available
+- The selection tree is now shown below the header location
+- The "base" context menu is now merged with the entry-specific one and shown below the entry-specific options
+- Command menu now has an "enter arguments" entry
+
+### Fixed
+- AppImage trying to store data inside itself in portable mode
+- Some incorrect hotkeys on macOS
+- Search sometimes missing entries
+
+## [0.22] - 2018-12-19
+### Added
+- Portable builds for Linux and macOS
+- --portable flag to make Pext behave more self-contained, readable by modules in settings
+
+### Changed
+- --config flag has been renamed to --data-path
+- Remember the geometry of the main window
+- The tray icon menu now lists all loaded modules for easier switching
+
+### Fixed
+- Sizing issues when moving to another monitor
+- Window not being resizeable
+- API version still being reported as 0.8.0 internally
+
 ## [0.21] - 2018-11-02
 ### API changes
 - Bump API version to 0.9.0

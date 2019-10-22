@@ -1,7 +1,7 @@
 /*
-    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 
-    This file is part of Pext
+    This file is part of Pext.
 
     Pext is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@ Dialog {
     property var moduleSettings: []
     property var moduleChosenSettings: {}
 
+    property var menuInstallModule
+
     ColumnLayout {
         width: parent.width
 
@@ -51,9 +53,7 @@ Dialog {
 
         ScrollView {
             width: parent.width
-
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Layout.fillWidth: true
 
             ListView {
                 id: settingsList
@@ -74,11 +74,32 @@ Dialog {
                     }
 
                     TextField {
+                        visible: modelData.options === undefined
                         placeholderText: modelData.default ? modelData.default : ""
                         width: root.width
                         onEditingFinished: moduleChosenSettings[modelData.name] = text
                     }
+
+                    ComboBox {
+                        id: settingComboBox
+                        visible: modelData.options !== undefined
+                        model: modelData.options
+                        currentIndex: modelData.options !== undefined ? modelData.options.indexOf(modelData.default) : 0
+                        width: root.width
+                        onCurrentIndexChanged: {
+                            if (modelData.options !== undefined) {
+                                moduleChosenSettings[modelData.name] = modelData.options[currentIndex];
+                            }
+                        }
+                    }
                 }
+            }
+        }
+        Button {
+            text: qsTr("Get more modules")
+            onClicked: {
+                menuInstallModule.trigger();
+                reject();
             }
         }
     }

@@ -1,7 +1,7 @@
 /*
-    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 
-    This file is part of Pext
+    This file is part of Pext.
 
     Pext is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -50,6 +50,14 @@ Dialog {
 
         Label {
             text: qsTr("Note: Pext will restart to apply the new theme.")
+        }
+
+        Button {
+            text: qsTr("Get more themes")
+            onClicked: {
+                menuInstallTheme.trigger();
+                reject();
+            }
         }
     }
 

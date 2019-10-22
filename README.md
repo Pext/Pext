@@ -1,24 +1,24 @@
 # Pext
 
+<a href="https://repology.org/metapackage/pext/versions">
+    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.26" alt="Packaging status" align="right">
+</a>
+
 ![Lilly the leoger](/logo.png)
 
+[![reuse compliant](https://reuse.software/badge/reuse-compliant.svg)](https://reuse.software)
 [![Linux & macOS Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/73oaa4x1spa5vumx/branch/master?svg=true)](https://ci.appveyor.com/project/TheLastProject/pext/branch/master)
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
 
-## Contents
+[![Matrix](https://img.shields.io/matrix/pext:matrix.org.svg)](https://riot.im/app/#/room/#pext:matrix.org)
 
-<a href="https://repology.org/metapackage/pext/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.21" alt="Packaging status" align="right">
-</a>
+## Contents
 
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
-- [Installation](#installation)
-  - [GNU/Linux](#gnulinux)
-  - [macOS](#macos)
-  - [Windows](#windows)
+- [Installation](https://pext.readthedocs.io/en/latest/installation.html)
 - [Usage](#usage)
 - [Hotkeys](#hotkeys)
 - [Community](#community)
@@ -35,9 +35,9 @@ Depending on the module you choose, what entries are shown and what happens when
 
 Several modules are available for effortless install right within Pext.
 
-![Pext running the radiobrowser module with info panel](/screenshots/pext_radiobrowser_infopanel.png)
-![Pext running the openweathermap module with context menu](/screenshots/pext_openweathermap_contextmenu.png)
-![Pext running the emoji module](/screenshots/pext_emoji.png)
+![Pext running the moji module](https://pext.io/pext-emojis.PNG)
+![Pext running the applauncher module](https://pext.io/pext-applauncher.PNG)
+![Pext running the weather module](https://pext.io/pext-weather.PNG)
 
 ## How it works
 
@@ -51,48 +51,6 @@ Simply put:
 - Search (for something)
 - Select (with Enter)
 - Hide (automatically)
-
-## Installation
-
-**Note: If you run into any issues, please check out the troubleshooting section near the end of this document before reporting a bug.**
-
-### GNU/Linux
-
-#### Arch
-
-Pext is available as [pext](https://aur.archlinux.org/packages/pext/) and [pext-git](https://aur.archlinux.org/packages/pext-git/). These packages are maintained by [Ivan Semkin](https://github.com/vanyasem).
-
-#### Other distros
-
-We recommend the AppImages under GitHub releases, but you can also install from PyPI.
-
-For the stable version (PyPI):
-
-```sh
-pip3 install pext --user
-```
-
-For the git version (PyPI):
-
-```sh
-pip3 install git+https://github.com/Pext/Pext.git --user
-```
-
-On some systems, you may need to use pip instead of pip3.
-
-Alternatively, you can [install Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
-
-### macOS
-
-A macOS .dmg file is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases). If you use [Homebrew](https://brew.sh), you can use `brew cask install pext` on the command line.
-
-Alternatively, see [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
-
-### Windows
-
-A Windows installer is available [in the releases section on GitHub](https://github.com/Pext/Pext/releases).
-
-Alternatively, see See [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 ## Usage
 
@@ -109,7 +67,8 @@ For command line options, use `--help`.
 - Escape: Go one level up
 - Tab: Tab-complete the current input
 - Enter / Left mouse button: Select entry or run command
-- Ctrl+Shift+. / Right mouse button on header: Open state menu
+- Shift+Enter: Select entry or run command but explicitly disable minimizing
+- Ctrl+Enter: Run command with arguments
 - Ctrl+. / Right mouse button on any item: Open context menu
 - Ctrl+J / Down arrow: Go one entry down
 - Ctrl+H / Up arrow: Go one entry up
@@ -133,9 +92,9 @@ For command line options, use `--help`.
 
 If you need support or just want to chat with our community, we have the following options:
 
-- IRC: #pext on OFTC ([webchat](https://webchat.oftc.net/?randomnick=1&channels=pext&prompt=1))
 - Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
 - Telegram: [@PextTool](https://t.me/PextTool)
+- IRC: #pext on FreeNode ([webchat](http://webchat.freenode.net/?channels=%23pext&uio=MTY9dHJ1ZQ79))
 
 All these channels are linked to each other, so there is no need to worry about missing out.
 
@@ -143,14 +102,13 @@ We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
 ## License
 
-Pext is licensed under the [GNU GPLv3+](LICENSE), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSE-CCBYSA).
+Pext is licensed under the [GNU GPLv3+](LICENSES/GPL-3.0-or-later.txt), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSES/CC-BY-SA-4.0.txt).
 
 Under artwork and documentation fall:
 
 - All files in the following directories:
   - docs/
   - pext/images/
-  - screenshots/
   - .github/
 - All Markdown files in the root directory.
 - logo.png

@@ -1,7 +1,7 @@
 /*
-    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 
-    This file is part of Pext
+    This file is part of Pext.
 
     Pext is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,22 +28,22 @@ Dialog {
     height: 350
     width: 500
 
-    property var translators: {"be": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
+    property var translators: {
+                               "ar": [{"name": "Ramy Gamal", "email": "ramyeg26@gmail.com"}],
+                               "be": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
                                "en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
                                "es": [{"name": "Rose Garcia", "email": "rosegarcia@protonmail.com"},
                                       {"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
-                               "fr": [{"name": "Claire Goulet"},
-                                      {"name": "Aurora Yeen"}],
+                               "fr": [{"name": "Claire Goulet"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
                                "hu": [{"name": "Szöllősi Attila", "email": "ata2001@airmail.cc"}],
                                "hi": [{"name": "Aayush Gupta", "email": "aayushgupta219@gmail.com"},
                                       {"name": "Satyam Singh", "email": "trueleo@protonmail.com"}],
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
-                               "pl": [{"name": "Konrad Dybcio"}],
-                               "ru": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"},
-                                      {"name": "Ivan Semkin", "email": "ivan@semkin.ru"}],
-                               "zh_Hant": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]}
+                               "ru": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
+                               "zh_TW": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]
+                              }
 
     TabView {
         width: parent.width
@@ -68,11 +68,11 @@ Dialog {
                     Text {
                         y: 150
                         color: palette.text
-                        width: parent.parent.width
+                        width: parent.width
                         wrapMode: Text.Wrap
                         text:
                             "<h1>Pext " + version + "</h1><br>" +
-                            "Copyright 2015 - 2018 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
+                            "Copyright 2015 - 2019 Sylvia van Os &lt;<a href='mailto:sylvia@hackerchick.me'>sylvia@hackerchick.me</a>&gt;<br><br>" +
                             "This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.<br><br>" +
                             "This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.<br><br>" +
                             "You should have received a copy of the GNU General Public License along with this program. If not, see <a href='http://www.gnu.org/licenses/'>http://www.gnu.org/licenses/</a>."
@@ -86,30 +86,51 @@ Dialog {
         Tab {
             title: qsTr("Translators")
             ScrollView {
-                Text {
-                    color: palette.text
+                Item {
+                    height: childrenRect.height
                     width: parent.parent.width
-                    wrapMode: Text.Wrap
-                    text: "<a href='https://hosted.weblate.org/engage/pext/'>"
-                          + qsTr("Want to help translate Pext? Please click here.")
-                          + "</a><br><h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:")
-                          + "</h3><br>";
     
-                    Component.onCompleted: {
-                          for (var lang in translators) {
-                              text += "<b>" + Object.keys(locales).filter(function(key) { return locales[key] === lang })[0] + "</b><br>";
-                              for (var translatorData in translators[lang]) {
-                                  text += translators[lang][translatorData]["name"]
-                                  if (translators[lang][translatorData]["email"]) {
-                                      text += " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;";
+                    Text {
+                        color: palette.text
+                        width: parent.width
+                        wrapMode: Text.Wrap
+                        text: "<a href='https://hosted.weblate.org/engage/pext/'>"
+                              + qsTr("Want to help translate Pext? Please click here.")
+                              + "</a><br><h3>" + qsTr("The Pext team would like to thank the following users for translating Pext:")
+                              + "</h3><br>";
+
+                        Component.onCompleted: {
+                              var localeNames = Object.keys(locales).sort();
+                              if (localeNames.length == 0) {
+                                text += "<i>No translations could be loaded. Compile some translations to see translation contributors.</i>"
+                                return;
+                              }
+
+                              for (var lang in translators) {
+                                  var localeText = null;
+                                  for (var index in localeNames) {
+                                    if (locales[localeNames[index]] === lang) {
+                                      localeText = localeNames[index];
+                                      break;
+                                    }
+                                  }
+                                  if (localeText === null) {
+                                    continue;
+                                  }
+                                  text += "<b>" + localeText + "</b><br>";
+                                  for (var translatorData in translators[lang]) {
+                                      text += translators[lang][translatorData]["name"]
+                                      if (translators[lang][translatorData]["email"]) {
+                                          text += " &lt;<a href='mailto:" + translators[lang][translatorData]["email"] + "'>" + translators[lang][translatorData]["email"] + "</a>&gt;";
+                                      }
+                                      text += "<br>";
                                   }
                                   text += "<br>";
                               }
-                              text += "<br>";
-                          }
-                    }
+                        }
 
-                    onLinkActivated: Qt.openUrlExternally(link)
+                        onLinkActivated: Qt.openUrlExternally(link)
+                    }
                 }
             }
         }

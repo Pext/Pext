@@ -8,6 +8,16 @@ Welcome to Pext's documentation!
    ../README.md
 
 .. toctree::
+   :maxdepth: 2
+
+   installation.rst
+
+.. toctree::
+   :maxdepth: 2
+
+   compiling.rst
+
+.. toctree::
    :maxdepth: 1
 
    ../CHANGELOG.md

@@ -1,7 +1,7 @@
 /*
-    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 
-    This file is part of Pext
+    This file is part of Pext.
 
     Pext is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.5
+import QtQuick 2.13
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.0
@@ -31,10 +31,14 @@ ApplicationWindow {
     property string version: applicationVersion
     property string platform: systemPlatform
     property int margin: 10
-    minimumWidth: 800
-    minimumHeight: 600
-    x: (Screen.width - width) / 2
-    y: (Screen.height - height) / 2
+    minimumWidth: FORCE_FULLSCREEN ? Screen.width : 800
+    minimumHeight: FORCE_FULLSCREEN ? Screen.height : 600
+    width: FORCE_FULLSCREEN ? Screen.width : 800
+    height: FORCE_FULLSCREEN ? Screen.height : 600
+
+    property var actionables: []
+
+    flags: Qt.Window
 
     signal confirmedClose()
 
@@ -45,8 +49,6 @@ ApplicationWindow {
             {"confirmedClose": confirmedClose,
              "platform": platform});
     }
-
-    flags: Qt.Window
 
     SystemPalette { id: palette; colorGroup: SystemPalette.Active }
 
@@ -105,6 +107,24 @@ ApplicationWindow {
     }
 
     Item {
+        objectName: "choiceDialog"
+
+        signal showChoiceDialog(string moduleName, string question, var choices)
+        signal choiceAccepted(string choice)
+        signal choiceRejected()
+
+        onShowChoiceDialog: {
+            var choiceDialog = Qt.createComponent("ChoiceDialog.qml");
+            choiceDialog.createObject(applicationWindow,
+                {"moduleName": moduleName,
+                 "question": question,
+                 "choices": choices,
+                 "accepted": choiceAccepted,
+                 "rejected": choiceRejected});
+        }
+    }
+
+    Item {
         objectName: "questionDialog"
 
         signal showQuestionDialog(string moduleName, string question)
@@ -121,6 +141,19 @@ ApplicationWindow {
         }
     }
 
+    Item {
+        objectName: "commandArgsDialog"
+
+        signal showCommandArgsDialog(string command)
+        signal commandArgsRequestAccepted(string args)
+
+        onShowCommandArgsDialog: {
+            var commandArgsDialog = Qt.createComponent("CommandArgsDialog.qml");
+            commandArgsDialog.createObject(applicationWindow,
+                 {"command": command,
+                  "requestAccepted": commandArgsRequestAccepted});
+        }
+    }
 
     Item {
         objectName: "errorDialog"
@@ -156,20 +189,28 @@ ApplicationWindow {
         return tab.item.children[0].children[0].visible;
     }
 
-    function openBaseMenu() {
-        var tab = tabs.getTab(tabs.currentIndex);
-        if (typeof tab === "undefined")
-            return;
-
-        tab.item.children[0].children[2].contentItem.openBaseMenu();
-    }
-
     function openContextMenu() {
         var tab = tabs.getTab(tabs.currentIndex);
         if (typeof tab === "undefined")
             return;
 
         tab.item.children[0].children[2].contentItem.openContextMenu();
+    }
+
+    function selectExplicitNoMinimize() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        tab.item.children[0].children[2].contentItem.selectExplicitNoMinimize();
+    }
+
+    function openArgumentsInput() {
+        var tab = tabs.getTab(tabs.currentIndex);
+        if (typeof tab === "undefined")
+            return;
+
+        tab.item.children[0].children[2].contentItem.openArgumentsInput();
     }
 
     function moveUp() {
@@ -227,23 +268,39 @@ ApplicationWindow {
     }
 
     Shortcut {
+        id: escapeShortcut
         objectName: "escapeShortcut"
         sequence: "Escape"
     }
 
     Shortcut {
+        id: tabShortcut
         objectName: "tabShortcut"
         sequence: "Tab"
     }
 
     Shortcut {
-        sequence: "Ctrl+Shift+."
-        onActivated: openBaseMenu();
+        id: contextMenuShortcut
+        sequence: "Ctrl+."
+        onActivated: openContextMenu();
     }
 
     Shortcut {
-        sequence: "Ctrl+."
-        onActivated: openContextMenu();
+        id: enterShortcut
+        enabled: false
+        sequence: "Return"
+    }
+
+    Shortcut {
+        id: noMinimizeShortcut
+        sequence: "Shift+Return"
+        onActivated: selectExplicitNoMinimize()
+    }
+
+    Shortcut {
+        id: argsShortcut
+        objectName: "argsShortcut"
+        sequence: "Ctrl+Return"
     }
 
     Shortcut {
@@ -286,63 +343,67 @@ ApplicationWindow {
         onActivated: pageDown()
     }
 
+    // Actual trigger is in menu due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
     Shortcut {
-        sequence: "Ctrl+Tab"
-        onActivated: nextTab()
+        id: nextTabShortcut
+        sequence: platform == 'Darwin' ? "Meta+Tab" : "Ctrl+Tab" // QTBUG-15746 and QTBUG-7001
+        enabled: false
+    }
+
+    // Actual trigger is in menu due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
+    Shortcut {
+        id: previousTabShortcut
+        sequence: platform == 'Darwin' ? "Meta+Shift+Tab" : "Ctrl+Shift+Tab" // QTBUG-15746 and QTBUG-7001
+        enabled: false
     }
 
     Shortcut {
-        sequence: "Ctrl+Shift+Tab" // StandardKey.PreviousChild does not work on my machine
-        onActivated: prevTab()
-    }
-
-    Shortcut {
-        sequence: "Alt+1"
+        sequence: platform == 'Linux' ? "Alt+1" : "Ctrl+1"
         onActivated: switchTab(0)
     }
 
     Shortcut {
-        sequence: "Alt+2"
+        sequence: platform == 'Linux' ? "Alt+2" : "Ctrl+2"
         onActivated: switchTab(1)
     }
 
     Shortcut {
-        sequence: "Alt+3"
+        sequence: platform == 'Linux' ? "Alt+3" : "Ctrl+3"
         onActivated: switchTab(2)
     }
 
     Shortcut {
-        sequence: "Alt+4"
+        sequence: platform == 'Linux' ? "Alt+4" : "Ctrl+4"
         onActivated: switchTab(3)
     }
 
     Shortcut {
-        sequence: "Alt+5"
+        sequence: platform == 'Linux' ? "Alt+5" : "Ctrl+5"
         onActivated: switchTab(4)
     }
 
     Shortcut {
-        sequence: "Alt+6"
+        sequence: platform == 'Linux' ? "Alt+6" : "Ctrl+6"
         onActivated: switchTab(5)
     }
 
     Shortcut {
-        sequence: "Alt+7"
+        sequence: platform == 'Linux' ? "Alt+7" : "Ctrl+7"
         onActivated: switchTab(6)
     }
 
     Shortcut {
-        sequence: "Alt+8"
+        sequence: platform == 'Linux' ? "Alt+8" : "Ctrl+8"
         onActivated: switchTab(7)
     }
 
     Shortcut {
-        sequence: "Alt+9"
+        sequence: platform == 'Linux' ? "Alt+9" : "Ctrl+9"
         onActivated: switchTab(8)
     }
 
     Shortcut {
-        sequence: "Alt+0"
+        sequence: platform == 'Linux' ? "Alt+0" : "Ctrl+0"
         onActivated: switchTab(9)
     }
 
@@ -360,10 +421,30 @@ ApplicationWindow {
         Menu {
             title: qsTr("&Module")
 
+            // Has to be in menu for macOS due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
             MenuItem {
+                text: qsTr("Switch to next loaded module")
+                shortcut: platform == 'Darwin' ? "Meta+Tab" : "Ctrl+Tab" // QTBUG-15746 and QTBUG-7001
+                onTriggered: nextTab()
+                enabled: tabs.count > 1
+            }
+
+            // Has to be in menu for macOS due to https://bugreports.qt.io/browse/QTBUG-8596?focusedCommentId=215198&page=com.atlassian.jira.plugin.system.issuetabpanels%3Acomment-tabpanel#comment-215198
+            MenuItem {
+                text: qsTr("Switch to previous loaded module")
+                shortcut: platform == 'Darwin' ? "Meta+Shift+Tab" : "Ctrl+Shift+Tab" // QTBUG-15746 and QTBUG-7001
+                onTriggered: prevTab()
+                enabled: tabs.count > 1
+            }
+
+            MenuSeparator { }
+
+            MenuItem {
+                id: menuReloadActiveModule
                 objectName: "menuReloadActiveModule"
                 text: qsTr("Reload active module")
                 shortcut: StandardKey.Refresh
+                enabled: tabs.count
             }
 
             MenuItem {
@@ -371,6 +452,7 @@ ApplicationWindow {
                 objectName: "menuCloseActiveModule"
                 text: qsTr("Close active module")
                 shortcut: StandardKey.Close
+                enabled: tabs.count
             }
 
             MenuSeparator { }
@@ -387,14 +469,14 @@ ApplicationWindow {
 
                 onTriggered: {
                     if (Object.keys(modules).length == 0) {
-                        var noModulesInstalledDialog = Qt.createComponent("NoModulesInstalledDialog.qml");
-                        noModulesInstalledDialog.createObject(applicationWindow);
+                        menuInstallModuleFromList.trigger();
                     } else {
                         var loadModuleDialog = Qt.createComponent("LoadModuleDialog.qml");
                         loadModuleDialog.createObject(applicationWindow,
                             {"modules": modules,
                              "loadRequest": loadModuleRequest,
-                             "modulesPath": modulesPath});
+                             "modulesPath": modulesPath,
+                             "menuInstallModule": menuInstallModuleFromList});
                     }
                 }
             }
@@ -430,6 +512,7 @@ ApplicationWindow {
                 signal installModuleRequest(string url, string identifier, string name)
 
                 MenuItem {
+                    id: menuInstallModuleFromList
                     text: qsTr("From online module list")
 
                     property var repositories:
@@ -477,15 +560,15 @@ ApplicationWindow {
 
                 onTriggered: {
                     if (Object.keys(themes).length == 0) {
-                        var noThemesInstalledDialog = Qt.createComponent("NoThemesInstalledDialog.qml");
-                        noThemesInstalledDialog.createObject(applicationWindow);
+                        menuInstallThemeFromList.trigger();
                     } else {
                         var loadThemeDialog = Qt.createComponent("LoadThemeDialog.qml");
                         loadThemeDialog.createObject(applicationWindow,
                             {"currentTheme": currentTheme,
                              "themes": themes,
                              "loadRequest": loadThemeRequest,
-                             "themesPath": themesPath});
+                             "themesPath": themesPath,
+                             "menuInstallTheme": menuInstallThemeFromList});
                     }
                 }
             }
@@ -521,6 +604,7 @@ ApplicationWindow {
                 signal installThemeRequest(string url, string identifier, string name)
 
                 MenuItem {
+                    id: menuInstallThemeFromList
                     text: qsTr("From online theme list")
 
                     property var repositories:
@@ -600,6 +684,12 @@ ApplicationWindow {
         Menu {
             title: platform == 'Darwin' ? "Settings" : qsTr("&Settings")
 
+            MenuItem {
+                objectName: "menuTurboMode"
+                text: qsTr("Turbo Mode")
+                checkable: true
+            }
+
             Menu {
                 id: menuChangeLanguage
                 objectName: "menuChangeLanguage"
@@ -674,35 +764,35 @@ ApplicationWindow {
                     checkable: true
                     exclusiveGroup: menuOutputGroup
                 }
-            }
 
-            Menu {
-                title: qsTr("Sorting style")
+                Menu {
+                    title: qsTr("Separator between output queue entries")
 
-                ExclusiveGroup {
-                    id: menuSortGroup
-                    objectName: "menuSortGroup"
-                }
+                    ExclusiveGroup {
+                        id: menuOutputSeparatorGroup
+                        objectName: "menuOutputSeparatorGroup"
+                    }
+    
+                    MenuItem {
+                        objectName: "menuOutputSeparatorNone"
+                        text: qsTr("Nothing")
+                        checkable: true
+                        exclusiveGroup: menuOutputSeparatorGroup
+                    }
 
-                MenuItem {
-                    objectName: "menuSortModule"
-                    text: qsTr("Sort by module choice")
-                    checkable: true
-                    exclusiveGroup: menuSortGroup
-                }
+                    MenuItem {
+                        objectName: "menuOutputSeparatorEnter"
+                        text: enterShortcut.nativeText
+                        checkable: true
+                        exclusiveGroup: menuOutputSeparatorGroup
+                    }
 
-                MenuItem {
-                    objectName: "menuSortAscending"
-                    text: qsTr("Sort ascending")
-                    checkable: true
-                    exclusiveGroup: menuSortGroup
-                }
-
-                MenuItem {
-                    objectName: "menuSortDescending"
-                    text: qsTr("Sort descending")
-                    checkable: true
-                    exclusiveGroup: menuSortGroup
+                    MenuItem {
+                        objectName: "menuOutputSeparatorTab"
+                        text: tabShortcut.nativeText
+                        checkable: true
+                        exclusiveGroup: menuOutputSeparatorGroup
+                    }
                 }
             }
 
@@ -811,24 +901,68 @@ ApplicationWindow {
         anchors.fill: parent
         anchors.margins: margin
 
+        Repeater {
+            id: actionableRepeater
+            objectName: "actionableRepeater"
+            signal removeActionable(int index);
+
+            model: actionables
+            height: childrenRect.height
+
+            Rectangle {
+                color: {
+                    if (modelData.urgency == "high") {
+                        return "red"
+                    } else {
+                        return "#FAFAD2"
+                    }
+                }
+                Layout.fillWidth: true
+                Layout.preferredHeight: row.height
+
+                RowLayout {
+                    id: row
+                    width: parent.width
+                    Layout.preferredHeight: childrenRect.height
+
+                    Text {
+                        text: modelData.text
+                        wrapMode: Text.Wrap
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                    }
+
+                    Button {
+                        visible: modelData.buttonText
+                        text: modelData.buttonText
+                        onClicked: {
+                            Qt.openUrlExternally(modelData.buttonUrl)
+                            actionableRepeater.removeActionable(index)
+                        }
+                        Layout.fillHeight: true
+                    }
+
+                    Text {
+                        text: "<a href='#' style='text-decoration:none;'>❌</a>"
+                        textFormat: Text.RichText
+                        Layout.fillHeight: true
+                        onLinkActivated: actionableRepeater.removeActionable(index)
+                    }
+                }
+            }
+        }
+
         GridLayout {
             Layout.fillHeight: true
 
             Button {
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                enabled: tabs.count > 0 && tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.tree.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
 
-                enabled: tabs.count > 0 && tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && (searchInput.length > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.depth > 0 || tabs.getTab(tabs.currentIndex).item.children[0].children[0].visible)
-
-                width: 60
-                text: searchInput.length > 0 ? qsTr("Clear") : qsTr("Back")
+                text: "←"
                 objectName: "backButton"
             }
 
             TextField {
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-
                 enabled: tabs.count > 0
                 placeholderText: tabs.count > 0 ? qsTr("Type to search") : ""
                 id: searchInput
@@ -841,6 +975,17 @@ ApplicationWindow {
                 }
 
                 Layout.fillWidth: true
+            }
+
+            Button {
+                text: "➕"
+                onClicked: menuLoadModule.trigger()
+            }
+
+            Button {
+                visible: tabs.count > 0
+                text: "❌"
+                onClicked: menuCloseActiveModule.trigger()
             }
         }
 
@@ -860,66 +1005,46 @@ ApplicationWindow {
             Layout.fillWidth: true
         }
 
-        GridLayout {
-            flow: applicationWindow.width > applicationWindow.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
+        Image {
+            id: logo
+            visible: tabs.count == 0
+            asynchronous: true
+            source: "../images/scalable/logo.svg"
+            fillMode: Image.Pad
+            horizontalAlignment: Image.AlignHCenter
+            verticalAlignment: Image.AlignVCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+            Layout.minimumHeight: sourceSize.height
+            Layout.minimumWidth: sourceSize.width
+        }
+
+        TextEdit {
+            objectName: "introScreen"
             visible: tabs.count == 0
 
-            TextEdit {
-                text: "<h2>" + qsTr("Design philosophy") + "</h2>" +
-                      "<p>" + qsTr("Pext is designed to stay out of your way. As soon as a module deems you are done using it, Pext will hide itself to the system tray. If you need to reach Pext again after it hid itself, just start it again or open it from the system tray.") + "</p>"
+            text: "<h2>" + qsTr("Hotkey reference") + "</h2><ul>" +
+                  (platform != 'Darwin' ? ("<li>" + qsTr("<kbd>%1</kbd>: Move Pext to the foreground").arg("Ctrl+`") + "</li>") : "") +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Open a new tab").arg(menuLoadModule.shortcut) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Reload active tab").arg(menuReloadActiveModule.shortcut) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Close active tab").arg(menuCloseActiveModule.shortcut) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Switch to next tab").arg(nextTabShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Switch to previous tab").arg(previousTabShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Complete input").arg(tabShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Left mouse button: Activate highlighted entry").arg(enterShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Middle mouse button: Activate highlighted entry (never minimize)").arg(noMinimizeShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Enter arguments for highlighted command").arg(argsShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu / enter arguments").arg(contextMenuShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li></ul>"
 
-                color: palette.text
-                textFormat: TextEdit.RichText
-                readOnly: true
-                selectByMouse: false
-                wrapMode: TextEdit.Wrap
-                horizontalAlignment: TextEdit.AlignHCenter
-                verticalAlignment: TextEdit.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
-
-            Image {
-                id: logo
-                visible: if (parent.flow == GridLayout.LeftToRight) {
-                    return applicationWindow.width > 3 * sourceSize.width
-                } else {
-                    return applicationWindow.height > 4 * sourceSize.height
-                }
-                asynchronous: true
-                source: "../images/scalable/logo.svg"
-                fillMode: Image.Pad
-                horizontalAlignment: Image.AlignHCenter
-                verticalAlignment: Image.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.minimumHeight: sourceSize.height + 50
-                Layout.minimumWidth: sourceSize.width + 50
-            }
-
-            Rectangle {
-                visible: !logo.visible
-                width: 50
-            }
-
-            TextEdit {
-                objectName: "introScreen"
-
-                property int modulesInstalledCount
-
-                text: "<h2>" + qsTr("Getting started") + "</h2>" +
-                      "<p>" + qsTr("To get started, press <kbd>%1</kbd> to open a new tab. When you are done with a tab, you can always close it by pressing <kbd>%2</kbd>. You currently have %n module(s) installed. You can manage modules in the Module menu.", "", modulesInstalledCount).arg(menuLoadModule.shortcut).arg(menuCloseActiveModule.shortcut) + "</p>"
-
-                color: palette.text
-                textFormat: TextEdit.RichText
-                readOnly: true
-                selectByMouse: false
-                wrapMode: TextEdit.Wrap
-                horizontalAlignment: TextEdit.AlignHCenter
-                verticalAlignment: TextEdit.AlignVCenter
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-            }
+            color: palette.text
+            textFormat: TextEdit.RichText
+            readOnly: true
+            selectByMouse: false
+            wrapMode: TextEdit.Wrap
+            verticalAlignment: TextEdit.AlignVCenter
+            Layout.fillHeight: true
+            Layout.fillWidth: true
         }
     }
 
@@ -928,23 +1053,118 @@ ApplicationWindow {
             width: parent.width
 
             Label {
+                id: statusText
                 objectName: "statusText"
                 Layout.fillWidth: true
             }
 
             Label {
+                visible: statusText.text
+                text: "|"
+            }
+
+            Label {
+                id: statusSortMode
+                objectName: "statusSortMode"
+
+                text: {
+                    var tab = tabs.getTab(tabs.currentIndex);
+                    if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
+                    var sortMode = tab.item.children[0].children[2].contentItem.pextSortMode;
+                    if (sortMode == 'Module') {
+                        return qsTr("Sort: Module");
+                    } else if (sortMode == 'Ascending') {
+                        return qsTr("Sort: Ascending");
+                    } else if (sortMode == 'Descending') {
+                        return qsTr("Sort: Descending");
+                    } else {
+                        return sortMode;
+                    }
+                }
+                MouseArea {
+                    anchors.fill: parent
+                    acceptedButtons: Qt.LeftButton
+
+                    hoverEnabled: true
+
+                    onClicked: {
+                        var tab = tabs.getTab(tabs.currentIndex);
+                        if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
+                        tab.item.children[0].children[2].contentItem.sortModeChanged();
+                    }
+                }
+            }
+
+            Label {
+                visible: statusSortMode.text
+                text: "|"
+            }
+
+            Label {
                 objectName: "statusQueue"
 
-                property var entriesLeftForeground
-                property var entriesLeftBackground
+                text: {
+                    var unprocessedForeground = 0;
+                    var unprocessedBackground = 0;
+                    var hasEntriesForeground = true;
+                    for (var i = 0; i < tabs.count; i++) {
+                        var tab = tabs.getTab(i);
+                        if (tab == null || tab.item == null || tab.item.children[0] == null) { continue; };
+                        var unprocessedCount = tab.item.children[0].children[2].contentItem.unprocessedQueueCount;
+                        if (i == tabs.currentIndex) {
+                            unprocessedForeground = unprocessedCount;
+                            hasEntriesForeground = tab.item.children[0].children[2].contentItem.hasEntries;
+                        } else {
+                            unprocessedBackground += unprocessedCount;
+                        }
+                    }
 
-                anchors.right: parent.right
-
-                text: entriesLeftForeground || entriesLeftBackground ?
-                      qsTr("Processing: %1 (%2)").arg(entriesLeftForeground).arg(entriesLeftBackground) :
-                      tabs.getTab(tabs.currentIndex) != null && tabs.getTab(tabs.currentIndex).item != null && !tabs.getTab(tabs.currentIndex).item.children[0].children[2].contentItem.hasEntries ?
-                      qsTr("Waiting") : qsTr("Ready")
+                    if (unprocessedForeground > 0 || unprocessedBackground > 0) {
+                        return qsTr("Processing: %1 (%2)").arg(unprocessedForeground).arg(unprocessedBackground);
+                    } else if (hasEntriesForeground) {
+                        return qsTr("Ready");
+                    } else {
+                       qsTr("Waiting");
+                    }
+                }
             }
         }
     }
+
+    property string tr_module_class_does_not_implement_modulebase: qsTr("Module's Module class does not implement ModuleBase")
+    property string tr_module_failed_load_wrong_param_count: qsTr("Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}")
+    property string tr_already_installed: qsTr("{0} is already installed")
+    property string tr_downloading_from_url: qsTr("Downloading {0} from {1}")
+    property string tr_failed_to_download: qsTr("Failed to download {0}: {1}")
+    property string tr_downloading_dependencies: qsTr("Downloading dependencies for {0}")
+    property string tr_failed_to_download_depencencies: qsTr("Failed to download dependencies for {0}")
+    property string tr_installed: qsTr("Installed {0}")
+    property string tr_uninstalling: qsTr("Uninstalling {0}")
+    property string tr_already_uninstalled: qsTr("{0} is already uninstalled")
+    property string tr_uninstalled: qsTr("Uninstalled {0}")
+    property string tr_updating: qsTr("Updating {0}")
+    property string tr_already_up_to_date: qsTr("{0} is already up to date")
+    property string tr_failed_to_download_update: qsTr("Failed to download update for {0}: {1}")
+    property string tr_updating_dependencies: qsTr("Updating dependencies for {0}")
+    property string tr_failed_to_update_dependencies: qsTr("Failed to update dependencies for {0}")
+    property string tr_updated: qsTr("Updated {0}")
+    property string tr_checking_for_pext_updates: qsTr("Checking for Pext updates")
+    property string tr_failed_to_check_for_pext_updates: qsTr("Failed to check for Pext updates: {0}")
+    property string tr_pext_is_already_up_to_date: qsTr("Pext is already up-to-date")
+    property string tr_data_queued_for_typing: qsTr("Data queued for typing")
+    property string tr_queued_data_typed: qsTr("All queued data has been typed")
+    property string tr_data_queued_for_clipboard: qsTr("Data queued for clipboard")
+    property string tr_data_copied_to_clipboard: qsTr("Data copied to clipboard")
+    property string tr_enter_arguments: qsTr("Enter arguments")
+    property string tr_no_context_menu_available: qsTr("No context menu available")
+    property string tr_no_tab_completion_possible: qsTr("No tab completion possible")
+    property string tr_no_entry_selected: qsTr("No entry selected")
+    property string tr_no_command_available_for_current_filter: qsTr("No command available for current filter")
+    property string tr_pynput_is_unavailable: qsTr("Pynput is unavailable")
+    property string tr_pyautogui_is_unavailable: qsTr("PyAutoGUI is unavailable")
+
+    property string tr_actionable_update_available: qsTr("Pext {0} is available. You are currently running Pext {1}.")
+    property string tr_actionable_update_available_button: qsTr("Open download page")
+    property string tr_actionable_error_in_module: qsTr("An error occured in {0}: {1}.")
+    property string tr_actionable_report_error_in_module: qsTr("Report as bug")
 }

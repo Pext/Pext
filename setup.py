@@ -29,6 +29,13 @@ version = version.replace('-', '+', 1).replace('-', '.')
 with open(pext_version_path, "w") as version_file:
     version_file.write(version)
 
+with open(os.path.join(pext_path, 'requirements.txt')) as requirements_file:
+    requirements = []
+    for line in requirements_file:
+        requirement_spec = line.strip().split(';', 1)
+        if len(requirement_spec) == 1 or eval(requirement_spec[1]):
+            requirements.append(requirement_spec[0])
+
 if sys.platform == 'linux':
     extra_options = dict(
         data_files=[
@@ -39,23 +46,13 @@ if sys.platform == 'linux':
             ('share/metainfo', ['io.pext.pext.appdata.xml'])
         ]
     )
-    extra_deps = []
-elif sys.platform == 'darwin':
-    extra_options = dict()
-    extra_deps = ['accessibility']
 else:
     extra_options = dict()
-    extra_deps = []
 
 setup(
     name='Pext',
     version=version,
-    install_requires=[
-        'dulwich',
-        'pynput',
-        'pyqt5',
-        'requests'
-    ] + extra_deps,
+    install_requires=requirements,
     description='Python-based extendable tool',
     long_description='A Python-based application that uses modules for extendability',
     url='https://pext.io/',

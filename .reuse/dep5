@@ -1,0 +1,26 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Pext
+Upstream-Contact: Sylvia van Os <sylvia@hackerchick.me>
+Source: https://pext.io
+
+Files: *
+Copyright: 2019 Sylvia van Os
+License: GPL-3.0-or-later
+
+Files: docs/*
+Copyright: 2019 Sylvia van Os
+License: CC-BY-SA-4.0
+
+Files: pext/images/*
+Copyright: 2019 White Paper Fox
+           2019 Sylvia van Os
+License: CC-BY-SA-4.0
+
+Files: *.md
+Copyright: 2019 Sylvia van Os
+License: CC-BY-SA-4.0
+
+Files: logo.png
+Copyright: 2019 White Paper Fox
+           2019 Sylvia van Os
+License: CC-BY-SA-4.0

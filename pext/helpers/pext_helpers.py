@@ -1,8 +1,6 @@
-#!/usr/bin/env python3
-
-# Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+# Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 #
-# This file is part of Pext
+# This file is part of Pext.
 #
 # Pext is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -188,6 +186,17 @@ class Action(Enum):
 
         Example: self.q.put([Action.ask_question_default_no, "Are you sure you want to continue?", 0])
 
+    ask_choice
+        Introduced in API version 0.12.0
+
+        Asks the user to make a choice between several options
+
+        question -- the question to ask
+        choices -- the choices the user can choose from
+        identifier -- an optional identifier which gets passed back to process_response
+
+        Example: self.q.put([Action.ask_choice, "Do you like cats or dogs?", ["Cats", "Dogs"], 0])
+
     ask_input
         Introduced in API version 0.1.0.
         Changed in API version 0.2.0.
@@ -350,9 +359,10 @@ class Action(Enum):
                               "video": ["on", "off"]}])
 
     set_base_context:
-        Introduced in API version 0.6.
+        Introduced in API version 0.6.0.
+        Changed in API version 0.11.0.
 
-        Set the base context, reachable by right-clicking the header text or Ctrl+Shift+..
+        Set the base context options, added after each entry-specific context options.
 
         Example: self.q.put([Action.set_base_context, ["Mute", "Stop"]])
 
@@ -374,22 +384,23 @@ class Action(Enum):
     ask_question = 13
     ask_question_default_yes = 14
     ask_question_default_no = 15
-    ask_input = 16
-    ask_input_password = 17
-    ask_input_multi_line = 18
-    copy_to_clipboard = 19
-    set_selection = 20
-    close = 21
-    set_entry_info = 22
-    replace_entry_info_dict = 23
-    set_command_info = 24
-    replace_command_info_dict = 25
-    set_base_info = 26
-    set_entry_context = 27
-    replace_entry_context_dict = 28
-    set_command_context = 29
-    replace_command_context_dict = 30
-    set_base_context = 31
+    ask_choice = 16
+    ask_input = 17
+    ask_input_password = 18
+    ask_input_multi_line = 19
+    copy_to_clipboard = 20
+    set_selection = 21
+    close = 22
+    set_entry_info = 23
+    replace_entry_info_dict = 24
+    set_command_info = 25
+    replace_command_info_dict = 26
+    set_base_info = 27
+    set_entry_context = 28
+    replace_entry_context_dict = 29
+    set_command_context = 30
+    replace_command_context_dict = 31
+    set_base_context = 32
 
 
 class SelectionType(Enum):
@@ -412,6 +423,8 @@ class SelectionType(Enum):
         Introduced in API version 0.6.
 
         The selection is not relevant to any entry or command.
+
+        Used for the base context options.
     """
 
     entry = 0

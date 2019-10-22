@@ -17,9 +17,9 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleVersion</key>
-    <string>0.21</string>
+    <string>0.26</string>
     <key>CFBundleShortVersionString</key>
-    <string>0.21</string>
+    <string>0.26</string>
     <key>LSMinimumSystemVersion</key>
     <string>10.7.0</string>
     <key>LSUIElement</key>
@@ -27,7 +27,7 @@
     <key>NSHighResolutionCapable</key>
     <true/>
     <key>NSHumanReadableCopyright</key>
-    <string>© 2018 Sylvia van Os</string>
+    <string>© 2019 Sylvia van Os</string>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
     <key>LSEnvironment</key>

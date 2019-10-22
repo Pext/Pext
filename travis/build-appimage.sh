@@ -46,19 +46,28 @@ for path in /etc/ssl/ca-bundle.pem \
     fi
 done
 
-exec "$APPDIR"/usr/bin/python -m pext "$@"
 EAT
+
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+cat >> AppRun.sh <<\EAT
+  exec "$APPDIR"/usr/bin/python -m pext --portable "$@"
+EAT
+else
+cat >> AppRun.sh <<\EAT
+  exec "$APPDIR"/usr/bin/python -m pext "$@"
+EAT
+fi
 
 chmod +x AppRun.sh
 
 # get linuxdeploy and its conda plugin
 wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/master/linuxdeploy-plugin-conda.sh
+wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/e714783a1ca6fffeeb9dd15bbfce83831bb196f8/linuxdeploy-plugin-conda.sh  # We use an older linuxdeploy-plugin-conda because commit 76c8c8bf4e7dd435eda9c9a1de88a980c697f58f breaks the Pext build
 
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
-export PIP_REQUIREMENTS="PyQt5 PyOpenGL PyOpenGL_accelerate dulwich pynput requests git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate ."
+export PIP_REQUIREMENTS="git+https://github.com/TheAssassin/python-appimageupdate.git#egg=appimageupdate ."
 
 mkdir -p AppDir/usr/share/metainfo/
 cp "$REPO_ROOT"/*.appdata.xml AppDir/usr/share/metainfo/
@@ -72,7 +81,11 @@ if [ "$TRAVIS_TAG" != "" ]; then
     APPIMAGEUPDATE_TAG=latest
 fi
 
-export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync"
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+  export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext-portable-*x86_64.AppImage.zsync"
+else
+  export UPD_INFO="gh-releases-zsync|Pext|Pext|$APPIMAGEUPDATE_TAG|Pext*x86_64.AppImage.zsync"
+fi
 
 chmod +x linuxdeploy*.{sh,AppImage}
 
@@ -107,13 +120,13 @@ popd
 
 # remove unused files from AppDir manually
 # these files are nothing the conda plugin could remove manually
-rm  AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/QtWebEngine*
-rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/translations/qtwebengine*
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/resources/qtwebengine*
-rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/qml/QtWebEngine*
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/plugins/webview/libqtwebview*
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess*
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/QtWebEngine* || true
+rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/translations/qtwebengine* || true
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/resources/qtwebengine* || true
+rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/qml/QtWebEngine* || true
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/plugins/webview/libqtwebview* || true
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess* || true
+rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine* || true
 
 # now, actually build AppImage
 # the extracted AppImage files will be cleaned up now
@@ -122,11 +135,19 @@ rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine*
 ls -al AppDir/
 
 python "$REPO_ROOT/setup.py" || true
-export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
+  export VERSION=portable-$(cat "$REPO_ROOT/pext/VERSION")
+else
+  export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+fi
 
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool*.AppImage
 ./appimagetool*.AppImage AppDir -u "$UPD_INFO"
+
+# Print version to test if the AppImage runs at all
+chmod +x Pext*.AppImage*
+xvfb-run ./Pext*.AppImage* --version
 
 # move AppImage back to old CWD
 mv Pext*.AppImage* "$OLD_CWD"/

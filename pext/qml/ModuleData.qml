@@ -1,7 +1,7 @@
 /*
-    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 
-    This file is part of Pext
+    This file is part of Pext.
 
     Pext is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import "repeat_polyfill.js" as RepeatPolyfill
+
 import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
@@ -25,6 +27,18 @@ import QtQuick.Window 2.0
 Item {
     id: contentRow
     height: parent.height
+
+    Shortcut {
+        id: enterShortcut
+        enabled: false
+        sequence: "Return"
+    }
+
+    Shortcut {
+        id: argsShortcut
+        enabled: false
+        sequence: "Ctrl+Return"
+    }
 
     GridLayout {
         id: moduleDataGrid
@@ -56,9 +70,12 @@ Item {
                 objectName: "contextMenuModel"
 
                 signal entryClicked()
+                signal selectExplicitNoMinimize()
+                signal openArgumentsInput()
                 signal closeContextMenu()
 
-                model: contextMenuModel
+                /* TODO: Add separator */
+                model: contextMenuModelFull
 
                 delegate: Component {
                     Item {
@@ -77,7 +94,7 @@ Item {
                         }
                         MouseArea {
                             anchors.fill: parent
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            acceptedButtons: Qt.LeftButton | Qt.MidButton | Qt.RightButton
 
                             hoverEnabled: true
 
@@ -87,6 +104,8 @@ Item {
                             onClicked: {
                                 if (mouse.button == Qt.LeftButton) {
                                     contextMenu.entryClicked();
+                                } else if (mouse.button == Qt.MidButton) {
+                                    resultList.selectExplicitNoMinimize();
                                 } else {
                                     contextMenu.closeContextMenu();
                                 }
@@ -128,22 +147,38 @@ Item {
 
             Item {
                 width: parent.width
-                visible: headerText.text
+                visible: headerText.text || treeText.text
+
                 Column {
+                    id: headerHolder
+                    objectName: "headerHolder"
+
                     Text {
                         id: headerText
-                        color: palette.highlight
                         objectName: "headerText"
 
+                        color: palette.highlight
                         textFormat: Text.PlainText
                     }
-                }
-                MouseArea {
-                    anchors.fill: headerText.parent
-                    acceptedButtons: Qt.RightButton
+                    Text {
+                        id: treeText
+                        objectName: "treeText"
 
-                    onClicked: {
-                        resultList.openBaseMenu();
+                        text: {
+                            var text = "";
+                            for (var i = 0; i < resultList.tree.length; i++) {
+                                for (var j = 0; j < i; j++) {
+                                    text += " ";
+                                }
+                                text += resultList.tree[i];
+                                if (i < resultList.tree.length - 1) {
+                                    text += "\n";
+                                }
+                            }
+                            return text;
+                        }
+                        color: palette.highlight
+                        textFormat: Text.PlainText
                     }
                 }
             }
@@ -156,7 +191,8 @@ Item {
             TextEdit {
                 visible: resultList.hasEntries && resultList.normalEntries == 0 && resultList.commandEntries == 0 && !searchInputFieldEmpty
 
-                text: "<h2>" + qsTr("No results") + "</h2>"
+                text: "<h2>" + qsTr("No results") + "</h2>" +
+                      (resultList.unprocessedQueueCount > 0 ? ("<p>" + qsTr("Still processing %1 module request(s)…", "", resultList.unprocessedQueueCount) + "</p>") : "")
 
                 anchors.centerIn: parent
                 color: palette.text
@@ -172,20 +208,24 @@ Item {
 
             ListView {
                 visible: resultList.hasEntries
-                anchors.topMargin: headerText.text ? headerText.height : 0
+                anchors.topMargin: headerHolder.height
                 clip: true
                 id: resultList
                 objectName: "resultListModel"
 
                 signal entryClicked()
+                signal selectExplicitNoMinimize()
                 signal openContextMenu()
-                signal openBaseMenu()
+                signal openArgumentsInput()
+
+                signal sortModeChanged()
+                property var pextSortMode: sortMode
 
                 property int normalEntries: resultListModelNormalEntries
                 property int commandEntries: resultListModelCommandEntries
-                property bool commandMode: resultListModelCommandMode
                 property bool hasEntries: resultListModelHasEntries
-                property int depth: resultListModelDepth
+                property variant tree: resultListModelTree
+                property int unprocessedQueueCount: unprocessedCount
 
                 model: resultListModel
 
@@ -200,15 +240,18 @@ Item {
                         Column {
                             Text {
                                 id: text
+                                width: parent.parent.width
                                 objectName: "text"
-                                text: display
-                                textFormat: Text.PlainText
-                                font.italic:
-                                    if (!resultListModelCommandMode) {
-                                        index >= resultListModelNormalEntries
-                                    } else {
-                                        index < resultListModelCommandEntries
+                                text: {
+                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + "&nbsp;".repeat(resultList.tree.length) + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
+                                    if (resultList.currentIndex === index) {
+                                        line += (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText);
+                                    } else if (resultList.currentIndex < resultListModelNormalEntries && resultListModelNormalEntries === index) {
+                                        line += argsShortcut.nativeText;
                                     }
+                                    return line + "</code></td></tr></table>"
+                                }
+                                textFormat: Text.RichText
                                 color: {
                                     if (resultList.currentIndex == index) {
                                         if (contextMenu.visible) {
@@ -230,7 +273,7 @@ Item {
                         MouseArea {
                             enabled: !contextMenuContainer.visible
                             anchors.fill: parent
-                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+                            acceptedButtons: Qt.LeftButton | Qt.MidButton | Qt.RightButton
 
                             hoverEnabled: true
 
@@ -240,6 +283,8 @@ Item {
                             onClicked: {
                                 if (mouse.button == Qt.LeftButton) {
                                     resultList.entryClicked();
+                                } else if (mouse.button == Qt.MidButton) {
+                                    resultList.selectExplicitNoMinimize();
                                 } else {
                                     resultList.openContextMenu();
                                 }
@@ -252,6 +297,7 @@ Item {
                 }
 
                 highlightMoveDuration: 250
+
             }
         }
 

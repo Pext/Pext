@@ -18,26 +18,46 @@
 */
 
 import QtQuick 2.3
+import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.0
 
-MessageDialog {
-    title: qsTr("Update manager")
-    icon: StandardIcon.Question
-    standardButtons: StandardButton.Yes | StandardButton.No
+Dialog {
+    title: moduleName.length == 0 ? qsTr("Pext") : qsTr("Pext - %1").arg(moduleName)
+    standardButtons: StandardButton.Ok | StandardButton.Cancel
 
-    property var requestAccepted
-    property var requestRejected
+    property var moduleName
+    property var question
+    property var choices
+    property var accepted
+    property var rejected
 
-    text: qsTr("May Pext automatically check for updates? You can change this at any time from the settings menu.")
+    Column {
+        id: root
+        width: parent.width
 
-    Component.onCompleted: visible = true;
+        Label {
+            text: question
+            width: root.width
+            wrapMode: Text.Wrap
+        }
 
-    onYes: {
-        requestAccepted()
+        ComboBox {
+            id: userInput
+            model: choices
+            width: root.width
+        }
     }
-    onNo: {
-        requestRejected()
+
+    Component.onCompleted: {
+        visible = true;
     }
 
+    onAccepted: {
+        accepted(userInput.currentText);
+    }
+
+    onRejected: {
+        rejected();
+    }
 }
-

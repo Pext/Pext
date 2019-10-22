@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+# Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 #
-# This file is part of Pext
+# This file is part of Pext.
 #
 # Pext is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,36 +37,54 @@ import time
 import traceback
 import webbrowser
 import tempfile
+import psutil
 
 from datetime import datetime
 from distutils.util import strtobool
 from enum import IntEnum
+from functools import partial
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from pkg_resources import parse_version
 from shutil import copytree, rmtree
 from subprocess import check_output, CalledProcessError, Popen
 try:
-    from typing import Any, Callable, Dict, List, Optional, Tuple, Union
+    from typing import Any, Callable, Dict, List, Optional, Set, Union
 except ImportError:
-    from backports.typing import Any, Callable, Dict, List, Optional, Tuple, Union  # type: ignore  # noqa: F401
+    from backports.typing import Any, Callable, Dict, List, Optional, Set, Union  # type: ignore  # noqa: F401
+from urllib.parse import quote_plus
 from queue import Queue, Empty
 
 import requests
 
 from dulwich import porcelain
 from dulwich.repo import Repo
-from pynput import keyboard
+
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QStyleFactory, QSystemTrayIcon
+from PyQt5.QtWidgets import QApplication, QAction, QMenu, QStyleFactory, QSystemTrayIcon
 from PyQt5.Qt import QClipboard, QIcon, QObject, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
-from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtGui import QPalette, QColor, QWindow
+from watchdog.events import FileSystemEventHandler
+from watchdog.observers import Observer
 
 if 'APPIMAGE' in os.environ:
     import appimageupdate
 
+pyautogui_error = None
 if platform.system() == 'Darwin':
-    import accessibility  # NOQA
+    # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
+    try:
+        from pyautogui import hotkey, typewrite
+    except Exception:
+        pyautogui_error = traceback.format_exc()
+        traceback.print_exc()
+
+pynput_error = None
+try:
+    from pynput import keyboard
+except Exception:
+    pynput_error = traceback.format_exc()
+    traceback.print_exc()
 
 # FIXME: Workaround for https://bugs.launchpad.net/ubuntu/+source/python-qt4/+bug/941826
 warn_no_openGL_linux = False
@@ -129,35 +147,67 @@ class OutputMode(IntEnum):
     AutoType = 3
 
 
+class OutputSeparator(IntEnum):
+    """A list of possible separators to put between entries in the output queue."""
+
+    None_ = 0
+    Tab = 1
+    Enter = 2
+
+
 class ConfigRetriever():
     """Retrieve global configuration entries."""
 
-    __config_home = None
+    __config_data_path = None
+    __config_temp_path = None
 
     @staticmethod
-    def set_home_path(path: Optional[str]) -> None:
+    def set_data_path(path: Optional[str]) -> None:
         """Set the root configuration directory for Pext to store in and load from."""
-        ConfigRetriever.__config_home = path
+        ConfigRetriever.__config_data_path = path
 
     @staticmethod
-    def get_setting(variable: str) -> str:
-        """Get a specific configuration setting."""
-        if ConfigRetriever.__config_home:
-            config_home = os.path.expanduser(ConfigRetriever.__config_home)
-            if os.path.isdir(config_home):
-                config = {'config_path': config_home}
+    def make_portable(portable: Optional[bool]) -> None:
+        """Make changes to locations so that Pext can be considered portable."""
+        if not portable:
+            return
+
+        if not ConfigRetriever.__config_data_path:
+            if 'APPIMAGE' in os.environ:
+                base_path = os.path.dirname(os.path.abspath(os.environ['APPIMAGE']))
             else:
-                raise NotADirectoryError('{} is not a directory.'.format(config_home))
+                base_path = AppFile.get_path()
+            ConfigRetriever.__config_data_path = os.path.join(base_path, 'pext_data')
+
+        ConfigRetriever.__config_temp_path = os.path.join(ConfigRetriever.__config_data_path, 'pext_temp')
+
+    @staticmethod
+    def get_path() -> str:
+        """Get the config path."""
+        if ConfigRetriever.__config_data_path:
+            config_data_path = os.path.expanduser(ConfigRetriever.__config_data_path)
+            os.makedirs(config_data_path, exist_ok=True)
+            return config_data_path
+
+        # Fall back to default config location
+        try:
+            config_data_path = os.environ['XDG_CONFIG_HOME']
+        except Exception:
+            config_data_path = os.path.join(os.path.expanduser('~'), '.config')
+
+        os.makedirs(config_data_path, exist_ok=True)
+        return os.path.join(config_data_path, 'pext')
+
+    @staticmethod
+    def get_temp_path() -> str:
+        """Get the temp path."""
+        if ConfigRetriever.__config_temp_path:
+            temp_path = os.path.expanduser(ConfigRetriever.__config_temp_path)
         else:
-            # Fall back to default config location
-            try:
-                config_home = os.environ['XDG_CONFIG_HOME']
-            except Exception:
-                config_home = os.path.join(os.path.expanduser('~'), '.config')
+            temp_path = tempfile.gettempdir()
 
-            config = {'config_path': os.path.join(config_home, 'pext')}
-
-        return config[variable]
+        os.makedirs(temp_path, exist_ok=True)
+        return temp_path
 
 
 class RunConseq():
@@ -184,14 +234,12 @@ class Logger():
 
     window = None
     status_text = None  # type: QObject
-    status_queue = None  # type: QObject
 
     @staticmethod
     def bind_window(window: 'Window') -> None:
         """Give the logger the ability to log info to the main window."""
         Logger.window = window
         Logger.status_text = window.window.findChild(QObject, "statusText")
-        Logger.status_queue = window.window.findChild(QObject, "statusQueue")
 
     @staticmethod
     def _queue_message(module_name: str, message: str, type_name: str) -> None:
@@ -238,16 +286,38 @@ class Logger():
             print(message)
 
     @staticmethod
-    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str]) -> None:
+    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str], metadata=None) -> None:
         """If a window is provided, pop up a window. Otherwise, print."""
         if not module_name:
             module_name = ""
         if not detailed_message:
             detailed_message = ""
 
-        if Logger.window:
-            error_dialog = Logger.window.window.findChild(QObject, "errorDialog")
-            error_dialog.showErrorDialog.emit(module_name, message, detailed_message)
+        if metadata and 'bugtracker' in metadata and 'bugtracker_type' in metadata:
+            if metadata['bugtracker_type'] == "github":
+                bugtracker_url = "".join([
+                    metadata['bugtracker'],
+                    "/issues/new?title=",
+                    quote_plus(message),
+                    "&body=Module%20version%20",
+                    quote_plus(metadata['version']),
+                    "%0APext%20",
+                    quote_plus(UpdateManager().get_core_version()),
+                    "%20on%20",
+                    quote_plus(sys.platform),
+                    "%0A%0A",
+                    quote_plus(detailed_message)
+                ])
+            else:
+                bugtracker_url = metadata['bugtracker']
+        else:
+            bugtracker_url = ""
+
+        if Logger.window and module_name:
+            Logger.window.add_actionable(
+                Translation.get("actionable_error_in_module").format(module_name, message),
+                Translation.get("actionable_report_error_in_module") if bugtracker_url else "",
+                bugtracker_url)
         else:
             print("{}\n{}\n{}".format(module_name, message, detailed_message))
 
@@ -284,12 +354,51 @@ class Logger():
 
             Logger.last_update = current_time
 
+
+class PextFileSystemEventHandler(FileSystemEventHandler):
+    """Watches the file system to ensure state changes when relevant."""
+
+    def __init__(self, window: 'Window', modules_path: str):
+        """Initialize filesystem event handler."""
+        self.window = window
+        self.modules_path = modules_path
+
+    def on_deleted(self, event):
+        """Unload modules on deletion."""
+        if not event.is_directory:
+            return
+
+        if event.src_path.startswith(self.modules_path):
+            for tab_id, tab in enumerate(self.window.tab_bindings):
+                if event.src_path == os.path.join(self.modules_path, tab['metadata']['id'].replace('.', '_')):
+                    print("Module {} was removed, sending unload event".format(tab['metadata']['id']))
+                    self.window.module_manager.unload_module(self.window, tab_id)
+
+
+class Translation():
+    """Retrieves translations for Python code.
+
+    This works by reading values from QML.
+    """
+
+    __window = None
+
     @staticmethod
-    def set_queue_count(count: List[int]) -> None:
-        """Show the queue size on screen."""
-        if Logger.status_queue:
-            QQmlProperty.write(Logger.status_queue, "entriesLeftForeground", count[0])
-            QQmlProperty.write(Logger.status_queue, "entriesLeftBackground", count[1])
+    def bind_window(window: 'Window') -> None:
+        """Give the translator access to the translations stored in the window."""
+        Translation.__window = window
+
+    @staticmethod
+    def get(string_id: str) -> str:
+        """Return the translated value."""
+        if Translation.__window:
+            translation = QQmlProperty.read(Translation.__window.window, 'tr_{}'.format(string_id))
+            if translation:
+                return translation
+
+            return "TRANSLATION MISSING: {}".format(string_id)
+
+        return "TRANSLATION SYSTEM NOT YET AVAILABLE: {}".format(string_id)
 
 
 class MainLoop():
@@ -309,7 +418,12 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
-            Logger.log_critical(tab['metadata']['name'], str(action[1]), str(action[2]) if len(action) > 2 else None)
+            Logger.log_critical(
+                tab['metadata']['name'],
+                str(action[1]),
+                str(action[2]) if len(action) > 2 else None,
+                tab['metadata']
+            )
 
             tab_id = self.window.tab_bindings.index(tab)
             self.window.module_manager.unload_module(self.window, tab_id)
@@ -364,11 +478,23 @@ class MainLoop():
 
         elif action[0] in [Action.ask_question, Action.ask_question_default_yes, Action.ask_question_default_no]:
             question_dialog = self.window.window.findChild(QObject, "questionDialog")
+            # Disconnect possibly existing handlers
+            try:
+                question_dialog.questionAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                question_dialog.questionRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                question_dialog.questionAccepted.connect(
-                    lambda: tab['vm'].module.process_response(True, action[2] if len(action) > 2 else None))
-                question_dialog.questionRejected.connect(
-                    lambda: tab['vm'].module.process_response(False, action[2] if len(action) > 2 else None))
+                question_dialog.questionAccepted.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(True, arg),
+                    arg=(action[2] if len(action) > 2 else None)))
+                question_dialog.questionRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(False, arg),
+                    arg=(action[2] if len(action) > 2 else None)))
             else:
                 question_dialog.questionAccepted.connect(
                     lambda: tab['vm'].module.process_response(True))
@@ -377,14 +503,52 @@ class MainLoop():
 
             question_dialog.showQuestionDialog.emit(tab['metadata']['name'], action[1])
 
+        elif action[0] == Action.ask_choice:
+            choice_dialog = self.window.window.findChild(QObject, "choiceDialog")
+            # Disconnect possibly existing handlers
+            try:
+                choice_dialog.choiceAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                choice_dialog.choiceRejected.disconnect()
+            except TypeError:
+                pass
+
+            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+                choice_dialog.choiceAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                choice_dialog.choiceRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+            else:
+                choice_dialog.choiceAccepted.connect(
+                    lambda userinput: tab['vm'].module.process_response(userinput))
+                choice_dialog.choiceRejected.connect(
+                    lambda: tab['vm'].module.process_response(None))
+
+            choice_dialog.showChoiceDialog.emit(tab['metadata']['name'], action[1], action[2])
+
         elif action[0] == Action.ask_input:
             input_request = self.window.window.findChild(QObject, "inputRequests")
+            # Disconnect possibly existing handlers
+            try:
+                input_request.inputRequestAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                input_request.inputRequestRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput,
-                                                                        action[3] if len(action) > 3 else None))
-                input_request.inputRequestRejected.connect(
-                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
+                input_request.inputRequestAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                input_request.inputRequestRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
                     lambda userinput: tab['vm'].module.process_response(userinput))
@@ -396,12 +560,23 @@ class MainLoop():
 
         elif action[0] == Action.ask_input_password:
             input_request = self.window.window.findChild(QObject, "inputRequests")
+            # Disconnect possibly existing handlers
+            try:
+                input_request.inputRequestAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                input_request.inputRequestRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput,
-                                                                        action[3] if len(action) > 3 else None))
-                input_request.inputRequestRejected.connect(
-                        lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
+                input_request.inputRequestAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                input_request.inputRequestRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
                     lambda userinput: tab['vm'].module.process_response(userinput))
@@ -413,33 +588,39 @@ class MainLoop():
 
         elif action[0] == Action.ask_input_multi_line:
             input_request = self.window.window.findChild(QObject, "inputRequests")
+            # Disconnect possibly existing handlers
+            try:
+                input_request.inputRequestAccepted.disconnect()
+            except TypeError:
+                pass
+            try:
+                input_request.inputRequestRejected.disconnect()
+            except TypeError:
+                pass
+
             if len(signature(tab['vm'].module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput,
-                                                                        action[3] if len(action) > 3 else None))
-                input_request.inputRequestRejected.connect(
-                    lambda: tab['vm'].module.process_response(None, action[3] if len(action) > 3 else None))
+                input_request.inputRequestAccepted.connect(partial(
+                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
+                input_request.inputRequestRejected.connect(partial(
+                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
                     lambda userinput: tab['vm'].module.process_response(userinput))
                 input_request.inputRequestRejected.connect(
                     lambda: tab['vm'].module.process_response(None))
+
             input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, True,
                                             action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
+            self.window.output_queue.append(str(action[1]))
             if Settings.get('output_mode') == OutputMode.AutoType:
-                self.window.output_queue.append(str(action[1]))
+                Logger.log(tab['metadata']['name'], Translation.get("data_queued_for_typing"))
             else:
-                if Settings.get('output_mode') == OutputMode.SelectionClipboard:
-                    mode = QClipboard.Selection
-                elif Settings.get('output_mode') == OutputMode.FindBuffer:
-                    mode = QClipboard.FindBuffer
-                else:
-                    mode = QClipboard.Clipboard
-
-                self.app.clipboard().setText(str(action[1]), mode)
+                Logger.log(tab['metadata']['name'], Translation.get("data_queued_for_clipboard"))
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
@@ -448,18 +629,25 @@ class MainLoop():
                 tab['vm'].selection = []
 
             tab['vm'].context.setContextProperty(
-                "resultListModelDepth", len(tab['vm'].selection))
+                "resultListModelTree", [part['value'] for part in tab['vm'].selection])
+
+            if tab['vm'].selection_thread:
+                tab['vm'].selection_thread.join()
 
             tab['vm'].make_selection()
 
         elif action[0] == Action.close:
-            self.window.close()
-            tab['vm'].selection = []
+            # Don't close and stay on the same depth if the user explicitly requested to not close after last input
+            if not tab['vm'].minimize_disabled:
+                self.window.close()
 
-            tab['vm'].context.setContextProperty(
-                "resultListModelDepth", len(tab['vm'].selection))
+                selection = []  # type: List[Dict[SelectionType, str]]
+            else:
+                selection = tab['vm'].selection[:-1]
 
-            tab['vm'].module.selection_made(tab['vm'].selection)
+            tab['vm'].minimize_disabled = False
+
+            tab['vm'].queue.put([Action.set_selection, selection])
 
         elif action[0] == Action.set_entry_info:
             if len(action) > 2:
@@ -541,6 +729,8 @@ class MainLoop():
             else:
                 tab['vm'].context_menu_base = []
 
+            tab['vm'].context_menu_model_base_list.setStringList(str(entry) for entry in tab['vm'].context_menu_base)
+
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
@@ -548,7 +738,6 @@ class MainLoop():
             tab['vm'].search(new_entries=True)
             tab['entries_processed'] = 0
 
-        self.window.update()
         tab['queue'].task_done()
 
     def run(self) -> None:
@@ -565,20 +754,19 @@ class MainLoop():
             Logger.show_next_message()
 
             current_tab = QQmlProperty.read(self.window.tabs, "currentIndex")
-            queue_size = [0, 0]
 
             all_empty = True
             for tab_id, tab in enumerate(self.window.tab_bindings):
                 if not tab['init']:
                     continue
 
+                tab['vm'].context.setContextProperty(
+                    "unprocessedCount", tab['queue'].qsize())
                 if tab_id == current_tab:
-                    queue_size[0] = tab['queue'].qsize()
                     active_tab = True
                     tab['vm'].context.setContextProperty(
                         "resultListModelHasEntries", True if tab['vm'].entry_list or tab['vm'].command_list else False)
                 else:
-                    queue_size[1] += tab['queue'].qsize()
                     active_tab = False
 
                 try:
@@ -593,8 +781,6 @@ class MainLoop():
                 except Exception as e:
                     print('WARN: Module {} caused exception {}'.format(tab['metadata']['name'], e))
                     traceback.print_exc()
-
-            Logger.set_queue_count(queue_size)
 
             if all_empty:
                 if self.window.window.isVisible():
@@ -668,10 +854,20 @@ class ProfileManager():
 
     def __init__(self) -> None:
         """Initialize the profile manager."""
-        self.profile_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'profiles')
-        self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
-        self.saved_settings = ['locale', 'minimize_mode', 'output_mode', 'sort_mode', 'theme', 'tray',
-                               'global_hotkey_enabled', 'last_update_check', 'update_check', 'object_update_check']
+        self.profile_dir = os.path.join(ConfigRetriever.get_path(), 'profiles')
+        self.module_dir = os.path.join(ConfigRetriever.get_path(), 'modules')
+        self.saved_settings = ['_window_geometry',
+                               'turbo_mode',
+                               'locale',
+                               'minimize_mode',
+                               'output_mode',
+                               'output_separator',
+                               'theme',
+                               'tray',
+                               'global_hotkey_enabled',
+                               'last_update_check',
+                               'update_check',
+                               'object_update_check']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -680,7 +876,7 @@ class ProfileManager():
         else:
             uid = str(os.getuid())
 
-        return os.path.join(tempfile.gettempdir(), '{}_pext_{}.pid'.format(uid, profile))
+        return os.path.join(ConfigRetriever.get_temp_path(), '{}_pext_{}.pid'.format(uid, profile))
 
     @staticmethod
     def lock_profile(profile: str) -> None:
@@ -697,12 +893,8 @@ class ProfileManager():
             return None
 
         pid = int(open(pidfile, 'r').read())
-        if platform.system() == 'Windows':
-            return True
 
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
+        if not psutil.pid_exists(pid):
             return None
 
         return pid
@@ -760,6 +952,9 @@ class ProfileManager():
                 # Only save non-internal variables
                 if setting[0] != "_":
                     settings[setting] = module['settings'][setting]
+            # Append Pext state variables
+            for setting in module['vm'].settings:
+                settings[setting] = module['vm'].settings[setting]
 
             config['{}_{}'.format(number, module['metadata']['id'])] = settings
 
@@ -811,7 +1006,7 @@ class ProfileManager():
         if profile:
             path = os.path.join(self.profile_dir, profile, 'settings')
         else:
-            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+            path = os.path.join(ConfigRetriever.get_path(), 'settings')
 
         with open(path, 'w') as configfile:
             config.write(configfile)
@@ -824,7 +1019,7 @@ class ProfileManager():
         if profile:
             path = os.path.join(self.profile_dir, profile, 'settings')
         else:
-            path = os.path.join(ConfigRetriever.get_setting('config_path'), 'settings')
+            path = os.path.join(ConfigRetriever.get_path(), 'settings')
 
         config.read(path)
 
@@ -930,9 +1125,9 @@ class ModuleManager():
 
     def __init__(self) -> None:
         """Initialize the module manager."""
-        self.module_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
+        self.module_dir = os.path.join(ConfigRetriever.get_path(),
                                        'modules')
-        self.module_dependencies_dir = os.path.join(ConfigRetriever.get_setting('config_path'),
+        self.module_dependencies_dir = os.path.join(ConfigRetriever.get_path(),
                                                     'module_dependencies')
 
     def _pip_install(self, identifier: str) -> Optional[str]:
@@ -981,20 +1176,39 @@ class ModuleManager():
     def load_module(self, window: 'Window', module: Dict[str, Any]) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
-        module_path = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
+        module_path = os.path.join(ConfigRetriever.get_path(), 'modules')
         if module_path not in sys.path:
             sys.path.append(module_path)
 
         # Append module dependencies path if not yet appended
-        module_dependencies_path = os.path.join(ConfigRetriever.get_setting('config_path'),
+        module_dependencies_path = os.path.join(ConfigRetriever.get_path(),
                                                 'module_dependencies',
                                                 module['metadata']['id'].replace('.', '_'))
         if module_dependencies_path not in sys.path:
             sys.path.append(module_dependencies_path)
 
+        # Set default for internal settings not loaded from file
+        if '__pext_sort_mode' not in module['settings']:
+            module['settings']['__pext_sort_mode'] = SortMode(SortMode.Module).value
+
+        view_settings = {}
+        module_settings = {}
+        for setting in module['settings']:
+            value = module['settings'][setting]
+            if setting.startswith("__pext_"):
+                # Export settings relevant for ViewModel to ViewModel variable
+                view_settings[setting] = value
+            else:
+                # Don't export internal Pext settings to module itself
+                module_settings[setting] = value
+
+        module['settings'] = module_settings
+
         # Prepare viewModel and context
-        vm = ViewModel()
+        vm = ViewModel(view_settings)
         module_context = QQmlContext(window.context)
+        module_context.setContextProperty(
+            "sortMode", vm.sort_mode)
         module_context.setContextProperty(
             "resultListModel", vm.result_list_model_list)
         module_context.setContextProperty(
@@ -1006,9 +1220,11 @@ class ModuleManager():
         module_context.setContextProperty(
             "resultListModelCommandMode", False)
         module_context.setContextProperty(
-            "resultListModelDepth", 0)
+            "resultListModelTree", [])
         module_context.setContextProperty(
-            "contextMenuModel", vm.context_menu_model_list)
+            "unprocessedCount", 0)
+        module_context.setContextProperty(
+            "contextMenuModelFull", vm.context_menu_model_list_full)
         module_context.setContextProperty(
             "contextMenuEnabled", False)
         module_context.setContextProperty(
@@ -1017,11 +1233,13 @@ class ModuleManager():
         # Prepare module
         try:
             module_import = __import__(module['metadata']['id'].replace('.', '_'), fromlist=['Module'])
-        except ImportError as e1:
+        except (ImportError, NameError) as e1:
             Logger.log_critical(
                 module['metadata']['name'],
                 str(e1),
-                traceback.format_exc())
+                traceback.format_exc(),
+                module['metadata']
+            )
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1034,7 +1252,9 @@ class ModuleManager():
             Logger.log_critical(
                 module['metadata']['name'],
                 str(e2),
-                traceback.format_exc())
+                traceback.format_exc(),
+                module['metadata']
+            )
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1042,7 +1262,18 @@ class ModuleManager():
             return False
 
         # Ensure the module implements the base
-        assert issubclass(Module, ModuleBase)
+        if not issubclass(Module, ModuleBase):
+            Logger.log_critical(
+                module['metadata']['name'],
+                Translation.get("module_class_does_not_implement_modulebase"),
+                None,
+                module['metadata']
+            )
+
+            # Remove module dependencies path
+            sys.path.remove(module_dependencies_path)
+
+            return False
 
         # Set up a queue so that the module can communicate with the main
         # thread
@@ -1055,7 +1286,9 @@ class ModuleManager():
             Logger.log_critical(
                 module['metadata']['name'],
                 str(e3),
-                traceback.format_exc())
+                traceback.format_exc(),
+                module['metadata']
+            )
 
             # Remove module dependencies path
             sys.path.remove(module_dependencies_path)
@@ -1083,7 +1316,7 @@ class ModuleManager():
                 else:
                     Logger.log_error(
                         None,
-                        "Failed to load module {}: {} function has {} parameters (excluding self), expected {}"
+                        Translation.get("module_failed_load_wrong_param_count")
                         .format(module['metadata']['name'], name, param_length, required_param_length))
 
                     return False
@@ -1091,8 +1324,9 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 8, 0]
+        module['settings']['_api_version'] = [0, 12, 0]
         module['settings']['_locale'] = locale
+        module['settings']['_portable'] = Settings.get('_portable')
 
         # Start the module in the background
         module_thread = ModuleThreadInitializer(
@@ -1130,6 +1364,10 @@ class ModuleManager():
         # Save active modules
         ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
 
+        # First module? Enforce load
+        if len(window.tab_bindings) == 1:
+            window.tabs.currentIndexChanged.emit()
+
         return True
 
     def unload_module(self, window: 'Window', tab_id: int) -> None:
@@ -1143,7 +1381,9 @@ class ModuleManager():
 
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
             tab_count = QQmlProperty.read(window.tabs, "count")
-            if tab_id + 1 < tab_count:
+            if tab_count == 1:
+                QQmlProperty.write(window.tabs, "currentIndex", "-1")
+            elif tab_id + 1 < tab_count:
                 QQmlProperty.write(window.tabs, "currentIndex", tab_id + 1)
             else:
                 QQmlProperty.write(window.tabs, "currentIndex", "0")
@@ -1153,6 +1393,13 @@ class ModuleManager():
 
         # Save active modules
         ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
+
+        # Ensure a proper refresh on the UI side
+        window.tabs.currentIndexChanged.emit()
+
+    def list_module(self, module_id: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
+        """Return the metadata and source of one single module."""
+        return ObjectManager().list_object(os.path.join(self.module_dir, module_id.replace('.', '_')))
 
     def list_modules(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
@@ -1203,18 +1450,21 @@ class ModuleManager():
 
         if os.path.exists(module_path):
             if verbose:
-                Logger.log(None, '✔⇩ {}'.format(name))
+                Logger.log(None, Translation.get("already_installed").format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩ {} ({})'.format(name, url))
+            Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download").format(name, e),
+                    traceback.format_exc())
 
             try:
                 rmtree(module_path)
@@ -1224,12 +1474,15 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger.log(None, '⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("downloading_dependencies").format(name))
 
         pip_error_output = self._pip_install(identifier)
         if pip_error_output is not None:
             if verbose:
-                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download_dependencies").format(name),
+                    pip_error_output)
 
             try:
                 rmtree(module_path)
@@ -1244,7 +1497,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("installed").format(name))
 
         return True
 
@@ -1267,13 +1520,13 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, '♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalling").format(name))
 
         try:
             rmtree(module_path)
         except FileNotFoundError:
             if verbose:
-                Logger.log(None, '✔♻ {}'.format(name))
+                Logger.log(None, Translation.get("already_uninstalled").format(name))
 
             return False
 
@@ -1283,7 +1536,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, '✔♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalled").format(name))
 
         return True
 
@@ -1305,33 +1558,39 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, '⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updating").format(name))
 
         try:
             if not UpdateManager.update(module_path):
                 if verbose:
-                    Logger.log(None, '⏩{}'.format(name))
+                    Logger.log(None, Translation.get("already_up_to_date").format(name))
 
                 return False
 
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download_update").format(name, e),
+                    traceback.format_exc())
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updating_dependencies").format(name))
 
         pip_error_output = self._pip_install(identifier)
         if pip_error_output is not None:
             if verbose:
-                Logger.log_critical(None, '⇩⇩ {}'.format(name), pip_error_output)
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_update_dependencies").format(name),
+                    pip_error_output)
 
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updated").format(name))
 
         return True
 
@@ -1425,19 +1684,18 @@ class UpdateManager():
         if 'APPIMAGE' in os.environ:
             return "APPIMAGE" if self.appimageupdate.check_for_changes() else None
 
-        r = requests.get('https://pext.io/version/stable')
-        available_version = r.text.splitlines()[0].strip()
-
         # Normalize own version
         if self.version.find('+') != -1:
-            print("Current version is an untagged development version, can only check for stable updates")
-            normalized_version = self.version[:self.version.find('+')]
-        elif self.version.find('-') != -1:
-            normalized_version = self.version[:self.version.find('-', self.version.find('-') + 1)]
+            version = self.version[:self.version.find('+')]
         else:
-            normalized_version = self.version
+            version = self.version
 
-        if parse_version(normalized_version.lstrip('v')) < parse_version(available_version.lstrip('v')):
+        if self.version.find('-') != -1:
+            available_version = requests.get('https://pext.io/version/nightly').text.splitlines()[0].strip()
+        else:
+            available_version = requests.get('https://pext.io/version/stable').text.splitlines()[0].strip()
+
+        if parse_version(version.lstrip('v')) < parse_version(available_version.lstrip('v')):
             return available_version
 
         return None
@@ -1468,32 +1726,85 @@ class ModuleThreadInitializer(threading.Thread):
 class ViewModel():
     """Manage the communication between user interface and module."""
 
-    def __init__(self) -> None:
+    def __init__(self, view_settings) -> None:
         """Initialize ViewModel."""
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
+        self._settings = {}  # type: Dict[str, Any]
         self.command_list = []  # type: List
         self.entry_list = []  # type: List
         self.filtered_entry_list = []  # type: List
         self.filtered_command_list = []  # type: List
         self.result_list_model_list = QStringListModel()
         self.result_list_model_max_index = -1
-        self.result_list_model_command_mode = False
-        self.result_list_model_command_mode_new = True
         self.selection = []  # type: List[Dict[SelectionType, str]]
         self.last_search = ""
         self.context_menu_model_list = QStringListModel()
+        self.context_menu_model_base_list = QStringListModel()
+        self.context_menu_model_list_full = QStringListModel()
         self.extra_info_entries = {}  # type: Dict[str, str]
         self.extra_info_commands = {}  # type: Dict[str, str]
         self.context_menu_entries = {}  # type: Dict[str, List[str]]
         self.context_menu_commands = {}  # type: Dict[str, List[str]]
         self.context_menu_base = []  # type: List[str]
-        self.context_menu_base_open = False
         self.extra_info_last_entry = ""
         self.extra_info_last_entry_type = None
         self.selection_thread = None  # type: Optional[threading.Thread]
+        self.minimize_disabled = False
 
-    def make_selection(self) -> None:
+        self.settings = view_settings
+
+    @property
+    def settings(self):
+        """Return all ViewModel settings."""
+        return self._settings
+
+    @settings.setter
+    def settings(self, settings):
+        """Overwrite ViewModel settings."""
+        self._settings = settings
+
+    @property
+    def sort_mode(self):
+        """Retrieve the current sorting mode as printable name."""
+        for data in SortMode:
+            if str(data.value) == str(self._settings['__pext_sort_mode']):
+                return data.name
+
+        # Maybe mode doesn't exist (anymore)
+        # Return first value
+        for data in SortMode:
+            self.sort_mode = data.value
+            return data.name
+
+    @sort_mode.setter
+    def sort_mode(self, sort_mode):
+        """Set the new sorting mode (by int)."""
+        self._settings['__pext_sort_mode'] = sort_mode
+        try:
+            self.context.setContextProperty("sortMode", self.sort_mode)
+            # Force a resort
+            self.search(new_entries=True)
+        except AttributeError:
+            pass
+
+    def next_sort_mode(self):
+        """Calculate and set the next sorting mode available."""
+        want_next = False
+        for data in SortMode:
+            if want_next:
+                self.sort_mode = data.value
+                return
+
+            if data.value == self._settings['__pext_sort_mode']:
+                want_next = True
+
+        # End of list reached
+        for data in SortMode:
+            self.sort_mode = data.value
+            return
+
+    def make_selection(self, disable_minimize=False) -> None:
         """Make a selection if no selection is currently being processed.
 
         Running the selection making in another thread prevents it from locking
@@ -1503,6 +1814,7 @@ class ViewModel():
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
+        self.minimize_disabled = disable_minimize
         self.selection_thread = threading.Thread(target=self.module.selection_made, args=(self.selection,))
         self.selection_thread.start()
 
@@ -1569,6 +1881,9 @@ class ViewModel():
         self.base_info_panel = base_info_panel
         self.context_info_panel = context_info_panel
 
+        # Force propagation of settings values to QML
+        self.settings = self._settings
+
     def bind_module(self, module: ModuleBase) -> None:
         """Bind the module.
 
@@ -1585,9 +1900,7 @@ class ViewModel():
         is empty, we tell the window to hide/close itself.
         """
         if self.context.contextProperty("contextMenuEnabled"):
-            self.context_menu_base_open = False
-            self.context.setContextProperty(
-                "contextMenuEnabled", False)
+            self.hide_context()
             return
 
         if QQmlProperty.read(self.search_input_model, "text") != "":
@@ -1606,10 +1919,9 @@ class ViewModel():
             self.search(new_entries=True)
 
             self.context.setContextProperty(
-                "resultListModelDepth", len(self.selection))
+                "resultListModelTree", [part['value'] for part in self.selection])
 
             self._clear_queue()
-            self.window.update()
 
             self.make_selection()
         else:
@@ -1622,142 +1934,204 @@ class ViewModel():
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
-        search_string = QQmlProperty.read(self.search_input_model, "text").lower()
+        search_string = QQmlProperty.read(self.search_input_model, "text")
         self.context.setContextProperty("searchInputFieldEmpty", not search_string)
 
         # Don't search if nothing changed
         if not new_entries and search_string == self.last_search:
             return
 
-        # TODO: Enable searching in context menu
-        if manual:
-            self.context_menu_base_open = False
-            self.context.setContextProperty(
-                "contextMenuEnabled", False)
-
-        # Sort if sorting is enabled
-        if Settings.get('sort_mode') != SortMode.Module:
-            reverse = Settings.get('sort_mode') == SortMode.Descending
-            self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
-            self.sorted_command_list = sorted(self.command_list, reverse=reverse)
-            self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
-            self.sorted_filtered_command_list = sorted(self.filtered_command_list, reverse=reverse)
-        else:
-            self.sorted_entry_list = self.entry_list
-            self.sorted_command_list = self.command_list
-            self.sorted_filtered_entry_list = self.filtered_entry_list
-            self.sorted_filtered_command_list = self.filtered_command_list
-
-        # Get current match
-        try:
-            current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model,
-                                                                                       "currentIndex")]
-        except IndexError:
-            current_match = None
-
-        # If empty, show all
-        if len(search_string) == 0 and not new_entries:
-            self.filtered_entry_list = self.entry_list
-            self.filtered_command_list = self.command_list
-            self.sorted_filtered_entry_list = self.sorted_entry_list
-            self.sorted_filtered_command_list = self.sorted_command_list
-
-            combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
-
-            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
-
-            self.context.setContextProperty(
-                "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
-            self.context.setContextProperty(
-                "resultListModelCommandEntries", len(self.sorted_filtered_command_list))
-
-            self.context.setContextProperty(
-                "resultListModelCommandMode", False)
-
-            # Keep existing selection, otherwise ensure something is selected
-            try:
-                current_index = combined_list.index(current_match)
-            except ValueError:
-                current_index = 0
-
-            QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
-
-            # Enable checking for changes next time
-            self.last_search = search_string
-
-            self.update_context_info_panel()
-
-            return
-
-        search_strings = search_string.split(" ")
-
-        # If longer and no new entries, only filter existing list
-        if (len(self.last_search) > 0 and len(search_string) > len(self.last_search)
-                and not self.result_list_model_command_mode):
-
-            filter_entry_list = self.sorted_filtered_entry_list
-            filter_command_list = self.sorted_filtered_command_list
-        else:
-            filter_entry_list = self.sorted_entry_list
-            filter_command_list = self.sorted_command_list
-
-        self.filtered_entry_list = []
-        self.filtered_command_list = []
-
-        activate_command_mode = False
-
-        for command in filter_command_list:
-            if search_strings[0] in command:
-                if search_strings[0] == command.split(" ", 1)[0] and len(search_string) >= len(self.last_search):
-                    activate_command_mode = True
-                    if manual and self.result_list_model_command_mode:
-                        self.result_list_model_command_mode_new = False
-                    self.result_list_model_command_mode = True
-
-                self.filtered_command_list.append(command)
-
-        if not activate_command_mode:
-            self.result_list_model_command_mode = False
-            self.result_list_model_command_mode_new = True
-
-        if self.result_list_model_command_mode:
-            for entry in filter_entry_list:
-                if all(search_string in str(entry).lower() for search_string in search_strings[1:]):
-                    self.filtered_entry_list.append(entry)
-
-            combined_list = self.filtered_command_list + self.filtered_entry_list
-        else:
-            for entry in filter_entry_list:
-                if all(search_string in str(entry).lower() for search_string in search_strings):
-                    self.filtered_entry_list.append(entry)
-
-            combined_list = self.filtered_entry_list + self.filtered_command_list
-
-        self.context.setContextProperty(
-            "resultListModelCommandMode", self.result_list_model_command_mode)
-
-        self.context.setContextProperty(
-            "resultListModelNormalEntries", len(self.filtered_entry_list))
-        self.context.setContextProperty(
-            "resultListModelCommandEntries", len(self.filtered_command_list))
-
-        self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
-
-        # Keep existing selection, otherwise ensure something is selected
-        if manual and self.result_list_model_command_mode and self.result_list_model_command_mode_new:
-            current_index = 0
-        else:
-            try:
-                current_index = combined_list.index(current_match)
-            except ValueError:
-                current_index = 0
-
-        QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
-
         # Enable checking for changes next time
         self.last_search = search_string
 
-        self.update_context_info_panel()
+        current_match = None
+        current_index = 0
+
+        # If context menu is open, search in context menu
+        if self.context.contextProperty("contextMenuEnabled"):
+            current_entry = self._get_entry()
+            try:
+                if current_entry['type'] == SelectionType.entry:
+                    entry_list = [str(entry) for entry in self.context_menu_entries[current_entry['value']]]
+                else:
+                    entry_list = [str(entry) for entry in self.context_menu_commands[current_entry['value']]]
+            except KeyError:
+                entry_list = []
+
+            if current_entry['type'] == SelectionType.command:
+                entry_list.insert(0, Translation.get("enter_arguments"))
+
+            # Sort if sorting is enabled
+            if self.settings['__pext_sort_mode'] != SortMode.Module:
+                reverse = self.settings['__pext_sort_mode'] == SortMode.Descending
+                self.sorted_context_list = sorted(entry_list, reverse=reverse)
+                self.sorted_context_base_list = sorted(self.context_menu_base, reverse=reverse)
+            else:
+                self.sorted_context_list = entry_list
+                self.sorted_context_base_list = self.context_menu_base
+
+            # Get current match
+            try:
+                current_match = self.context_menu_model_list_full.stringList()[
+                        QQmlProperty.read(self.context_menu_model, "currentIndex")]
+            except IndexError:
+                pass
+        # Else, search in normal list
+        else:
+            # Sort if sorting is enabled
+            if self.settings['__pext_sort_mode'] != SortMode.Module:
+                reverse = self.settings['__pext_sort_mode'] == SortMode.Descending
+                self.sorted_entry_list = sorted(self.entry_list, reverse=reverse)
+                self.sorted_command_list = sorted(self.command_list, reverse=reverse)
+                self.sorted_filtered_entry_list = sorted(self.filtered_entry_list, reverse=reverse)
+                self.sorted_filtered_command_list = sorted(self.filtered_command_list, reverse=reverse)
+            else:
+                self.sorted_entry_list = self.entry_list
+                self.sorted_command_list = self.command_list
+                self.sorted_filtered_entry_list = self.filtered_entry_list
+                self.sorted_filtered_command_list = self.filtered_command_list
+
+            # Get current match
+            try:
+                current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model,
+                                                                                           "currentIndex")]
+            except IndexError:
+                pass
+
+        # If empty, show all
+        if not search_string and not new_entries:
+            if self.context.contextProperty("contextMenuEnabled"):
+                self.filtered_context_list = entry_list
+                self.filtered_context_base_list = self.context_menu_base
+                self.sorted_filtered_context_list = self.sorted_context_list
+                self.sorted_filtered_context_base_list = self.sorted_context_base_list
+
+                combined_list = self.sorted_filtered_context_list + self.sorted_filtered_context_base_list
+
+                self.context_menu_model_list.setStringList(str(entry) for entry in self.sorted_filtered_context_list)
+                self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
+            else:
+                self.filtered_entry_list = self.entry_list
+                self.filtered_command_list = self.command_list
+                self.sorted_filtered_entry_list = self.sorted_entry_list
+                self.sorted_filtered_command_list = self.sorted_command_list
+
+                combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
+
+                self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+
+                self.context.setContextProperty(
+                    "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
+                self.context.setContextProperty(
+                    "resultListModelCommandEntries", len(self.sorted_filtered_command_list))
+
+            # Keep existing selection, otherwise ensure something is selected
+            if current_match:
+                try:
+                    current_index = combined_list.index(current_match)
+                except ValueError:
+                    current_index = 0
+
+            if self.context.contextProperty("contextMenuEnabled"):
+                QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
+            else:
+                QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
+
+                self.update_context_info_panel()
+
+            return
+
+        if self.context.contextProperty("contextMenuEnabled"):
+            self.filtered_context_list = []
+            self.filtered_context_base_list = []
+        else:
+            self.filtered_entry_list = []
+            self.filtered_command_list = []
+
+        # Regex matching
+        if search_string.startswith('/'):
+            try:
+                # /search_string/python_flags
+                regex_parts = search_string.split('/', 2)
+                if len(regex_parts) > 2 and regex_parts[2]:
+                    regex_search = "(?{}){}".format(regex_parts[2], regex_parts[1])
+                else:
+                    regex_search = regex_parts[1]
+
+                regex_match = re.compile(regex_search)
+            except re.error:
+                return
+
+            def check_regex_match(entries, regex) -> List[str]:
+                return_list = []
+                for entry in entries:
+                    if regex.match(entry):
+                        return_list.append(entry)
+
+                return return_list
+
+            if self.context.contextProperty("contextMenuEnabled"):
+                self.filtered_context_list = check_regex_match(self.sorted_context_list, regex_match)
+                self.filtered_context_base_list = check_regex_match(self.sorted_context_base_list, regex_match)
+            else:
+                self.filtered_entry_list = check_regex_match(self.sorted_entry_list, regex_match)
+                self.filtered_command_list = check_regex_match(self.sorted_command_list, regex_match)
+        # Regular string matching
+        else:
+            list_match = search_string.lower().split(' ')
+
+            def check_list_match(entries, string_list) -> List[str]:
+                return_list = []
+                for entry in entries:
+                    lower_entry = entry.lower()
+                    for search_string_part in string_list:
+                        if search_string_part not in lower_entry:
+                            break
+                    else:
+                        return_list.append(entry)
+
+                return return_list
+
+            if self.context.contextProperty("contextMenuEnabled"):
+                self.filtered_context_list = check_list_match(self.sorted_context_list, list_match)
+                self.filtered_context_base_list = check_list_match(self.sorted_context_base_list, list_match)
+            else:
+                self.filtered_entry_list = check_list_match(self.sorted_entry_list, list_match)
+                self.filtered_command_list = check_list_match(self.sorted_command_list, list_match)
+
+        if self.context.contextProperty("contextMenuEnabled"):
+            combined_list = self.filtered_context_list + self.filtered_context_base_list
+        else:
+            combined_list = self.filtered_entry_list + self.filtered_command_list
+
+            self.context.setContextProperty(
+                "resultListModelNormalEntries", len(self.filtered_entry_list))
+            self.context.setContextProperty(
+                "resultListModelCommandEntries", len(self.filtered_command_list))
+
+        if self.context.contextProperty("contextMenuEnabled"):
+            self.context_menu_model_list.setStringList(str(entry) for entry in self.filtered_context_list)
+            self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
+        else:
+            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+
+        # Keep existing selection, otherwise ensure something is selected
+        if current_match:
+            try:
+                current_index = combined_list.index(current_match)
+            except ValueError:
+                current_index = 0
+
+        if self.context.contextProperty("contextMenuEnabled"):
+            QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
+        else:
+            QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
+
+            self.update_context_info_panel()
+
+        # Turbo mode: Select entry if only entry left
+        if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty() and search_string:
+            self.select(force_args=True)
 
     def _get_entry(self, include_context=False) -> Dict:
         """Get info on the entry that's currently focused."""
@@ -1766,45 +2140,52 @@ class ViewModel():
 
             selected_entry = self._get_entry()
 
-            selected_entry['context_option'] = self.context_menu_model_list.stringList()[current_index]
+            # Return entry-specific option if selected, otherwise base option
+            if current_index >= len(self.filtered_context_list):
+                # Selection is a base entry
+                return {'type': SelectionType.none,
+                        'value': None,
+                        'context_option': self.filtered_context_base_list[
+                            current_index - len(self.filtered_context_list)]
+                        }
+            else:
+                selected_entry['context_option'] = self.filtered_context_list[current_index]
 
             return selected_entry
 
-        if self.context.contextProperty("contextMenuEnabled") and self.context_menu_base_open:
-            return {'type': SelectionType.none, 'value': None, 'context_option': None}
-
         current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
-        selected_command = None
 
-        if self.result_list_model_command_mode:
-            try:
-                selected_command = self.filtered_command_list[current_index]
-            except IndexError:
-                entry = self.filtered_entry_list[current_index - len(self.filtered_command_list)]
-                return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
-        elif current_index >= len(self.filtered_entry_list):
-            selected_command = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
-
-        if selected_command:
-            command_typed = QQmlProperty.read(self.search_input_model, "text")
-
-            if command_typed.startswith(selected_command + " "):
-                args = command_typed.split(selected_command + " ", 1)[-1]
-            else:
-                args = ""
-
-            return {'type': SelectionType.command, 'value': selected_command, 'args': args, 'context_option': None}
+        if current_index >= len(self.filtered_entry_list):
+            # Selection is a command
+            selection_type = SelectionType.command
+            entry = self.filtered_command_list[current_index - len(self.filtered_entry_list)]
         else:
+            selection_type = SelectionType.entry
             entry = self.filtered_entry_list[current_index]
-            return {'type': SelectionType.entry, 'value': entry, 'context_option': None}
 
-    def select(self) -> None:
+        return {'type': selection_type, 'value': entry, 'context_option': None}
+
+    def select(self, command_args="", force_args=False, disable_minimize=False) -> None:
         """Notify the module of our selection entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+        if not self.filtered_entry_list and not self.filtered_command_list:
             return
 
         if self.selection_thread and self.selection_thread.is_alive():
             return
+
+        selection = self._get_entry(include_context=True)
+        if selection['type'] == SelectionType.command:
+            if force_args or selection['context_option'] == Translation.get("enter_arguments"):
+                self.input_args()
+                return
+
+        selection["args"] = command_args
+        self.selection.append(selection)
+
+        self.context.setContextProperty(
+            "contextMenuEnabled", False)
+        self.context.setContextProperty(
+            "resultListModelTree", [part['value'] for part in self.selection])
 
         self.entry_list = []
         self.command_list = []
@@ -1813,62 +2194,58 @@ class ViewModel():
         self.context_menu_entries = {}
         self.context_menu_commands = {}
 
-        self.selection.append(self._get_entry(include_context=True))
-
-        self.context.setContextProperty(
-            "contextMenuEnabled", False)
-        self.context.setContextProperty(
-            "resultListModelDepth", len(self.selection))
-
         QQmlProperty.write(self.search_input_model, "text", "")
         self.context.setContextProperty("searchInputFieldEmpty", True)
         self.search(new_entries=True, manual=True)
         self._clear_queue()
-        self.window.update()
 
-        self.make_selection()
-
-    def show_context_base(self) -> None:
-        """Show the base context menu."""
-        if not QQmlProperty.read(self.header_text, "text"):
-            return
-
-        self.context_menu_base_open = True
-
-        self.context_menu_model_list.setStringList(str(entry) for entry in self.context_menu_base)
-        self.context.setContextProperty(
-            "contextMenuEnabled", True)
+        self.make_selection(disable_minimize=disable_minimize)
 
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
-            return
-
         current_entry = self._get_entry()
 
+        entries = 0
+
+        # Get all menu-specific entries
         try:
             if current_entry['type'] == SelectionType.entry:
-                self.context_menu_model_list.setStringList(
-                    str(entry) for entry in self.context_menu_entries[current_entry['value']])
+                entries += len(self.context_menu_entries[current_entry['value']])
             else:
-                self.context_menu_model_list.setStringList(
-                    str(entry) for entry in self.context_menu_commands[current_entry['value']])
-
-            self.context_menu_base_open = False
-            self.context.setContextProperty(
-                "contextMenuEnabled", True)
+                entries += len(self.context_menu_commands[current_entry['value']])
         except KeyError:
-            pass  # No menu available, do nothing
+            pass
+
+        if not entries and not self.context_menu_base:
+            if current_entry['type'] == SelectionType.command:
+                self.input_args()
+                return
+
+            Logger.log(None, Translation.get("no_context_menu_available"))
+            return
+
+        QQmlProperty.write(self.context_menu_model, "currentIndex", 0)
+        self.context.setContextProperty(
+            "contextMenuEnabled", True)
+
+        if QQmlProperty.read(self.search_input_model, "text") != "":
+            QQmlProperty.write(self.search_input_model, "text", "")
+            self.context.setContextProperty("searchInputFieldEmpty", True)
+        self.search(new_entries=True)
 
     def hide_context(self) -> None:
         """Hide the context menu."""
-        self.context_menu_base_open = False
         self.context.setContextProperty(
             "contextMenuEnabled", False)
 
+        if QQmlProperty.read(self.search_input_model, "text") != "":
+            QQmlProperty.write(self.search_input_model, "text", "")
+            self.context.setContextProperty("searchInputFieldEmpty", True)
+        self.search()
+
     def update_context_info_panel(self, request_update=True) -> None:
         """Update the context info panel with the info panel data of the currently selected entry."""
-        if len(self.filtered_entry_list + self.filtered_command_list) == 0:
+        if not self.filtered_entry_list and not self.filtered_command_list:
             QQmlProperty.write(self.context_info_panel, "text", "")
             self.extra_info_last_entry_type = None
             return
@@ -1913,47 +2290,53 @@ class ViewModel():
         search bar to the longest possible common completion.
         """
         current_input = QQmlProperty.read(self.search_input_model, "text")
+        combined_list = self.filtered_entry_list + self.filtered_command_list
 
-        start = current_input
+        entry = self._get_longest_common_string(
+                [entry.lower() for entry in combined_list],
+                start=current_input.lower())
+        if entry is None or len(entry) <= len(current_input):
+            self.queue.put(
+                [Action.add_error, Translation.get("no_tab_completion_possible")])
+            return
 
-        possibles = current_input.split(" ", 1)
-        command = self._get_longest_common_string(
-            [command.split(" ", 1)[0] for command in self.command_list],
-            start=possibles[0])
-        # If we didn't complete the command, see if we can complete the text
-        if command is None or len(command) == len(possibles[0]):
-            if command is None:
-                command = ""  # We string concat this later
-            else:
-                command += " "
-
-            start = possibles[1] if len(possibles) > 1 else ""
-            entry = self._get_longest_common_string([list_entry for list_entry in self.filtered_entry_list
-                                                     if list_entry not in self.command_list],
-                                                    start=start)
-
-            if entry is None or len(entry) <= len(start):
-                self.queue.put(
-                    [Action.add_error, "No tab completion possible"])
-                return
-        else:
-            entry = " "  # Add an extra space to simplify typing for the user
-
-        QQmlProperty.write(self.search_input_model, "text", command + entry)
+        QQmlProperty.write(self.search_input_model, "text", entry)
         self.search()
 
+    def input_args(self) -> None:
+        """Open dialog that allows the user to input command arguments."""
+        if not self.filtered_command_list and not self.filtered_entry_list:
+            self.queue.put(
+                [Action.add_error, Translation.get("no_entry_selected")])
+            return
 
-class Window(QMainWindow):
+        selected_entry = self._get_entry(include_context=True)
+        if not self.context.contextProperty("contextMenuEnabled") and selected_entry["type"] != SelectionType.command:
+            if len(self.filtered_command_list) > 0:
+                # Jump to the first command in case the current selection
+                # is not a command
+                QQmlProperty.write(self.result_list_model, "currentIndex",
+                                   len(self.filtered_entry_list))
+                selected_entry = self._get_entry(include_context=True)
+            else:
+                self.queue.put(
+                    [Action.add_error, Translation.get("no_command_available_for_current_filter")])
+                return
+
+        args_request = self.window.window.findChild(QObject, "commandArgsDialog")
+        args_request.commandArgsRequestAccepted.connect(
+            lambda args: self.select(args))
+
+        args_request.showCommandArgsDialog.emit(selected_entry["value"])
+
+
+class Window():
     """The main Pext window."""
 
-    def __init__(self, locale_manager: LocaleManager, parent=None) -> None:
+    def __init__(self, app: QApplication, locale_manager: LocaleManager, parent=None) -> None:
         """Initialize the window."""
-        super().__init__(parent)
-
-        # Ask for accessibility access to autotype and focus-fix on macOS
-        if platform.system() == 'Darwin':
-            self.acc = accessibility.create_systemwide_ref()
-            self.acc.set_timeout(300)
+        # Actionable items to show in the UI
+        self.actionables = []  # type: List[Dict]
 
         # Text to type on close if needed
         self.output_queue = []  # type: List[str]
@@ -1964,10 +2347,13 @@ class Window(QMainWindow):
         self.tab_bindings = []  # type: List[Dict]
         self.tray = None  # type: Optional[Tray]
 
-        self.engine = QQmlApplicationEngine(self)
+        self.app = app
+        self.engine = QQmlApplicationEngine(None)
 
         # Set QML variables
         self.context = self.engine.rootContext()
+        self.context.setContextProperty(
+            "FORCE_FULLSCREEN", self.app.platformName() in ['webgl', 'vnc'])
         self.context.setContextProperty(
             "USE_INTERNAL_UPDATER", USE_INTERNAL_UPDATER)
         self.context.setContextProperty(
@@ -1976,9 +2362,9 @@ class Window(QMainWindow):
             "systemPlatform", platform.system())
 
         self.context.setContextProperty(
-            "modulesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'modules'))
+            "modulesPath", os.path.join(ConfigRetriever.get_path(), 'modules'))
         self.context.setContextProperty(
-            "themesPath", os.path.join(ConfigRetriever.get_setting('config_path'), 'themes'))
+            "themesPath", os.path.join(ConfigRetriever.get_path(), 'themes'))
 
         self.context.setContextProperty("currentTheme", Settings.get('theme'))
         self.context.setContextProperty("defaultProfile", ProfileManager.default_profile_name())
@@ -1992,6 +2378,12 @@ class Window(QMainWindow):
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
 
         self.window = self.engine.rootObjects()[0]
+
+        # Some hacks to make Qt WebGL streaming work
+        if self.app.platformName() == 'webgl':
+            self.parent_window = QWindow()
+            self.parent_window.setVisibility(QWindow.FullScreen)
+            self.window.setParent(self.parent_window)
 
         # Override quit and minimize
         self.window.confirmedClose.connect(self.quit)
@@ -2010,25 +2402,25 @@ class Window(QMainWindow):
         self.profile_manager = ProfileManager()
         self._update_profiles_info_qml()
 
-        # Bind update dialog
-        self.update_available_requests = self.window.findChild(QObject, "updateAvailableRequests")
-        if 'APPIMAGE' in os.environ:
-            self.update_available_requests.updateAvailableDialogAccepted.connect(self._core_update_appimage_start)
-        else:
-            self.update_available_requests.updateAvailableDialogAccepted.connect(self._show_download_page)
-
         # Bind global shortcuts
         self.search_input_model = self.window.findChild(
             QObject, "searchInputModel")
         escape_shortcut = self.window.findChild(QObject, "escapeShortcut")
         back_button = self.window.findChild(QObject, "backButton")
         tab_shortcut = self.window.findChild(QObject, "tabShortcut")
+        args_shortcut = self.window.findChild(QObject, "argsShortcut")
 
         self.search_input_model.textChanged.connect(self._search)
         self.search_input_model.accepted.connect(self._select)
         escape_shortcut.activated.connect(self._go_up)
         back_button.clicked.connect(self._go_up)
         tab_shortcut.activated.connect(self._tab_complete)
+        args_shortcut.activated.connect(self._input_args)
+
+        # Bind actionable remove
+        actionable_repeater = self.window.findChild(
+            QObject, "actionableRepeater")
+        actionable_repeater.removeActionable.connect(self._remove_actionable)
 
         # Find menu entries
         menu_reload_active_module_shortcut = self.window.findChild(
@@ -2054,6 +2446,9 @@ class Window(QMainWindow):
         menu_manage_profiles_shortcut = self.window.findChild(
             QObject, "menuManageProfiles")
 
+        menu_turbo_mode_shortcut = self.window.findChild(
+            QObject, "menuTurboMode")
+
         menu_change_language_shortcut = self.window.findChild(
             QObject, "menuChangeLanguage")
 
@@ -2066,12 +2461,12 @@ class Window(QMainWindow):
         self.menu_output_auto_type = self.window.findChild(
             QObject, "menuOutputAutoType")
 
-        menu_sort_module_shortcut = self.window.findChild(
-            QObject, "menuSortModule")
-        menu_sort_ascending_shortcut = self.window.findChild(
-            QObject, "menuSortAscending")
-        menu_sort_descending_shortcut = self.window.findChild(
-            QObject, "menuSortDescending")
+        menu_output_separator_none = self.window.findChild(
+            QObject, "menuOutputSeparatorNone")
+        menu_output_separator_enter = self.window.findChild(
+            QObject, "menuOutputSeparatorEnter")
+        menu_output_separator_tab = self.window.findChild(
+            QObject, "menuOutputSeparatorTab")
 
         menu_minimize_normally_shortcut = self.window.findChild(
             QObject, "menuMinimizeNormally")
@@ -2081,7 +2476,7 @@ class Window(QMainWindow):
             QObject, "menuMinimizeNormallyManually")
         menu_minimize_to_tray_manually_shortcut = self.window.findChild(
             QObject, "menuMinimizeToTrayManually")
-        menu_enable_global_hotkey_shortcut = self.window.findChild(
+        self.menu_enable_global_hotkey_shortcut = self.window.findChild(
             QObject, "menuEnableGlobalHotkey")
         menu_show_tray_icon_shortcut = self.window.findChild(
             QObject, "menuShowTrayIcon")
@@ -2119,6 +2514,8 @@ class Window(QMainWindow):
         menu_manage_profiles_shortcut.renameProfileRequest.connect(self._menu_rename_profile)
         menu_manage_profiles_shortcut.removeProfileRequest.connect(self._menu_remove_profile)
 
+        menu_turbo_mode_shortcut.toggled.connect(self._menu_toggle_turbo_mode)
+
         menu_change_language_shortcut.changeLanguage.connect(self._menu_change_language)
 
         self.menu_output_default_clipboard.toggled.connect(self._menu_output_default_clipboard)
@@ -2126,18 +2523,17 @@ class Window(QMainWindow):
         menu_output_find_buffer.toggled.connect(self._menu_output_find_buffer)
         self.menu_output_auto_type.toggled.connect(self._menu_output_auto_type)
 
-        menu_sort_module_shortcut.toggled.connect(self._menu_sort_module)
-        menu_sort_ascending_shortcut.toggled.connect(self._menu_sort_ascending)
-        menu_sort_descending_shortcut.toggled.connect(self._menu_sort_descending)
+        menu_output_separator_none.toggled.connect(self._menu_output_separator_none)
+        menu_output_separator_enter.toggled.connect(self._menu_output_separator_enter)
+        menu_output_separator_tab.toggled.connect(self._menu_output_separator_tab)
 
         menu_minimize_normally_shortcut.toggled.connect(self._menu_minimize_normally)
         menu_minimize_to_tray_shortcut.toggled.connect(self._menu_minimize_to_tray)
         menu_minimize_normally_manually_shortcut.toggled.connect(self._menu_minimize_normally_manually)
         menu_minimize_to_tray_manually_shortcut.toggled.connect(self._menu_minimize_to_tray_manually)
-        menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
+        self.menu_enable_global_hotkey_shortcut.toggled.connect(self._menu_enable_global_hotkey_shortcut)
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
         menu_install_quick_action_service.triggered.connect(self._menu_install_quick_action_service)
-        self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
         self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
 
         menu_quit_shortcut.triggered.connect(self.quit)
@@ -2145,6 +2541,10 @@ class Window(QMainWindow):
         menu_homepage_shortcut.triggered.connect(self._show_homepage)
 
         # Set entry states
+        QQmlProperty.write(menu_turbo_mode_shortcut,
+                           "checked",
+                           Settings.get('turbo_mode'))
+
         QQmlProperty.write(self.menu_output_default_clipboard,
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.DefaultClipboard)
@@ -2158,15 +2558,15 @@ class Window(QMainWindow):
                            "checked",
                            int(Settings.get('output_mode')) == OutputMode.AutoType)
 
-        QQmlProperty.write(menu_sort_module_shortcut,
+        QQmlProperty.write(menu_output_separator_none,
                            "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Module)
-        QQmlProperty.write(menu_sort_ascending_shortcut,
+                           int(Settings.get('output_separator')) == OutputSeparator.None_)
+        QQmlProperty.write(menu_output_separator_enter,
                            "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Ascending)
-        QQmlProperty.write(menu_sort_descending_shortcut,
+                           int(Settings.get('output_separator')) == OutputSeparator.Enter)
+        QQmlProperty.write(menu_output_separator_tab,
                            "checked",
-                           int(Settings.get('sort_mode')) == SortMode.Descending)
+                           int(Settings.get('output_separator')) == OutputSeparator.Tab)
 
         QQmlProperty.write(menu_minimize_normally_shortcut,
                            "checked",
@@ -2181,7 +2581,7 @@ class Window(QMainWindow):
                            "checked",
                            int(Settings.get('minimize_mode')) == MinimizeMode.TrayManualOnly)
 
-        QQmlProperty.write(menu_enable_global_hotkey_shortcut,
+        QQmlProperty.write(self.menu_enable_global_hotkey_shortcut,
                            "checked",
                            Settings.get('global_hotkey_enabled'))
         QQmlProperty.write(menu_show_tray_icon_shortcut,
@@ -2193,6 +2593,10 @@ class Window(QMainWindow):
         QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
                            "checked",
                            Settings.get('object_update_check'))
+
+        # We bind the update check after writing the initial value to prevent
+        # instantly triggering the update check
+        self.menu_enable_update_check_shortcut.toggled.connect(self._menu_toggle_update_check)
 
         # Get reference to tabs list
         self.tabs = self.window.findChild(QObject, "tabs")
@@ -2210,7 +2614,7 @@ class Window(QMainWindow):
         elif not Settings.get('background'):
             self.show()
 
-            if Settings.get('update_check') is None:
+            if Settings.get('update_check') is None and USE_INTERNAL_UPDATER:
                 # Ask if the user wants to enable automatic update checking
                 permission_requests = self.window.findChild(QObject, "permissionRequests")
 
@@ -2220,6 +2624,17 @@ class Window(QMainWindow):
                     lambda: self._menu_update_check_dialog_result(False))
 
                 permission_requests.updatePermissionRequest.emit()
+
+        # Set remembered geometry
+        if not self.app.platformName() in ['webgl', 'vnc']:
+            geometry = Settings.get('_window_geometry')
+            try:
+                self.window.setGeometry(*[int(geopoint) for geopoint in geometry.split(';')])
+            except Exception as e:
+                if geometry:
+                    print("Invalid geometry: {}".format(e))
+                screen_size = self.window.screen().size()
+                self.window.setGeometry((screen_size.width() - 800) / 2, (screen_size.height() - 600) / 2, 800, 600)
 
         # Start binding the modules
         if len(Settings.get('modules')) > 0:
@@ -2239,19 +2654,17 @@ class Window(QMainWindow):
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
-        if platform.system() != 'Darwin':
+        if platform.system() != 'Darwin' or pyautogui_error:
             return
 
-        keyboard_device = keyboard.Controller()
-
-        keyboard_device.press(keyboard.Key.cmd)
-        keyboard_device.press(keyboard.Key.tab)
-        keyboard_device.release(keyboard.Key.tab)
-        keyboard_device.release(keyboard.Key.cmd)
+        hotkey('command', 'tab')
 
     def _bind_context(self) -> None:
         """Bind the context for the module."""
         current_tab = QQmlProperty.read(self.tabs, "currentIndex")
+        if current_tab < 0:
+            return
+
         element = self.tab_bindings[current_tab]
 
         # Only initialize once, ensure filter is applied
@@ -2279,10 +2692,18 @@ class Window(QMainWindow):
 
         # Enable mouse selection support
         result_list_model.entryClicked.connect(element['vm'].select)
-        result_list_model.openBaseMenu.connect(element['vm'].show_context_base)
+        result_list_model.selectExplicitNoMinimize.connect(
+                    lambda: element['vm'].select(disable_minimize=True))
         result_list_model.openContextMenu.connect(element['vm'].show_context)
+        result_list_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.entryClicked.connect(element['vm'].select)
+        context_menu_model.selectExplicitNoMinimize.connect(
+                    lambda: element['vm'].select(disable_minimize=True))
+        context_menu_model.openArgumentsInput.connect(element['vm'].input_args)
         context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
+
+        # Enable changing sort mode
+        result_list_model.sortModeChanged.connect(element['vm'].next_sort_mode)
 
         # Enable info pane
         result_list_model.currentIndexChanged.connect(element['vm'].update_context_info_panel)
@@ -2334,11 +2755,9 @@ class Window(QMainWindow):
 
             module_settings[key] = value
 
-        module = {'metadata': {'id': identifier, 'name': name}, 'settings': module_settings}
+        metadata = ModuleManager().list_module(identifier)['metadata']  # type: ignore
+        module = {'metadata': metadata, 'settings': module_settings}
         self.module_manager.load_module(self, module)
-        # First module? Enforce load
-        if len(self.tab_bindings) == 1:
-            self.tabs.currentIndexChanged.emit()
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
@@ -2537,6 +2956,12 @@ class Window(QMainWindow):
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
+    def _menu_toggle_turbo_mode(self, enabled: bool) -> None:
+        Settings.set('turbo_mode', enabled)
+        if enabled:
+            for tab in self.tab_bindings:
+                tab['vm'].search(new_entries=True)
+
     def _menu_change_language(self, lang_code: str) -> None:
         Settings.set('locale', lang_code)
         self._menu_restart_pext()
@@ -2555,31 +2980,31 @@ class Window(QMainWindow):
 
     def _menu_output_auto_type(self, enabled: bool) -> None:
         if enabled:
-            if platform.system() == 'Darwin':
-                if not accessibility.is_enabled() or not accessibility.is_trusted():
-                    QQmlProperty.write(self.menu_output_auto_type, "checked", False)
-                    QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
-                    return
+            if platform.system() == 'Darwin' and pyautogui_error:
+                Logger.log_critical(None, Translation.get("pyautogui_is_unavailable"), pyautogui_error)
+                QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
+                return
+
+            if platform.system() != 'Darwin' and pynput_error:
+                Logger.log_critical(None, Translation.get("pynput_is_unavailable"), pynput_error)
+                QQmlProperty.write(self.menu_output_auto_type, "checked", False)
+                QQmlProperty.write(self.menu_output_default_clipboard, "checked", True)
+                return
 
             Settings.set('output_mode', OutputMode.AutoType)
 
-    def _menu_sort_module(self, enabled: bool) -> None:
+    def _menu_output_separator_none(self, enabled: bool) -> None:
         if enabled:
-            Settings.set('sort_mode', SortMode.Module)
-            for tab in self.tab_bindings:
-                tab['vm'].search(new_entries=True)
+            Settings.set('output_separator', OutputSeparator.None_)
 
-    def _menu_sort_ascending(self, enabled: bool) -> None:
+    def _menu_output_separator_enter(self, enabled: bool) -> None:
         if enabled:
-            Settings.set('sort_mode', SortMode.Ascending)
-            for tab in self.tab_bindings:
-                tab['vm'].search(new_entries=True)
+            Settings.set('output_separator', OutputSeparator.Enter)
 
-    def _menu_sort_descending(self, enabled: bool) -> None:
+    def _menu_output_separator_tab(self, enabled: bool) -> None:
         if enabled:
-            Settings.set('sort_mode', SortMode.Descending)
-            for tab in self.tab_bindings:
-                tab['vm'].search(new_entries=True)
+            Settings.set('output_separator', OutputSeparator.Tab)
 
     def _menu_minimize_normally(self, enabled: bool) -> None:
         if enabled:
@@ -2598,6 +3023,11 @@ class Window(QMainWindow):
             Settings.set('minimize_mode', MinimizeMode.TrayManualOnly)
 
     def _menu_enable_global_hotkey_shortcut(self, enabled: bool) -> None:
+        if enabled and pynput_error:
+            Logger.log_critical(None, Translation.get("pynput_is_unavailable"), pynput_error)
+            QQmlProperty.write(self.menu_enable_global_hotkey_shortcut, "checked", False)
+            return
+
         Settings.set('global_hotkey_enabled', enabled)
 
     def _menu_toggle_tray_icon(self, enabled: bool) -> None:
@@ -2608,7 +3038,7 @@ class Window(QMainWindow):
             pass
 
     def _menu_install_quick_action_service(self) -> None:
-        new_path = os.path.join(tempfile.gettempdir(), 'Pext.workflow')
+        new_path = os.path.join(ConfigRetriever.get_temp_path(), 'Pext.workflow')
         try:
             rmtree(new_path)
         except IOError:
@@ -2632,7 +3062,6 @@ class Window(QMainWindow):
             self._menu_restart_pext()
 
         # Check for updates immediately after toggling true
-        # This is also toggled on app launch because we bind before we toggle
         self._menu_check_updates(verbose=False, manual=False)
 
     def _menu_toggle_object_update_check(self, enabled: bool) -> None:
@@ -2665,6 +3094,14 @@ class Window(QMainWindow):
             except TypeError:
                 pass
 
+    def _input_args(self) -> None:
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].input_args()
+            except TypeError:
+                pass
+
     def _update_modules_info_qml(self) -> None:
         modules = self.module_manager.list_modules()
         self.context.setContextProperty(
@@ -2684,23 +3121,28 @@ class Window(QMainWindow):
 
     def _menu_check_updates_actually_check(self, verbose=True) -> None:
         if verbose:
-            Logger.log(None, '⇩ Pext')
+            Logger.log(None, Translation.get("checking_for_pext_updates"))
 
         try:
             new_version = UpdateManager().check_core_update()
         except Exception as e:
-            Logger.log_error(None, '⇩ Pext: {}'.format(e))
+            Logger.log_error(None, Translation.get("failed_to_check_for_pext_updates").format(e))
             traceback.print_exc()
 
             return
 
         if new_version:
-            # Show update dialog (already bound at initialization)
-            self.update_available_requests.showUpdateAvailableDialog.emit()
+            if 'APPIMAGE' in os.environ:
+                # FIXME: Let the user choose when to install the update
+                self._core_update_appimage_start()
+            else:
+                self.add_actionable(
+                    Translation.get("actionable_update_available").format(new_version, UpdateManager().get_core_version()),
+                    Translation.get("actionable_update_available_button"),
+                    "https://pext.io/download/")
         else:
             if verbose:
-                self.update_available_requests.showNoUpdateAvailableDialog.emit()
-                Logger.log(None, '✔⇩ Pext')
+                Logger.log(None, Translation.get("pext_is_already_up_to_date"))
 
     def _menu_check_updates(self, verbose=True, manual=True) -> None:
         # Set a timer to run this function again in an hour
@@ -2742,8 +3184,19 @@ class Window(QMainWindow):
         if appimageupdate.is_done():
             self._menu_restart_pext(new_exec=appimageupdate.path_to_new_file())
 
-    def _show_download_page(self) -> None:
-        webbrowser.open('https://pext.io/download')
+    def _remove_actionable(self, index: int) -> None:
+        self.actionables.pop(index)
+        QQmlProperty.write(self.window, 'actionables', self.actionables)
+
+    def add_actionable(self, text: str, button_text: str, button_url: str, urgency="medium") -> None:
+        """Add an action to show in the UI."""
+        self.actionables.insert(0, {
+            'text': text,
+            'buttonText': button_text,
+            'buttonUrl': button_url,
+            'urgency': urgency
+        })
+        QQmlProperty.write(self.window, 'actionables', self.actionables)
 
     def bind_tray(self, tray: 'Tray') -> None:
         """Bind the tray to the window."""
@@ -2754,6 +3207,9 @@ class Window(QMainWindow):
 
     def close(self, manual=False, force_tray=False) -> None:
         """Close the window."""
+        if self.app.platformName() in ['webgl', 'vnc']:
+            return
+
         if force_tray:
             if self.tray:
                 self.tray.show()
@@ -2772,19 +3228,63 @@ class Window(QMainWindow):
         self._macos_focus_workaround()
 
         if self.output_queue:
-            time.sleep(0.5)
-            keyboard_device = keyboard.Controller()
+            output_mode = Settings.get('output_mode')
+            if output_mode == OutputMode.AutoType:
+                time.sleep(0.5)
+                keyboard_device = keyboard.Controller()
 
-            while True:
-                try:
-                    output = self.output_queue.pop(0)
-                except IndexError:
-                    break
+                while True:
+                    try:
+                        output = self.output_queue.pop(0)
+                    except IndexError:
+                        Logger.log(None, Translation.get("queued_data_typed"))
+                        break
 
-                keyboard_device.type(output)
-                if self.output_queue:
-                    keyboard_device.press(keyboard.Key.tab)
-                    keyboard_device.release(keyboard.Key.tab)
+                    if platform.system() == "Darwin":
+                        # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
+                        typewrite(output)
+                    else:
+                        keyboard_device.type(output)
+
+                    if self.output_queue:
+                        separator_key = Settings.get('output_separator')
+                        if separator_key == OutputSeparator.None_:
+                            continue
+
+                        if platform.system() == "Darwin":
+                            if separator_key == OutputSeparator.Tab:
+                                hotkey('tab')
+                            elif separator_key == OutputSeparator.Enter:
+                                hotkey('return')
+                        else:
+                            if separator_key == OutputSeparator.Tab:
+                                key = keyboard.Key.tab
+                            elif separator_key == OutputSeparator.Enter:
+                                key = keyboard.Key.enter
+
+                            keyboard_device.press(key)
+                            keyboard_device.release(key)
+            else:
+                if output_mode == OutputMode.SelectionClipboard:
+                    mode = QClipboard.Selection
+                elif output_mode == OutputMode.FindBuffer:
+                    mode = QClipboard.FindBuffer
+                else:
+                    mode = QClipboard.Clipboard
+
+                separator_key = Settings.get('output_separator')
+                if separator_key == OutputSeparator.Tab:
+                    join_string = "\t"
+                elif separator_key == OutputSeparator.Enter:
+                    join_string = os.linesep
+                else:
+                    join_string = ""
+
+                self.app.clipboard().setText(str(join_string.join(self.output_queue)), mode)
+
+                Logger.log(None, Translation.get("data_copied_to_clipboard"))
+
+                self.output_queue = []
 
     def show(self) -> None:
         """Show the window."""
@@ -2800,7 +3300,10 @@ class Window(QMainWindow):
             self.window.show()
 
         self.window.raise_()
-        self.activateWindow()
+
+    def switch_tab(self, tab_id) -> None:
+        """Switch the active tab."""
+        QQmlProperty.write(self.tabs, "currentIndex", tab_id)
 
     def toggle_visibility(self, force_tray=False) -> None:
         """Toggle window visibility."""
@@ -2811,6 +3314,9 @@ class Window(QMainWindow):
 
     def quit(self) -> None:
         """Quit."""
+        geometry = self.window.geometry()
+        Settings.set('_window_geometry',
+                     "{};{};{};{}".format(geometry.x(), geometry.y(), geometry.width(), geometry.height()))
         sys.exit(0)
         self.quit()
 
@@ -2832,7 +3338,7 @@ class ThemeManager():
 
     def __init__(self) -> None:
         """Initialize the module manager."""
-        self.theme_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'themes')
+        self.theme_dir = os.path.join(ConfigRetriever.get_path(), 'themes')
 
     def _get_palette_mappings(self) -> Dict[str, Dict[str, str]]:
         mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
@@ -2869,7 +3375,7 @@ class ThemeManager():
                                      palette_mappings['colour_roles'][colour_role],
                                      QColor(*colour_code_list))
                 except KeyError as e:
-                    print("Theme contained an unknown key, {}, skipping.".format(e))
+                    print("Theme contained an unknown key, {}, skipping".format(e))
 
         return palette
 
@@ -2883,18 +3389,21 @@ class ThemeManager():
 
         if os.path.exists(theme_path):
             if verbose:
-                Logger.log(None, '✔⇩ {}'.format(name))
+                Logger.log(None, Translation.get("already_installed").format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '⇩ {} ({})'.format(name, url))
+            Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download").format(name, e),
+                    traceback.format_exc())
 
             try:
                 rmtree(os.path.join(self.theme_dir, identifier))
@@ -2904,7 +3413,7 @@ class ThemeManager():
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩ {}'.format(name))
+            Logger.log(None, Translation.get("installed").format(name))
 
         return True
 
@@ -2926,18 +3435,18 @@ class ThemeManager():
             pass
 
         if verbose:
-            Logger.log(None, '♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalling").format(name))
 
         try:
             rmtree(theme_path)
         except FileNotFoundError:
             if verbose:
-                Logger.log(None, '✔♻ {}'.format(name))
+                Logger.log(None, Translation.get("already_uninstalled").format(name))
 
             return False
 
         if verbose:
-            Logger.log(None, '✔♻ {}'.format(name))
+            Logger.log(None, Translation.get("uninstalled").format(name))
 
         return True
 
@@ -2959,23 +3468,26 @@ class ThemeManager():
             pass
 
         if verbose:
-            Logger.log(None, '⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updating").format(name))
 
         try:
             if not UpdateManager.update(theme_path):
                 if verbose:
-                    Logger.log(None, '⏩{}'.format(name))
+                    Logger.log(None, Translation.get("already_up_to_date").format(name))
 
                 return False
 
         except Exception as e:
             if verbose:
-                Logger.log_critical(None, '⇩ {}: {}'.format(name, e), traceback.format_exc())
+                Logger.log_critical(
+                    None,
+                    Translation.get("failed_to_download_update").format(name, e),
+                    traceback.format_exc())
 
             return False
 
         if verbose:
-            Logger.log(None, '✔⇩ {}'.format(name))
+            Logger.log(None, Translation.get("updated").format(name))
 
         return True
 
@@ -2998,14 +3510,32 @@ class Tray():
         self.window = window
 
         self.tray = QSystemTrayIcon(app_icon)
-
         self.tray.activated.connect(self.icon_clicked)
-
         self.tray.setToolTip(QQmlProperty.read(self.window.window, "title"))
+
+        self.window.tabs.currentIndexChanged.connect(self._update_context_menu)
+        self._update_context_menu()
+
+    def _update_context_menu(self) -> None:
+        """Update the context menu to list the loaded modules."""
+        tray_menu = QMenu()
+        tray_menu_item = QAction(QQmlProperty.read(self.window.window, "title"), tray_menu)
+        tray_menu_item.triggered.connect(self.window.show)
+        tray_menu.addAction(tray_menu_item)
+        if len(self.window.tab_bindings) > 0:
+            tray_menu.addSeparator()
+
+        for tab_id, tab in enumerate(self.window.tab_bindings):
+            tray_menu_item = QAction(tab['metadata']['name'], tray_menu)
+            tray_menu_item.triggered.connect(partial(
+                lambda tab_id: [self.window.switch_tab(tab_id), self.window.show()], tab_id=tab_id))  # type: ignore
+            tray_menu.addAction(tray_menu_item)
+
+        self.tray.setContextMenu(tray_menu)
 
     def icon_clicked(self, reason: int) -> None:
         """Toggle window visibility on left click."""
-        if reason == 3:
+        if reason == 3 and platform.system() != "Darwin":
             self.window.toggle_visibility(force_tray=True)
 
     def show(self) -> None:
@@ -3023,23 +3553,32 @@ class HotkeyHandler():
     def __init__(self, needs_main_loop_queue: Queue, window: Window) -> None:
         """Initialize the global hotkey handler."""
         self.window = window
-        self.pressed = []  # type: List[Union[keyboard.Key, keyboard.KeyCode]]
+        self.modifiers = set()  # type: Set[Union[keyboard.Key, keyboard.KeyCode]]
+        self.backtick = keyboard.KeyCode(char='`')
         self.needs_main_loop_queue = needs_main_loop_queue
 
-        listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
-        listener.start()
+        self.modifier_keys = [
+            keyboard.Key.ctrl,
+            keyboard.Key.shift,
+            keyboard.Key.alt,
+            keyboard.Key.cmd
+        ]
+
+        if not pynput_error:
+            listener = keyboard.Listener(on_press=self.on_press, on_release=self.on_release)
+            listener.start()
 
     def on_press(self, key) -> bool:
         """Executed when a key is pressed."""
         if key is None:
             return True
 
-        if key not in self.pressed:
-            self.pressed.append(key)
-
-        if (len(self.pressed) == 2 and
-                self.pressed[0] == keyboard.Key.ctrl and self.pressed[1].char == '`' and
-                Settings.get('global_hotkey_enabled')):
+        if key in self.modifier_keys:
+            self.modifiers.add(key)
+        elif (key == self.backtick and
+              len(self.modifiers) == 1 and
+              keyboard.Key.ctrl in self.modifiers and
+              Settings.get('global_hotkey_enabled')):
             self.needs_main_loop_queue.put(self.window.show)
 
         return True
@@ -3047,7 +3586,7 @@ class HotkeyHandler():
     def on_release(self, key) -> bool:
         """Executed when a key is released."""
         try:
-            self.pressed.remove(key)
+            self.modifiers.remove(key)
         except KeyError:
             pass
 
@@ -3059,18 +3598,21 @@ class Settings():
 
     __settings = {
         '_launch_app': True,  # Keep track if launching is normal
+        '_window_geometry': None,
+        '_portable': False,
         'background': False,
+        'turbo_mode': False,
         'locale': None,
         'modules': [],
         'minimize_mode': MinimizeMode.Normal,
         'profile': ProfileManager.default_profile_name(),
         'output_mode': OutputMode.DefaultClipboard,
-        'sort_mode': SortMode.Module,
+        'output_separator': OutputSeparator.Enter,
         'style': None,
         'theme': None,
         'global_hotkey_enabled': True,
         'tray': True
-    }
+    }  # type: Dict[str, Any]
 
     __global_settings = {
         'last_update_check': None,
@@ -3090,7 +3632,11 @@ class Settings():
         except KeyError:
             pass
 
-        value = Settings.__settings[name]
+        try:
+            value = Settings.__settings[name]
+        except KeyError:
+            value = None
+
         if value is None:
             return default
 
@@ -3146,7 +3692,7 @@ class ModuleOptionParser(argparse.Action):
         modules = namespace._modules
 
         if self.dest == 'module':
-            module_dir = os.path.join(ConfigRetriever.get_setting('config_path'), 'modules')
+            module_dir = os.path.join(ConfigRetriever.get_path(), 'modules')
             data = ObjectManager.list_object(os.path.join(module_dir, value.replace('.', '_')))
             if not data:
                 print("Could not find module {}".format(value))
@@ -3188,7 +3734,7 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description='The Python-based extendable tool.')
     parser.add_argument('-v', '--version', action='version',
                         version='Pext {}'.format(UpdateManager().get_core_version()))
-    parser.add_argument('--config', help='use given directory to store settings and data.')
+    parser.add_argument('--data-path', help='use given directory to store settings and data.')
     parser.add_argument('--locale', help='load the given locale.')
     parser.add_argument('--list-locales', action='store_true',
                         help='print a list of the available locales.')
@@ -3225,6 +3771,14 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='create a tray icon (this is the default).')
     parser.add_argument('--no-tray', action='store_false', dest='tray', default=None,
                         help='do not create a tray icon.')
+    parser.add_argument('--portable', action='store_true', dest='portable', default=None,
+                        help='load and store everything in a local directory.')
+    parser.add_argument('--no-portable', action='store_false', dest='portable', default=None,
+                        help='load and store everything in the user directory.')
+    parser.add_argument('--turbo', action='store_true', dest='turbo_mode', default=None,
+                        help='automatically select entries when expecting the user to want to (possibly dangerous).')
+    parser.add_argument('--no-turbo', action='store_false', dest='turbo_mode', default=None,
+                        help='do not automatically select entries (safer).')
 
     # Remove weird macOS-added parameter
     # https://stackoverflow.com/questions/10242115/os-x-strange-psn-command-line-parameter-when-launched-from-finder
@@ -3309,12 +3863,12 @@ def _load_settings(args: argparse.Namespace) -> None:
                 metadata = requests.get(metadata_url).json()
 
                 try:
-                    r = requests.get(re.sub(r'\.json$', '{}_.json'
-                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
-                                     ''))
+                    translated_metadata_url = re.sub(r'\.json$', '_{}.json'.format(
+                        LocaleManager.find_best_locale(Settings.get('locale')).name()), metadata_url)
+                    r = requests.get(translated_metadata_url)
                     metadata.update(r.json())
-                except Exception:
-                    pass
+                except json.decoder.JSONDecodeError:
+                    print("Could not parse localized metadata file {}, ignoring...".format(translated_metadata_url))
 
                 if not ModuleManager().install_module(metadata['git_urls'][0],
                                                       metadata['id'],
@@ -3362,12 +3916,12 @@ def _load_settings(args: argparse.Namespace) -> None:
                 metadata = requests.get(metadata_url).json()
 
                 try:
-                    r = requests.get(re.sub(r'\.json$', '{}_.json'
-                                     .format(LocaleManager.find_best_locale(Settings.get('locale')).name()),
-                                     ''))
+                    translated_metadata_url = re.sub(r'\.json$', '_{}.json'.format(
+                        LocaleManager.find_best_locale(Settings.get('locale')).name()), metadata_url)
+                    r = requests.get(translated_metadata_url)
                     metadata.update(r.json())
-                except Exception:
-                    pass
+                except json.decoder.JSONDecodeError:
+                    print("Could not parse localized metadata file {}, ignoring...".format(translated_metadata_url))
 
                 if not ThemeManager().install_theme(metadata['git_urls'][0],
                                                     metadata['id'],
@@ -3439,6 +3993,12 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.tray is not None:
         Settings.set('tray', args.tray)
 
+    if args.portable:
+        Settings.set('_portable', args.portable)
+
+    if args.turbo_mode is not None:
+        Settings.set('turbo_mode', args.turbo_mode)
+
     # Set up the parsed modules
     if '_modules' in args:
         Settings.set('modules', args._modules)
@@ -3446,6 +4006,9 @@ def _load_settings(args: argparse.Namespace) -> None:
 
 def _shut_down(window: Window) -> None:
     """Clean up."""
+    profile = Settings.get('profile')
+    ProfileManager().save_modules(profile, window.tab_bindings)
+
     for module in window.tab_bindings:
         try:
             module['module'].stop()
@@ -3453,7 +4016,6 @@ def _shut_down(window: Window) -> None:
             print("Failed to cleanly stop module {}: {}".format(module['metadata']['name'], e))
             traceback.print_exc()
 
-    profile = Settings.get('profile')
     ProfileManager.unlock_profile(profile)
 
 
@@ -3462,12 +4024,13 @@ def main() -> None:
     # Parse arguments
     args = _parse_args(sys.argv[1:])
 
+    # Load configuration
+    ConfigRetriever.set_data_path(args.data_path)
+    ConfigRetriever.make_portable(args.portable)
+
     # Lock profile or call existing profile if running
     _init_persist(args.profile if args.profile else ProfileManager.default_profile_name(),
                   args.background if args.background else False)
-
-    # Load configuration
-    ConfigRetriever.set_home_path(args.config)
 
     # Ensure our necessary directories exist
     for directory in ['modules',
@@ -3476,18 +4039,10 @@ def main() -> None:
                       'profiles',
                       os.path.join('profiles', ProfileManager.default_profile_name())]:
         try:
-            os.makedirs(os.path.join(ConfigRetriever.get_setting('config_path'), directory))
+            os.makedirs(os.path.join(ConfigRetriever.get_path(), directory))
         except OSError:
             # Probably already exists, that's okay
             pass
-
-    # Delete old system theme hack if exists
-    # TODO: Remove later
-    try:
-        rmtree(os.path.join(ConfigRetriever.get_setting('config_path'), 'themes', "pext_theme_system"))
-    except FileNotFoundError:
-        # Probably already deleted
-        pass
 
     _load_settings(args)
     del args
@@ -3525,6 +4080,11 @@ def main() -> None:
     if Settings.get('style') is not None:
         app.setStyle(QStyleFactory().create(Settings.get('style')))
 
+    # Qt5's default style for macOS seems to have sizing bugs for buttons, so
+    # we force the Fusion theme instead
+    if platform.system() == 'Darwin':
+        app.setStyle(QStyleFactory().create('Fusion'))
+
     theme_identifier = Settings.get('theme')
     if theme_identifier is not None:
         # Qt5's default style for Windows, windowsvista, does not support palettes properly
@@ -3538,10 +4098,13 @@ def main() -> None:
         theme_manager.apply_theme_to_app(theme, app)
 
     # Get a window
-    window = Window(locale_manager)
+    window = Window(app, locale_manager)
 
     # Give the logger a reference to the window
     Logger.bind_window(window)
+
+    # Give the translator a reference to the window
+    Translation.bind_window(window)
 
     # Clean up on exit
     atexit.register(_shut_down, window)
@@ -3564,6 +4127,15 @@ def main() -> None:
 
     # Give the window a reference to the tray
     window.bind_tray(tray)
+
+    # Start watching for uninstalls
+    event_handler = PextFileSystemEventHandler(window, os.path.join(ConfigRetriever.get_path(), 'modules'))
+    observer = Observer()
+    observer.schedule(event_handler, os.path.join(ConfigRetriever.get_path(), 'modules'), recursive=True)
+    observer.start()
+
+    # Start update check
+    window._menu_check_updates(verbose=False, manual=False)
 
     # And run...
     main_loop.run()

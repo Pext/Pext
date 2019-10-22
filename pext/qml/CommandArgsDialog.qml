@@ -1,7 +1,7 @@
 /*
-    Copyright (c) 2015 - 2018 Sylvia van Os <sylvia@hackerchick.me>
+    Copyright (c) 2015 - 2019 Sylvia van Os <sylvia@hackerchick.me>
 
-    This file is part of Pext
+    This file is part of Pext.
 
     Pext is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,21 +18,34 @@
 */
 
 import QtQuick 2.3
+import QtQuick.Controls 1.2
 import QtQuick.Dialogs 1.2
+import QtQuick.Layouts 1.0
 
-MessageDialog {
-    title: qsTr("New version available")
-    icon: StandardIcon.Question
-    standardButtons: StandardButton.Yes | StandardButton.No
+Dialog {
+    title: qsTr("Arguments for %1").arg(command)
+    standardButtons: StandardButton.Ok | StandardButton.Cancel
 
-    property var updateAccepted
+    property var command
+    property var requestAccepted
 
-    text: qsTr("A new version of Pext is available. Do you want to download it?")
+    ColumnLayout {
+        Label {
+            text: qsTr("Enter arguments for %1").arg(command)
+        }
 
-    Component.onCompleted: visible = true;
+        TextField {
+            id: textfield
+            Layout.fillWidth: true
+        }
+    }
 
-    onYes: {
-        updateAccepted()
+    Component.onCompleted: {
+        visible = true;
+        textfield.focus = true;
+    }
+
+    onAccepted: {
+        requestAccepted(textfield.text);
     }
 }
-

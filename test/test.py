@@ -17,14 +17,14 @@ class TestConfig(unittest.TestCase):
                                     os.path.join(self.temp_dir.name, 'testdata'))
 
         self.test_config = os.path.join(test_data, "config")
-        ConfigRetriever.set_home_path(self.test_config)
+        ConfigRetriever.set_data_path(self.test_config)
 
     def tearDown(self):
         # Delete the temporary directory
         self.temp_dir.cleanup()
 
     def test_get_setting(self):
-        self.assertEqual(ConfigRetriever.get_setting('config_path'),
+        self.assertEqual(ConfigRetriever.get_path(),
                          self.test_config)
 
 
