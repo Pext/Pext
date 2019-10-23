@@ -34,7 +34,7 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
@@ -107,7 +107,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
@@ -315,7 +315,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtener más modulos</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtener más temas</translation>
     </message>
 </context>
 <context>
@@ -732,24 +732,22 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/main.qml" line="1041"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar: Módulo</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1043"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar: Ascendente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1045"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Ordenar: Descendiente</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1100"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation>Did you mean: Modules Module class does not implement ModuleBase
-51/5000
-La clase Module del módulo no implementa ModuleBase</translation>
+        <translation>La clase Module del módulo no implementa ModuleBase</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1101"/>
@@ -909,22 +907,22 @@ La clase Module del módulo no implementa ModuleBase</translation>
     <message>
         <location filename="../qml/main.qml" line="1133"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext {0} está disponible. Actualmente está usando Pext {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1134"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir página de descarga</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1135"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Un error ha ocurrido en {0}: {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1136"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>Reportar como error</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="453"/>
