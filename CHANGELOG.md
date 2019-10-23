@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Enable update check by default
 - Use action to notify users about update checks being enabled
+- Don't update module while in use (could cause unexpected state)
 
 ### Fixed
 - Update action being added before translations are available

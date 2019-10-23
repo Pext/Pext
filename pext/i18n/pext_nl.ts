@@ -916,11 +916,21 @@ Weet je zeker dat je wilt afsluiten?</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1135"/>
+        <source>{0} can be updated but is currently in use.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1136"/>
+        <source>Update and reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1137"/>
         <source>An error occured in {0}: {1}.</source>
         <translation>Er is een fout opgetreden in {0}: {1}.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1136"/>
+        <location filename="../qml/main.qml" line="1138"/>
         <source>Report as bug</source>
         <translation>Meld dit als bug</translation>
     </message>

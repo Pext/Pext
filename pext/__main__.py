@@ -369,7 +369,7 @@ class PextFileSystemEventHandler(FileSystemEventHandler):
             for tab_id, tab in enumerate(self.window.tab_bindings):
                 if event.src_path == os.path.join(self.modules_path, tab['metadata']['id'].replace('.', '_')):
                     print("Module {} was removed, sending unload event".format(tab['metadata']['id']))
-                    self.window.module_manager.unload_module(self.window, tab_id)
+                    self.window.module_manager.unload(self.window, tab_id)
 
 
 class Translation():
@@ -423,7 +423,7 @@ class MainLoop():
             )
 
             tab_id = self.window.tab_bindings.index(tab)
-            self.window.module_manager.unload_module(self.window, tab_id)
+            self.window.module_manager.unload(self.window, tab_id)
 
         elif action[0] == Action.add_message:
             Logger.log(tab['metadata']['name'], str(action[1]))
@@ -1170,7 +1170,7 @@ class ModuleManager():
 
         return None
 
-    def load_module(self, window: 'Window', module: Dict[str, Any]) -> bool:
+    def load(self, window: 'Window', module: Dict[str, Any]) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
         module_path = os.path.join(ConfigRetriever.get_path(), 'modules')
@@ -1367,7 +1367,7 @@ class ModuleManager():
 
         return True
 
-    def unload_module(self, window: 'Window', tab_id: int) -> None:
+    def unload(self, window: 'Window', tab_id: int) -> None:
         """Unload a module by tab ID."""
         try:
             window.tab_bindings[tab_id]['module'].stop()
@@ -1394,15 +1394,15 @@ class ModuleManager():
         # Ensure a proper refresh on the UI side
         window.tabs.currentIndexChanged.emit()
 
-    def list_module(self, module_id: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
+    def get_info(self, module_id: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return the metadata and source of one single module."""
         return ObjectManager().list_object(os.path.join(self.module_dir, module_id.replace('.', '_')))
 
-    def list_modules(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
+    def list(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.module_dir)
 
-    def reload_module(self, window: 'Window', tab_id: int) -> bool:
+    def reload(self, window: 'Window', tab_id: int) -> bool:
         """Reload a module by tab ID."""
         # Get currently active tab
         current_index = QQmlProperty.read(window.tabs, "currentIndex")
@@ -1440,7 +1440,7 @@ class ModuleManager():
 
         return True
 
-    def install_module(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
+    def install(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
         """Install a module."""
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
         dep_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
@@ -1498,7 +1498,7 @@ class ModuleManager():
 
         return True
 
-    def uninstall_module(self, identifier: str, verbose=False) -> bool:
+    def uninstall(self, identifier: str, verbose=False) -> bool:
         """Uninstall a module."""
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
         dep_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
@@ -1537,8 +1537,16 @@ class ModuleManager():
 
         return True
 
-    def update_module(self, identifier: str, verbose=False) -> bool:
+    def has_update(self, identifier: str) -> bool:
+        """Check if a module has an update available."""
+        module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
+        return UpdateManager.has_update(module_path)
+
+    def update(self, identifier: str, verbose=False) -> bool:
         """Update a module."""
+        if self.has_update(identifier):
+            return True
+
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
 
         try:
@@ -1591,12 +1599,12 @@ class ModuleManager():
 
         return True
 
-    def update_all_modules(self, verbose=False) -> bool:
+    def update_all(self, verbose=False) -> bool:
         """Update all modules."""
         success = True
 
-        for identifier in self.list_modules().keys():
-            if not self.update_module(identifier, verbose=verbose):
+        for identifier in self.list().keys():
+            if not self.update(identifier, verbose=verbose):
                 success = False
 
         return success
@@ -1646,6 +1654,17 @@ class UpdateManager():
         with UpdateManager._path_to_repo(directory) as repo:
             config = repo.get_config()
             return config.get(("remote".encode(), "origin".encode()), "url".encode()).decode()
+
+    @staticmethod
+    def has_update(directory: str, branch=b'refs/heads/master') -> bool:
+        """Check if an update is available for the git-managed directory."""
+        # Get current commit
+        with UpdateManager._path_to_repo(directory) as repo:
+            old_commit = repo[repo.head()]
+            remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
+            remote_commit = porcelain.ls_remote(remote_url)[branch]
+
+            return remote_commit != old_commit.id
 
     @staticmethod
     def update(directory: str) -> bool:
@@ -2632,10 +2651,10 @@ class Window():
         # Start binding the modules
         if len(Settings.get('modules')) > 0:
             for module in Settings.get('modules'):
-                self.module_manager.load_module(self, module)
+                self.module_manager.load(self, module)
         else:
             for module in ProfileManager().retrieve_modules(Settings.get('profile')):
-                self.module_manager.load_module(self, module)
+                self.module_manager.load(self, module)
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the
@@ -2748,26 +2767,26 @@ class Window():
 
             module_settings[key] = value
 
-        metadata = ModuleManager().list_module(identifier)['metadata']  # type: ignore
+        metadata = ModuleManager().get_info(identifier)['metadata']  # type: ignore
         module = {'metadata': metadata, 'settings': module_settings}
-        self.module_manager.load_module(self, module)
+        self.module_manager.load(self, module)
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
-            self.module_manager.unload_module(
+            self.module_manager.unload(
                 self,
                 QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _reload_active_module(self) -> None:
         if len(self.tab_bindings) > 0:
-            self.module_manager.reload_module(
+            self.module_manager.reload(
                 self,
                 QQmlProperty.read(self.tabs, "currentIndex"))
 
     def _menu_install_module(self, module_url: str, identifier: str, name: str) -> None:
         functions = [
             {
-                'name': self.module_manager.install_module,
+                'name': self.module_manager.install,
                 'args': (module_url, identifier, name,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
@@ -2781,7 +2800,7 @@ class Window():
     def _menu_uninstall_module(self, identifier: str) -> None:
         functions = [
             {
-                'name': self.module_manager.uninstall_module,
+                'name': self.module_manager.uninstall,
                 'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
@@ -2795,7 +2814,7 @@ class Window():
     def _menu_update_module(self, identifier: str) -> None:
         functions = [
             {
-                'name': self.module_manager.update_module,
+                'name': self.module_manager.update,
                 'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
@@ -2809,7 +2828,7 @@ class Window():
     def _menu_update_all_modules(self, verbose=False) -> None:
         functions = [
             {
-                'name': self.module_manager.update_all_modules,
+                'name': self.module_manager.update_all,
                 'args': (),
                 'kwargs': {'verbose': verbose}
             }, {
@@ -2896,7 +2915,7 @@ class Window():
     def _menu_install_theme(self, theme_url: str, identifier: str, name: str) -> None:
         functions = [
             {
-                'name': self.theme_manager.install_theme,
+                'name': self.theme_manager.install,
                 'args': (theme_url, identifier, name,),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
@@ -2910,7 +2929,7 @@ class Window():
     def _menu_uninstall_theme(self, identifier: str) -> None:
         functions = [
             {
-                'name': self.theme_manager.uninstall_theme,
+                'name': self.theme_manager.uninstall,
                 'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
@@ -2924,7 +2943,7 @@ class Window():
     def _menu_update_theme(self, identifier: str) -> None:
         functions = [
             {
-                'name': self.theme_manager.update_theme,
+                'name': self.theme_manager.update,
                 'args': (identifier,),
                 'kwargs': {'verbose': True}
             }, {
@@ -2938,7 +2957,7 @@ class Window():
     def _menu_update_all_themes(self, verbose=False) -> None:
         functions = [
             {
-                'name': self.theme_manager.update_all_themes,
+                'name': self.theme_manager.update_all,
                 'args': (),
                 'kwargs': {'verbose': False}
             }, {
@@ -3087,14 +3106,14 @@ class Window():
                 pass
 
     def _update_modules_info_qml(self) -> None:
-        modules = self.module_manager.list_modules()
+        modules = self.module_manager.list()
         self.context.setContextProperty(
             "modules", modules)
         QQmlProperty.write(
             self.intro_screen, "modulesInstalledCount", len(modules.keys()))
 
     def _update_themes_info_qml(self) -> None:
-        themes = self.theme_manager.list_themes()
+        themes = self.theme_manager.list()
         self.context.setContextProperty(
             "themes", themes)
 
@@ -3140,7 +3159,25 @@ class Window():
                     threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
 
             if manual or Settings.get('object_update_check'):
-                self._menu_update_all_modules(verbose)
+                for module_id, data in self.module_manager.list().items():
+                    if not self.module_manager.has_update(module_id):
+                        continue
+
+                    module_in_use = False
+                    for tab in self.tab_bindings:
+                        if tab['metadata']['id'] == module_id:
+                            module_in_use = True
+                            self.add_actionable(
+                                Translation.get("actionable_module_update_available_in_use").format(
+                                    data['metadata']['name'])
+                            )
+                            # TODO: Add button to update now: "actionable_module_update_available_in_use_button"
+
+                            break
+
+                    if not module_in_use:
+                        self._menu_update_module(module_id)
+
                 self._menu_update_all_themes(verbose)
 
             Settings.set('last_update_check', time.time())
@@ -3317,11 +3354,11 @@ class ThemeManager():
 
         return mapping
 
-    def list_themes(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
-        """Return a list of modules together with their source."""
+    def list(self) -> Dict[str, Dict[str, Optional[Union[str, Dict[str, str]]]]]:
+        """Return a list of themes together with their source."""
         return ObjectManager().list_objects(self.theme_dir)
 
-    def load_theme(self, identifier: str) -> QPalette:
+    def load(self, identifier: str) -> QPalette:
         """Return the parsed palette."""
         palette = QPalette()
         palette_mappings = self._get_palette_mappings()
@@ -3343,11 +3380,11 @@ class ThemeManager():
 
         return palette
 
-    def apply_theme_to_app(self, palette: QPalette, app: QApplication) -> None:
+    def apply(self, palette: QPalette, app: QApplication) -> None:
         """Apply the palette to the app (use this before creating a window)."""
         app.setPalette(palette)
 
-    def install_theme(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
+    def install(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
         """Install a theme."""
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
@@ -3381,7 +3418,7 @@ class ThemeManager():
 
         return True
 
-    def uninstall_theme(self, identifier: str, verbose=False) -> bool:
+    def uninstall(self, identifier: str, verbose=False) -> bool:
         """Uninstall a theme."""
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
@@ -3414,8 +3451,16 @@ class ThemeManager():
 
         return True
 
-    def update_theme(self, identifier: str, verbose=False) -> bool:
+    def has_update(self, identifier: str) -> bool:
+        """Check if a theme has an update available."""
+        theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
+        return UpdateManager.has_update(theme_path)
+
+    def update(self, identifier: str, verbose=False) -> bool:
         """Update a theme."""
+        if self.has_update(identifier):
+            return True
+
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
         try:
@@ -3455,12 +3500,12 @@ class ThemeManager():
 
         return True
 
-    def update_all_themes(self, verbose=False) -> bool:
+    def update_all(self, verbose=False) -> bool:
         """Update all themes."""
         success = True
 
-        for identifier in self.list_themes().keys():
-            if not self.update_theme(identifier, verbose=verbose):
+        for identifier in self.list().keys():
+            if not self.update(identifier, verbose=verbose):
                 success = False
 
         return success
@@ -3866,7 +3911,7 @@ def _load_settings(args: argparse.Namespace) -> None:
         Settings.set('_launch_app', False)
 
     if args.list_modules:
-        for module_identifier, module_data in ModuleManager().list_modules().items():
+        for module_identifier, module_data in ModuleManager().list().items():
             print('{} ({})'.format(module_identifier, module_data['source']))
 
         Settings.set('_launch_app', False)
@@ -3919,7 +3964,7 @@ def _load_settings(args: argparse.Namespace) -> None:
         Settings.set('_launch_app', False)
 
     if args.list_themes:
-        for theme_name, theme_data in ThemeManager().list_themes().items():
+        for theme_name, theme_data in ThemeManager().list().items():
             print('{} ({})'.format(theme_name, theme_data['source']))
 
         Settings.set('_launch_app', False)
@@ -4058,8 +4103,8 @@ def main() -> None:
             app.setStyle(QStyleFactory().create('Fusion'))
 
         theme_manager = ThemeManager()
-        theme = theme_manager.load_theme(theme_identifier)
-        theme_manager.apply_theme_to_app(theme, app)
+        theme = theme_manager.load(theme_identifier)
+        theme_manager.apply(theme, app)
 
     # Get a window
     window = Window(app, locale_manager)
