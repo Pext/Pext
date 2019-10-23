@@ -1402,7 +1402,7 @@ class ModuleManager():
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.module_dir)
 
-    def reload(self, window: 'Window', tab_id: int) -> bool:
+    def reload(self, window: 'Window', tab_id: int, in_between_callback=None) -> bool:
         """Reload a module by tab ID."""
         # Get currently active tab
         current_index = QQmlProperty.read(window.tabs, "currentIndex")
@@ -1416,6 +1416,9 @@ class ModuleManager():
 
         # Unload the module
         self.unload(window, tab_id)
+
+        if in_between_callback:
+            in_between_callback()
 
         # Force a reload to make code changes happen
         reload(module_data['module_import'])
@@ -2674,10 +2677,13 @@ class Window():
             return
 
         if parts[1] == "update-module-in-use":
-            self.module_manager.update(parts[2], True)
             for tab_id, tab in enumerate(self.tab_bindings):
                 if tab['metadata']['id'] == parts[2]:
-                    self.module_manager.reload(self, tab_id)
+                    self.module_manager.reload(
+                        self,
+                        tab_id,
+                        lambda: self.module_manager.update(parts[2], True)
+                    )
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
