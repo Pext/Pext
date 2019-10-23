@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Enable update check by default
+- Use action to notify users about update checks being enabled
+
 ### Fixed
 - Update action being added before translations are available
 

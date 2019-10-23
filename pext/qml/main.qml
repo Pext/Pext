@@ -53,34 +53,6 @@ ApplicationWindow {
     SystemPalette { id: palette; colorGroup: SystemPalette.Active }
 
     Item {
-        objectName: "permissionRequests"
-
-        signal updatePermissionRequest()
-        signal updatePermissionRequestAccepted()
-        signal updatePermissionRequestRejected()
-
-        onUpdatePermissionRequest: {
-            var permissionRequestDialog = Qt.createComponent("UpdatePermissionDialog.qml");
-            permissionRequestDialog.createObject(applicationWindow,
-                {"requestAccepted": updatePermissionRequestAccepted,
-                 "requestRejected": updatePermissionRequestRejected});
-        }
-    }
-
-    Item {
-        objectName: "updateAvailableRequests"
-
-        signal showUpdateAvailableDialog()
-        signal updateAvailableDialogAccepted()
-
-        onShowUpdateAvailableDialog: {
-            var updateAvailableDialogRequestDialog = Qt.createComponent("UpdateAvailableDialog.qml");
-            updateAvailableDialogRequestDialog.createObject(applicationWindow,
-                {"updateAccepted": updateAvailableDialogAccepted});
-        }
-    }
-
-    Item {
         objectName: "inputRequests"
 
         signal inputRequest(string moduleName, string description, bool isPassword, bool isMultiline, string prefill)
@@ -1157,6 +1129,7 @@ ApplicationWindow {
     property string tr_pynput_is_unavailable: qsTr("Pynput is unavailable")
     property string tr_pyautogui_is_unavailable: qsTr("PyAutoGUI is unavailable")
 
+    property string tr_actionable_update_check_enabled: qsTr("Automatic update checks are enabled. You can change this in settings.")
     property string tr_actionable_update_available: qsTr("Pext {0} is available. You are currently running Pext {1}.")
     property string tr_actionable_update_available_button: qsTr("Open download page")
     property string tr_actionable_error_in_module: qsTr("An error occured in {0}: {1}.")

@@ -2370,6 +2370,9 @@ class Window():
 
         self.window = self.engine.rootObjects()[0]
 
+        # Give the translator a reference to the window
+        Translation.bind_window(self)
+
         # Some hacks to make Qt WebGL streaming work
         if self.app.platformName() == 'webgl':
             self.parent_window = QWindow()
@@ -2606,15 +2609,14 @@ class Window():
             self.show()
 
             if Settings.get('update_check') is None and USE_INTERNAL_UPDATER:
-                # Ask if the user wants to enable automatic update checking
-                permission_requests = self.window.findChild(QObject, "permissionRequests")
+                # Tell the user automatic updating is enabled but set the last
+                # check to right now so the user can disable it before the first
+                # check
+                Settings.set('last_update_check', time.time())
+                self.add_actionable(Translation.get("actionable_update_check_enabled"))
 
-                permission_requests.updatePermissionRequestAccepted.connect(
-                    lambda: self._menu_update_check_dialog_result(True))
-                permission_requests.updatePermissionRequestRejected.connect(
-                    lambda: self._menu_update_check_dialog_result(False))
-
-                permission_requests.updatePermissionRequest.emit()
+                self._menu_toggle_object_update_check(True)
+                self._menu_toggle_update_check(True)
 
         # Set remembered geometry
         if not self.app.platformName() in ['webgl', 'vnc']:
@@ -3037,20 +3039,11 @@ class Window():
         copytree(os.path.join(AppFile.get_path(), 'Pext.workflow'), new_path)
         Popen(['open', new_path])
 
-    def _menu_update_check_dialog_result(self, accepted: bool) -> None:
-        self._menu_toggle_object_update_check(True)
-        self._menu_toggle_update_check(True, True)
-
-    def _menu_toggle_update_check(self, enabled: bool, after_permission_request=False) -> None:
+    def _menu_toggle_update_check(self, enabled: bool) -> None:
         Settings.set('update_check', enabled)
         QQmlProperty.write(self.menu_enable_update_check_shortcut,
                            "checked",
                            Settings.get('update_check'))
-
-        # macOS breaks if we show the update dialog immediately after accepting
-        # checking for updates so we need this workaround
-        if enabled and after_permission_request:
-            self._menu_restart_pext()
 
         # Check for updates immediately after toggling true
         self._menu_check_updates(verbose=False, manual=False)
@@ -3159,12 +3152,12 @@ class Window():
         self.actionables.pop(index)
         QQmlProperty.write(self.window, 'actionables', self.actionables)
 
-    def add_actionable(self, text: str, button_text: str, button_url: str, urgency="medium") -> None:
+    def add_actionable(self, text: str, button_text=None, button_url=None, urgency="medium") -> None:
         """Add an action to show in the UI."""
         self.actionables.insert(0, {
             'text': text,
-            'buttonText': button_text,
-            'buttonUrl': button_url,
+            'buttonText': button_text if button_text else "",
+            'buttonUrl': button_url if button_url else "",
             'urgency': urgency
         })
         QQmlProperty.write(self.window, 'actionables', self.actionables)
@@ -4073,9 +4066,6 @@ def main() -> None:
 
     # Give the logger a reference to the window
     Logger.bind_window(window)
-
-    # Give the translator a reference to the window
-    Translation.bind_window(window)
 
     # Clean up on exit
     atexit.register(_shut_down, window)
