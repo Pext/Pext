@@ -1664,7 +1664,7 @@ class UpdateManager():
             remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
             remote_commit = porcelain.ls_remote(remote_url)[branch]
 
-            return remote_commit == old_commit.id
+            return remote_commit != old_commit.id
 
     @staticmethod
     def update(directory: str) -> bool:
