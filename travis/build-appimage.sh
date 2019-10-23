@@ -24,6 +24,11 @@ trap cleanup EXIT
 REPO_ROOT=$(readlink -f $(dirname $(dirname "$0")))
 OLD_CWD=$(readlink -f .)
 
+# build libappimageupdate
+git clone https://github.com/AppImage/AppImageUpdate
+cd AppImageUpdate
+make install
+
 pushd "$BUILD_DIR"/
 
 # set up custom AppRun script
