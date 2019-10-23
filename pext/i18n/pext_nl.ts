@@ -902,7 +902,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1132"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatische updates zijn ingeschakeld. Je kunt dit aanpassen in de instellingen.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1133"/>
@@ -917,12 +917,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1135"/>
         <source>{0} can be updated but is currently in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} kan worden bijgewerkt, maar is momenteel in gebruik.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1136"/>
         <source>Update and reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Bijwerken en herladen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1137"/>
