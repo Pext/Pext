@@ -3190,7 +3190,7 @@ class Window():
                             module_in_use = True
                             self.add_actionable(
                                 Translation.get("actionable_module_update_available_in_use").format(
-                                    data['metadata']['name']),
+                                    data['metadata']['name']),  # type: ignore
                                 Translation.get("actionable_module_update_available_in_use_button"),
                                 "pext:update-module-in-use:{}".format(module_id)
                             )
@@ -3213,12 +3213,18 @@ class Window():
 
     def add_actionable(self, text: str, button_text=None, button_url=None, urgency="medium") -> None:
         """Add an action to show in the UI."""
-        self.actionables.insert(0, {
+        new_actionable = {
             'text': text,
             'buttonText': button_text if button_text else "",
             'buttonUrl': button_url if button_url else "",
             'urgency': urgency
-        })
+        }
+
+        for actionable in self.actionables:
+            if actionable == new_actionable:
+                return
+
+        self.actionables.insert(0, new_actionable)
         QQmlProperty.write(self.window, 'actionables', self.actionables)
 
     def bind_tray(self, tray: 'Tray') -> None:
