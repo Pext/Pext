@@ -1415,13 +1415,13 @@ class ModuleManager():
         }
 
         # Unload the module
-        self.unload_module(window, tab_id)
+        self.unload(window, tab_id)
 
         # Force a reload to make code changes happen
         reload(module_data['module_import'])
 
         # Load it into the UI
-        if not self.load_module(window, module):
+        if not self.load(window, module):
             return False
 
         # Get new position
@@ -1664,7 +1664,7 @@ class UpdateManager():
             remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
             remote_commit = porcelain.ls_remote(remote_url)[branch]
 
-            return remote_commit != old_commit.id
+            return remote_commit == old_commit.id
 
     @staticmethod
     def update(directory: str) -> bool:
@@ -2430,6 +2430,9 @@ class Window():
         tab_shortcut.activated.connect(self._tab_complete)
         args_shortcut.activated.connect(self._input_args)
 
+        # Bind internal calls
+        self.window.internalCall.connect(self._process_internal_call)
+
         # Bind actionable remove
         actionable_repeater = self.window.findChild(
             QObject, "actionableRepeater")
@@ -2663,6 +2666,18 @@ class Window():
             self.tabs.currentIndexChanged.emit()
         elif len(self.tab_bindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
+
+    def _process_internal_call(self, call: str) -> None:
+        """Process an internal call."""
+        parts = call.split(":")
+        if parts[0] != "pext":
+            return
+
+        if parts[1] == "update-module-in-use":
+            self.module_manager.update(parts[2], True)
+            for tab_id, tab in enumerate(self.tab_bindings):
+                if tab['metadata']['id'] == parts[2]:
+                    self.module_manager.reload(self, tab_id)
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
@@ -3169,9 +3184,10 @@ class Window():
                             module_in_use = True
                             self.add_actionable(
                                 Translation.get("actionable_module_update_available_in_use").format(
-                                    data['metadata']['name'])
+                                    data['metadata']['name']),
+                                Translation.get("actionable_module_update_available_in_use_button"),
+                                "pext:update-module-in-use:{}".format(module_id)
                             )
-                            # TODO: Add button to update now: "actionable_module_update_available_in_use_button"
 
                             break
 
@@ -3879,10 +3895,10 @@ def _load_settings(args: argparse.Namespace) -> None:
                 except json.decoder.JSONDecodeError:
                     print("Could not parse localized metadata file {}, ignoring...".format(translated_metadata_url))
 
-                if not ModuleManager().install_module(metadata['git_urls'][0],
-                                                      metadata['id'],
-                                                      metadata['name'],
-                                                      verbose=True):
+                if not ModuleManager().install(metadata['git_urls'][0],
+                                               metadata['id'],
+                                               metadata['name'],
+                                               verbose=True):
                     sys.exit(3)
             except Exception as e:
                 print("Failed installing module from {}: {}".format(metadata_url, e))
@@ -3892,20 +3908,20 @@ def _load_settings(args: argparse.Namespace) -> None:
 
     if args.uninstall_module:
         for identifier in args.uninstall_module:
-            if not ModuleManager().uninstall_module(identifier, verbose=True):
+            if not ModuleManager().uninstall(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_module:
         for identifier in args.update_module:
-            if not ModuleManager().update_module(identifier, verbose=True):
+            if not ModuleManager().update(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_modules:
-        if not ModuleManager().update_all_modules(verbose=True):
+        if not ModuleManager().update_all(verbose=True):
             sys.exit(3)
 
         Settings.set('_launch_app', False)
@@ -3932,10 +3948,10 @@ def _load_settings(args: argparse.Namespace) -> None:
                 except json.decoder.JSONDecodeError:
                     print("Could not parse localized metadata file {}, ignoring...".format(translated_metadata_url))
 
-                if not ThemeManager().install_theme(metadata['git_urls'][0],
-                                                    metadata['id'],
-                                                    metadata['name'],
-                                                    verbose=True):
+                if not ThemeManager().install(metadata['git_urls'][0],
+                                              metadata['id'],
+                                              metadata['name'],
+                                              verbose=True):
                     sys.exit(3)
             except Exception as e:
                 print("Failed installing theme from {}: {}".format(metadata_url, e))
@@ -3945,20 +3961,20 @@ def _load_settings(args: argparse.Namespace) -> None:
 
     if args.uninstall_theme:
         for identifier in args.uninstall_theme:
-            if not ThemeManager().uninstall_theme(identifier, verbose=True):
+            if not ThemeManager().uninstall(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_theme:
         for identifier in args.update_theme:
-            if not ThemeManager().update_theme(identifier, verbose=True):
+            if not ThemeManager().update(identifier, verbose=True):
                 sys.exit(3)
 
         Settings.set('_launch_app', False)
 
     if args.update_themes:
-        if not ThemeManager().update_all_themes(verbose=True):
+        if not ThemeManager().update_all(verbose=True):
             sys.exit(3)
 
         Settings.set('_launch_app', False)

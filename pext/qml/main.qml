@@ -37,6 +37,7 @@ ApplicationWindow {
     height: FORCE_FULLSCREEN ? Screen.height : 600
 
     property var actionables: []
+    signal internalCall(string url)
 
     flags: Qt.Window
 
@@ -902,7 +903,11 @@ ApplicationWindow {
                         visible: modelData.buttonText
                         text: modelData.buttonText
                         onClicked: {
-                            Qt.openUrlExternally(modelData.buttonUrl)
+                            if (modelData.buttonUrl.startsWith("pext:")) {
+                                applicationWindow.internalCall(modelData.buttonUrl)
+                            } else {
+                                Qt.openUrlExternally(modelData.buttonUrl)
+                            }
                             actionableRepeater.removeActionable(index)
                         }
                         Layout.fillHeight: true
