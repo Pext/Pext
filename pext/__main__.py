@@ -2677,13 +2677,18 @@ class Window():
             return
 
         if parts[1] == "update-module-in-use":
+            def reload_chain():
+                self.module_manager.update(parts[2], True)
             for tab_id, tab in enumerate(self.tab_bindings):
                 if tab['metadata']['id'] == parts[2]:
-                    self.module_manager.reload(
+                    reload_chain = partial(
+                        self.module_manager.reload,
                         self,
                         tab_id,
-                        lambda: self.module_manager.update(parts[2], True)
+                        reload_chain
                     )
+
+            reload_chain()
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
