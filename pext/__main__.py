@@ -1698,12 +1698,12 @@ class UpdateManager():
     def check_core_update(self) -> Optional[str]:
         """Check if there is an update of the core and if so, return the name of the new version."""
         # Normalize own version
-        if self.version.find('+') != -1:
-            version = self.version[:self.version.find('+')]
+        if self.version.find('+dev') != -1:
+            version = self.version[:self.version.find('+dev')]
         else:
             version = self.version
 
-        if self.version.find('-') != -1:
+        if self.version.find('+') != -1:
             available_version = requests.get('https://pext.io/version/nightly').text.splitlines()[0].strip()
         else:
             available_version = requests.get('https://pext.io/version/stable').text.splitlines()[0].strip()
