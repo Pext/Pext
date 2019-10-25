@@ -23,10 +23,6 @@ script:
   - bash prepare_activate_translations.sh 70 https://hosted.weblate.org/exports/stats/pext/?format=json
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then lrelease pext/pext.pro; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro; fi
-  # check REUSE compliance
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pip3 install fsfe-reuse; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo pip install fsfe-reuse; fi
-  - reuse lint
   # run tests
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then xvfb-run tox -v; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tox -v; fi
