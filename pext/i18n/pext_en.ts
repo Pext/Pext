@@ -315,7 +315,7 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Get more modules</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Get more themes</translation>
     </message>
 </context>
 <context>
@@ -732,17 +732,17 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1041"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort: Module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1043"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort: Ascending</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1045"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sort: Descending</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1100"/>
@@ -902,37 +902,37 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1132"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatic update checks are enabled. You can change this in settings.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1133"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext {0} is available. You are currently running Pext {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1134"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>Open download page</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1135"/>
         <source>{0} can be updated but is currently in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} can be updated but is currently in use.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1136"/>
         <source>Update and reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Update and reload</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1137"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>An error occurred in {0}: {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1138"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>Report as bug</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="453"/>

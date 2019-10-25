@@ -901,7 +901,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1132"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>自動更新檢查已啟用。您可以在設定中變更此項目。</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1133"/>
@@ -916,12 +916,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1135"/>
         <source>{0} can be updated but is currently in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} 可以更新，但目前正在使用。</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1136"/>
         <source>Update and reload</source>
-        <translation type="unfinished"></translation>
+        <translation>更新並重新載入</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1137"/>
