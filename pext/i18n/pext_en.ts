@@ -707,12 +707,12 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="818"/>
         <source>Automatically check for module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatically check for module and theme updates</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="824"/>
         <source>Automatically install module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatically install module and theme updates</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="833"/>
@@ -927,12 +927,12 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1148"/>
         <source>{0} can be updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} can be updated.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
         <source>Update</source>
-        <translation type="unfinished">Update</translation>
+        <translation>Update</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1150"/>
