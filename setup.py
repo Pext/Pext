@@ -24,7 +24,6 @@ if isinstance(version, bytes):
     version = version.decode()
 
 version = version.lstrip("v")
-version = version.replace('-', '+', 1).replace('-', '.')
 
 with open(pext_version_path, "w") as version_file:
     version_file.write(version)
