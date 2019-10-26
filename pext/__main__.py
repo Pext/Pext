@@ -864,7 +864,8 @@ class ProfileManager():
                                'global_hotkey_enabled',
                                'last_update_check',
                                'update_check',
-                               'object_update_check']
+                               'object_update_check',
+                               'object_update_install']
 
     @staticmethod
     def _get_pid_path(profile: str) -> str:
@@ -2505,6 +2506,8 @@ class Window():
             QObject, "menuEnableUpdateCheck")
         self.menu_enable_object_update_check_shortcut = self.window.findChild(
             QObject, "menuEnableObjectUpdateCheck")
+        self.menu_enable_object_update_install_shortcut = self.window.findChild(
+            QObject, "menuEnableObjectUpdateInstall")
 
         menu_quit_shortcut = self.window.findChild(QObject, "menuQuit")
         menu_check_for_updates_shortcut = self.window.findChild(QObject, "menuCheckForUpdates")
@@ -2554,6 +2557,7 @@ class Window():
         menu_show_tray_icon_shortcut.toggled.connect(self._menu_toggle_tray_icon)
         menu_install_quick_action_service.triggered.connect(self._menu_install_quick_action_service)
         self.menu_enable_object_update_check_shortcut.toggled.connect(self._menu_toggle_object_update_check)
+        self.menu_enable_object_update_install_shortcut.toggled.connect(self._menu_toggle_object_update_install)
 
         menu_quit_shortcut.triggered.connect(self.quit)
         menu_check_for_updates_shortcut.triggered.connect(self._menu_check_updates)
@@ -2612,6 +2616,9 @@ class Window():
         QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
                            "checked",
                            Settings.get('object_update_check'))
+        QQmlProperty.write(self.menu_enable_object_update_install_shortcut,
+                           "checked",
+                           Settings.get('object_update_check') and Settings.get('object_update_install'))
 
         # We bind the update check after writing the initial value to prevent
         # instantly triggering the update check
@@ -2641,6 +2648,7 @@ class Window():
                 self.add_actionable(Translation.get("actionable_update_check_enabled"))
 
                 self._menu_toggle_object_update_check(True)
+                self._menu_toggle_object_update_install(True)
                 self._menu_toggle_update_check(True)
 
         # Set remembered geometry
@@ -2689,6 +2697,9 @@ class Window():
                     )
 
             reload_chain()
+
+        if parts[1] == "update-theme":
+            self.theme_manager.update(parts[2], True)
 
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
@@ -3098,6 +3109,14 @@ class Window():
         QQmlProperty.write(self.menu_enable_object_update_check_shortcut,
                            "checked",
                            Settings.get('object_update_check'))
+        if not enabled:
+            self._menu_toggle_object_update_install(False)
+
+    def _menu_toggle_object_update_install(self, enabled: bool) -> None:
+        Settings.set('object_update_install', enabled)
+        QQmlProperty.write(self.menu_enable_object_update_install_shortcut,
+                           "checked",
+                           Settings.get('object_update_install'))
 
     def _search(self) -> None:
         element = self._get_current_element()
@@ -3185,27 +3204,45 @@ class Window():
                     threading.Thread(target=self._menu_check_updates_actually_check, args=(verbose,)).start()
 
             if manual or Settings.get('object_update_check'):
-                for module_id, data in self.module_manager.list().items():
-                    if not self.module_manager.has_update(module_id):
-                        continue
+                if Settings.get('object_update_install'):
+                    for module_id, data in self.module_manager.list().items():
+                        if not self.module_manager.has_update(module_id):
+                            continue
 
-                    module_in_use = False
-                    for tab in self.tab_bindings:
-                        if tab['metadata']['id'] == module_id:
-                            module_in_use = True
+                        module_in_use = False
+                        for tab in self.tab_bindings:
+                            if tab['metadata']['id'] == module_id:
+                                module_in_use = True
+                                self.add_actionable(
+                                    Translation.get("actionable_object_update_available_in_use").format(
+                                        data['metadata']['name']),  # type: ignore
+                                    Translation.get("actionable_object_update_available_in_use_button"),
+                                    "pext:update-module-in-use:{}".format(module_id)
+                                )
+
+                                break
+
+                        if not module_in_use:
+                            self._menu_update_module(module_id)
+
+                    self._menu_update_all_themes(verbose)
+                else:
+                    for module_id, data in self.module_manager.list().items():
+                        if self.module_manager.has_update(module_id):
                             self.add_actionable(
-                                Translation.get("actionable_module_update_available_in_use").format(
+                                Translation.get("actionable_object_update_available").format(
                                     data['metadata']['name']),  # type: ignore
-                                Translation.get("actionable_module_update_available_in_use_button"),
+                                Translation.get("actionable_object_update_available"),
                                 "pext:update-module-in-use:{}".format(module_id)
                             )
-
-                            break
-
-                    if not module_in_use:
-                        self._menu_update_module(module_id)
-
-                self._menu_update_all_themes(verbose)
+                    for theme_id, data in self.theme_manager.list().items():
+                        if self.theme_manager.has_update(theme_id):
+                            self.add_actionable(
+                                Translation.get("actionable_object_update_available").format(
+                                    data['metadata']['name']),  # type: ignore
+                                Translation.get("actionable_object_update_available"),
+                                "pext:update-theme:{}".format(module_id)
+                            )
 
             Settings.set('last_update_check', time.time())
 
@@ -3659,7 +3696,8 @@ class Settings():
     __global_settings = {
         'last_update_check': None,
         'update_check': None,  # None = not asked, True/False = permission
-        'object_update_check': None  # None = not asked, True/False = permission
+        'object_update_check': None,  # None = not asked, True/False = permission
+        'object_update_install': True  # True/False = permission
     }
 
     @staticmethod

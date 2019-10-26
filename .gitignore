@@ -91,3 +91,6 @@ ENV/
 
 # Compiled QML
 *.qmlc
+
+# Pext specific
+pext/i18n/*.qm

@@ -813,9 +813,17 @@ ApplicationWindow {
                 }
 
                 MenuItem {
+                    id: menuEnableObjectUpdateCheck
                     objectName: "menuEnableObjectUpdateCheck"
-                    text: qsTr("Automatically update modules and themes")
+                    text: qsTr("Automatically check for module and theme updates")
                     checkable: true
+                }
+
+                MenuItem {
+                    objectName: "menuEnableObjectUpdateInstall"
+                    text: qsTr("Automatically install module and theme updates")
+                    checkable: true
+                    enabled: menuEnableObjectUpdateCheck.checked
                 }
             }
 
@@ -1137,8 +1145,10 @@ ApplicationWindow {
     property string tr_actionable_update_check_enabled: qsTr("Automatic update checks are enabled. You can change this in settings.")
     property string tr_actionable_update_available: qsTr("Pext {0} is available. You are currently running Pext {1}.")
     property string tr_actionable_update_available_button: qsTr("Open download page")
-    property string tr_actionable_module_update_available_in_use: qsTr("{0} can be updated but is currently in use.")
-    property string tr_actionable_module_update_available_in_use_button: qsTr("Update and reload")
+    property string tr_actionable_object_update_available: qsTr("{0} can be updated.")
+    property string tr_actionable_object_update_available_button: qsTr("Update")
+    property string tr_actionable_object_update_available_in_use: qsTr("{0} can be updated but is currently in use.")
+    property string tr_actionable_object_update_available_in_use_button: qsTr("Update and reload")
     property string tr_actionable_error_in_module: qsTr("An error occured in {0}: {1}.")
     property string tr_actionable_report_error_in_module: qsTr("Report as bug")
 }
