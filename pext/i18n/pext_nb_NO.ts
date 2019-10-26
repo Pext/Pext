@@ -315,7 +315,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Hent flere moduler</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Hent flere drakter</translation>
     </message>
 </context>
 <context>
@@ -707,12 +707,12 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="818"/>
         <source>Automatically check for module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Se etter nye moduler og drakter automatisk</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="824"/>
         <source>Automatically install module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Installer oppdateringer til moduler og drakter automatisk</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="833"/>
@@ -742,17 +742,17 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1054"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortering: Modul</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1056"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortering: Stigende</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1058"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Sortering: Synkende</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1113"/>
@@ -912,22 +912,22 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1145"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatiske oppdateringssjekker er påskrudd. Du kan endre dette i innstillingene.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1146"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext {0} er tilgjengelig. Du kjører nå Pext {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1147"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>Åpne nedlastingsside</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1148"/>
         <source>{0} can be updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} kan oppdateres.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
@@ -937,22 +937,22 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1150"/>
         <source>{0} can be updated but is currently in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} kan oppdateres, men er i bruk.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1151"/>
         <source>Update and reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Oppdater og gjeninnlast</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1152"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>En feil inntraff i {0}: {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1153"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>Innrapporter som feil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="454"/>
@@ -1057,7 +1057,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1014"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / midklikk på mus: Aktiver framhevet oppføring (aldri minimer)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1015"/>
