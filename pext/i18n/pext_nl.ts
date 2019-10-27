@@ -707,12 +707,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="818"/>
         <source>Automatically check for module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatisch controleren op module- en thema-updates</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="824"/>
         <source>Automatically install module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Module- en thema-updates automatisch installeren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="833"/>
@@ -927,12 +927,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1148"/>
         <source>{0} can be updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} kan worden bijgewerkt.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
         <source>Update</source>
-        <translation type="unfinished">Bijwerken</translation>
+        <translation>Bijwerken</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1150"/>
