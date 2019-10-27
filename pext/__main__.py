@@ -1704,7 +1704,7 @@ class UpdateManager():
         else:
             version = self.version
 
-        if self.version.find('+') != -1:
+        if self.version.find('-') != -1:
             available_version = requests.get('https://pext.io/version/nightly').text.splitlines()[0].strip()
         else:
             available_version = requests.get('https://pext.io/version/stable').text.splitlines()[0].strip()
