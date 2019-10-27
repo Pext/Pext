@@ -30,11 +30,11 @@ after_test:
   - echo Icon 'Pext\pext\images\scalable\pext.ico' >> Pext.nsi
   - echo OutFile 'Pext.exe' >> Pext.nsi
   - echo RequestExecutionLevel admin >> Pext.nsi
-  - echo SetShellVarContext all >> Pext.nsi
   - echo InstallDir "$PROGRAMFILES\${APPNAME}" >> Pext.nsi
   - echo Page directory >> Pext.nsi
   - echo Page instfiles >> Pext.nsi
   - echo Section 'install' >> Pext.nsi
+  - echo SetShellVarContext all >> Pext.nsi
   - echo SetOutPath $INSTDIR >> Pext.nsi
   - echo File /r '*' >> Pext.nsi
   - echo WriteUninstaller '$INSTDIR\uninstall.exe' >> Pext.nsi
