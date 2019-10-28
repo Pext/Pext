@@ -77,6 +77,8 @@ Dialog {
         } else {
             loadRequest(themes[Object.keys(themes)[combobox.currentIndex - 1]].metadata.id);
         }
+        destroy();
     }
-}
 
+    onRejected: destroy();
+}

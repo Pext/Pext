@@ -60,6 +60,9 @@ Dialog {
 
         xmlhttp.open("GET", textfield.text, true);
         xmlhttp.send();
-    }
-}
 
+        destroy();
+    }
+
+    onRejected: destroy();
+}

@@ -65,6 +65,8 @@ Dialog {
 
     onAccepted: {
         loadRequest(combobox.currentText, newInstance.checked);
+        destroy();
     }
-}
 
+    onRejected: destroy();
+}

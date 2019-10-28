@@ -33,4 +33,3 @@ MessageDialog {
 
     Component.onCompleted: visible = true;
 }
-

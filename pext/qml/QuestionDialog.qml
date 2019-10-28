@@ -38,9 +38,11 @@ MessageDialog {
 
     onYes: {
         accepted();
+        destroy();
     }
 
     onNo: {
         rejected();
+        destroy();
     }
 }

@@ -47,5 +47,8 @@ Dialog {
 
     onAccepted: {
         requestAccepted(textfield.text);
+        destroy();
     }
+
+    onRejected: destroy();
 }
