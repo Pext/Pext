@@ -55,9 +55,11 @@ Dialog {
 
     onAccepted: {
         accepted(userInput.currentText);
+        destroy();
     }
 
     onRejected: {
         rejected();
+        destroy();
     }
 }
