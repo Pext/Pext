@@ -34,6 +34,7 @@ after_test:
   - echo Page directory >> Pext.nsi
   - echo Page instfiles >> Pext.nsi
   - echo Section 'install' >> Pext.nsi
+  - echo SetShellVarContext all >> Pext.nsi
   - echo SetOutPath $INSTDIR >> Pext.nsi
   - echo File /r '*' >> Pext.nsi
   - echo WriteUninstaller '$INSTDIR\uninstall.exe' >> Pext.nsi
@@ -47,6 +48,7 @@ after_test:
   - echo WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoRepair" 1 >> Pext.nsi
   - echo SectionEnd >> Pext.nsi
   - echo Section 'uninstall' >> Pext.nsi
+  - echo SetShellVarContext all >> Pext.nsi
   - echo Delete "$SMPROGRAMS\Pext.lnk" >> Pext.nsi
   - echo RmDir /r "$INSTDIR" >> Pext.nsi
   - echo SectionEnd >> Pext.nsi
