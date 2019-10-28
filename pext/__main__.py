@@ -3683,7 +3683,7 @@ class Settings():
         'turbo_mode': False,
         'locale': None,
         'modules': [],
-        'minimize_mode': MinimizeMode.Normal,
+        'minimize_mode': MinimizeMode.Normal if platform.system() == "Darwin" else MinimizeMode.Tray,
         'profile': ProfileManager.default_profile_name(),
         'output_mode': OutputMode.DefaultClipboard,
         'output_separator': OutputSeparator.Enter,

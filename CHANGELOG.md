@@ -13,9 +13,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Enable update check by default
 - Use action to notify users about update checks being enabled
 - Don't update module while in use (could cause unexpected state)
+- Minimize to tray by default on non-macOS platforms
 
 ### Fixed
 - Update action being added before translations are available
+- Windows shortcut only being available for admin account
 
 ## [0.26] - 2019-10-18
 ### API changes
