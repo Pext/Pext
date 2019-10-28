@@ -32,4 +32,6 @@ MessageDialog {
     detailedText: detailedMessage
 
     Component.onCompleted: visible = true;
+
+    onAccepted: destroy();
 }

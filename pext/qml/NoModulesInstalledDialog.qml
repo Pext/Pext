@@ -27,4 +27,6 @@ MessageDialog {
     text: qsTr("No modules installed, please install one first.")
 
     Component.onCompleted: visible = true;
+
+    onAccepted: destroy();
 }

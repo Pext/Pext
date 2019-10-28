@@ -27,4 +27,6 @@ MessageDialog {
     text: qsTr("There is only one profile available. Please create a second profile first.")
 
     Component.onCompleted: visible = true;
+
+    onAccepted: destroy();
 }
