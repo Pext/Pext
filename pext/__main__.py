@@ -312,6 +312,7 @@ class Logger():
 
         if Logger.window and module_name:
             Logger.window.add_actionable(
+                "module_error_{}".format(module_name),
                 Translation.get("actionable_error_in_module").format(module_name, message),
                 Translation.get("actionable_report_error_in_module") if bugtracker_url else "",
                 bugtracker_url)
@@ -2645,7 +2646,7 @@ class Window():
                 # check to right now so the user can disable it before the first
                 # check
                 Settings.set('last_update_check', time.time())
-                self.add_actionable(Translation.get("actionable_update_check_enabled"))
+                self.add_actionable("update_check_enabled", Translation.get("actionable_update_check_enabled"))
 
                 self._menu_toggle_object_update_check(True)
                 self._menu_toggle_object_update_install(True)
@@ -3181,6 +3182,7 @@ class Window():
 
         if new_version:
             self.add_actionable(
+                "pext_update_available",
                 Translation.get("actionable_update_available").format(new_version, UpdateManager().get_core_version()),
                 Translation.get("actionable_update_available_button"),
                 "https://pext.io/download/")
@@ -3214,6 +3216,7 @@ class Window():
                             if tab['metadata']['id'] == module_id:
                                 module_in_use = True
                                 self.add_actionable(
+                                    "object_update_available_in_use_{}".format(data['metadata']['id']),  # type: ignore
                                     Translation.get("actionable_object_update_available_in_use").format(
                                         data['metadata']['name']),  # type: ignore
                                     Translation.get("actionable_object_update_available_in_use_button"),
@@ -3230,17 +3233,19 @@ class Window():
                     for module_id, data in self.module_manager.list().items():
                         if self.module_manager.has_update(module_id):
                             self.add_actionable(
+                                "object_update_available_in_use_{}".format(data['metadata']['id']),  # type: ignore
                                 Translation.get("actionable_object_update_available").format(
                                     data['metadata']['name']),  # type: ignore
-                                Translation.get("actionable_object_update_available"),
+                                Translation.get("actionable_object_update_available_button"),
                                 "pext:update-module-in-use:{}".format(module_id)
                             )
                     for theme_id, data in self.theme_manager.list().items():
                         if self.theme_manager.has_update(theme_id):
                             self.add_actionable(
+                                "object_update_available_in_use_{}".format(data['metadata']['id']),  # type: ignore
                                 Translation.get("actionable_object_update_available").format(
                                     data['metadata']['name']),  # type: ignore
-                                Translation.get("actionable_object_update_available"),
+                                Translation.get("actionable_object_update_available_button"),
                                 "pext:update-theme:{}".format(module_id)
                             )
 
@@ -3253,9 +3258,10 @@ class Window():
         self.actionables.pop(index)
         QQmlProperty.write(self.window, 'actionables', self.actionables)
 
-    def add_actionable(self, text: str, button_text=None, button_url=None, urgency="medium") -> None:
+    def add_actionable(self, identifier: str, text: str, button_text=None, button_url=None, urgency="medium") -> None:
         """Add an action to show in the UI."""
         new_actionable = {
+            'identifier': identifier,
             'text': text,
             'buttonText': button_text if button_text else "",
             'buttonUrl': button_url if button_url else "",
@@ -3263,7 +3269,8 @@ class Window():
         }
 
         for actionable in self.actionables:
-            if actionable == new_actionable:
+            if actionable['identifier'] == identifier:
+                actionable = new_actionable
                 return
 
         self.actionables.insert(0, new_actionable)
