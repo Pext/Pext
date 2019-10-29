@@ -706,12 +706,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="818"/>
         <source>Automatically check for module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>自動檢查模組與佈景主題的更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="824"/>
         <source>Automatically install module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>自動安裝模組與佈景主題更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="833"/>
@@ -926,12 +926,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1148"/>
         <source>{0} can be updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} 可以被更新。</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
         <source>Update</source>
-        <translation type="unfinished">更新</translation>
+        <translation>更新</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1150"/>

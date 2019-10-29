@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation type="unfinished">Pext</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation type="unfinished">Pext - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -315,7 +315,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Скачать модули</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Скачать темы</translation>
     </message>
 </context>
 <context>
@@ -467,8 +467,8 @@ Are you sure you want to quit?</source>
         <source>Still processing %1 module request(s)…</source>
         <translation>
             <numerusform>Все еще обрабатывается %1 запрос модуля…</numerusform>
-            <numerusform>Все еще обрабатываются %1 запросов модуля(ей)…</numerusform>
-            <numerusform>Все еще обрабатываются %1 запросов модуля(ей)…</numerusform>
+            <numerusform>Все еще обрабатываются %1 запросов модуля…</numerusform>
+            <numerusform>Все еще обрабатываются %1 запросов модулей…</numerusform>
         </translation>
     </message>
 </context>
@@ -552,12 +552,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="393"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Следующий загруженный модуль</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="401"/>
         <source>Switch to previous loaded module</source>
-        <translation type="unfinished"></translation>
+        <translation>Предыдущий загруженный модуль</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="412"/>
@@ -633,7 +633,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="656"/>
         <source>Turbo Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>Режим Турбо</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="664"/>
@@ -673,12 +673,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="736"/>
         <source>Separator between output queue entries</source>
-        <translation type="unfinished"></translation>
+        <translation>Разделитель очереди вывода</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="745"/>
         <source>Nothing</source>
-        <translation type="unfinished"></translation>
+        <translation>Без разделителя</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="767"/>
@@ -708,12 +708,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="818"/>
         <source>Automatically check for module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Автоматически проверять обновления тем и модулей</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="824"/>
         <source>Automatically install module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Автоматически устанавливать обновления тем и модулей</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="833"/>
@@ -743,17 +743,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1054"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>Сортировка по модулю</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1056"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Сортировка по возрастанию</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1058"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Сортировка по убыванию</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1113"/>
@@ -863,12 +863,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1134"/>
         <source>All queued data has been typed</source>
-        <translation type="unfinished"></translation>
+        <translation>Очередь ввода полностью введена</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1135"/>
         <source>Data queued for clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Данные ожидают в очереди буфера обмена</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1136"/>
@@ -903,57 +903,57 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1142"/>
         <source>Pynput is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>Pynput не установлен</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1143"/>
         <source>PyAutoGUI is unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>PyAutoGUI не установлен</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1145"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Включена автоматическая проверка обновлений. Вы можете изменить это в настройках.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1146"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступно обновление Pext {0}. Текущая версия Pext {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1147"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>Открыть страницу загрузки</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1148"/>
         <source>{0} can be updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступно обновление для {0}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
         <source>Update</source>
-        <translation type="unfinished">Обновить</translation>
+        <translation>Обновить</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1150"/>
         <source>{0} can be updated but is currently in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>Доступно обновление для {0}, но {0} сейчас используется.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1151"/>
         <source>Update and reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Обновить и перезагрузить</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1152"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Произошла ошибка в {0}: {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1153"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>Сообщить об ошибке</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="454"/>
@@ -1058,7 +1058,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1014"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Средняя кнопка мыши: Активировать выделнную запись (никогда не сворачивать)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1015"/>
