@@ -35,9 +35,7 @@ Depending on the module you choose, what entries are shown and what happens when
 
 Several modules are available for effortless install right within Pext.
 
-![Pext running the moji module](https://pext.io/pext-emojis.PNG)
-![Pext running the applauncher module](https://pext.io/pext-applauncher.PNG)
-![Pext running the weather module](https://pext.io/pext-weather.PNG)
+![Pext Introduction](/pext_intro.gif)
 
 ## How it works
 
