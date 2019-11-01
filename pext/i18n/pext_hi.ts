@@ -315,7 +315,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>और अधिक मॉड्यूल प्राप्त करें</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>और अधिक थीम प्राप्त करें</translation>
     </message>
 </context>
 <context>
@@ -707,12 +707,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="818"/>
         <source>Automatically check for module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल और थीम अपडेट के लिए स्वतः रूप से जांचें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="824"/>
         <source>Automatically install module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल और थीम अपडेट को स्वतः रूप से इंस्टॉल करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="833"/>
@@ -742,17 +742,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1054"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>क्रमबद्ध करें: मॉड्यूल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1056"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>क्रमबद्ध करें: छोटे से बड़े</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1058"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>क्रमबद्ध करें: बड़े से छोटे</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1113"/>
@@ -912,47 +912,47 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1145"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>स्वतः अपडेट जांच सक्षम हैं। आप इसे सेटिंग्स में बदल सकते हैं।</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1146"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext {0} उपलब्ध है। आप वर्तमान में Pext {1} चला रहे हैं।</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1147"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>डाउनलोड पृष्ठ खोलें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1148"/>
         <source>{0} can be updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} को अपडेट किया जा सकता है।</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
         <source>Update</source>
-        <translation type="unfinished">अपडेट</translation>
+        <translation>अपडेट</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1150"/>
         <source>{0} can be updated but is currently in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} को अपडेट किया जा सकता है लेकिन वर्तमान में उपयोग में है।</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1151"/>
         <source>Update and reload</source>
-        <translation type="unfinished"></translation>
+        <translation>अपडेट और पुनः लोड करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1152"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0}: {1} में एक त्रुटि हुई।</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1153"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>बग के रूप में रिपोर्ट करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="454"/>
@@ -1057,7 +1057,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1014"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1 &lt;/kbd&gt; / मध्य माउस बटन: हाइलाइट की गई प्रविष्टि सक्रिय करें (कभी भी छोटा ना करे)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1015"/>
