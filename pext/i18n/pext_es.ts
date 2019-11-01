@@ -310,7 +310,7 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="44"/>
         <source>Choose the module to load:</source>
-        <translation>Elige el tema para cargar:</translation>
+        <translation>Elige el módulo para cargar:</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
@@ -465,9 +465,9 @@ Esto detendrá cualquier módulo en ejecución y la tecla de acceso directo glob
     <message numerus="yes">
         <location filename="../qml/ModuleData.qml" line="195"/>
         <source>Still processing %1 module request(s)…</source>
-        <translation>
-            <numerusform>Todavía procesando% 1 módulo de solicitud(s)…</numerusform>
-            <numerusform>Todavía procesando% 1 solicitudes de módulo…</numerusform>
+        <translation type="unfinished">
+            <numerusform>Todavía procesando %1 módulo de solicitud(s)…</numerusform>
+            <numerusform>Todavía procesando %1 solicitudes de módulo…</numerusform>
         </translation>
     </message>
 </context>

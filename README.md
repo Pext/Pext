@@ -4,7 +4,7 @@
     <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.26" alt="Packaging status" align="right">
 </a>
 
-![Lilly the leoger](/logo.png)
+![Lilly the leoger](/assets/logo.png)
 
 [![REUSE status](https://api.reuse.software/badge/github.com/Pext/Pext)](https://api.reuse.software/info/github.com/Pext/Pext)
 [![Linux & macOS Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
@@ -35,15 +35,13 @@ Depending on the module you choose, what entries are shown and what happens when
 
 Several modules are available for effortless install right within Pext.
 
-![Pext running the moji module](https://pext.io/pext-emojis.PNG)
-![Pext running the applauncher module](https://pext.io/pext-applauncher.PNG)
-![Pext running the weather module](https://pext.io/pext-weather.PNG)
+![Pext Introduction](/assets/pext_intro.gif)
 
 ## How it works
 
 Pext is designed to quickly pop up and get out of your way as soon as you're done with something. It is recommended to bind Pext to some global hotkey, or possibly run multiple instances of it with different profiles under multiple hotkeys. Example Pext workflows look as follows:
 
-![Pext workflow graph](/workflow_graph.png)
+![Pext workflow graph](/assets/workflow_graph.png)
 
 Simply put:
 
@@ -107,10 +105,10 @@ Pext is licensed under the [GNU GPLv3+](LICENSES/GPL-3.0-or-later.txt), with exc
 Under artwork and documentation fall:
 
 - All files in the following directories:
+  - assets/
   - docs/
   - pext/images/
   - .github/
 - All Markdown files in the root directory.
-- logo.png
 
 When attributing the logo (which was donated by [vaeringjar](https://notabug.org/vaeringjar)), it should be attributed as Lilly the leoger by White Paper Fox. Alternatively, it may be referred to as the Pext logo. Please link to Pext with <https://github.com/Pext/Pext> or <https://pext.io/> and to White Paper Fox with <http://www.whitepaperfox.com/> where possible.

@@ -803,13 +803,17 @@ class LocaleManager():
         It is return as a dictionary formatted as follows: {nativeLanguageName: languageCode}.
         """
         locales = {}
-        for locale_file in os.listdir(os.path.join(AppFile.get_path(), 'i18n')):
-            if not locale_file.endswith('.qm'):
-                continue
 
-            locale_code = os.path.splitext(locale_file)[0][len('pext_'):]
-            locale_name = QLocale(locale_code).nativeLanguageName()
-            locales[locale_name] = locale_code
+        try:
+            for locale_file in os.listdir(os.path.join(AppFile.get_path(), 'i18n')):
+                if not locale_file.endswith('.qm'):
+                    continue
+
+                locale_code = os.path.splitext(locale_file)[0][len('pext_'):]
+                locale_name = QLocale(locale_code).nativeLanguageName()
+                locales[locale_name] = locale_code
+        except FileNotFoundError:
+            print("No translations found")
 
         return locales
 

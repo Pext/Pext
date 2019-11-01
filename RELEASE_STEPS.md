@@ -1,7 +1,8 @@
 **This documentation is for maintainers. If you're an user, please ignore it.**
 
 ``<VERSION>`` is the release version (example: 0.1.0)  
-``<DATE>`` is the release date as YYYY-MM-DD (example: 2015-12-22)
+``<DATE>`` is the release date as YYYY-MM-DD (example: 2015-12-22)  
+``<IMAGES>`` are the screenshots of the features present in Pext. Must be in order for proper priority when converting into GIF on new releases (example: pext-*.PNG)
 
 # When releasing, do the following:
 ## i18n
@@ -19,6 +20,7 @@
 2. Update the ``<VERSION>`` in ``Info.plist``
 3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG``
 4. Update the minversion in the repology badge in `README.md`
+5. In Case new features have been added, update the current GIF under the head Introduction in `README.md` using ```convert -delay 100 <IMAGES> -loop 0 pext_intro.gif```
 
 ## GitHub
 1. ```git add pext/VERSION Info.plist CHANGELOG README.md```
