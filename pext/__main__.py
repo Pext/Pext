@@ -953,7 +953,12 @@ class ProfileManager():
                     settings[setting] = module['settings'][setting]
             # Append Pext state variables
             for setting in module['vm'].settings:
-                settings[setting] = module['vm'].settings[setting]
+                try:
+                    value = module['vm'].settings[setting].name
+                except KeyError:
+                    value = module['vm'].settings[setting]
+
+                settings[setting] = value
 
             config['{}_{}'.format(number, module['metadata']['id'])] = settings
 
@@ -1188,7 +1193,7 @@ class ModuleManager():
 
         # Set default for internal settings not loaded from file
         if '__pext_sort_mode' not in module['settings']:
-            module['settings']['__pext_sort_mode'] = SortMode(SortMode.Module).value
+            module['settings']['__pext_sort_mode'] = 'Module'
 
         view_settings = {}
         module_settings = {}
@@ -1196,6 +1201,12 @@ class ModuleManager():
             value = module['settings'][setting]
             if setting.startswith("__pext_"):
                 # Export settings relevant for ViewModel to ViewModel variable
+                if setting == '__pext_sort_mode':
+                    try:
+                        value = SortMode[value]
+                    except ValueError:
+                        pass
+
                 view_settings[setting] = value
             else:
                 # Don't export internal Pext settings to module itself
@@ -1783,18 +1794,18 @@ class ViewModel():
     def sort_mode(self):
         """Retrieve the current sorting mode as printable name."""
         for data in SortMode:
-            if str(data.value) == str(self._settings['__pext_sort_mode']):
+            if data == self._settings['__pext_sort_mode']:
                 return data.name
 
         # Maybe mode doesn't exist (anymore)
         # Return first value
         for data in SortMode:
-            self.sort_mode = data.value
+            self.sort_mode = data
             return data.name
 
     @sort_mode.setter
-    def sort_mode(self, sort_mode):
-        """Set the new sorting mode (by int)."""
+    def sort_mode(self, sort_mode: SortMode):
+        """Set the new sorting mode."""
         self._settings['__pext_sort_mode'] = sort_mode
         try:
             self.context.setContextProperty("sortMode", self.sort_mode)
@@ -1808,15 +1819,15 @@ class ViewModel():
         want_next = False
         for data in SortMode:
             if want_next:
-                self.sort_mode = data.value
+                self.sort_mode = data
                 return
 
-            if data.value == self._settings['__pext_sort_mode']:
+            if data == self._settings['__pext_sort_mode']:
                 want_next = True
 
         # End of list reached
         for data in SortMode:
-            self.sort_mode = data.value
+            self.sort_mode = data
             return
 
     def make_selection(self, disable_minimize=False) -> None:

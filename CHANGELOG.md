@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Update action being added before translations are available
 - Windows shortcut only being available for admin account
+- Sort mode not correctly saved/loaded
 
 ## [0.26] - 2019-10-18
 ### API changes
