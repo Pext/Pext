@@ -1564,7 +1564,7 @@ class ModuleManager():
 
     def update(self, identifier: str, verbose=False) -> bool:
         """Update a module."""
-        if self.has_update(identifier):
+        if not self.has_update(identifier):
             return True
 
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
@@ -3533,7 +3533,7 @@ class ThemeManager():
 
     def update(self, identifier: str, verbose=False) -> bool:
         """Update a theme."""
-        if self.has_update(identifier):
+        if not self.has_update(identifier):
             return True
 
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
