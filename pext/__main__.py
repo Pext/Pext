@@ -2865,25 +2865,26 @@ class Window():
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_update_module(self, identifier: str) -> None:
+        if self.module_manager.has_update(identifier):
+            return
+
+        for tab in self.tab_bindings:
+            if tab['metadata']['id'] == identifier:
+                data = self.module_manager.get_info(identifier)
+                self.add_actionable(
+                    "object_update_available_in_use_{}".format(data['metadata']['id']),  # type: ignore
+                    Translation.get("actionable_object_update_available_in_use").format(
+                        data['metadata']['name']),  # type: ignore
+                    Translation.get("actionable_object_update_available_in_use_button"),
+                    "pext:update-module-in-use:{}".format(identifier)
+                )
+                return
+
         functions = [
             {
                 'name': self.module_manager.update,
                 'args': (identifier,),
                 'kwargs': {'verbose': True}
-            }, {
-                'name': self._update_modules_info_qml,
-                'args': (),
-                'kwargs': {}
-            }
-        ]
-        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
-
-    def _menu_update_all_modules(self, verbose=False) -> None:
-        functions = [
-            {
-                'name': self.module_manager.update_all,
-                'args': (),
-                'kwargs': {'verbose': verbose}
             }, {
                 'name': self._update_modules_info_qml,
                 'args': (),
@@ -3223,25 +3224,7 @@ class Window():
             if manual or Settings.get('object_update_check'):
                 if Settings.get('object_update_install'):
                     for module_id, data in self.module_manager.list().items():
-                        if not self.module_manager.has_update(module_id):
-                            continue
-
-                        module_in_use = False
-                        for tab in self.tab_bindings:
-                            if tab['metadata']['id'] == module_id:
-                                module_in_use = True
-                                self.add_actionable(
-                                    "object_update_available_in_use_{}".format(data['metadata']['id']),  # type: ignore
-                                    Translation.get("actionable_object_update_available_in_use").format(
-                                        data['metadata']['name']),  # type: ignore
-                                    Translation.get("actionable_object_update_available_in_use_button"),
-                                    "pext:update-module-in-use:{}".format(module_id)
-                                )
-
-                                break
-
-                        if not module_in_use:
-                            self._menu_update_module(module_id)
+                        self._menu_update_module(module_id)
 
                     self._menu_update_all_themes(verbose)
                 else:
