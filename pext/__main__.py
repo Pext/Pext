@@ -2865,7 +2865,7 @@ class Window():
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     def _menu_update_module(self, identifier: str) -> None:
-        if self.module_manager.has_update(identifier):
+        if not self.module_manager.has_update(identifier):
             return
 
         for tab in self.tab_bindings:
