@@ -316,8 +316,8 @@ class Logger():
                 Translation.get("actionable_error_in_module").format(module_name, message),
                 Translation.get("actionable_report_error_in_module") if bugtracker_url else "",
                 bugtracker_url)
-        else:
-            print("{}\n{}\n{}".format(module_name, message, detailed_message))
+
+        print("{}\n{}\n{}".format(module_name if module_name else "Pext", message, detailed_message))
 
     @staticmethod
     def show_next_message() -> None:
