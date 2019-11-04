@@ -81,7 +81,6 @@ rm -rf pkgs
 find . -type d -iname '__pycache__' -print0 | xargs -0 rm -r
 #find . -type f -iname '*.so*' -print -exec strip '{}' \;
 rm -rf lib/cmake/
-rm -rf include/
 rm -rf share/{gtk-,}doc
 rm lib/python3.7/site-packages/PyQt5/QtWebEngine* || true
 rm -r lib/python3.7/site-packages/PyQt5/Qt/translations/qtwebengine* || true

@@ -64,6 +64,9 @@ chmod +x AppRun.sh
 wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
 wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/e714783a1ca6fffeeb9dd15bbfce83831bb196f8/linuxdeploy-plugin-conda.sh  # We use an older linuxdeploy-plugin-conda because commit 76c8c8bf4e7dd435eda9c9a1de88a980c697f58f breaks the Pext build
 
+# Don't remove include, needed for compiling some extensions
+sed -i 's;rm -rf include/;;g' linuxdeploy-plugin-conda.sh
+
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
