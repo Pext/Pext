@@ -57,8 +57,9 @@ from queue import Queue, Empty
 
 import requests
 
-from dulwich import porcelain
+from dulwich import client, porcelain
 from dulwich.repo import Repo
+from dulwich.contrib.paramiko_vendor import ParamikoSSHVendor
 
 from PyQt5.QtCore import QStringListModel, QLocale, QTranslator, Qt
 from PyQt5.QtWidgets import QApplication, QAction, QMenu, QStyleFactory, QSystemTrayIcon
@@ -67,6 +68,7 @@ from PyQt5.QtGui import QPalette, QColor, QWindow
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
+client.get_ssh_vendor = ParamikoSSHVendor
 pyautogui_error = None
 if platform.system() == 'Darwin':
     # https://github.com/moses-palmer/pynput/issues/83#issuecomment-410264758
