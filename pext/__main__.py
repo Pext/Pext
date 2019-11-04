@@ -1208,7 +1208,7 @@ class ModuleManager():
                 if setting == '__pext_sort_mode':
                     try:
                         value = SortMode[value]
-                    except ValueError:
+                    except KeyError:
                         pass
 
                 view_settings[setting] = value
