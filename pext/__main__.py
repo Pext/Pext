@@ -3277,12 +3277,13 @@ class Window():
             'urgency': urgency
         }
 
-        for actionable in self.actionables:
+        for index, actionable in enumerate(self.actionables):
             if actionable['identifier'] == identifier:
-                actionable = new_actionable
-                return
+                self.actionables[index] = new_actionable
+                break
+        else:
+            self.actionables.insert(0, new_actionable)
 
-        self.actionables.insert(0, new_actionable)
         QQmlProperty.write(self.window, 'actionables', self.actionables)
 
     def bind_tray(self, tray: 'Tray') -> None:
