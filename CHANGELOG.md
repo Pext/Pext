@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Use action to notify users about update checks being enabled
 - Don't update module while in use (could cause unexpected state)
 - Minimize to tray by default on non-macOS platforms
+- Always put exact match on top of results
 
 ### Fixed
 - Update action being added before translations are available

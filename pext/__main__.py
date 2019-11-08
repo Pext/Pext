@@ -2120,7 +2120,12 @@ class ViewModel():
                         if search_string_part not in lower_entry:
                             break
                     else:
-                        return_list.append(entry)
+                        # If exact match, put on top
+                        if len(string_list) == 1 and string_list[0] == entry.lower():
+                            return_list.insert(0, entry)
+                        # otherwise, put on bottom
+                        else:
+                            return_list.append(entry)
 
                 return return_list
 
@@ -2147,10 +2152,14 @@ class ViewModel():
         else:
             self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
 
-        # Keep existing selection, otherwise ensure something is selected
-        if current_match:
+        # See if we have an exact match
+        if combined_list and len(list_match) == 1 and combined_list[0].lower() == list_match[0]:
+            current_index = 0
+        # Otherwise, keep existing selection
+        elif current_match:
             try:
                 current_index = combined_list.index(current_match)
+            # As fallback, ensure something is selected
             except ValueError:
                 current_index = 0
 
