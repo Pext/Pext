@@ -23,29 +23,20 @@ Welcome to Pext's documentation!
    ../CHANGELOG.md
 
 .. toctree::
-  :maxdepth: 2
-  :caption: Module/Theme Reference:
-
-  metadata.rst
-
-.. toctree::
    :maxdepth: 2
-   :caption: Module Development:
+   :caption: Module Reference:
 
+   metadata.rst
+   requirements.rst
+   api.rst
    module_development.rst
 
 .. toctree::
-   :maxdepth 2
-   :caption: Theme Development:
-
-   theme_development.rst
-
-.. toctree::
    :maxdepth: 2
-   :caption: API reference:
+   :caption: Theme Reference:
 
-   pext_base.rst
-   pext_helpers.rst
+   metadata.rst
+   theme_development.rst
 
 Indices and tables
 ==================
