@@ -23,6 +23,12 @@ Welcome to Pext's documentation!
    ../CHANGELOG.md
 
 .. toctree::
+  :maxdepth: 2
+  :caption: Module/Theme Reference:
+
+  metadata.rst
+
+.. toctree::
    :maxdepth: 2
    :caption: Module Development:
 

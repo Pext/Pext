@@ -2113,7 +2113,7 @@ class ViewModel():
             list_match = search_string.lower().split(' ')
 
             def check_list_match(entries, string_list) -> List[str]:
-                return_list = []
+                return_list = []  # type: List[str]
                 for entry in entries:
                     lower_entry = entry.lower()
                     for search_string_part in string_list:
