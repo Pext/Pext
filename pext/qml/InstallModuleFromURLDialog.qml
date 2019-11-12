@@ -59,12 +59,15 @@ Dialog {
                 responseStart = xmlhttp.responseText.length;
             } else if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
                 var metadata = JSON.parse(xmlhttp.response.substring(responseStart));
-                installRequest(metadata.git_urls[0], metadata.id, metadata.name)
+                installRequest(metadata.git_urls[0], metadata.id, metadata.name);
+
+                destroy();
             }
         }
 
         xmlhttp.open("GET", textfield.text, true);
         xmlhttp.send();
     }
-}
 
+    onRejected: destroy();
+}

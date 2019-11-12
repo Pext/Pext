@@ -26,7 +26,7 @@ Dialog {
     title: qsTr("Manage profiles")
     standardButtons: StandardButton.Ok
 
-    property var profiles 
+    property var profiles
     property var createRequest
     property var renameRequest
     property var removeRequest
@@ -59,19 +59,19 @@ Dialog {
 
         ListView {
             anchors.fill: parent
-            model: profiles 
+            model: profiles
 
             width: parent.width
 
             spacing: 20
-    
+
             delegate: Column {
                 id: root
                 width: parent.width
 
                 Label {
                     text: modelData
-                    wrapMode: Text.Wrap 
+                    wrapMode: Text.Wrap
                     font.bold: true
                 }
 
@@ -99,5 +99,6 @@ Dialog {
     }
 
     Component.onCompleted: visible = true;
-}
 
+    onAccepted: destroy();
+}

@@ -75,10 +75,11 @@ Dialog {
         } else {
             requestAccepted(userInput.text);
         }
+        destroy();
     }
 
     onRejected: {
         requestRejected();
+        destroy();
     }
 }
-

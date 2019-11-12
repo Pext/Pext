@@ -92,6 +92,8 @@ Dialog {
 
     onAccepted: {
         installRequest(urlSelectionBox.currentText);
+        destroy();
     }
-}
 
+    onRejected: destroy();
+}

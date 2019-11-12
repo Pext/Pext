@@ -27,5 +27,6 @@ MessageDialog {
     text: qsTr("No themes installed, please install one first.")
 
     Component.onCompleted: visible = true;
-}
 
+    onAccepted: destroy();
+}

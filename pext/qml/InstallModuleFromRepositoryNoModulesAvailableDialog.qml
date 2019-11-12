@@ -27,5 +27,6 @@ MessageDialog {
     text: qsTr("No modules were found in this repository.")
 
     Component.onCompleted: visible = true;
-}
 
+    onAccepted: destroy();
+}

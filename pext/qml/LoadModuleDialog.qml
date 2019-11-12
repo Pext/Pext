@@ -116,9 +116,13 @@ Dialog {
         for (var key in moduleChosenSettings)
             settingString += key + "=" + moduleChosenSettings[key] + " ";
 
-        var metadata = modules[Object.keys(modules)[combobox.currentIndex]].metadata 
+        var metadata = modules[Object.keys(modules)[combobox.currentIndex]].metadata
         loadRequest(metadata.id, metadata.name, settingString)
+
+        destroy();
     }
+
+    onRejected: destroy();
 
     function getModuleSettings() {
         // Reset
@@ -128,4 +132,3 @@ Dialog {
         moduleSettings = modules[Object.keys(modules)[combobox.currentIndex]].metadata.settings;
     }
 }
-

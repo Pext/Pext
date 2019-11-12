@@ -138,5 +138,6 @@ Dialog {
     }
 
     Component.onCompleted: visible = true;
-}
 
+    onAccepted: destroy();
+}

@@ -50,6 +50,8 @@ Dialog {
 
     onAccepted: {
         renameRequest(profileName, newProfileName.text)
+        destroy();
     }
-}
 
+    onRejected: destroy();
+}

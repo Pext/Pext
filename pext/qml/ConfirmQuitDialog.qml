@@ -37,4 +37,6 @@ MessageDialog {
     onYes: {
         confirmedClose();
     }
+
+    onNo: destroy();
 }
