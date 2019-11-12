@@ -956,7 +956,9 @@ class ProfileManager():
             for setting in module['settings']:
                 # Only save non-internal variables
                 if setting[0] != "_":
-                    settings[setting] = module['settings'][setting]
+                    value = module['settings'][setting]
+                    settings[setting] = str(value) if value is not None else ''
+
             # Append Pext state variables
             for setting in module['vm'].settings:
                 try:
@@ -964,7 +966,7 @@ class ProfileManager():
                 except KeyError:
                     value = module['vm'].settings[setting]
 
-                settings[setting] = value
+                settings[setting] = str(value) if value is not None else ''
 
             config['{}_{}'.format(number, module['metadata']['id'])] = settings
 
