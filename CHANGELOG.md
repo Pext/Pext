@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Option to disable automatic module and theme update install
 - Ctrl+Y and Ctrl+N hotkeys to activate/dismiss top-most actionable
+- Ctrl+S hotkey to change the sorting mode
 
 ### Changed
 - Enable update check by default

@@ -394,6 +394,12 @@ ApplicationWindow {
         }
     }
 
+    Shortcut {
+        id: changeSortModeShortcut
+        sequence: "Ctrl+S"
+        onActivated: statusSortMode.sortModeChanged()
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Pext")
@@ -1041,7 +1047,8 @@ ApplicationWindow {
                   "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd>: Activate top actionable (yellow bar)").arg(activateActionableShortcut.nativeText) + "</li>" +
 
-                  "<li>" + qsTr("<kbd>%1</kbd>: Dismiss top actionable (yellow bar)").arg(dismissActionableShortcut.nativeText) + "</li></ul>"
+                  "<li>" + qsTr("<kbd>%1</kbd>: Dismiss top actionable (yellow bar)").arg(dismissActionableShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Change sorting style").arg(changeSortModeShortcut.nativeText) + "</li></ul>"
 
             color: palette.text
             textFormat: TextEdit.RichText
@@ -1073,6 +1080,13 @@ ApplicationWindow {
                 id: statusSortMode
                 objectName: "statusSortMode"
 
+                signal sortModeChanged()
+                onSortModeChanged: {
+                    var tab = tabs.getTab(tabs.currentIndex);
+                    if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
+                    tab.item.children[0].children[2].contentItem.sortModeChanged();
+                }
+
                 text: {
                     var tab = tabs.getTab(tabs.currentIndex);
                     if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
@@ -1093,11 +1107,7 @@ ApplicationWindow {
 
                     hoverEnabled: true
 
-                    onClicked: {
-                        var tab = tabs.getTab(tabs.currentIndex);
-                        if (tab == null || tab.item == null || tab.item.children[0] == null) { return ''; };
-                        tab.item.children[0].children[2].contentItem.sortModeChanged();
-                    }
+                    onClicked: statusSortMode.sortModeChanged()
                 }
             }
 
