@@ -742,12 +742,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1042"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate top actionable (yellow bar)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: bovenste actie activeren (gele balk)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1044"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Dismiss top actionable (yellow bar)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: bovenste actie verwerpen (gele balk)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1081"/>
