@@ -752,7 +752,7 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1051"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Change sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Change sorting style</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1095"/>
