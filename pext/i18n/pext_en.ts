@@ -742,12 +742,12 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1042"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate top actionable (yellow bar)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate top actionable (yellow bar)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1044"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Dismiss top actionable (yellow bar)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Dismiss top actionable (yellow bar)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1081"/>
