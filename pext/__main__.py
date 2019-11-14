@@ -3408,7 +3408,6 @@ class Window():
         Settings.set('_window_geometry',
                      "{};{};{};{}".format(geometry.x(), geometry.y(), geometry.width(), geometry.height()))
         sys.exit(0)
-        self.quit()
 
 
 class SignalHandler():
