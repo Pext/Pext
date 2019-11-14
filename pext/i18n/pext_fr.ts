@@ -9,22 +9,22 @@
         <translation>À propos de Pext</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="55"/>
+        <location filename="../qml/AboutDialog.qml" line="56"/>
         <source>Copyright</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="87"/>
+        <location filename="../qml/AboutDialog.qml" line="88"/>
         <source>Translators</source>
         <translation>Traducteurs</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="98"/>
+        <location filename="../qml/AboutDialog.qml" line="99"/>
         <source>Want to help translate Pext? Please click here.</source>
         <translation>Voulez-vous aider à traduire Pext? Cliquez ici s&apos;il vous plaît.</translation>
     </message>
     <message>
-        <location filename="../qml/AboutDialog.qml" line="99"/>
+        <location filename="../qml/AboutDialog.qml" line="100"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
         <translation>L&apos;équipe Pext aimerait remercier les utilisateurs suivants pour la traduction de Pext :</translation>
     </message>
@@ -539,423 +539,433 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
 <context>
     <name>main</name>
     <message>
-        <location filename="../qml/main.qml" line="383"/>
+        <location filename="../qml/main.qml" line="403"/>
         <source>Quit</source>
         <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="389"/>
+        <location filename="../qml/main.qml" line="409"/>
         <source>&amp;Module</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="393"/>
+        <location filename="../qml/main.qml" line="413"/>
         <source>Switch to next loaded module</source>
         <translation>Passer au prochain module chargé</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="401"/>
+        <location filename="../qml/main.qml" line="421"/>
         <source>Switch to previous loaded module</source>
         <translation>Passer au module chargé précédent</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="412"/>
+        <location filename="../qml/main.qml" line="432"/>
         <source>Reload active module</source>
         <translation>Recharger le module actif</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="420"/>
+        <location filename="../qml/main.qml" line="440"/>
         <source>Close active module</source>
         <translation>Fermer le module actif</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="433"/>
+        <location filename="../qml/main.qml" line="453"/>
         <source>Load module</source>
         <translation>Charger le module</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="477"/>
+        <location filename="../qml/main.qml" line="497"/>
         <source>Install module</source>
         <translation>Installer le module</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="483"/>
+        <location filename="../qml/main.qml" line="503"/>
         <source>From online module list</source>
         <translation>De la liste des modules en ligne</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="506"/>
-        <location filename="../qml/main.qml" line="598"/>
+        <location filename="../qml/main.qml" line="526"/>
+        <location filename="../qml/main.qml" line="618"/>
         <source>From URL</source>
         <translation>Depuis l&apos;URL</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="518"/>
+        <location filename="../qml/main.qml" line="538"/>
         <source>&amp;Theme</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="526"/>
+        <location filename="../qml/main.qml" line="546"/>
         <source>Switch theme</source>
         <translation>Changer de thème</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="546"/>
+        <location filename="../qml/main.qml" line="566"/>
         <source>Manage themes</source>
         <translation>Gérer les thèmes</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="569"/>
+        <location filename="../qml/main.qml" line="589"/>
         <source>Install theme</source>
         <translation>Installer un thème</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="575"/>
+        <location filename="../qml/main.qml" line="595"/>
         <source>From online theme list</source>
         <translation>De la liste des thèmes en ligne</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="614"/>
+        <location filename="../qml/main.qml" line="634"/>
         <source>Switch profile</source>
         <translation>Changer de profil</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="634"/>
+        <location filename="../qml/main.qml" line="654"/>
         <source>Manage profiles</source>
         <translation>Gérer les profils</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="652"/>
+        <location filename="../qml/main.qml" line="672"/>
         <source>&amp;Settings</source>
         <translation>&amp;Paramètres</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="656"/>
+        <location filename="../qml/main.qml" line="676"/>
         <source>Turbo Mode</source>
         <translation>Mode Turbo</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="664"/>
+        <location filename="../qml/main.qml" line="684"/>
         <source>Language</source>
         <translation>Langue</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="674"/>
+        <location filename="../qml/main.qml" line="694"/>
         <source>System locale</source>
         <translation>Paramètres régionaux du système</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="698"/>
+        <location filename="../qml/main.qml" line="718"/>
         <source>Output style</source>
         <translation>Format de sortie</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="707"/>
+        <location filename="../qml/main.qml" line="727"/>
         <source>Copy to default clipboard</source>
         <translation>Copier dans le presse-papier défaut</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="715"/>
+        <location filename="../qml/main.qml" line="735"/>
         <source>Copy to selection clipboard (X11)</source>
         <translation>Copier dans le presse-papiers de sélection (X11)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="723"/>
+        <location filename="../qml/main.qml" line="743"/>
         <source>Copy to find buffer (macOS)</source>
         <translation>Copier pour trouver le tampon (macOS)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="730"/>
+        <location filename="../qml/main.qml" line="750"/>
         <source>Type automatically</source>
         <translation>Tapez automatiquement</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="736"/>
+        <location filename="../qml/main.qml" line="756"/>
         <source>Separator between output queue entries</source>
         <translation>Séparateur entre les entrées de file d&apos;attente de sortie</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="745"/>
+        <location filename="../qml/main.qml" line="765"/>
         <source>Nothing</source>
         <translation>Rien</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="767"/>
+        <location filename="../qml/main.qml" line="787"/>
         <source>Minimizing behaviour</source>
         <translation>Minimiser la page</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="776"/>
+        <location filename="../qml/main.qml" line="796"/>
         <source>Minimize normally</source>
         <translation>Minimiser normalement</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="784"/>
+        <location filename="../qml/main.qml" line="804"/>
         <source>Minimize to tray</source>
         <translation>Réduire en tâche de fond</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="791"/>
+        <location filename="../qml/main.qml" line="811"/>
         <source>Manual only: Minimize normally</source>
         <translation>Manuel seulement: Réduire normalement</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="799"/>
+        <location filename="../qml/main.qml" line="819"/>
         <source>Manual only: Minimize to tray</source>
         <translation>Manuel seulement: Réduire en tâche de fond</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="818"/>
+        <location filename="../qml/main.qml" line="838"/>
         <source>Automatically check for module and theme updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="824"/>
+        <location filename="../qml/main.qml" line="844"/>
         <source>Automatically install module and theme updates</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="833"/>
+        <location filename="../qml/main.qml" line="853"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
         <translation>Déplacer Pext an avant lorsque l&apos;utilisateur appuie sur la touche de raccourci globale (%1)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="845"/>
+        <location filename="../qml/main.qml" line="865"/>
         <source>&amp;Help</source>
         <translation>&amp;Aide</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="859"/>
+        <location filename="../qml/main.qml" line="879"/>
         <source>Check for updates</source>
         <translation>Vérifier les mises à jour</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="865"/>
+        <location filename="../qml/main.qml" line="885"/>
         <source>Install quick action service</source>
         <translation>Installer un service d&apos;action rapide</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1016"/>
+        <location filename="../qml/main.qml" line="1040"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / bouton droit de la souris: ouvrir le menu contextuel / entrer des arguments</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1054"/>
+        <location filename="../qml/main.qml" line="1042"/>
+        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate top actionable (yellow bar)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1044"/>
+        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Dismiss top actionable (yellow bar)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1081"/>
         <source>Sort: Module</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1056"/>
+        <location filename="../qml/main.qml" line="1083"/>
         <source>Sort: Ascending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1058"/>
+        <location filename="../qml/main.qml" line="1085"/>
         <source>Sort: Descending</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1113"/>
+        <location filename="../qml/main.qml" line="1140"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
         <translation>La classe de module du module n&apos;implémente pas ModuleBase</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1114"/>
+        <location filename="../qml/main.qml" line="1141"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
         <translation>Échec en retrouvez la module {0}: la {1} fonction contient {2} paramètres (en excluant ce paramètre), attendus {3}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1115"/>
+        <location filename="../qml/main.qml" line="1142"/>
         <source>{0} is already installed</source>
         <translation>{0} est déjà installé</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1116"/>
+        <location filename="../qml/main.qml" line="1143"/>
         <source>Downloading {0} from {1}</source>
         <translation>Téléchargement de {0} à partir de {1}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1117"/>
+        <location filename="../qml/main.qml" line="1144"/>
         <source>Failed to download {0}: {1}</source>
         <translation>Échec du téléchargement de {0}: {1}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1118"/>
+        <location filename="../qml/main.qml" line="1145"/>
         <source>Downloading dependencies for {0}</source>
         <translation>Téléchargement de dépendances pour {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1119"/>
+        <location filename="../qml/main.qml" line="1146"/>
         <source>Failed to download dependencies for {0}</source>
         <translation>Échec du téléchargement des dépendances pour {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1120"/>
+        <location filename="../qml/main.qml" line="1147"/>
         <source>Installed {0}</source>
         <translation>Installée {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1121"/>
+        <location filename="../qml/main.qml" line="1148"/>
         <source>Uninstalling {0}</source>
         <translation>Désinstaller {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1122"/>
+        <location filename="../qml/main.qml" line="1149"/>
         <source>{0} is already uninstalled</source>
         <translation>{0} est déjà désinstallé</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1123"/>
+        <location filename="../qml/main.qml" line="1150"/>
         <source>Uninstalled {0}</source>
         <translation>Désinstaller {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1124"/>
+        <location filename="../qml/main.qml" line="1151"/>
         <source>Updating {0}</source>
         <translation>Mise à jour {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1125"/>
+        <location filename="../qml/main.qml" line="1152"/>
         <source>{0} is already up to date</source>
         <translation>{0} est déjà à jour</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1126"/>
+        <location filename="../qml/main.qml" line="1153"/>
         <source>Failed to download update for {0}: {1}</source>
         <translation>Impossible de télécharger la mise à jour pour {0}: {1}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1127"/>
+        <location filename="../qml/main.qml" line="1154"/>
         <source>Updating dependencies for {0}</source>
         <translation>Mise à jour des dépendances pour {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1128"/>
+        <location filename="../qml/main.qml" line="1155"/>
         <source>Failed to update dependencies for {0}</source>
         <translation>Échec de la mise à jour des dépendances pour {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1129"/>
+        <location filename="../qml/main.qml" line="1156"/>
         <source>Updated {0}</source>
         <translation>Mis à jour {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1130"/>
+        <location filename="../qml/main.qml" line="1157"/>
         <source>Checking for Pext updates</source>
         <translation>Vérifier les mises à jour de Pext</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1131"/>
+        <location filename="../qml/main.qml" line="1158"/>
         <source>Failed to check for Pext updates: {0}</source>
         <translation>Échec de la recherche de mises à jour Pext: {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1132"/>
+        <location filename="../qml/main.qml" line="1159"/>
         <source>Pext is already up-to-date</source>
         <translation>Pext est déjà à jour</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1133"/>
+        <location filename="../qml/main.qml" line="1160"/>
         <source>Data queued for typing</source>
         <translation>Données en attente de transposition</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1134"/>
+        <location filename="../qml/main.qml" line="1161"/>
         <source>All queued data has been typed</source>
         <translation>Tout le texte en file d&apos;attente a été tapé</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1135"/>
+        <location filename="../qml/main.qml" line="1162"/>
         <source>Data queued for clipboard</source>
         <translation>Données placées en file d&apos;attente pour le presse-papiers</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1136"/>
+        <location filename="../qml/main.qml" line="1163"/>
         <source>Data copied to clipboard</source>
         <translation>Données copiées dans le presse-papier</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1137"/>
+        <location filename="../qml/main.qml" line="1164"/>
         <source>Enter arguments</source>
         <translation>Entrez les arguments</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1138"/>
+        <location filename="../qml/main.qml" line="1165"/>
         <source>No context menu available</source>
         <translation>Aucun menu contextuel disponible</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1139"/>
+        <location filename="../qml/main.qml" line="1166"/>
         <source>No tab completion possible</source>
         <translation>La complétion par onglet n&apos;est pas possible</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1140"/>
+        <location filename="../qml/main.qml" line="1167"/>
         <source>No entry selected</source>
         <translation>Aucune entrée sélectionnée</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1141"/>
+        <location filename="../qml/main.qml" line="1168"/>
         <source>No command available for current filter</source>
         <translation>Aucune commande disponible pour le filtre actuel</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1142"/>
+        <location filename="../qml/main.qml" line="1169"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput n&apos;est pas desponible</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1143"/>
+        <location filename="../qml/main.qml" line="1170"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI n&apos;est pas desponible</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1145"/>
+        <location filename="../qml/main.qml" line="1172"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1146"/>
+        <location filename="../qml/main.qml" line="1173"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1147"/>
+        <location filename="../qml/main.qml" line="1174"/>
         <source>Open download page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1148"/>
+        <location filename="../qml/main.qml" line="1175"/>
         <source>{0} can be updated.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1149"/>
+        <location filename="../qml/main.qml" line="1176"/>
         <source>Update</source>
         <translation type="unfinished">Mise à jour</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1150"/>
+        <location filename="../qml/main.qml" line="1177"/>
         <source>{0} can be updated but is currently in use.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1151"/>
+        <location filename="../qml/main.qml" line="1178"/>
         <source>Update and reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1152"/>
+        <location filename="../qml/main.qml" line="1179"/>
         <source>An error occured in {0}: {1}.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1153"/>
+        <location filename="../qml/main.qml" line="1180"/>
         <source>Report as bug</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="454"/>
+        <location filename="../qml/main.qml" line="474"/>
         <source>Manage modules</source>
         <translation>Gérer les modules</translation>
     </message>
@@ -970,118 +980,118 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
         <translation>Pext (%1)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="379"/>
+        <location filename="../qml/main.qml" line="399"/>
         <source>&amp;Pext</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="610"/>
+        <location filename="../qml/main.qml" line="630"/>
         <source>P&amp;rofile</source>
         <translation>P&amp;rofil</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="806"/>
+        <location filename="../qml/main.qml" line="826"/>
         <source>Automatic updates</source>
         <translation>Mises à jour automatiques</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="810"/>
+        <location filename="../qml/main.qml" line="830"/>
         <source>Automatically check for Pext updates</source>
         <translation>Vérifier automatiquement les mises à jour pour Pext</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="839"/>
+        <location filename="../qml/main.qml" line="859"/>
         <source>Always show tray icon</source>
         <translation>Toujours afficher l&apos;icône dans la barre de tâche</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="849"/>
+        <location filename="../qml/main.qml" line="869"/>
         <source>About</source>
         <translation>À propos</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="870"/>
+        <location filename="../qml/main.qml" line="890"/>
         <source>Visit homepage</source>
         <translation>Visiter la page d&apos;accueil</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="946"/>
+        <location filename="../qml/main.qml" line="970"/>
         <source>Type to search</source>
         <translation>Taper pour rechercher</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1005"/>
+        <location filename="../qml/main.qml" line="1029"/>
         <source>Hotkey reference</source>
         <translation>Référence de raccourci</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1006"/>
+        <location filename="../qml/main.qml" line="1030"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Déplacer Pext au premier plan</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1007"/>
+        <location filename="../qml/main.qml" line="1031"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Ouvrir un nouvel onglet</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1008"/>
+        <location filename="../qml/main.qml" line="1032"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Rafraîchir l&apos;onglet actif</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1009"/>
+        <location filename="../qml/main.qml" line="1033"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Fermer l&apos;onglet actif</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1010"/>
+        <location filename="../qml/main.qml" line="1034"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Passer à l&apos;onglet suivant</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1011"/>
+        <location filename="../qml/main.qml" line="1035"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Passer à l&apos;onglet précédent</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1012"/>
+        <location filename="../qml/main.qml" line="1036"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Complétion automatique</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1013"/>
+        <location filename="../qml/main.qml" line="1037"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / Bouton gauche de la souris: Activer l&apos;entrée sélectionnée</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1014"/>
+        <location filename="../qml/main.qml" line="1038"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1015"/>
+        <location filename="../qml/main.qml" line="1039"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt; / 
 Bouton droit de la souris: Entrez les arguments de la commande sélectionnée</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1017"/>
+        <location filename="../qml/main.qml" line="1041"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
         <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Retour / Réduire Pext</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1102"/>
+        <location filename="../qml/main.qml" line="1129"/>
         <source>Processing: %1 (%2)</source>
         <translation>En cours de traitement: %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1104"/>
+        <location filename="../qml/main.qml" line="1131"/>
         <source>Ready</source>
         <translation>Prêt</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1106"/>
+        <location filename="../qml/main.qml" line="1133"/>
         <source>Waiting</source>
         <translation>En attente</translation>
     </message>

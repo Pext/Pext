@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Added
 - Option to disable automatic module and theme update install
+- Ctrl+Y and Ctrl+N hotkeys to activate/dismiss top-most actionable
 
 ### Changed
 - Enable update check by default

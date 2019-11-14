@@ -374,6 +374,26 @@ ApplicationWindow {
         onActivated: switchTab(9)
     }
 
+    Shortcut {
+        id: activateActionableShortcut
+        sequence: "Ctrl+Y"
+        onActivated: {
+            if (actionables.length > 0) {
+                actionableRepeater.activateActionable(0);
+            }
+        }
+    }
+
+    Shortcut {
+        id: dismissActionableShortcut
+        sequence: "Ctrl+N"
+        onActivated: {
+            if (actionables.length > 0) {
+                actionableRepeater.removeActionable(0);
+            }
+        }
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("&Pext")
@@ -879,6 +899,16 @@ ApplicationWindow {
         Repeater {
             id: actionableRepeater
             objectName: "actionableRepeater"
+            signal activateActionable(int index);
+            onActivateActionable: {
+                var actionable = actionables[index]
+                if (actionable.buttonUrl.startsWith("pext:")) {
+                    applicationWindow.internalCall(actionable.buttonUrl)
+                } else {
+                    Qt.openUrlExternally(actionable.buttonUrl)
+                }
+                actionableRepeater.removeActionable(index)
+            }
             signal removeActionable(int index);
 
             model: actionables
@@ -908,16 +938,10 @@ ApplicationWindow {
                     }
 
                     Button {
+                        id: button
                         visible: modelData.buttonText
                         text: modelData.buttonText
-                        onClicked: {
-                            if (modelData.buttonUrl.startsWith("pext:")) {
-                                applicationWindow.internalCall(modelData.buttonUrl)
-                            } else {
-                                Qt.openUrlExternally(modelData.buttonUrl)
-                            }
-                            actionableRepeater.removeActionable(index)
-                        }
+                        onClicked: actionableRepeater.activateActionable(index)
                         Layout.fillHeight: true
                     }
 
@@ -1014,7 +1038,10 @@ ApplicationWindow {
                   "<li>" + qsTr("<kbd>%1</kbd> / Middle mouse button: Activate highlighted entry (never minimize)").arg(noMinimizeShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Enter arguments for highlighted command").arg(argsShortcut.nativeText) + "</li>" +
                   "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu / enter arguments").arg(contextMenuShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li></ul>"
+                  "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li>" +
+                  "<li>" + qsTr("<kbd>%1</kbd>: Activate top actionable (yellow bar)").arg(activateActionableShortcut.nativeText) + "</li>" +
+
+                  "<li>" + qsTr("<kbd>%1</kbd>: Dismiss top actionable (yellow bar)").arg(dismissActionableShortcut.nativeText) + "</li></ul>"
 
             color: palette.text
             textFormat: TextEdit.RichText
