@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.27] - 2019-11-15
 ### Added
 - Option to disable automatic module and theme update install
 - Ctrl+Y and Ctrl+N hotkeys to activate/dismiss top-most actionable
