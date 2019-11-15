@@ -752,7 +752,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1051"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Change sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: sorteerstijl aanpassen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1095"/>

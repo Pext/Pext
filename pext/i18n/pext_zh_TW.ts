@@ -741,17 +741,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1048"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate top actionable (yellow bar)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;：啟用頂部可操作（黃色列）</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1050"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Dismiss top actionable (yellow bar)</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;：關閉頂部可操作（黃色列）</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1051"/>
         <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Change sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;：變更排序樣式</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1095"/>
