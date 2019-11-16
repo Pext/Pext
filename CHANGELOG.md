@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Still processing module requests string containing %1
 
 ## [0.27] - 2019-11-15
+### Packaging changes
+- New dependency: [psutil](https://pypi.org/project/psutil/)
+
 ### Added
 - Option to disable automatic module and theme update install
 - Ctrl+Y and Ctrl+N hotkeys to activate/dismiss top-most actionable
