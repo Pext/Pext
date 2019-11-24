@@ -462,14 +462,6 @@ Are you sure you want to quit?</source>
         <source>No results</source>
         <translation>कोई परिणाम नहीं</translation>
     </message>
-    <message numerus="yes">
-        <location filename="../qml/ModuleData.qml" line="195"/>
-        <source>Still processing %1 module request(s)…</source>
-        <translation>
-            <numerusform>अभी भी% 1 मॉड्यूल अनुरोध संसाधित किया जा रहा है …</numerusform>
-            <numerusform>अभी भी% 1 मॉड्यूल अनुरोध संसाधित कर रहा है …</numerusform>
-        </translation>
-    </message>
 </context>
 <context>
     <name>NoModulesInstalledDialog</name>
@@ -735,237 +727,328 @@ Are you sure you want to quit?</source>
         <translation>त्वरित कार्य करने की सेवा को इंस्टॉल करे</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1046"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Open context menu / enter arguments</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;/ राइट माउस बटन: संदर्भ मेनू खोलें / तर्क दर्ज करें</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1048"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Activate top actionable (yellow bar)</source>
+        <location filename="../qml/main.qml" line="1064"/>
+        <source>Move Pext to the foreground</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1050"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Dismiss top actionable (yellow bar)</source>
+        <location filename="../qml/main.qml" line="1069"/>
+        <source>Minimize</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1051"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Change sorting style</source>
+        <location filename="../qml/main.qml" line="1074"/>
+        <source>Tabs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1095"/>
+        <location filename="../qml/main.qml" line="1076"/>
+        <source>Open a new tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1080"/>
+        <source>Reload active tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1084"/>
+        <source>Close active tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1088"/>
+        <source>Switch to next tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1092"/>
+        <source>Switch to previous tab</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1097"/>
+        <source>Modules</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1099"/>
+        <source>Complete input</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1103"/>
+        <source>Go back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1107"/>
+        <source>Activate highlighted entry</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1108"/>
+        <source>Left mouse button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1111"/>
+        <source>Activate highlighted entry (never minimize)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1112"/>
+        <source>Middle mouse button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1115"/>
+        <source>Enter arguments for highlighted command</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1116"/>
+        <location filename="../qml/main.qml" line="1120"/>
+        <source>Right mouse button</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1119"/>
+        <source>Open context menu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1123"/>
+        <source>Change sorting style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1128"/>
+        <source>Actionables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1130"/>
+        <source>Activate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1134"/>
+        <source>Dismiss</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1201"/>
         <source>Sort: Module</source>
         <translation>क्रमबद्ध करें: मॉड्यूल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1097"/>
+        <location filename="../qml/main.qml" line="1203"/>
         <source>Sort: Ascending</source>
         <translation>क्रमबद्ध करें: छोटे से बड़े</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1099"/>
+        <location filename="../qml/main.qml" line="1205"/>
         <source>Sort: Descending</source>
         <translation>क्रमबद्ध करें: बड़े से छोटे</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1150"/>
+        <location filename="../qml/main.qml" line="1256"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
         <translation>मॉड्यूल का मॉड्यूल वर्ग ModuleBase को लागू नहीं करता है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1151"/>
+        <location filename="../qml/main.qml" line="1257"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
         <translation>मॉड्यूल {0} लोड करने में विफल: {1} फ़ंक्शन में {2} पैरामीटर (स्वयं को छोड़कर), अपेक्षित {3}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1152"/>
+        <location filename="../qml/main.qml" line="1258"/>
         <source>{0} is already installed</source>
         <translation>{0} पहले से इंस्टॉल है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1153"/>
+        <location filename="../qml/main.qml" line="1259"/>
         <source>Downloading {0} from {1}</source>
         <translation>{0} से {1} डाउनलोड करना</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1154"/>
+        <location filename="../qml/main.qml" line="1260"/>
         <source>Failed to download {0}: {1}</source>
         <translation>{0}: {1} डाउनलोड करने में विफल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1155"/>
+        <location filename="../qml/main.qml" line="1261"/>
         <source>Downloading dependencies for {0}</source>
         <translation>{0} के लिए निर्भरताएँ डाउनलोड कि जा रही है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1156"/>
+        <location filename="../qml/main.qml" line="1262"/>
         <source>Failed to download dependencies for {0}</source>
         <translation>{0} के लिए निर्भरता डाउनलोड करने में विफल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1157"/>
+        <location filename="../qml/main.qml" line="1263"/>
         <source>Installed {0}</source>
         <translation>स्थापित {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1158"/>
+        <location filename="../qml/main.qml" line="1264"/>
         <source>Uninstalling {0}</source>
         <translation>{0} अनइंस्टॉल किया जा रहा है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1159"/>
+        <location filename="../qml/main.qml" line="1265"/>
         <source>{0} is already uninstalled</source>
         <translation>{0} पहले से ही अनइंस्टॉल है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1160"/>
+        <location filename="../qml/main.qml" line="1266"/>
         <source>Uninstalled {0}</source>
         <translation>अनइंस्टॉल किया गया {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1161"/>
+        <location filename="../qml/main.qml" line="1267"/>
         <source>Updating {0}</source>
         <translation>अद्यतन {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1162"/>
+        <location filename="../qml/main.qml" line="1268"/>
         <source>{0} is already up to date</source>
         <translation>{0} पहले से अद्यतित है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1163"/>
+        <location filename="../qml/main.qml" line="1269"/>
         <source>Failed to download update for {0}: {1}</source>
         <translation>{0}: {1} के लिए अपडेट डाउनलोड करने में विफल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1164"/>
+        <location filename="../qml/main.qml" line="1270"/>
         <source>Updating dependencies for {0}</source>
         <translation>{0} के लिए निर्भरता को अद्यतन किया जा रहा है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1165"/>
+        <location filename="../qml/main.qml" line="1271"/>
         <source>Failed to update dependencies for {0}</source>
         <translation>{0} के लिए निर्भरता अपडेट करने में विफल</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1166"/>
+        <location filename="../qml/main.qml" line="1272"/>
         <source>Updated {0}</source>
         <translation>अद्यतित {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1167"/>
+        <location filename="../qml/main.qml" line="1273"/>
         <source>Checking for Pext updates</source>
         <translation>Pext कि अद्यतनों के लिए जाँच कर रहा है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1168"/>
+        <location filename="../qml/main.qml" line="1274"/>
         <source>Failed to check for Pext updates: {0}</source>
         <translation>Pext कि अद्यतनों की जांच करने में विफल: {0}</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1169"/>
+        <location filename="../qml/main.qml" line="1275"/>
         <source>Pext is already up-to-date</source>
         <translation>Pext पहले से अद्यतित है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1170"/>
+        <location filename="../qml/main.qml" line="1276"/>
         <source>Data queued for typing</source>
         <translation>टाइप करने के लिए डेटा कतार में है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1171"/>
+        <location filename="../qml/main.qml" line="1277"/>
         <source>All queued data has been typed</source>
         <translation>सभी पंक्तिबद्ध डेटा टाइप किया जा चुक्का है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1172"/>
+        <location filename="../qml/main.qml" line="1278"/>
         <source>Data queued for clipboard</source>
         <translation>क्लिपबोर्ड के लिए डेटा कतारबद्ध है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1173"/>
+        <location filename="../qml/main.qml" line="1279"/>
         <source>Data copied to clipboard</source>
         <translation>क्लिपबोर्ड पर कॉपी किया गया डेटा</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1174"/>
+        <location filename="../qml/main.qml" line="1280"/>
         <source>Enter arguments</source>
         <translation>तर्क दर्ज करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1175"/>
+        <location filename="../qml/main.qml" line="1281"/>
         <source>No context menu available</source>
         <translation>कोई संदर्भ मेनू उपलब्ध नहीं है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1176"/>
+        <location filename="../qml/main.qml" line="1282"/>
         <source>No tab completion possible</source>
         <translation>कोई टैब पूरा नहीं हो पा रहा है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1177"/>
+        <location filename="../qml/main.qml" line="1283"/>
         <source>No entry selected</source>
         <translation>कोई प्रविष्टि चयनित नहीं है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1178"/>
+        <location filename="../qml/main.qml" line="1284"/>
         <source>No command available for current filter</source>
         <translation>वर्तमान फ़िल्टर के लिए कोई कमांड उपलब्ध नहीं है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1179"/>
+        <location filename="../qml/main.qml" line="1285"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput अनुपलब्ध है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1180"/>
+        <location filename="../qml/main.qml" line="1286"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI अनुपलब्ध है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1182"/>
+        <location filename="../qml/main.qml" line="1288"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
         <translation>स्वतः अपडेट जांच सक्षम हैं। आप इसे सेटिंग्स में बदल सकते हैं।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1183"/>
+        <location filename="../qml/main.qml" line="1289"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
         <translation>Pext {0} उपलब्ध है। आप वर्तमान में Pext {1} चला रहे हैं।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1184"/>
+        <location filename="../qml/main.qml" line="1290"/>
         <source>Open download page</source>
         <translation>डाउनलोड पृष्ठ खोलें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1185"/>
+        <location filename="../qml/main.qml" line="1291"/>
         <source>{0} can be updated.</source>
         <translation>{0} को अपडेट किया जा सकता है।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1186"/>
+        <location filename="../qml/main.qml" line="1292"/>
         <source>Update</source>
         <translation>अपडेट</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1187"/>
+        <location filename="../qml/main.qml" line="1293"/>
         <source>{0} can be updated but is currently in use.</source>
         <translation>{0} को अपडेट किया जा सकता है लेकिन वर्तमान में उपयोग में है।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1188"/>
+        <location filename="../qml/main.qml" line="1294"/>
         <source>Update and reload</source>
         <translation>अपडेट और पुनः लोड करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1189"/>
+        <location filename="../qml/main.qml" line="1295"/>
         <source>An error occured in {0}: {1}.</source>
         <translation>{0}: {1} में एक त्रुटि हुई।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1190"/>
+        <location filename="../qml/main.qml" line="1296"/>
         <source>Report as bug</source>
         <translation>बग के रूप में रिपोर्ट करें</translation>
     </message>
@@ -976,6 +1059,7 @@ Are you sure you want to quit?</source>
     </message>
     <message>
         <location filename="../qml/main.qml" line="29"/>
+        <location filename="../qml/main.qml" line="1062"/>
         <source>Pext</source>
         <translation>पैक्स्ट</translation>
     </message>
@@ -1025,77 +1109,22 @@ Are you sure you want to quit?</source>
         <translation>खोजने के लिए लिखें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1035"/>
+        <location filename="../qml/main.qml" line="1034"/>
         <source>Hotkey reference</source>
         <translation>हॉटकी संदर्भ</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1036"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Move Pext to the foreground</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: Pext को अग्रभूमि में ले जाएं</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1037"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Open a new tab</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: एक नया टैब खोलें</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1038"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Reload active tab</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: सक्रिय टैब पुनः लोड करें</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1039"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Close active tab</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: सक्रिय टैब बंद करें</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1040"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to next tab</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: अगले टैब पर जाएं</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1041"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Switch to previous tab</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: पिछले टैब पर जाएं</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1042"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Complete input</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: पूरा इनपुट</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1043"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Left mouse button: Activate highlighted entry</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;/ Left माउस बटन: हाइलाइट की गई प्रविष्टि को सक्रिय करें</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1044"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Middle mouse button: Activate highlighted entry (never minimize)</source>
-        <translation>&lt;kbd&gt;%1 &lt;/kbd&gt; / मध्य माउस बटन: हाइलाइट की गई प्रविष्टि सक्रिय करें (कभी भी छोटा ना करे)</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1045"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt; / Right mouse button: Enter arguments for highlighted command</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;/ राइट माउस बटन: हाइलाइटेड कमांड के लिए तर्क दर्ज करें</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1047"/>
-        <source>&lt;kbd&gt;%1&lt;/kbd&gt;: Go back / minimize Pext</source>
-        <translation>&lt;kbd&gt;%1&lt;/kbd&gt;: वापस जाएं / Pext minimize करें</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1139"/>
+        <location filename="../qml/main.qml" line="1245"/>
         <source>Processing: %1 (%2)</source>
         <translation>प्रोसेस किया जा रहा है : %1 (%2)</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1141"/>
+        <location filename="../qml/main.qml" line="1247"/>
         <source>Ready</source>
         <translation>तैयार</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1143"/>
+        <location filename="../qml/main.qml" line="1249"/>
         <source>Waiting</source>
         <translation>इंतजार</translation>
     </message>
