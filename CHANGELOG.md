@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Improved hotkey reference screen with no modules loaded
+
 ### Fixed
 - Still processing module requests string containing %1
 

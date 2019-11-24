@@ -32,9 +32,9 @@ ApplicationWindow {
     property string platform: systemPlatform
     property int margin: 10
     minimumWidth: FORCE_FULLSCREEN ? Screen.width : 800
-    minimumHeight: FORCE_FULLSCREEN ? Screen.height : 600
+    minimumHeight: FORCE_FULLSCREEN ? Screen.height : 640
     width: FORCE_FULLSCREEN ? Screen.width : 800
-    height: FORCE_FULLSCREEN ? Screen.height : 600
+    height: FORCE_FULLSCREEN ? Screen.height : 640
 
     property var actionables: []
     signal internalCall(string url)
@@ -1022,7 +1022,6 @@ ApplicationWindow {
             fillMode: Image.Pad
             horizontalAlignment: Image.AlignHCenter
             verticalAlignment: Image.AlignVCenter
-            Layout.fillHeight: true
             Layout.fillWidth: true
             Layout.minimumHeight: sourceSize.height
             Layout.minimumWidth: sourceSize.width
@@ -1032,32 +1031,139 @@ ApplicationWindow {
             objectName: "introScreen"
             visible: tabs.count == 0
 
-            text: "<h2>" + qsTr("Hotkey reference") + "</h2><ul>" +
-                  (platform != 'Darwin' ? ("<li>" + qsTr("<kbd>%1</kbd>: Move Pext to the foreground").arg("Ctrl+`") + "</li>") : "") +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Open a new tab").arg(menuLoadModule.shortcut) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Reload active tab").arg(menuReloadActiveModule.shortcut) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Close active tab").arg(menuCloseActiveModule.shortcut) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Switch to next tab").arg(nextTabShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Switch to previous tab").arg(previousTabShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Complete input").arg(tabShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd> / Left mouse button: Activate highlighted entry").arg(enterShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd> / Middle mouse button: Activate highlighted entry (never minimize)").arg(noMinimizeShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Enter arguments for highlighted command").arg(argsShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd> / Right mouse button: Open context menu / enter arguments").arg(contextMenuShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Go back / minimize Pext").arg(escapeShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Activate top actionable (yellow bar)").arg(activateActionableShortcut.nativeText) + "</li>" +
-
-                  "<li>" + qsTr("<kbd>%1</kbd>: Dismiss top actionable (yellow bar)").arg(dismissActionableShortcut.nativeText) + "</li>" +
-                  "<li>" + qsTr("<kbd>%1</kbd>: Change sorting style").arg(changeSortModeShortcut.nativeText) + "</li></ul>"
+            text: "<h2>" + qsTr("Hotkey reference") + "</h2>"
 
             color: palette.text
             textFormat: TextEdit.RichText
             readOnly: true
             selectByMouse: false
             wrapMode: TextEdit.Wrap
+            horizontalAlignment: TextEdit.AlignHCenter
             verticalAlignment: TextEdit.AlignVCenter
-            Layout.fillHeight: true
             Layout.fillWidth: true
+            padding: 10
+        }
+
+        Grid {
+            visible: tabs.count == 0
+            horizontalItemAlignment: Grid.AlignHCenter
+            verticalItemAlignment: Grid.AlignTop
+            flow: Grid.TopToBottom
+            spacing: 15
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignHCenter
+
+            Repeater {
+                id: hotkeyRepeater
+                objectName: "hotkeyRepeater"
+
+                property var hotkeys: {
+                    "window": {
+                        "text": qsTr("Pext"),
+                        "foreground": {
+                            "text": qsTr("Move Pext to the foreground"),
+                            "hotkeys": ["Ctrl+`"],
+                            "unsupported_on": ["Darwin", "Windows"]
+                        },
+                        "minimize": {
+                            "text": qsTr("Minimize"),
+                            "hotkeys": [escapeShortcut.nativeText]
+                        }
+                    },
+                    "tabs": {
+                        "text": qsTr("Tabs"),
+                        "open": {
+                            "text": qsTr("Open a new tab"),
+                            "hotkeys": [menuLoadModule.shortcut]
+                        },
+                        "reload": {
+                            "text": qsTr("Reload active tab"),
+                            "hotkeys": [menuReloadActiveModule.shortcut]
+                        },
+                        "close": {
+                            "text": qsTr("Close active tab"),
+                            "hotkeys": [menuCloseActiveModule.shortcut]
+                        },
+                        "next": {
+                            "text": qsTr("Switch to next tab"),
+                            "hotkeys": [nextTabShortcut.nativeText]
+                        },
+                        "previous": {
+                            "text": qsTr("Switch to previous tab"),
+                            "hotkeys": [previousTabShortcut.nativeText]
+                        }
+                    },
+                    "module": {
+                        "text": qsTr("Modules"),
+                        "tab_complete": {
+                            "text": qsTr("Complete input"),
+                            "hotkeys": [tabShortcut.nativeText]
+                        },
+                        "back": {
+                            "text": qsTr("Go back"),
+                            "hotkeys": [escapeShortcut.nativeText]
+                        },
+                        "activate_entry": {
+                            "text": qsTr("Activate highlighted entry"),
+                            "hotkeys": [enterShortcut.nativeText, qsTr("Left mouse button")]
+                        },
+                        "activate_entry_nominimize": {
+                            "text": qsTr("Activate highlighted entry (never minimize)"),
+                            "hotkeys": [noMinimizeShortcut.nativeText, qsTr("Middle mouse button")]
+                        },
+                        "enter_arguments": {
+                            "text": qsTr("Enter arguments for highlighted command"),
+                            "hotkeys": [argsShortcut.nativeText, qsTr("Right mouse button")]
+                        },
+                        "context_menu": {
+                            "text": qsTr("Open context menu"),
+                            "hotkeys": [contextMenuShortcut.nativeText, qsTr("Right mouse button")]
+                        },
+                        "sorting": {
+                            "text": qsTr("Change sorting style"),
+                            "hotkeys": [changeSortModeShortcut.nativeText]
+                        }
+                    },
+                    "actionables": {
+                        "text": qsTr("Actionables"),
+                        "activate": {
+                            "text": qsTr("Activate"),
+                            "hotkeys": [activateActionableShortcut.nativeText]
+                        },
+                        "dismiss": {
+                            "text": qsTr("Dismiss"),
+                            "hotkeys": [dismissActionableShortcut.nativeText]
+                        }
+                    }
+                }
+
+                model: Object.keys(hotkeys)
+
+                TextEdit {
+                    text: {
+                        var string = "<h3>" + hotkeyRepeater.hotkeys[modelData].text + "</h3>";
+
+                        for (const key of Object.keys(hotkeyRepeater.hotkeys[modelData])) {
+                            var data = hotkeyRepeater.hotkeys[modelData][key];
+                            if (!data.text || !data.hotkeys) {
+                                continue;
+                            }
+                            if (data.unsupported_on && data.unsupported_on.indexOf(platform) != -1) {
+                                continue;
+                            }
+                            string += "<p><i>" + data.hotkeys.join(' / ') + "</i><br>" + data.text + "</p>";
+                        }
+
+                        return string;
+                    }
+
+                    color: palette.text
+                    textFormat: TextEdit.RichText
+                    readOnly: true
+                    selectByMouse: false
+                    wrapMode: TextEdit.Wrap
+                }
+            }
         }
     }
 
