@@ -729,113 +729,113 @@ Are you sure you want to quit?</translation>
     <message>
         <location filename="../qml/main.qml" line="1064"/>
         <source>Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>Move Pext to the foreground</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1069"/>
         <source>Minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimize</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1074"/>
         <source>Tabs</source>
-        <translation type="unfinished"></translation>
+        <translation>Tabs</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1076"/>
         <source>Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Open a new tab</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1080"/>
         <source>Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Reload active tab</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1084"/>
         <source>Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Close active tab</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1088"/>
         <source>Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Switch to next tab</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1092"/>
         <source>Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Switch to previous tab</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1097"/>
         <source>Modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Modules</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1099"/>
         <source>Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>Complete input</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1103"/>
         <source>Go back</source>
-        <translation type="unfinished"></translation>
+        <translation>Go back</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1107"/>
         <source>Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>Activate highlighted entry</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1108"/>
         <source>Left mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Left mouse button</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1111"/>
         <source>Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>Activate highlighted entry (never minimize)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1112"/>
         <source>Middle mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Middle mouse button</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1115"/>
         <source>Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>Enter arguments for highlighted command</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1116"/>
         <location filename="../qml/main.qml" line="1120"/>
         <source>Right mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Right mouse button</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1119"/>
         <source>Open context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Open context menu</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1123"/>
         <source>Change sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>Change sorting style</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1128"/>
         <source>Actionables</source>
-        <translation type="unfinished"></translation>
+        <translation>Actionables</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1130"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Activate</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1134"/>
         <source>Dismiss</source>
-        <translation type="unfinished"></translation>
+        <translation>Dismiss</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1201"/>

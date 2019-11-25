@@ -47,12 +47,12 @@
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="26"/>
         <source>Arguments for %1</source>
-        <translation>Argumenten voor %1</translation>
+        <translation>Aanvullende opties voor %1</translation>
     </message>
     <message>
         <location filename="../qml/CommandArgsDialog.qml" line="34"/>
         <source>Enter arguments for %1</source>
-        <translation>Voer argumenten in voor %1</translation>
+        <translation>Voer aanvullende opties in voor %1</translation>
     </message>
 </context>
 <context>
@@ -279,7 +279,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation>Voer de metagegevens-URL in van de te installeren module:</translation>
+        <translation>Voer de metagegevens-url in van de te installeren module:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -473,7 +473,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>Je hebt geen modules geïnstalleerd; installeer er één.</translation>
+        <translation>Je hebt geen modules geïnstalleerd; installeer er een.</translation>
     </message>
 </context>
 <context>
@@ -525,7 +525,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/RenameProfileDialog.qml" line="37"/>
         <source>Please choose a new name for this profile.</source>
-        <translation>Kies een nieuwe naam voor het profiel.</translation>
+        <translation>Voer een nieuwe naam in voor het profiel.</translation>
     </message>
 </context>
 <context>
@@ -573,13 +573,13 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>From online module list</source>
-        <translation>Uit online modulelijst</translation>
+        <translation>Uit online-modulelijst</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="532"/>
         <location filename="../qml/main.qml" line="624"/>
         <source>From URL</source>
-        <translation>Via URL</translation>
+        <translation>Via url</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="544"/>
@@ -604,12 +604,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="601"/>
         <source>From online theme list</source>
-        <translation>Uit online themalijst</translation>
+        <translation>Uit online-themalijst</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="640"/>
         <source>Switch profile</source>
-        <translation>Profiel wijzigen</translation>
+        <translation>Ander profiel kiezen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="660"/>
@@ -674,7 +674,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="793"/>
         <source>Minimizing behaviour</source>
-        <translation>Gedrag bij minimaliseren</translation>
+        <translation>Minimaliseermethode</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="802"/>
@@ -729,113 +729,113 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1064"/>
         <source>Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext naar de voorgrond brengen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1069"/>
         <source>Minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimaliseren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1074"/>
         <source>Tabs</source>
-        <translation type="unfinished"></translation>
+        <translation>Tabbladen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1076"/>
         <source>Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuw tabblad openen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1080"/>
         <source>Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Actief tabblad herladen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1084"/>
         <source>Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Actief tabblad sluiten</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1088"/>
         <source>Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Overschakelen naar volgend tabblad</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1092"/>
         <source>Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Overschakelen naar vorig tabblad</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1097"/>
         <source>Modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Modules</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1099"/>
         <source>Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>Invoer vervolledigen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1103"/>
         <source>Go back</source>
-        <translation type="unfinished"></translation>
+        <translation>Ga terug</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1107"/>
         <source>Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>Gemarkeerd item activeren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1108"/>
         <source>Left mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Linkermuisknop</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1111"/>
         <source>Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>Gemarkeerd item activeren (nooit minimaliseren)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1112"/>
         <source>Middle mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Middelste muisknop</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1115"/>
         <source>Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>Voer aanvullende opties in voor de gemarkeerde opdracht</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1116"/>
         <location filename="../qml/main.qml" line="1120"/>
         <source>Right mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechtermuisknop</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1119"/>
         <source>Open context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechtermuisknopmenu openen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1123"/>
         <source>Change sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>Sorteermethode aanpassen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1128"/>
         <source>Actionables</source>
-        <translation type="unfinished"></translation>
+        <translation>Acties</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1130"/>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Activeren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1134"/>
         <source>Dismiss</source>
-        <translation type="unfinished"></translation>
+        <translation>Verwerpen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1201"/>
@@ -860,7 +860,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1257"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation>Kan module &apos;{0}&apos; niet laden: functie &apos;{1}&apos; bevat de parameters &apos;{2}&apos; (m.u.v. zichzelf), terwijl &apos;{3}&apos; verwacht werd</translation>
+        <translation>Kan module &apos;{0}&apos; niet laden: functie &apos;{1}&apos; bevat de aanvullende opties &apos;{2}&apos; (m.u.v. zichzelf), terwijl &apos;{3}&apos; verwacht werd</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1258"/>
@@ -935,7 +935,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1272"/>
         <source>Updated {0}</source>
-        <translation>{0} is bijgewerkt</translation>
+        <translation>&apos;{0}&apos; is bijgewerkt</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1273"/>
@@ -950,7 +950,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1275"/>
         <source>Pext is already up-to-date</source>
-        <translation>Pext is al actueel</translation>
+        <translation>Pext is volledig actueel</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1276"/>
@@ -975,17 +975,17 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1280"/>
         <source>Enter arguments</source>
-        <translation>Voer argumenten in</translation>
+        <translation>Voer aanvullende opties in</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1281"/>
         <source>No context menu available</source>
-        <translation>Rechtermuisknopmenu is niet beschikbaar</translation>
+        <translation>Geen rechtermuisknopmenu beschikbaar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1282"/>
         <source>No tab completion possible</source>
-        <translation>Tabvervollediging is niet beschikbaar</translation>
+        <translation>Geen tabvervollediging beschikbaar</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1283"/>
