@@ -737,42 +737,42 @@ Er du sikker på at du vil avslutte?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1074"/>
+        <location filename="../qml/main.qml" line="1078"/>
         <source>Tabs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1076"/>
+        <location filename="../qml/main.qml" line="1080"/>
         <source>Open a new tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1080"/>
+        <location filename="../qml/main.qml" line="1084"/>
         <source>Reload active tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1084"/>
+        <location filename="../qml/main.qml" line="1088"/>
         <source>Close active tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1088"/>
+        <location filename="../qml/main.qml" line="1092"/>
         <source>Switch to next tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1092"/>
+        <location filename="../qml/main.qml" line="1096"/>
         <source>Switch to previous tab</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1097"/>
+        <location filename="../qml/main.qml" line="1101"/>
         <source>Modules</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1099"/>
+        <location filename="../qml/main.qml" line="1073"/>
         <source>Complete input</source>
         <translation type="unfinished"></translation>
     </message>
@@ -820,21 +820,6 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1123"/>
         <source>Change sorting style</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1128"/>
-        <source>Actionables</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1130"/>
-        <source>Activate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1134"/>
-        <source>Dismiss</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1112,6 +1097,21 @@ Er du sikker på at du vil avslutte?</translation>
         <location filename="../qml/main.qml" line="1034"/>
         <source>Hotkey reference</source>
         <translation>Snarveisreferanse</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1128"/>
+        <source>Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1130"/>
+        <source>Accept</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1134"/>
+        <source>Decline</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1245"/>

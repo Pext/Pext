@@ -737,42 +737,42 @@ Are you sure you want to quit?</source>
         <translation>最小化</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1074"/>
+        <location filename="../qml/main.qml" line="1078"/>
         <source>Tabs</source>
         <translation>分頁</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1076"/>
+        <location filename="../qml/main.qml" line="1080"/>
         <source>Open a new tab</source>
         <translation>開啟新分頁</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1080"/>
+        <location filename="../qml/main.qml" line="1084"/>
         <source>Reload active tab</source>
         <translation>重新載入作用中分頁</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1084"/>
+        <location filename="../qml/main.qml" line="1088"/>
         <source>Close active tab</source>
         <translation>關閉作用中分頁</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1088"/>
+        <location filename="../qml/main.qml" line="1092"/>
         <source>Switch to next tab</source>
         <translation>切換到下一個分頁</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1092"/>
+        <location filename="../qml/main.qml" line="1096"/>
         <source>Switch to previous tab</source>
         <translation>切換到前一個分頁</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1097"/>
+        <location filename="../qml/main.qml" line="1101"/>
         <source>Modules</source>
         <translation>模組</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1099"/>
+        <location filename="../qml/main.qml" line="1073"/>
         <source>Complete input</source>
         <translation>完成輸入</translation>
     </message>
@@ -821,21 +821,6 @@ Are you sure you want to quit?</source>
         <location filename="../qml/main.qml" line="1123"/>
         <source>Change sorting style</source>
         <translation>變更排序樣式</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1128"/>
-        <source>Actionables</source>
-        <translation>可行</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1130"/>
-        <source>Activate</source>
-        <translation>啟用</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1134"/>
-        <source>Dismiss</source>
-        <translation>忽略</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1201"/>
@@ -1112,6 +1097,21 @@ Are you sure you want to quit?</source>
         <location filename="../qml/main.qml" line="1034"/>
         <source>Hotkey reference</source>
         <translation>快捷鍵參考</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1128"/>
+        <source>Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1130"/>
+        <source>Accept</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1134"/>
+        <source>Decline</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1245"/>

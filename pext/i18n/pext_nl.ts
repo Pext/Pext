@@ -737,42 +737,42 @@ Weet je zeker dat je wilt afsluiten?</translation>
         <translation>Minimaliseren</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1074"/>
+        <location filename="../qml/main.qml" line="1078"/>
         <source>Tabs</source>
         <translation>Tabbladen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1076"/>
+        <location filename="../qml/main.qml" line="1080"/>
         <source>Open a new tab</source>
         <translation>Nieuw tabblad openen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1080"/>
+        <location filename="../qml/main.qml" line="1084"/>
         <source>Reload active tab</source>
         <translation>Actief tabblad herladen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1084"/>
+        <location filename="../qml/main.qml" line="1088"/>
         <source>Close active tab</source>
         <translation>Actief tabblad sluiten</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1088"/>
+        <location filename="../qml/main.qml" line="1092"/>
         <source>Switch to next tab</source>
         <translation>Overschakelen naar volgend tabblad</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1092"/>
+        <location filename="../qml/main.qml" line="1096"/>
         <source>Switch to previous tab</source>
         <translation>Overschakelen naar vorig tabblad</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1097"/>
+        <location filename="../qml/main.qml" line="1101"/>
         <source>Modules</source>
         <translation>Modules</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1099"/>
+        <location filename="../qml/main.qml" line="1073"/>
         <source>Complete input</source>
         <translation>Invoer vervolledigen</translation>
     </message>
@@ -821,21 +821,6 @@ Weet je zeker dat je wilt afsluiten?</translation>
         <location filename="../qml/main.qml" line="1123"/>
         <source>Change sorting style</source>
         <translation>Sorteermethode aanpassen</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1128"/>
-        <source>Actionables</source>
-        <translation>Acties</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1130"/>
-        <source>Activate</source>
-        <translation>Activeren</translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1134"/>
-        <source>Dismiss</source>
-        <translation>Verwerpen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1201"/>
@@ -1112,6 +1097,21 @@ Weet je zeker dat je wilt afsluiten?</translation>
         <location filename="../qml/main.qml" line="1034"/>
         <source>Hotkey reference</source>
         <translation>Sneltoetshulp</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1128"/>
+        <source>Alerts</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1130"/>
+        <source>Accept</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1134"/>
+        <source>Decline</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1245"/>

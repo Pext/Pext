@@ -1125,13 +1125,13 @@ ApplicationWindow {
                         }
                     },
                     "actionables": {
-                        "text": qsTr("Actionables"),
+                        "text": qsTr("Alerts"),
                         "activate": {
-                            "text": qsTr("Activate"),
+                            "text": qsTr("Accept"),
                             "hotkeys": [activateActionableShortcut.nativeText]
                         },
                         "dismiss": {
-                            "text": qsTr("Dismiss"),
+                            "text": qsTr("Decline"),
                             "hotkeys": [dismissActionableShortcut.nativeText]
                         }
                     }
