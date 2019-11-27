@@ -1101,17 +1101,17 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1128"/>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Waarschuwingen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1130"/>
         <source>Accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Accepteren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1134"/>
         <source>Decline</source>
-        <translation type="unfinished"></translation>
+        <translation>Weigeren</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1245"/>
