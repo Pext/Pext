@@ -1,2 +1,2 @@
-Sphinx==2.3.0
+Sphinx==2.3.1
 sphinxcontrib-programoutput==0.15
