@@ -996,6 +996,12 @@ ApplicationWindow {
                 text: "❌"
                 onClicked: menuCloseActiveModule.trigger()
             }
+
+            Button {
+                visible: tabs.count > 0
+                text: "☰"
+                onClicked: openContextMenu();
+            }
         }
 
         TabView {
