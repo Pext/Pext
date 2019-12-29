@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Still processing module requests string containing %1
+- Traditional Chinese incorrectly not being included as a selectable language
 
 ## [0.27] - 2019-11-15
 ### Packaging changes
