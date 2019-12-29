@@ -1,10 +1,10 @@
-dulwich==0.19.13
-paramiko==2.6.0
-psutil==5.6.5
-pynput==1.4.5
-pyqt5==5.13.2
+dulwich==0.19.14
+paramiko==2.7.1
+psutil==5.6.7
+pynput==1.6.0
+pyqt5==5.14.0
 requests==2.22.0
 watchdog==0.9.0
 PyAutoGUI==0.9.48; sys.platform == 'darwin'
-PyOpenGL==3.1.0; sys.platform == 'linux'
-PyOpenGL_accelerate==3.1.0; sys.platform == 'linux'
+PyOpenGL==3.1.4; sys.platform == 'linux'
+PyOpenGL_accelerate==3.1.4; sys.platform == 'linux'

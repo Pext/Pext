@@ -729,113 +729,98 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1064"/>
         <source>Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>Flytt Pext til forgrunnen</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1069"/>
         <source>Minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Minimer</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1074"/>
+        <location filename="../qml/main.qml" line="1078"/>
         <source>Tabs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1076"/>
-        <source>Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Faner</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1080"/>
-        <source>Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <source>Open a new tab</source>
+        <translation>Åpne en ny fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1084"/>
-        <source>Close active tab</source>
-        <translation type="unfinished"></translation>
+        <source>Reload active tab</source>
+        <translation>Gjeninnlast aktiv fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1088"/>
-        <source>Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <source>Close active tab</source>
+        <translation>Lukk aktiv fane</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1092"/>
+        <source>Switch to next tab</source>
+        <translation>Bytt til neste fane</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1096"/>
         <source>Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Bytt til forrige fane</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1097"/>
+        <location filename="../qml/main.qml" line="1101"/>
         <source>Modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Moduler</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1099"/>
+        <location filename="../qml/main.qml" line="1073"/>
         <source>Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>Fullfør inndata</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1103"/>
         <source>Go back</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tilbake</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1107"/>
         <source>Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiver framhevede oppføringer</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1108"/>
         <source>Left mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Venstre museknapp</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1111"/>
         <source>Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiver framhevet oppføring (aldri minimer)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1112"/>
         <source>Middle mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Midtklikk</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1115"/>
         <source>Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>Skriv inn argumenter for framhevet kommando</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1116"/>
         <location filename="../qml/main.qml" line="1120"/>
         <source>Right mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Høyre museknapp</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1119"/>
         <source>Open context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Åpne bindeleddsmeny</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1123"/>
         <source>Change sorting style</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1128"/>
-        <source>Actionables</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1130"/>
-        <source>Activate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../qml/main.qml" line="1134"/>
-        <source>Dismiss</source>
-        <translation type="unfinished"></translation>
+        <translation>Endre sorteringsstil</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1201"/>
@@ -1112,6 +1097,21 @@ Er du sikker på at du vil avslutte?</translation>
         <location filename="../qml/main.qml" line="1034"/>
         <source>Hotkey reference</source>
         <translation>Snarveisreferanse</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1128"/>
+        <source>Alerts</source>
+        <translation>Varsler</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1130"/>
+        <source>Accept</source>
+        <translation>Godta</translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1134"/>
+        <source>Decline</source>
+        <translation>Avslå</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1245"/>

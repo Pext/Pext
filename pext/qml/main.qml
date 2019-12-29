@@ -1068,6 +1068,10 @@ ApplicationWindow {
                         "minimize": {
                             "text": qsTr("Minimize"),
                             "hotkeys": [escapeShortcut.nativeText]
+                        },
+                        "tab_complete": {
+                            "text": qsTr("Complete input"),
+                            "hotkeys": [tabShortcut.nativeText]
                         }
                     },
                     "tabs": {
@@ -1095,10 +1099,6 @@ ApplicationWindow {
                     },
                     "module": {
                         "text": qsTr("Modules"),
-                        "tab_complete": {
-                            "text": qsTr("Complete input"),
-                            "hotkeys": [tabShortcut.nativeText]
-                        },
                         "back": {
                             "text": qsTr("Go back"),
                             "hotkeys": [escapeShortcut.nativeText]
@@ -1125,13 +1125,13 @@ ApplicationWindow {
                         }
                     },
                     "actionables": {
-                        "text": qsTr("Actionables"),
+                        "text": qsTr("Alerts"),
                         "activate": {
-                            "text": qsTr("Activate"),
+                            "text": qsTr("Accept"),
                             "hotkeys": [activateActionableShortcut.nativeText]
                         },
                         "dismiss": {
-                            "text": qsTr("Dismiss"),
+                            "text": qsTr("Decline"),
                             "hotkeys": [dismissActionableShortcut.nativeText]
                         }
                     }
@@ -1151,7 +1151,7 @@ ApplicationWindow {
                             if (data.unsupported_on && data.unsupported_on.indexOf(platform) != -1) {
                                 continue;
                             }
-                            string += "<p><i>" + data.hotkeys.join(' / ') + "</i><br>" + data.text + "</p>";
+                            string += "<p><b>" + data.hotkeys.join(' / ') + "</b><br>" + data.text + "</p>";
                         }
 
                         return string;
