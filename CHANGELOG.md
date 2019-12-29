@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Improved hotkey reference screen with no modules loaded
+- Spacing between entry-specific and base context options for clarity
 
 ### Fixed
 - Still processing module requests string containing %1

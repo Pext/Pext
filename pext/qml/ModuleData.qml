@@ -19,7 +19,7 @@
 
 import "repeat_polyfill.js" as RepeatPolyfill
 
-import QtQuick 2.5
+import QtQuick 2.6
 import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.0
 import QtQuick.Window 2.0
@@ -74,15 +74,19 @@ Item {
                 signal openArgumentsInput()
                 signal closeContextMenu()
 
-                /* TODO: Add separator */
                 model: contextMenuModelFull
+
+                property int entrySpecificCount: contextMenuModelEntrySpecificCount
 
                 delegate: Component {
                     Item {
                         property variant itemData: model.modelData
                         width: parent.width
-                        height: text.height
+                        height: column.height
                         Column {
+                            id: column
+                            topPadding: (index >= (contextMenu.entrySpecificCount)) ? 10 : undefined
+                            height: text.height
                             Text {
                                 id: text
                                 objectName: "text"
@@ -114,6 +118,7 @@ Item {
                     }
                 }
                 highlight: Rectangle {
+                    transform: Translate { y: ((contextMenu.currentIndex >= (contextMenu.entrySpecificCount)) ? 10 : 0) }
                     color: palette.highlight
                 }
 

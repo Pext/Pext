@@ -1242,7 +1242,11 @@ class ModuleManager():
         module_context.setContextProperty(
             "unprocessedCount", 0)
         module_context.setContextProperty(
+            "contextMenuModel", vm.context_menu_model_list)
+        module_context.setContextProperty(
             "contextMenuModelFull", vm.context_menu_model_list_full)
+        module_context.setContextProperty(
+            "contextMenuModelEntrySpecificCount", 0)
         module_context.setContextProperty(
             "contextMenuEnabled", False)
         module_context.setContextProperty(
@@ -2044,6 +2048,8 @@ class ViewModel():
 
                 self.context_menu_model_list.setStringList(str(entry) for entry in self.sorted_filtered_context_list)
                 self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
+                self.context.setContextProperty(
+                    "contextMenuModelEntrySpecificCount", len(self.sorted_filtered_context_list))
             else:
                 self.filtered_entry_list = self.entry_list
                 self.filtered_command_list = self.command_list
@@ -2151,6 +2157,7 @@ class ViewModel():
         if self.context.contextProperty("contextMenuEnabled"):
             self.context_menu_model_list.setStringList(str(entry) for entry in self.filtered_context_list)
             self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
+            self.context.setContextProperty("contextMenuModelEntrySpecificCount", len(self.filtered_context_list))
         else:
             self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
 
