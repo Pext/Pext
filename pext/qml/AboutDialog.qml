@@ -33,6 +33,7 @@ Dialog {
                                "be": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
                                "en": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"}],
                                "es": [{"name": "Rose Garcia", "email": "rosegarcia@protonmail.com"},
+                                      {"name": "Adolfo Jayme-Barrientos", "email": "fitojb@ubuntu.com"},
                                       {"name": "Emily Lau", "email": "fuchslein@hackerchick.me"}],
                                "fr": [{"name": "Claire Goulet"}],
                                "nb_NO": [{"name": "Allan Nordhøy", "email": "epost@anotheragency.no"}],
