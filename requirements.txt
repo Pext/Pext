@@ -6,5 +6,5 @@ pyqt5==5.14.0
 requests==2.22.0
 watchdog==0.9.0
 PyAutoGUI==0.9.48; sys.platform == 'darwin'
-PyOpenGL==3.1.4; sys.platform == 'linux'
+PyOpenGL==3.1.5; sys.platform == 'linux'
 PyOpenGL_accelerate==3.1.5; sys.platform == 'linux'
