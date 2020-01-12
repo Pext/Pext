@@ -2088,61 +2088,32 @@ class ViewModel():
             self.filtered_entry_list = []
             self.filtered_command_list = []
 
-        # Regex matching
-        if search_string.startswith('/'):
-            try:
-                # /search_string/python_flags
-                regex_parts = search_string.split('/', 2)
-                if len(regex_parts) > 2 and regex_parts[2]:
-                    regex_search = "(?{}){}".format(regex_parts[2], regex_parts[1])
+        # String matching logic
+        list_match = search_string.lower().split(' ')
+
+        def check_list_match(entries, string_list) -> List[str]:
+            return_list = []  # type: List[str]
+            for entry in entries:
+                lower_entry = entry.lower()
+                for search_string_part in string_list:
+                    if search_string_part not in lower_entry:
+                        break
                 else:
-                    regex_search = regex_parts[1]
-
-                regex_match = re.compile(regex_search)
-            except re.error:
-                return
-
-            def check_regex_match(entries, regex) -> List[str]:
-                return_list = []
-                for entry in entries:
-                    if regex.match(entry):
+                    # If exact match, put on top
+                    if len(string_list) == 1 and string_list[0] == entry.lower():
+                        return_list.insert(0, entry)
+                    # otherwise, put on bottom
+                    else:
                         return_list.append(entry)
 
-                return return_list
+            return return_list
 
-            if self.context.contextProperty("contextMenuEnabled"):
-                self.filtered_context_list = check_regex_match(self.sorted_context_list, regex_match)
-                self.filtered_context_base_list = check_regex_match(self.sorted_context_base_list, regex_match)
-            else:
-                self.filtered_entry_list = check_regex_match(self.sorted_entry_list, regex_match)
-                self.filtered_command_list = check_regex_match(self.sorted_command_list, regex_match)
-        # Regular string matching
+        if self.context.contextProperty("contextMenuEnabled"):
+            self.filtered_context_list = check_list_match(self.sorted_context_list, list_match)
+            self.filtered_context_base_list = check_list_match(self.sorted_context_base_list, list_match)
         else:
-            list_match = search_string.lower().split(' ')
-
-            def check_list_match(entries, string_list) -> List[str]:
-                return_list = []  # type: List[str]
-                for entry in entries:
-                    lower_entry = entry.lower()
-                    for search_string_part in string_list:
-                        if search_string_part not in lower_entry:
-                            break
-                    else:
-                        # If exact match, put on top
-                        if len(string_list) == 1 and string_list[0] == entry.lower():
-                            return_list.insert(0, entry)
-                        # otherwise, put on bottom
-                        else:
-                            return_list.append(entry)
-
-                return return_list
-
-            if self.context.contextProperty("contextMenuEnabled"):
-                self.filtered_context_list = check_list_match(self.sorted_context_list, list_match)
-                self.filtered_context_base_list = check_list_match(self.sorted_context_base_list, list_match)
-            else:
-                self.filtered_entry_list = check_list_match(self.sorted_entry_list, list_match)
-                self.filtered_command_list = check_list_match(self.sorted_command_list, list_match)
+            self.filtered_entry_list = check_list_match(self.sorted_entry_list, list_match)
+            self.filtered_command_list = check_list_match(self.sorted_command_list, list_match)
 
         if self.context.contextProperty("contextMenuEnabled"):
             combined_list = self.filtered_context_list + self.filtered_context_base_list

@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Button to open module's context menu
 
+### Removed
+- Regex matching support
+
 ### Changed
 - Improved hotkey reference screen with no modules loaded
 - Spacing between entry-specific and base context options for clarity
