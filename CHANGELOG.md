@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.28] - 2020-01-18
 ### Added
 - Button to open module's context menu
 
@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Still processing module requests string containing %1
 - Traditional Chinese incorrectly not being included as a selectable language
+- Crash when search string starts with /
 
 ## [0.27] - 2019-11-15
 ### Packaging changes

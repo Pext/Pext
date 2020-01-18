@@ -13,14 +13,13 @@
 ## Cleanup
 1. ```git clean -dfx``` to delete all untracked files and directories
 2. Temporarily disable dulwich version generation in setup.py
-3. Compile translations (``lrelease-qt5 pext/pext.pro``)
 
 ## Preparation
 1. Update the ``<VERSION>`` in ``pext/VERSION``
 2. Update the ``<VERSION>`` in ``Info.plist``
 3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG``
 4. Update the minversion in the repology badge in `README.md`
-5. In Case new features have been added, update the current GIF under the head Introduction in `README.md` using ```convert -delay 100 <IMAGES> -loop 0 pext_intro.gif```
+5. In case new features have been added, update the current GIF under the head Introduction in `README.md` using ```convert -delay 100 <IMAGES> -loop 0 pext_intro.gif```
 
 ## GitHub
 1. ```git add pext/VERSION Info.plist CHANGELOG README.md```
