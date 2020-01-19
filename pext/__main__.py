@@ -1121,13 +1121,6 @@ class ObjectManager():
             if dir_object and isinstance(dir_object['metadata'], dict) and 'id' in dir_object['metadata']:
                 object_id = dir_object['metadata']['id']
                 objects[object_id] = dir_object
-            else:
-                # Remove corrupted entry (FIXME: Temporary?)
-                print("Removing corrupted object at {}".format(os.path.join(core_directory, directory)))
-                try:
-                    rmtree(os.path.join(core_directory, directory))
-                except Exception:
-                    pass
 
         return objects
 

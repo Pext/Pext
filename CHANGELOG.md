@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Changed
+- Pext no longer deletes invalid modules from disk
+
 ## [0.28] - 2020-01-18
 ### Added
 - Button to open module's context menu
