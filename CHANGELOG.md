@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.27] - 2019-11-15
 ### Packaging changes
+- New dependency: [paramiko](https://pypi.org/project/paramiko/)
 - New dependency: [psutil](https://pypi.org/project/psutil/)
 
 ### Added
