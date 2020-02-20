@@ -43,6 +43,7 @@ Dialog {
                                "nl": [{"name": "Sylvia van Os", "email": "sylvia@hackerchick.me"},
                                       {"name": "Heimen Stoffels", "email": "vistausss@outlook.com"}],
                                "pt_BR": [{"name": "Agesly Danzig", "email": "agesly.danzig@gmail.com"}],
+                               "pt_PT": [{"name": "Peter J. Mello (RogueScholar)", "email": "admin@petermello.net"}],
                                "ru": [{"name": "Nelly Simkova", "email": "stylinsonnelly@gmail.com"}],
                                "zh_TW": [{"name": "Jeff Huang", "email": "s8321414@gmail.com"}]
                               }
