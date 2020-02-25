@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Pext no longer deletes invalid modules from disk
 
+### Fixed
+- Alignment of text and dismiss icon in alerts
+
 ## [0.28] - 2020-01-18
 ### Added
 - Button to open module's context menu

@@ -941,20 +941,22 @@ ApplicationWindow {
                         wrapMode: Text.Wrap
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+                        verticalAlignment: Text.AlignVCenter
                     }
 
                     Button {
                         id: button
                         visible: modelData.buttonText
                         text: modelData.buttonText
-                        onClicked: actionableRepeater.activateActionable(index)
                         Layout.fillHeight: true
+                        onClicked: actionableRepeater.activateActionable(index)
                     }
 
                     Text {
                         text: "<a href='#' style='text-decoration:none;'>❌</a>"
                         textFormat: Text.RichText
                         Layout.fillHeight: true
+                        verticalAlignment: Text.AlignVCenter
                         onLinkActivated: actionableRepeater.removeActionable(index)
                     }
                 }
