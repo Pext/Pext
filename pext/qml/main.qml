@@ -241,6 +241,12 @@ ApplicationWindow {
     }
 
     Shortcut {
+        id: shiftEscapeShortcut
+        objectName: "shiftEscapeShortcut"
+        sequence: "Shift+Escape"
+    }
+
+    Shortcut {
         id: tabShortcut
         objectName: "tabShortcut"
         sequence: "Tab"
@@ -1076,6 +1082,10 @@ ApplicationWindow {
                         "minimize": {
                             "text": qsTr("Minimize"),
                             "hotkeys": [escapeShortcut.nativeText]
+                        },
+                        "back_and_minimize": {
+                            "text": qsTr("Go back to module's base level and minimize"),
+                            "hotkeys": [shiftEscapeShortcut.nativeText]
                         },
                         "tab_complete": {
                             "text": qsTr("Complete input"),

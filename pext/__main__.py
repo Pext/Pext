@@ -1922,7 +1922,7 @@ class ViewModel():
         """
         self.module = module
 
-    def go_up(self) -> None:
+    def go_up(self, to_base=False) -> None:
         """Go one level up.
 
         This means that, if we're currently in the entry content list, we go
@@ -1932,18 +1932,24 @@ class ViewModel():
         """
         if self.context.contextProperty("contextMenuEnabled"):
             self.hide_context()
-            return
+            if not to_base:
+                return
 
         if QQmlProperty.read(self.search_input_model, "text") != "":
             QQmlProperty.write(self.search_input_model, "text", "")
             self.context.setContextProperty("searchInputFieldEmpty", True)
-            return
+            if not to_base:
+                return
 
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
         if len(self.selection) > 0:
-            self.selection.pop()
+            if not to_base:
+                self.selection.pop()
+            else:
+                self.selection = []
+
             self.entry_list = []
             self.command_list = []
 
@@ -2423,6 +2429,7 @@ class Window():
         self.search_input_model = self.window.findChild(
             QObject, "searchInputModel")
         escape_shortcut = self.window.findChild(QObject, "escapeShortcut")
+        shift_escape_shortcut = self.window.findChild(QObject, "shiftEscapeShortcut")
         back_button = self.window.findChild(QObject, "backButton")
         tab_shortcut = self.window.findChild(QObject, "tabShortcut")
         args_shortcut = self.window.findChild(QObject, "argsShortcut")
@@ -2430,6 +2437,7 @@ class Window():
         self.search_input_model.textChanged.connect(self._search)
         self.search_input_model.accepted.connect(self._select)
         escape_shortcut.activated.connect(self._go_up)
+        shift_escape_shortcut.activated.connect(self._go_up_to_base_and_minimize)
         back_button.clicked.connect(self._go_up)
         tab_shortcut.activated.connect(self._tab_complete)
         args_shortcut.activated.connect(self._input_args)
@@ -2793,6 +2801,16 @@ class Window():
                 element['vm'].go_up()
             except TypeError:
                 pass
+
+    def _go_up_to_base_and_minimize(self) -> None:
+        element = self._get_current_element()
+        if element:
+            try:
+                element['vm'].go_up(True)
+            except TypeError:
+                pass
+
+        self.close(manual=True)
 
     def _open_tab(self, identifier: str, name: str, settings: str) -> None:
         module_settings = {}
