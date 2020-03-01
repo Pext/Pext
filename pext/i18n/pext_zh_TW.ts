@@ -779,7 +779,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1087"/>
         <source>Go back to module&apos;s base level and minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>回到模組的基礎等級並最小化</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1121"/>
