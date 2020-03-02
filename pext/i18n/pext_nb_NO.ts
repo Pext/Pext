@@ -543,7 +543,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="425"/>
         <source>Switch to next loaded module</source>
-        <translation type="unfinished">Bytt til neste innlastet modul</translation>
+        <translation>Bytt til neste innlastede modul</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="433"/>
@@ -779,7 +779,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1087"/>
         <source>Go back to module&apos;s base level and minimize</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Gå tilbake til modulens grunnivå og minimer</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1121"/>

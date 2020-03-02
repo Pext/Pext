@@ -779,7 +779,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1087"/>
         <source>Go back to module&apos;s base level and minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Ga terug naar het basisniveau van de module en minimaliseer</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1121"/>
