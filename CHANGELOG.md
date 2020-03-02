@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Alignment of text and dismiss icon in alerts
+- Crash when checking for module/theme updates with no Internet connection
 
 ## [0.28] - 2020-01-18
 ### Added
