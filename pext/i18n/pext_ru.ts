@@ -944,101 +944,106 @@ Are you sure you want to quit?</source>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1294"/>
+        <source>Failed to check for updates for module {0}: {1}</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1295"/>
         <source>Data queued for typing</source>
         <translation>Данные в очереди для ввода</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1295"/>
+        <location filename="../qml/main.qml" line="1296"/>
         <source>All queued data has been typed</source>
         <translation>Очередь ввода полностью введена</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1296"/>
+        <location filename="../qml/main.qml" line="1297"/>
         <source>Data queued for clipboard</source>
         <translation>Данные ожидают в очереди буфера обмена</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1297"/>
+        <location filename="../qml/main.qml" line="1298"/>
         <source>Data copied to clipboard</source>
         <translation>Данные скопированы в буфер обмена</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1298"/>
+        <location filename="../qml/main.qml" line="1299"/>
         <source>Enter arguments</source>
         <translation>Введите аргументы</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1299"/>
+        <location filename="../qml/main.qml" line="1300"/>
         <source>No context menu available</source>
         <translation>Нет контекстного меню</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1300"/>
+        <location filename="../qml/main.qml" line="1301"/>
         <source>No tab completion possible</source>
         <translation>Нет возможности завершить вкладку</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1301"/>
+        <location filename="../qml/main.qml" line="1302"/>
         <source>No entry selected</source>
         <translation>Не выбрано ни одной записи</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1302"/>
+        <location filename="../qml/main.qml" line="1303"/>
         <source>No command available for current filter</source>
         <translation>Нет команды для текущего фильтра</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1303"/>
+        <location filename="../qml/main.qml" line="1304"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput не установлен</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1304"/>
+        <location filename="../qml/main.qml" line="1305"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI не установлен</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1306"/>
+        <location filename="../qml/main.qml" line="1307"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
         <translation>Включена автоматическая проверка обновлений. Вы можете изменить это в настройках.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1307"/>
+        <location filename="../qml/main.qml" line="1308"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
         <translation>Доступно обновление Pext {0}. Текущая версия Pext {1}.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1308"/>
+        <location filename="../qml/main.qml" line="1309"/>
         <source>Open download page</source>
         <translation>Открыть страницу загрузки</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1309"/>
+        <location filename="../qml/main.qml" line="1310"/>
         <source>{0} can be updated.</source>
         <translation>Доступно обновление для {0}.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1310"/>
+        <location filename="../qml/main.qml" line="1311"/>
         <source>Update</source>
         <translation>Обновить</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1311"/>
+        <location filename="../qml/main.qml" line="1312"/>
         <source>{0} can be updated but is currently in use.</source>
         <translation>Доступно обновление для {0}, но {0} сейчас используется.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1312"/>
+        <location filename="../qml/main.qml" line="1313"/>
         <source>Update and reload</source>
         <translation>Обновить и перезагрузить</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1313"/>
+        <location filename="../qml/main.qml" line="1314"/>
         <source>An error occured in {0}: {1}.</source>
         <translation>Произошла ошибка в {0}: {1}.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1314"/>
+        <location filename="../qml/main.qml" line="1315"/>
         <source>Report as bug</source>
         <translation>Сообщить об ошибке</translation>
     </message>

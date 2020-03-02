@@ -1683,7 +1683,13 @@ class UpdateManager():
         with UpdateManager._path_to_repo(directory) as repo:
             old_commit = repo[repo.head()]
             remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
-            remote_commit = porcelain.ls_remote(remote_url)[branch]
+            try:
+                remote_commit = porcelain.ls_remote(remote_url)[branch]
+            except Exception as e:
+                Logger.log_error(None, Translation.get("failed_to_check_for_module_update").format(directory, e))
+                traceback.print_exc()
+
+                return False
 
             return remote_commit != old_commit.id
 
