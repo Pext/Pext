@@ -945,7 +945,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1294"/>
         <source>Failed to check for updates for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Klarte ikke å se etter oppdateringer for modul {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1295"/>

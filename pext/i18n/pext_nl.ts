@@ -945,7 +945,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1294"/>
         <source>Failed to check for updates for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Kan niet controleren op updates van module &apos;{0}&apos;: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1295"/>
