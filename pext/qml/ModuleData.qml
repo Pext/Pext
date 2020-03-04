@@ -172,11 +172,14 @@ Item {
                         text: {
                             var text = "";
                             for (var i = 0; i < resultList.tree.length; i++) {
+                                if (headerText.text) {
+                                    text += "  ";
+                                }
                                 for (var j = 0; j < i; j++) {
-                                    text += " ";
+                                    text += "  ";
                                 }
                                 var value_text = ""
-                                if (resultList.tree[i]['value'] != null) {
+                                if (resultList.tree[i]['value']) {
                                     value_text = resultList.tree[i]['value'] + " "
                                 }
                                 if (resultList.tree[i]['context_option']) {
@@ -255,7 +258,7 @@ Item {
                                 width: parent.parent.width
                                 objectName: "text"
                                 text: {
-                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + "&nbsp;".repeat(resultList.tree.length) + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
+                                    var line = "<table width=" + parent.width + "><tr><td><span>" + (index >= resultListModelNormalEntries ? "<i>" : "") + "&nbsp;".repeat((resultList.tree.length + (headerText.text ? 1 : 0)) * 2) + String(display).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + (index >= resultListModelNormalEntries ? "</i>" : "") + "</td><td align='right'><code>";
                                     if (resultList.currentIndex === index) {
                                         line += (resultList.currentIndex < resultListModelNormalEntries ? enterShortcut.nativeText : argsShortcut.nativeText);
                                     } else if (resultList.currentIndex < resultListModelNormalEntries && resultListModelNormalEntries === index) {
