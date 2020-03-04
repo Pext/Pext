@@ -11,10 +11,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Pext no longer deletes invalid modules from disk
+- Context options are now shown in the navigation tree
 
 ### Fixed
 - Alignment of text and dismiss icon in alerts
 - Crash when checking for module/theme updates with no Internet connection
+- Pext sometimes showing null in the navigation tree
 
 ## [0.28] - 2020-01-18
 ### Added

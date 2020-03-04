@@ -629,7 +629,7 @@ class MainLoop():
                 tab['vm'].selection = []
 
             tab['vm'].context.setContextProperty(
-                "resultListModelTree", [part['value'] for part in tab['vm'].selection])
+                "resultListModelTree", tab['vm'].selection)
 
             if tab['vm'].selection_thread:
                 tab['vm'].selection_thread.join()
@@ -1962,7 +1962,7 @@ class ViewModel():
             self.search(new_entries=True)
 
             self.context.setContextProperty(
-                "resultListModelTree", [part['value'] for part in self.selection])
+                "resultListModelTree", self.selection)
 
             self._clear_queue()
 
@@ -2211,7 +2211,7 @@ class ViewModel():
         self.context.setContextProperty(
             "contextMenuEnabled", False)
         self.context.setContextProperty(
-            "resultListModelTree", [part['value'] for part in self.selection])
+            "resultListModelTree", self.selection)
 
         self.entry_list = []
         self.command_list = []

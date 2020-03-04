@@ -175,7 +175,14 @@ Item {
                                 for (var j = 0; j < i; j++) {
                                     text += " ";
                                 }
-                                text += resultList.tree[i];
+                                var value_text = ""
+                                if (resultList.tree[i]['value'] != null) {
+                                    value_text = resultList.tree[i]['value'] + " "
+                                }
+                                if (resultList.tree[i]['context_option']) {
+                                    value_text += "(" + resultList.tree[i]['context_option'] + ")"
+                                }
+                                text += value_text;
                                 if (i < resultList.tree.length - 1) {
                                     text += "\n";
                                 }
