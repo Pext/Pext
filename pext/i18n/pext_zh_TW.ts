@@ -945,7 +945,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1294"/>
         <source>Failed to check for updates for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>檢查模組 {0} 更新失敗：{1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1295"/>
