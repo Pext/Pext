@@ -63,6 +63,7 @@ For command line options, use `--help`.
 ### Entry management
 
 - Escape: Go one level up
+- Shift+Escape: Go up to top level and trigger minimize
 - Tab: Tab-complete the current input
 - Enter / Left mouse button: Select entry or run command
 - Shift+Enter: Select entry or run command but explicitly disable minimizing
