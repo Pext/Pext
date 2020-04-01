@@ -67,6 +67,9 @@ wget https://raw.githubusercontent.com/TheAssassin/linuxdeploy-plugin-conda/e714
 # Don't remove include, needed for compiling some extensions
 sed -i 's;rm -rf include/;;g' linuxdeploy-plugin-conda.sh
 
+# Don't remove setuptools, needed for some packages modules may need (https://github.com/Pext/Pext/issues/291)
+sed -i 's;rm -rf lib/python?.?/site-packages/setuptools;;g' linuxdeploy-plugin-conda.sh
+
 # can use the plugin's environment variables to ease some setup
 export CONDA_CHANNELS=conda-forge
 export CONDA_PACKAGES=xorg-libxi
