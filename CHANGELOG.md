@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- Setuptools missing from AppImage
+
 ## [0.29] - 2020-03-07
 ### Added
 - Shift+Escape hotkey to reset selection to base and minimize
