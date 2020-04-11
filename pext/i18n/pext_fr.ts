@@ -315,7 +315,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtenir plus de modules</translation>
     </message>
 </context>
 <context>
@@ -366,7 +366,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation type="unfinished"></translation>
+        <translation>Obtenir plus de thèmes</translation>
     </message>
 </context>
 <context>
@@ -689,12 +689,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="823"/>
         <source>Manual only: Minimize normally</source>
-        <translation>Manuel seulement: Réduire normalement</translation>
+        <translation>Manuel seulement : réduire normalement</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="831"/>
         <source>Manual only: Minimize to tray</source>
-        <translation>Manuel seulement: Réduire en tâche de fond</translation>
+        <translation>Manuel seulement : réduire en tâche de fond</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="850"/>
@@ -734,42 +734,42 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1083"/>
         <source>Minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Réduire</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1096"/>
         <source>Tabs</source>
-        <translation type="unfinished"></translation>
+        <translation>Onglets</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1098"/>
         <source>Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir un nouvel onglet</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1102"/>
         <source>Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Recharger l&apos;onglet actif</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1106"/>
         <source>Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Fermer l&apos;onglet actif</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1110"/>
         <source>Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller à l&apos;onglet suivant</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1114"/>
         <source>Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Aller à l&apos;onglet précédent</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1119"/>
         <source>Modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Modules</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1091"/>
@@ -784,7 +784,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1121"/>
         <source>Go back</source>
-        <translation type="unfinished"></translation>
+        <translation>Retour</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1125"/>
@@ -1025,17 +1025,17 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1311"/>
         <source>Update</source>
-        <translation type="unfinished">Mise à jour</translation>
+        <translation>Mettre à jour</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
         <source>{0} can be updated but is currently in use.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} peut être mis à jour mais est actuellement en exécution.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1313"/>
         <source>Update and reload</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre à jour et recharger</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1314"/>
