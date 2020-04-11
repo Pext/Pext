@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 ### Fixed
 - Setuptools missing from AppImage
+- Pext locking up when pressing "Update and reload" until update completes
 
 ## [0.29] - 2020-03-07
 ### Added

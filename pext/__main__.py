@@ -221,6 +221,96 @@ class RunConseq():
                 function['name'](**function['kwargs'])
 
 
+class InternalCallProcessor():
+    """Process internal calls."""
+
+    queue = Queue()  # type: Queue
+
+    window = None
+    module_manager = None
+    theme_manager = None
+
+    # Temporarily store module_data between reload phases
+    temp_module_datas = []  # type: List[Dict[str, Any]]
+
+    @staticmethod
+    def bind(window: 'Window', module_manager: 'ModuleManager', theme_manager: 'ThemeManager') -> None:
+        """Bind the Window, ModuleManager and ThemeManager to the InternalCallProcessor."""
+        if window is not None:
+            InternalCallProcessor.window = window
+
+        if module_manager is not None:
+            InternalCallProcessor.module_manager = module_manager
+
+        if theme_manager is not None:
+            InternalCallProcessor.theme_manager = theme_manager
+
+    @staticmethod
+    def enqueue(call: str) -> None:
+        """Queue an internal call."""
+        InternalCallProcessor.queue.put(call)
+
+    @staticmethod
+    def process() -> None:
+        """Process an internal call."""
+        try:
+            call = InternalCallProcessor.queue.get_nowait()
+        except Empty:
+            return
+
+        parts = call.split(":")
+        if parts[0] != "pext":
+            raise ValueError("Cannot process non-pext call")
+
+        # Call function
+        getattr(InternalCallProcessor, "_{}".format(parts[1].replace('-', '_')))(parts[2:])
+
+    @staticmethod
+    def _update_module_in_use(arguments: List) -> None:
+        # update-module-in-use
+        #   module_id
+        functions = [
+            {
+                'name': InternalCallProcessor.module_manager.update,  # type: ignore
+                'args': (arguments[0], True,),
+                'kwargs': {}
+            }
+        ]
+
+        for tab_id, tab in enumerate(InternalCallProcessor.window.tab_bindings):  # type: ignore
+            if tab['metadata']['id'] == arguments[0]:
+                module_data = InternalCallProcessor.module_manager.reload_step_unload(  # type: ignore
+                    InternalCallProcessor.window,  # type: ignore
+                    tab_id
+                )
+                InternalCallProcessor.temp_module_datas.append(module_data)
+                functions.append({
+                    'name': InternalCallProcessor.enqueue,
+                    'args': ("pext:update-module-in-use-finalize:{}:{}".format(
+                        tab_id, len(InternalCallProcessor.temp_module_datas) - 1),),
+                    'kwargs': {}
+                })
+
+        threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
+
+    @staticmethod
+    def _update_module_in_use_finalize(arguments: List) -> None:
+        # update-module-in-use-finalize
+        #   tab_id
+        #   module_data (multiple fields likely, json contains also :
+        InternalCallProcessor.module_manager.reload_step_load(  # type: ignore
+            InternalCallProcessor.window,  # type: ignore
+            int(arguments[0]),
+            InternalCallProcessor.temp_module_datas[int(arguments[1])]
+        )
+
+    @staticmethod
+    def _update_theme(arguments: List) -> None:
+        # update-theme
+        #   theme_id
+        InternalCallProcessor.theme_manager.update(arguments[0], True)  # type: ignore
+
+
 class Logger():
     """Log events to the appropriate location.
 
@@ -748,6 +838,9 @@ class MainLoop():
                 main_loop_request()
             except Empty:
                 pass
+
+            # Process a call if there is any to process
+            InternalCallProcessor.process()
 
             self.app.sendPostedEvents()
             self.app.processEvents()
@@ -1420,28 +1513,35 @@ class ModuleManager():
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.module_dir)
 
-    def reload(self, window: 'Window', tab_id: int, in_between_callback=None) -> bool:
-        """Reload a module by tab ID."""
-        # Get currently active tab
-        current_index = QQmlProperty.read(window.tabs, "currentIndex")
-
+    def reload_step_unload(self, window: 'Window', tab_id: int) -> Dict[str, str]:
+        """Reload a module by tab ID: Unload step."""
         # Get the needed info to load the module
         module_data = window.tab_bindings[tab_id]
         module = {
             'metadata': module_data['metadata'],
-            'settings': module_data['settings']
+            'settings': module_data['settings'],
+            'module_import': module_data['module_import']
         }
 
         # Unload the module
         self.unload(window, tab_id)
 
-        if in_between_callback:
-            in_between_callback()
+        return module
+
+    def reload_step_load(self, window: 'Window', tab_id: int, module_data: Dict[str, Any]) -> bool:
+        """Reload a module by tab ID: Load step."""
+        # Get currently active tab
+        current_index = QQmlProperty.read(window.tabs, "currentIndex")
 
         # Force a reload to make code changes happen
         reload(module_data['module_import'])
 
         # Load it into the UI
+        module = {
+            'metadata': module_data['metadata'],
+            'settings': module_data['settings']
+        }
+
         if not self.load(window, module):
             return False
 
@@ -2359,7 +2459,8 @@ class ViewModel():
 class Window():
     """The main Pext window."""
 
-    def __init__(self, app: QApplication, locale_manager: LocaleManager, parent=None) -> None:
+    def __init__(self, app: QApplication, locale_manager: LocaleManager, module_manager: ModuleManager,
+                 theme_manager: 'ThemeManager', parent=None) -> None:
         """Initialize the window."""
         # Actionable items to show in the UI
         self.actionables = []  # type: List[Dict]
@@ -2420,11 +2521,11 @@ class Window():
 
         # Give QML the module info
         self.intro_screen = self.window.findChild(QObject, "introScreen")
-        self.module_manager = ModuleManager()
+        self.module_manager = module_manager
         self._update_modules_info_qml()
 
         # Give QML the theme info
-        self.theme_manager = ThemeManager()
+        self.theme_manager = theme_manager
         self._update_themes_info_qml()
 
         # Give QML the profile info
@@ -2449,7 +2550,7 @@ class Window():
         args_shortcut.activated.connect(self._input_args)
 
         # Bind internal calls
-        self.window.internalCall.connect(self._process_internal_call)
+        self.window.internalCall.connect(InternalCallProcessor.enqueue)
 
         # Bind actionable remove
         actionable_repeater = self.window.findChild(
@@ -2692,29 +2793,6 @@ class Window():
         elif len(self.tab_bindings) > 1:
             QQmlProperty.write(self.tabs, "currentIndex", "0")
 
-    def _process_internal_call(self, call: str) -> None:
-        """Process an internal call."""
-        parts = call.split(":")
-        if parts[0] != "pext":
-            return
-
-        if parts[1] == "update-module-in-use":
-            def reload_chain():
-                self.module_manager.update(parts[2], True)
-            for tab_id, tab in enumerate(self.tab_bindings):
-                if tab['metadata']['id'] == parts[2]:
-                    reload_chain = partial(
-                        self.module_manager.reload,
-                        self,
-                        tab_id,
-                        reload_chain
-                    )
-
-            reload_chain()
-
-        if parts[1] == "update-theme":
-            self.theme_manager.update(parts[2], True)
-
     def _macos_focus_workaround(self) -> None:
         """Set the focus correctly after minimizing Pext on macOS."""
         if platform.system() != 'Darwin' or pyautogui_error:
@@ -2840,9 +2918,9 @@ class Window():
 
     def _reload_active_module(self) -> None:
         if len(self.tab_bindings) > 0:
-            self.module_manager.reload(
-                self,
-                QQmlProperty.read(self.tabs, "currentIndex"))
+            tab_id = QQmlProperty.read(self.tabs, "currentIndex")
+            module_data = self.module_manager.reload_step_unload(self, tab_id)
+            self.module_manager.reload_step_load(self, tab_id, module_data)
 
     def _menu_install_module(self, module_url: str, identifier: str, name: str) -> None:
         functions = [
@@ -3642,12 +3720,12 @@ class Tray():
 class HotkeyHandler():
     """Handles global hotkey presses."""
 
-    def __init__(self, needs_main_loop_queue: Queue, window: Window) -> None:
+    def __init__(self, main_loop_queue: Queue, window: Window) -> None:
         """Initialize the global hotkey handler."""
         self.window = window
         self.modifiers = set()  # type: Set[Union[keyboard.Key, keyboard.KeyCode]]
         self.backtick = keyboard.KeyCode(char='`')
-        self.needs_main_loop_queue = needs_main_loop_queue
+        self.main_loop_queue = main_loop_queue
 
         self.modifier_keys = [
             keyboard.Key.ctrl,
@@ -3671,7 +3749,7 @@ class HotkeyHandler():
               len(self.modifiers) == 1 and
               keyboard.Key.ctrl in self.modifiers and
               Settings.get('global_hotkey_enabled')):
-            self.needs_main_loop_queue.put(self.window.show)
+            self.main_loop_queue.put(self.window.show)
 
         return True
 
@@ -4178,6 +4256,10 @@ def main() -> None:
     if platform.system() == 'Darwin':
         app.setStyle(QStyleFactory().create('Fusion'))
 
+    # Create managers
+    module_manager = ModuleManager()
+    theme_manager = ThemeManager()
+
     theme_identifier = Settings.get('theme')
     if theme_identifier is not None:
         # Qt5's default style for Windows, windowsvista, does not support palettes properly
@@ -4186,12 +4268,14 @@ def main() -> None:
         if platform.system() == 'Windows' and Settings.get('style') is None:
             app.setStyle(QStyleFactory().create('Fusion'))
 
-        theme_manager = ThemeManager()
         theme = theme_manager.load(theme_identifier)
         theme_manager.apply(theme, app)
 
     # Get a window
-    window = Window(app, locale_manager)
+    window = Window(app, locale_manager, module_manager, theme_manager)
+
+    # Prepare InternalCallProcessor
+    InternalCallProcessor.bind(window, module_manager, theme_manager)
 
     # Give the logger a reference to the window
     Logger.bind_window(window)
@@ -4205,11 +4289,11 @@ def main() -> None:
         signal.signal(signal.SIGUSR1, signal_handler.handle)
 
     # Start handling the global hotkey
-    needs_main_loop_queue = Queue()  # type: Queue[Callable[[], None]]
-    HotkeyHandler(needs_main_loop_queue, window)
+    main_loop_queue = Queue()  # type: Queue[Callable[[], None]]
+    HotkeyHandler(main_loop_queue, window)
 
     # Create a main loop
-    main_loop = MainLoop(app, window, needs_main_loop_queue)
+    main_loop = MainLoop(app, window, main_loop_queue)
 
     # Create a tray icon
     # This needs to be stored in a variable to prevent the Python garbage collector from removing the Qt tray
