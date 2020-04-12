@@ -464,7 +464,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="407"/>
-        <source>Module will restart after updating completes...</source>
+        <source>Module will reload after updating completes...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
