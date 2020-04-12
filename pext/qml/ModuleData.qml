@@ -28,6 +28,8 @@ Item {
     id: contentRow
     height: parent.height
 
+    property var disabled: false
+
     Shortcut {
         id: enterShortcut
         enabled: false
@@ -41,6 +43,7 @@ Item {
     }
 
     GridLayout {
+        visible: !contentRow.disabled
         id: moduleDataGrid
         anchors.fill: parent
         rowSpacing: 0
@@ -395,5 +398,22 @@ Item {
                 onLinkActivated: Qt.openUrlExternally(link)
             }
         }
+    }
+
+    TextEdit {
+        objectName: "introScreen"
+        visible: contentRow.disabled
+
+        text: "<h2>" + qsTr("Module will restart after updating completes...") + "</h2>"
+
+        color: palette.text
+        textFormat: TextEdit.RichText
+        readOnly: true
+        selectByMouse: false
+        wrapMode: TextEdit.Wrap
+        horizontalAlignment: TextEdit.AlignHCenter
+        verticalAlignment: TextEdit.AlignVCenter
+        Layout.fillWidth: true
+        padding: 10
     }
 }

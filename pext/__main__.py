@@ -516,6 +516,7 @@ class MainLoop():
             )
 
             tab_id = self.window.tab_bindings.index(tab)
+            self.window.module_manager.stop(self.window, tab_id)
             self.window.module_manager.unload(self.window, tab_id)
 
         elif action[0] == Action.add_message:
@@ -1478,8 +1479,8 @@ class ModuleManager():
 
         return True
 
-    def unload(self, window: 'Window', tab_id: int) -> None:
-        """Unload a module by tab ID."""
+    def stop(self, window: 'Window', tab_id: int) -> None:
+        """Call a module's stop function by ID."""
         try:
             window.tab_bindings[tab_id]['module'].stop()
         except Exception as e:
@@ -1487,6 +1488,12 @@ class ModuleManager():
                   .format(window.tab_bindings[tab_id]['metadata']['name'], e))
             traceback.print_exc()
 
+    def disable(self, window: 'Window', tab_id: int) -> None:
+        """Disable a module by tab ID."""
+        window.tabs.disableRequest.emit(tab_id)
+
+    def unload(self, window: 'Window', tab_id: int) -> None:
+        """Unload a module by tab ID."""
         if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
             tab_count = QQmlProperty.read(window.tabs, "count")
             if tab_count == 1:
@@ -1523,8 +1530,9 @@ class ModuleManager():
             'module_import': module_data['module_import']
         }
 
-        # Unload the module
-        self.unload(window, tab_id)
+        # Stop and disable the module
+        self.stop(window, tab_id)
+        self.disable(window, tab_id)
 
         return module
 
@@ -1532,6 +1540,9 @@ class ModuleManager():
         """Reload a module by tab ID: Load step."""
         # Get currently active tab
         current_index = QQmlProperty.read(window.tabs, "currentIndex")
+
+        # Unload the module
+        self.unload(window, tab_id)
 
         # Force a reload to make code changes happen
         reload(module_data['module_import'])
@@ -2912,9 +2923,9 @@ class Window():
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
-            self.module_manager.unload(
-                self,
-                QQmlProperty.read(self.tabs, "currentIndex"))
+            tab_id = QQmlProperty.read(self.tabs, "currentIndex")
+            self.module_manager.stop(self, tab_id)
+            self.module_manager.unload(self, tab_id)
 
     def _reload_active_module(self) -> None:
         if len(self.tab_bindings) > 0:

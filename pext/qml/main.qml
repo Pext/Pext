@@ -1017,7 +1017,12 @@ ApplicationWindow {
             id: tabs
             objectName: "tabs"
 
+            signal disableRequest(int index);
             signal removeRequest(int index);
+
+            onDisableRequest: {
+                tabs.getTab(index).item.disabled = true;
+            }
 
             onRemoveRequest: {
                 tabs.getTab(index).sourceComponent = undefined;
