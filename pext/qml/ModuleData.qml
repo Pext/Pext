@@ -404,7 +404,7 @@ Item {
         objectName: "introScreen"
         visible: contentRow.disabled
 
-        text: "<h2>" + qsTr("Module will reload after updating completes...") + "</h2>"
+        text: "<h2>" + qsTr("Reloading module after updating…") + "</h2>"
 
         color: palette.text
         textFormat: TextEdit.RichText
