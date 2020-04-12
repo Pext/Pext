@@ -460,7 +460,7 @@ Are you sure you want to quit?</source>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="407"/>
-        <source>Module will reload after updating completes...</source>
+        <source>Module will reload after updating completes…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -464,7 +464,7 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="407"/>
-        <source>Module will reload after updating completes...</source>
+        <source>Module will reload after updating completes…</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
