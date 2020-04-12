@@ -465,7 +465,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/ModuleData.qml" line="407"/>
         <source>Module will reload after updating completes...</source>
-        <translation type="unfinished"></translation>
+        <translation>De module wordt herladen zodra het bijwerken is afgerond...</translation>
     </message>
 </context>
 <context>
