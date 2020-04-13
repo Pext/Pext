@@ -465,7 +465,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="407"/>
         <source>Module will reload after updating completes…</source>
-        <translation type="unfinished"></translation>
+        <translation>更新完成後，模組將會重新載入……</translation>
     </message>
 </context>
 <context>
