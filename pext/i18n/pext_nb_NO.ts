@@ -465,7 +465,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/ModuleData.qml" line="407"/>
         <source>Module will reload after updating completes…</source>
-        <translation type="unfinished"></translation>
+        <translation>Modulen vil gjeninnlastes etter at oppdateringen fullføres…</translation>
     </message>
 </context>
 <context>
