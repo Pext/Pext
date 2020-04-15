@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Changed
+- Display update progress in module tab
+- Display crash reason in module tab
+- Open "Load Module" dialog after module finishes installing
+
 ### Fixed
 - Setuptools missing from AppImage
 - Pext locking up when pressing "Update and reload" until update completes

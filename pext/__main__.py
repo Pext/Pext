@@ -269,24 +269,30 @@ class InternalCallProcessor():
     def _update_module_in_use(arguments: List) -> None:
         # update-module-in-use
         #   module_id
+        if not InternalCallProcessor.module_manager:
+            raise ValueError("Module manager not yet initialized.")
+
+        if not InternalCallProcessor.window:
+            raise ValueError("Window not yet initialized.")
+
         functions = [
             {
-                'name': InternalCallProcessor.module_manager.update,  # type: ignore
+                'name': InternalCallProcessor.module_manager.update,
                 'args': (arguments[0], True,),
                 'kwargs': {}
             }
         ]
 
-        for tab_id, tab in enumerate(InternalCallProcessor.window.tab_bindings):  # type: ignore
+        for tab_id, tab in enumerate(InternalCallProcessor.window.tab_bindings):
             if tab['metadata']['id'] == arguments[0]:
-                module_data = InternalCallProcessor.module_manager.reload_step_unload(  # type: ignore
-                    InternalCallProcessor.window,  # type: ignore
+                module_data = InternalCallProcessor.module_manager.reload_step_unload(
+                    InternalCallProcessor.window,
                     tab_id
                 )
                 InternalCallProcessor.temp_module_datas.append(module_data)
                 functions.append({
                     'name': InternalCallProcessor.enqueue,
-                    'args': ("pext:update-module-in-use-finalize:{}:{}".format(
+                    'args': ("pext:finalize-module:{}:{}".format(
                         tab_id, len(InternalCallProcessor.temp_module_datas) - 1),),
                     'kwargs': {}
                 })
@@ -294,21 +300,38 @@ class InternalCallProcessor():
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
     @staticmethod
-    def _update_module_in_use_finalize(arguments: List) -> None:
-        # update-module-in-use-finalize
+    def _finalize_module(arguments: List) -> None:
+        # finalize-module
         #   tab_id
         #   module_data (multiple fields likely, json contains also :
-        InternalCallProcessor.module_manager.reload_step_load(  # type: ignore
-            InternalCallProcessor.window,  # type: ignore
+        if not InternalCallProcessor.module_manager:
+            raise ValueError("Module manager not yet initialized.")
+
+        if not InternalCallProcessor.window:
+            raise ValueError("Window not yet initialized.")
+
+        InternalCallProcessor.module_manager.reload_step_load(
+            InternalCallProcessor.window,
             int(arguments[0]),
             InternalCallProcessor.temp_module_datas[int(arguments[1])]
         )
 
     @staticmethod
+    def _open_load_tab(arguments: List) -> None:
+        # open-load-tab
+        if not InternalCallProcessor.window:
+            raise ValueError("Window not yet initialized.")
+
+        InternalCallProcessor.window.open_load_tab()
+
+    @staticmethod
     def _update_theme(arguments: List) -> None:
         # update-theme
         #   theme_id
-        InternalCallProcessor.theme_manager.update(arguments[0], True)  # type: ignore
+        if not InternalCallProcessor.theme_manager:
+            raise ValueError("Theme manager not yet initialized.")
+
+        InternalCallProcessor.theme_manager.update(arguments[0], True)
 
 
 class Logger():
@@ -353,29 +376,40 @@ class Logger():
         return message_lines
 
     @staticmethod
-    def log(module_name: Optional[str], message: str) -> None:
+    def _show_in_module(identifier: Optional[str], message: str) -> None:
+        """Show in the module disabled screen."""
+        if identifier and Logger.window:
+            for tab_id, tab in enumerate(Logger.window.tab_bindings):  # type: ignore
+                if tab['metadata']['id'] == identifier:
+                    Logger.window.update_state(tab_id, message)
+
+    @staticmethod
+    def log(module_name: Optional[str], message: str, show_in_module=None) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
         if Logger.window:
             if not module_name:
                 module_name = ""
 
             Logger._queue_message(module_name, message, 'message')
+            Logger._show_in_module(show_in_module, message)
         else:
             print(message)
 
     @staticmethod
-    def log_error(module_name: Optional[str], message: str) -> None:
+    def log_error(module_name: Optional[str], message: str, show_in_module=None) -> None:
         """If a logger is provided, log to the logger. Otherwise, print."""
         if Logger.window:
             if not module_name:
                 module_name = ""
 
             Logger._queue_message(module_name, message, 'error')
+            Logger._show_in_module(show_in_module, message)
         else:
             print(message)
 
     @staticmethod
-    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str], metadata=None) -> None:
+    def log_critical(module_name: Optional[str], message: str, detailed_message: Optional[str], metadata=None,
+                     show_in_module=None) -> None:
         """If a window is provided, pop up a window. Otherwise, print."""
         if not module_name:
             module_name = ""
@@ -408,6 +442,7 @@ class Logger():
                 Translation.get("actionable_error_in_module").format(module_name, message),
                 Translation.get("actionable_report_error_in_module") if bugtracker_url else "",
                 bugtracker_url)
+            Logger._show_in_module(show_in_module, detailed_message)
 
         print("{}\n{}\n{}".format(module_name if module_name else "Pext", message, detailed_message))
 
@@ -508,17 +543,23 @@ class MainLoop():
         action = tab['queue'].get_nowait()
 
         if action[0] == Action.critical_error:
+            # Stop the module
+            tab_id = self.window.tab_bindings.index(tab)
+            self.window.module_manager.stop(self.window, tab_id)
+
+            # Disable with reason: crash
+            self.window.disable_module(tab_id, 1)
+
+            if len(action) > 2:
+                self.window.update_state(tab_id, action[2])
+
+            # Log critical error
             Logger.log_critical(
                 tab['metadata']['name'],
                 str(action[1]),
                 str(action[2]) if len(action) > 2 else None,
                 tab['metadata']
             )
-
-            tab_id = self.window.tab_bindings.index(tab)
-            self.window.module_manager.stop(self.window, tab_id)
-            self.window.module_manager.unload(self.window, tab_id)
-
         elif action[0] == Action.add_message:
             Logger.log(tab['metadata']['name'], str(action[1]))
 
@@ -1482,15 +1523,11 @@ class ModuleManager():
     def stop(self, window: 'Window', tab_id: int) -> None:
         """Call a module's stop function by ID."""
         try:
-            window.tab_bindings[tab_id]['module'].stop()
+            window.tab_bindings[tab_id]['vm'].stop()
         except Exception as e:
             print('WARN: Module {} caused exception {} on unload'
                   .format(window.tab_bindings[tab_id]['metadata']['name'], e))
             traceback.print_exc()
-
-    def disable(self, window: 'Window', tab_id: int) -> None:
-        """Disable a module by tab ID."""
-        window.tabs.disableRequest.emit(tab_id)
 
     def unload(self, window: 'Window', tab_id: int) -> None:
         """Unload a module by tab ID."""
@@ -1530,9 +1567,11 @@ class ModuleManager():
             'module_import': module_data['module_import']
         }
 
-        # Stop and disable the module
+        # Stop the module
         self.stop(window, tab_id)
-        self.disable(window, tab_id)
+
+        # Disable with reason: update
+        window.disable_module(tab_id, 2)
 
         return module
 
@@ -1649,13 +1688,13 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, Translation.get("uninstalling").format(name))
+            Logger.log(None, Translation.get("uninstalling").format(name), show_in_module=identifier)
 
         try:
             rmtree(module_path)
         except FileNotFoundError:
             if verbose:
-                Logger.log(None, Translation.get("already_uninstalled").format(name))
+                Logger.log(None, Translation.get("already_uninstalled").format(name), show_in_module=identifier)
 
             return False
 
@@ -1665,7 +1704,7 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, Translation.get("uninstalled").format(name))
+            Logger.log(None, Translation.get("uninstalled").format(name), show_in_module=identifier)
 
         return True
 
@@ -1695,12 +1734,12 @@ class ModuleManager():
             pass
 
         if verbose:
-            Logger.log(None, Translation.get("updating").format(name))
+            Logger.log(None, Translation.get("updating").format(name), show_in_module=identifier)
 
         try:
             if not UpdateManager.update(module_path):
                 if verbose:
-                    Logger.log(None, Translation.get("already_up_to_date").format(name))
+                    Logger.log(None, Translation.get("already_up_to_date").format(name), show_in_module=identifier)
 
                 return False
 
@@ -1709,12 +1748,13 @@ class ModuleManager():
                 Logger.log_critical(
                     None,
                     Translation.get("failed_to_download_update").format(name, e),
-                    traceback.format_exc())
+                    traceback.format_exc(),
+                    show_in_module=identifier)
 
             return False
 
         if verbose:
-            Logger.log(None, Translation.get("updating_dependencies").format(name))
+            Logger.log(None, Translation.get("updating_dependencies").format(name), show_in_module=identifier)
 
         pip_error_output = self._pip_install(identifier)
         if pip_error_output is not None:
@@ -1727,7 +1767,7 @@ class ModuleManager():
             return False
 
         if verbose:
-            Logger.log(None, Translation.get("updated").format(name))
+            Logger.log(None, Translation.get("updated").format(name), show_in_module=identifier)
 
         return True
 
@@ -1902,6 +1942,8 @@ class ViewModel():
 
         self.settings = view_settings
 
+        self.stopped = False
+
     @property
     def settings(self):
         """Return all ViewModel settings."""
@@ -1936,6 +1978,11 @@ class ViewModel():
         except AttributeError:
             pass
 
+    def stop(self) -> None:
+        """Stop the module."""
+        self.stopped = True
+        self.module.stop()
+
     def next_sort_mode(self):
         """Calculate and set the next sorting mode available."""
         want_next = False
@@ -1959,6 +2006,9 @@ class ViewModel():
         up Pext's UI, while ensuring existing thread completion prevents race
         conditions.
         """
+        if self.stopped:
+            return
+
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
@@ -2058,6 +2108,9 @@ class ViewModel():
             if not to_base:
                 return
 
+        if self.stopped:
+            return
+
         if self.selection_thread and self.selection_thread.is_alive():
             return
 
@@ -2088,6 +2141,9 @@ class ViewModel():
         to the entries containing one or more words of the string currently
         visible in the search bar.
         """
+        if self.stopped:
+            return
+
         search_string = QQmlProperty.read(self.search_input_model, "text")
         self.context.setContextProperty("searchInputFieldEmpty", not search_string)
 
@@ -2304,6 +2360,9 @@ class ViewModel():
 
     def select(self, command_args="", force_args=False, disable_minimize=False) -> None:
         """Notify the module of our selection entry."""
+        if self.stopped:
+            return
+
         if not self.filtered_entry_list and not self.filtered_command_list:
             return
 
@@ -2340,6 +2399,9 @@ class ViewModel():
 
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
+        if self.stopped:
+            return
+
         current_entry = self._get_entry()
 
         entries = 0
@@ -2372,6 +2434,9 @@ class ViewModel():
 
     def hide_context(self) -> None:
         """Hide the context menu."""
+        if self.stopped:
+            return
+
         self.context.setContextProperty(
             "contextMenuEnabled", False)
 
@@ -2382,6 +2447,9 @@ class ViewModel():
 
     def update_context_info_panel(self, request_update=True) -> None:
         """Update the context info panel with the info panel data of the currently selected entry."""
+        if self.stopped:
+            return
+
         if not self.filtered_entry_list and not self.filtered_command_list:
             QQmlProperty.write(self.context_info_panel, "text", "")
             self.extra_info_last_entry_type = None
@@ -2426,6 +2494,9 @@ class ViewModel():
         This tab-completes the command, entry or combination currently in the
         search bar to the longest possible common completion.
         """
+        if self.stopped:
+            return
+
         current_input = QQmlProperty.read(self.search_input_model, "text")
         combined_list = self.filtered_entry_list + self.filtered_command_list
 
@@ -2442,6 +2513,9 @@ class ViewModel():
 
     def input_args(self) -> None:
         """Open dialog that allows the user to input command arguments."""
+        if self.stopped:
+            return
+
         if not self.filtered_command_list and not self.filtered_entry_list:
             self.queue.put(
                 [Action.add_error, Translation.get("no_entry_selected")])
@@ -2571,7 +2645,7 @@ class Window():
         # Find menu entries
         menu_reload_active_module_shortcut = self.window.findChild(
             QObject, "menuReloadActiveModule")
-        menu_load_module_shortcut = self.window.findChild(
+        self.menu_load_module_shortcut = self.window.findChild(
             QObject, "menuLoadModule")
         menu_close_active_module_shortcut = self.window.findChild(
             QObject, "menuCloseActiveModule")
@@ -2642,7 +2716,7 @@ class Window():
         # Bind menu entries
         menu_reload_active_module_shortcut.triggered.connect(
             self._reload_active_module)
-        menu_load_module_shortcut.loadModuleRequest.connect(self._open_tab)
+        self.menu_load_module_shortcut.loadModuleRequest.connect(self._open_tab)
         menu_close_active_module_shortcut.triggered.connect(self._close_tab)
         menu_install_module_shortcut.installModuleRequest.connect(
             self._menu_install_module)
@@ -2907,6 +2981,11 @@ class Window():
 
         self.close(manual=True)
 
+    def open_load_tab(self) -> None:
+        """Open the tab to load a new module."""
+        # TODO: Support giving the module name
+        self.menu_load_module_shortcut.trigger()
+
     def _open_tab(self, identifier: str, name: str, settings: str) -> None:
         module_settings = {}
         for setting in settings.split(" "):
@@ -2942,6 +3021,10 @@ class Window():
             }, {
                 'name': self._update_modules_info_qml,
                 'args': (),
+                'kwargs': {}
+            }, {
+                'name': InternalCallProcessor.enqueue,
+                'args': ("pext:open_load_tab:{}".format(identifier),),
                 'kwargs': {}
             }
         ]
@@ -3352,6 +3435,24 @@ class Window():
     def _remove_actionable(self, index: int) -> None:
         self.actionables.pop(index)
         QQmlProperty.write(self.window, 'actionables', self.actionables)
+
+    def disable_module(self, tab_id: int, reason: int) -> None:
+        """Disable a module by tab ID.
+
+        Valid reasons:
+        1: Crash
+        2: Update
+        """
+        self.tabs.disableRequest.emit(tab_id, reason)
+
+    def update_state(self, tab_id: int, state: str) -> None:
+        """Update a module's state by tab ID.
+
+        This adds an entry to display in the module's disabled screen.
+
+        Used for showing installation, update progress or module crashes.
+        """
+        self.tabs.updateStateRequest.emit(tab_id, state)
 
     def add_actionable(self, identifier: str, text: str, button_text=None, button_url=None, urgency="medium") -> None:
         """Add an action to show in the UI."""
@@ -4193,7 +4294,7 @@ def _shut_down(window: Window) -> None:
 
     for module in window.tab_bindings:
         try:
-            module['module'].stop()
+            module['vm'].stop()
         except Exception as e:
             print("Failed to cleanly stop module {}: {}".format(module['metadata']['name'], e))
             traceback.print_exc()

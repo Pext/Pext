@@ -28,7 +28,8 @@ Item {
     id: contentRow
     height: parent.height
 
-    property var disabled: false
+    property var disableReason: 0
+    property var progressStates: []
 
     Shortcut {
         id: enterShortcut
@@ -43,7 +44,7 @@ Item {
     }
 
     GridLayout {
-        visible: !contentRow.disabled
+        visible: !contentRow.disableReason
         id: moduleDataGrid
         anchors.fill: parent
         rowSpacing: 0
@@ -401,15 +402,30 @@ Item {
     }
 
     TextEdit {
-        objectName: "introScreen"
-        visible: contentRow.disabled
+        objectName: "disabledScreen"
+        visible: contentRow.disableReason
 
-        text: "<h2>" + qsTr("Module will reload after updating completes…") + "</h2>"
+        text: {
+            var reason = "";
+            switch (contentRow.disableReason) {
+                case 1:
+                    reason = qsTr("Module has crashed.");
+                    break;
+                case 2:
+                    reason = qsTr("Updating module…");
+                    break;
+            }
+            var text = "<h2>" + reason + "</h2>";
+            for (var i = 0; i < contentRow.progressStates.length; i++) {
+                text += "<pre>" + contentRow.progressStates[i] + "</pre>";
+            }
+            return text;
+        }
 
         color: palette.text
         textFormat: TextEdit.RichText
         readOnly: true
-        selectByMouse: false
+        selectByMouse: true
         wrapMode: TextEdit.Wrap
         horizontalAlignment: TextEdit.AlignHCenter
         verticalAlignment: TextEdit.AlignVCenter
