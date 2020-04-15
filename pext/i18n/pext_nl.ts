@@ -465,12 +465,12 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module has crashed.</source>
-        <translation type="unfinished"></translation>
+        <translation>De module is gecrasht.</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met bijwerken…</translation>
     </message>
 </context>
 <context>
