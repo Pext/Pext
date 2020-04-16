@@ -464,7 +464,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
-        <source>Module has crashed.</source>
+        <source>Module crashed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

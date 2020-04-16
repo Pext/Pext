@@ -464,7 +464,7 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
-        <source>Module has crashed.</source>
+        <source>Module crashed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
