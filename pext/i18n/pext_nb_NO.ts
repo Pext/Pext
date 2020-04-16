@@ -470,7 +470,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation type="unfinished"></translation>
+        <translation>Oppdaterer modul…</translation>
     </message>
 </context>
 <context>

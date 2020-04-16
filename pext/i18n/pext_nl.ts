@@ -470,7 +470,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezig met bijwerken…</translation>
     </message>
 </context>
 <context>
