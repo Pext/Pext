@@ -465,12 +465,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module has crashed.</source>
-        <translation type="unfinished"></translation>
+        <translation>模組當掉了。</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation type="unfinished"></translation>
+        <translation>正在更新模組……</translation>
     </message>
 </context>
 <context>
