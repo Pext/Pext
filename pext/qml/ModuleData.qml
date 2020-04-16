@@ -409,7 +409,7 @@ Item {
             var reason = "";
             switch (contentRow.disableReason) {
                 case 1:
-                    reason = qsTr("Module has crashed.");
+                    reason = qsTr("Module crashed.");
                     break;
                 case 2:
                     reason = qsTr("Updating module…");
