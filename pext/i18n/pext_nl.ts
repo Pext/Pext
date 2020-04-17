@@ -465,7 +465,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module crashed.</source>
-        <translation type="unfinished"></translation>
+        <translation>De module is gecrasht.</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
