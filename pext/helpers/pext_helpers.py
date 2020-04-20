@@ -288,7 +288,7 @@ class Action(Enum):
 
         Set all entry info at once by passing a dictionary.
 
-        Example: self.q.put([Action.set_entry_info,
+        Example: self.q.put([Action.replace_entry_info_dict,
                              {"Audio settings": "Change the audio settings",
                               "Video settings": "Change the video settings"}])
 
@@ -307,7 +307,7 @@ class Action(Enum):
 
         Set all command info at once by passing a dictionary.
 
-        Example: self.q.put([Action.set_entry_info,
+        Example: self.q.put([Action.replace_command_info_dict,
                              {"volume": "Set the volume to the desired percentage (0 - 100)",
                               "video": "Turn video on or off"}])
 

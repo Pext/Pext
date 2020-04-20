@@ -790,15 +790,11 @@ class MainLoop():
                 except KeyError:
                     pass
 
-            tab['vm'].update_context_info_panel(request_update=False)
-
         elif action[0] == Action.replace_entry_info_dict:
             if len(action) > 1:
                 tab['vm'].extra_info_entries = action[1]
             else:
                 tab['vm'].extra_info_entries = {}
-
-            tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.set_command_info:
             if len(action) > 2:
@@ -809,15 +805,11 @@ class MainLoop():
                 except KeyError:
                     pass
 
-            tab['vm'].update_context_info_panel(request_update=False)
-
         elif action[0] == Action.replace_command_info_dict:
             if len(action) > 1:
                 tab['vm'].extra_info_commands = action[1]
             else:
                 tab['vm'].extra_info_commands = {}
-
-            tab['vm'].update_context_info_panel(request_update=False)
 
         elif action[0] == Action.set_base_info:
             if len(action) > 1:
@@ -1935,8 +1927,6 @@ class ViewModel():
         self.context_menu_entries = {}  # type: Dict[str, List[str]]
         self.context_menu_commands = {}  # type: Dict[str, List[str]]
         self.context_menu_base = []  # type: List[str]
-        self.extra_info_last_entry = ""
-        self.extra_info_last_entry_type = None
         self.selection_thread = None  # type: Optional[threading.Thread]
         self.minimize_disabled = False
 
@@ -2249,7 +2239,7 @@ class ViewModel():
             else:
                 QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
-                self.update_context_info_panel()
+            self.update_context_info_panel()
 
             return
 
@@ -2320,7 +2310,7 @@ class ViewModel():
         else:
             QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
 
-            self.update_context_info_panel()
+        self.update_context_info_panel()
 
         # Turbo mode: Select entry if only entry left
         if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty() and search_string:
@@ -2452,18 +2442,9 @@ class ViewModel():
 
         if not self.filtered_entry_list and not self.filtered_command_list:
             QQmlProperty.write(self.context_info_panel, "text", "")
-            self.extra_info_last_entry_type = None
             return
 
         current_entry = self._get_entry()
-
-        # Prevent updating the list unnecessarily often
-        if (current_entry['value'] == self.extra_info_last_entry
-                and current_entry['type'] == self.extra_info_last_entry_type):
-            return
-
-        self.extra_info_last_entry = current_entry['value']
-        self.extra_info_last_entry_type = current_entry['type']
 
         if request_update:
             info_selection = self.selection[:]
