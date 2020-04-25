@@ -61,8 +61,7 @@ from dulwich.repo import Repo
 from dulwich.contrib.paramiko_vendor import ParamikoSSHVendor
 
 from PyQt5.QtWidgets import QApplication, QStyleFactory, QSystemTrayIcon
-from PyQt5.Qt import (QIcon, QLocale, QObject, QStringListModel, QTranslator, QQmlComponent, QQmlContext,
-                      QQmlProperty, QUrl)
+from PyQt5.Qt import QIcon, QLocale, QObject, QTranslator, QQmlProperty
 from PyQt5.QtGui import QPalette, QColor
 
 from watchdog.events import FileSystemEventHandler
@@ -131,11 +130,56 @@ class OutputSeparator(IntEnum):
     Enter = 2
 
 
+class UiModule():
+    def __init__(self, vm: 'ViewModel', module_code, module_import, metadata, settings) -> None:
+        self.init = False
+        self.vm = vm
+        self.module_code = module_code
+        self.module_import = module_import
+        self.metadata = metadata
+        self.settings = settings
+
+        self.entries_processed = 0
+
+
 class Core():
+    __active_modules = []
+    __focused_module = -1
+
     @staticmethod
-    def restart(window: 'Window', extra_args=None):
+    def add_module(module: UiModule, index=None) -> int:
+        """Add a module to the list of active modules."""
+        if index:
+            Core.__active_modules[index] = module
+            return index
+
+        Core.__active_modules.append(module)
+        return len(Core.__active_modules) - 1
+
+    @staticmethod
+    def remove_module(index: int) -> None:
+        del Core.__active_modules[index]
+
+    @staticmethod
+    def get_module(index: int) -> UiModule:
+        return Core.__active_modules[index]
+
+    @staticmethod
+    def get_modules() -> List[UiModule]:
+        return Core.__active_modules
+
+    @staticmethod
+    def get_focused_module_id() -> int:
+        return Core.__focused_module
+
+    @staticmethod
+    def set_focused_module_id(index: int) -> None:
+        Core.__focused_module = index
+
+    @staticmethod
+    def restart(extra_args=None):
         # Call _shut_down manually because it isn't called when using os.execv
-        Core._shut_down(window)
+        Core._shut_down()
 
         args = sys.argv[:]
         if extra_args:
@@ -149,16 +193,18 @@ class Core():
         os.execv(sys.executable, args)
 
     @staticmethod
-    def _shut_down(window: 'Window') -> None:
+    def _shut_down() -> None:
         """Clean up."""
-        profile = Settings.get('profile')
-        ProfileManager().save_modules(profile, window.tab_bindings)
+        modules = Core.get_modules()
 
-        for module in window.tab_bindings:
+        profile = Settings.get('profile')
+        ProfileManager().save_modules(profile, modules)
+
+        for module in modules:
             try:
-                module['vm'].stop()
+                module.vm.stop()
             except Exception as e:
-                print("Failed to cleanly stop module {}: {}".format(module['metadata']['name'], e))
+                print("Failed to cleanly stop module {}: {}".format(module.metadata['name'], e))
                 traceback.print_exc()
 
         ProfileManager.unlock_profile(profile)
@@ -293,17 +339,17 @@ class InternalCallProcessor():
             }
         ]
 
-        for tab_id, tab in enumerate(InternalCallProcessor.window.tab_bindings):
-            if tab['metadata']['id'] == arguments[0]:
+        for index, module in enumerate(Core.get_modules()):
+            if module.metadata['id'] == arguments[0]:
                 module_data = InternalCallProcessor.module_manager.reload_step_unload(
-                    InternalCallProcessor.window,
-                    tab_id
+                    index,
+                    InternalCallProcessor.window
                 )
                 InternalCallProcessor.temp_module_datas.append(module_data)
                 functions.append({
                     'name': InternalCallProcessor.enqueue,
                     'args': ("pext:finalize-module:{}:{}".format(
-                        tab_id, len(InternalCallProcessor.temp_module_datas) - 1),),
+                        index, len(InternalCallProcessor.temp_module_datas) - 1),),
                     'kwargs': {}
                 })
 
@@ -321,9 +367,9 @@ class InternalCallProcessor():
             raise ValueError("Window not yet initialized.")
 
         InternalCallProcessor.module_manager.reload_step_load(
-            InternalCallProcessor.window,
             int(arguments[0]),
-            InternalCallProcessor.temp_module_datas[int(arguments[1])]
+            InternalCallProcessor.temp_module_datas[int(arguments[1])],
+            InternalCallProcessor.window
         )
 
     @staticmethod
@@ -543,80 +589,82 @@ class MainLoop():
     ensures these events get managed without locking up the UI.
     """
 
-    def __init__(self, app: QApplication, window: 'Window', main_loop_queue: Queue) -> None:
+    def __init__(self, app: QApplication, main_loop_queue: Queue, module_manager: 'ModuleManager', window: 'Window') -> None:
         """Initialize the main loop."""
         self.app = app
-        self.window = window
         self.main_loop_queue = main_loop_queue
+        self.module_manager = module_manager
+        self.window = window
 
-    def _process_tab_action(self, tab: Dict, active_tab: int) -> None:
-        action = tab['queue'].get_nowait()
+    def _process_module_action(self, index: int, module: UiModule, focused_module: bool) -> None:
+        action = module.vm.queue.get_nowait()
 
         if action[0] == Action.critical_error:
             # Stop the module
-            tab_id = self.window.tab_bindings.index(tab)
-            self.window.module_manager.stop(self.window, tab_id)
+            self.module_manager.stop(index)
 
             # Disable with reason: crash
-            self.window.disable_module(tab_id, 1)
+            self.window.disable_module(index, 1)
 
             if len(action) > 2:
-                self.window.update_state(tab_id, action[2])
+                self.window.update_state(index, action[2])
 
             # Log critical error
             Logger.log_critical(
-                tab['metadata']['name'],
+                module.metadata['name'],
                 str(action[1]),
                 str(action[2]) if len(action) > 2 else None,
-                tab['metadata']
+                module.metadata
             )
         elif action[0] == Action.add_message:
-            Logger.log(tab['metadata']['name'], str(action[1]))
+            Logger.log(module.metadata['name'], str(action[1]))
 
         elif action[0] == Action.add_error:
-            Logger.log_error(tab['metadata']['name'], str(action[1]))
+            Logger.log_error(module.metadata['name'], str(action[1]))
 
         elif action[0] == Action.add_entry:
-            tab['vm'].entry_list = tab['vm'].entry_list + [action[1]]
+            module.vm.entry_list = module.vm.entry_list + [action[1]]
 
         elif action[0] == Action.prepend_entry:
-            tab['vm'].entry_list = [action[1]] + tab['vm'].entry_list
+            module.vm.entry_list = [action[1]] + module.vm.entry_list
 
         elif action[0] == Action.remove_entry:
-            tab['vm'].entry_list.remove(action[1])
+            module.vm.entry_list.remove(action[1])
 
         elif action[0] == Action.replace_entry_list:
             if len(action) > 1:
-                tab['vm'].entry_list = action[1]
+                module.vm.entry_list = action[1]
             else:
-                tab['vm'].entry_list = []
+                module.vm.entry_list = []
 
         elif action[0] == Action.add_command:
-            tab['vm'].command_list = tab['vm'].command_list + [action[1]]
+            module.vm.command_list = module.vm.command_list + [action[1]]
 
         elif action[0] == Action.prepend_command:
-            tab['vm'].command_list = [action[1]] + tab['vm'].command_list
+            module.vm.command_list = [action[1]] + module.vm.command_list
 
         elif action[0] == Action.remove_command:
-            tab['vm'].command_list.remove(action[1])
+            module.vm.command_list.remove(action[1])
 
         elif action[0] == Action.replace_command_list:
             if len(action) > 1:
-                tab['vm'].command_list = action[1]
+                module.vm.command_list = action[1]
             else:
-                tab['vm'].command_list = []
+                module.vm.command_list = []
 
         elif action[0] == Action.set_header:
             if len(action) > 1:
-                tab['vm'].set_header(str(action[1]))
+                module.vm.set_header(str(action[1]))
             else:
-                tab['vm'].set_header("")
+                module.vm.set_header("")
 
         elif action[0] == Action.set_filter:
             if len(action) > 1:
-                QQmlProperty.write(tab['vm'].search_input_model, "text", str(action[1]))
+                module.vm.search_string = str(action[1])
             else:
-                QQmlProperty.write(tab['vm'].search_input_model, "text", "")
+                module.vm.search_string = ""
+
+            module.vm.search_string_changed(module.vm.search_string)
 
         elif action[0] in [Action.ask_question, Action.ask_question_default_yes, Action.ask_question_default_no]:
             question_dialog = self.window.window.findChild(QObject, "questionDialog")
@@ -630,20 +678,20 @@ class MainLoop():
             except TypeError:
                 pass
 
-            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+            if len(signature(module.vm.module.process_response).parameters) == 2:
                 question_dialog.questionAccepted.connect(partial(
-                    lambda arg: tab['vm'].module.process_response(True, arg),
+                    lambda arg: module.vm.module.process_response(True, arg),
                     arg=(action[2] if len(action) > 2 else None)))
                 question_dialog.questionRejected.connect(partial(
-                    lambda arg: tab['vm'].module.process_response(False, arg),
+                    lambda arg: module.vm.module.process_response(False, arg),
                     arg=(action[2] if len(action) > 2 else None)))
             else:
                 question_dialog.questionAccepted.connect(
-                    lambda: tab['vm'].module.process_response(True))
+                    lambda: module.vm.module.process_response(True))
                 question_dialog.questionRejected.connect(
-                    lambda: tab['vm'].module.process_response(False))
+                    lambda: module.vm.module.process_response(False))
 
-            question_dialog.showQuestionDialog.emit(tab['metadata']['name'], action[1])
+            question_dialog.showQuestionDialog.emit(module.metadata['name'], action[1])
 
         elif action[0] == Action.ask_choice:
             choice_dialog = self.window.window.findChild(QObject, "choiceDialog")
@@ -657,20 +705,20 @@ class MainLoop():
             except TypeError:
                 pass
 
-            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+            if len(signature(module.vm.module.process_response).parameters) == 2:
                 choice_dialog.choiceAccepted.connect(partial(
-                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
                     arg=(action[3] if len(action) > 3 else None)))
                 choice_dialog.choiceRejected.connect(partial(
-                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    lambda arg: module.vm.module.process_response(None, arg),
                     arg=(action[3] if len(action) > 3 else None)))
             else:
                 choice_dialog.choiceAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput))
+                    lambda userinput: module.vm.module.process_response(userinput))
                 choice_dialog.choiceRejected.connect(
-                    lambda: tab['vm'].module.process_response(None))
+                    lambda: module.vm.module.process_response(None))
 
-            choice_dialog.showChoiceDialog.emit(tab['metadata']['name'], action[1], action[2])
+            choice_dialog.showChoiceDialog.emit(module.metadata['name'], action[1], action[2])
 
         elif action[0] == Action.ask_input:
             input_request = self.window.window.findChild(QObject, "inputRequests")
@@ -684,20 +732,20 @@ class MainLoop():
             except TypeError:
                 pass
 
-            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+            if len(signature(module.vm.module.process_response).parameters) == 2:
                 input_request.inputRequestAccepted.connect(partial(
-                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
                     arg=(action[3] if len(action) > 3 else None)))
                 input_request.inputRequestRejected.connect(partial(
-                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    lambda arg: module.vm.module.process_response(None, arg),
                     arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput))
+                    lambda userinput: module.vm.module.process_response(userinput))
                 input_request.inputRequestRejected.connect(
-                    lambda: tab['vm'].module.process_response(None))
+                    lambda: module.vm.module.process_response(None))
 
-            input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, False,
+            input_request.inputRequest.emit(module.metadata['name'], action[1], False, False,
                                             action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.ask_input_password:
@@ -712,20 +760,20 @@ class MainLoop():
             except TypeError:
                 pass
 
-            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+            if len(signature(module.vm.module.process_response).parameters) == 2:
                 input_request.inputRequestAccepted.connect(partial(
-                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
                     arg=(action[3] if len(action) > 3 else None)))
                 input_request.inputRequestRejected.connect(partial(
-                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    lambda arg: module.vm.module.process_response(None, arg),
                     arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput))
+                    lambda userinput: module.vm.module.process_response(userinput))
                 input_request.inputRequestRejected.connect(
-                    lambda: tab['vm'].module.process_response(None))
+                    lambda: module.vm.module.process_response(None))
 
-            input_request.inputRequest.emit(tab['metadata']['name'], action[1], True, False,
+            input_request.inputRequest.emit(module.metadata['name'], action[1], True, False,
                                             action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.ask_input_multi_line:
@@ -740,139 +788,136 @@ class MainLoop():
             except TypeError:
                 pass
 
-            if len(signature(tab['vm'].module.process_response).parameters) == 2:
+            if len(signature(module.vm.module.process_response).parameters) == 2:
                 input_request.inputRequestAccepted.connect(partial(
-                    lambda userinput, arg: tab['vm'].module.process_response(userinput, arg),
+                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
                     arg=(action[3] if len(action) > 3 else None)))
                 input_request.inputRequestRejected.connect(partial(
-                    lambda arg: tab['vm'].module.process_response(None, arg),
+                    lambda arg: module.vm.module.process_response(None, arg),
                     arg=(action[3] if len(action) > 3 else None)))
             else:
                 input_request.inputRequestAccepted.connect(
-                    lambda userinput: tab['vm'].module.process_response(userinput))
+                    lambda userinput: module.vm.module.process_response(userinput))
                 input_request.inputRequestRejected.connect(
-                    lambda: tab['vm'].module.process_response(None))
+                    lambda: module.vm.module.process_response(None))
 
-            input_request.inputRequest.emit(tab['metadata']['name'], action[1], False, True,
+            input_request.inputRequest.emit(module.metadata['name'], action[1], False, True,
                                             action[2] if len(action) > 2 else "")
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
             self.window.output_queue.append(str(action[1]))
             if Settings.get('output_mode') == OutputMode.AutoType:
-                Logger.log(tab['metadata']['name'], Translation.get("data_queued_for_typing"))
+                Logger.log(module.metadata['name'], Translation.get("data_queued_for_typing"))
             else:
-                Logger.log(tab['metadata']['name'], Translation.get("data_queued_for_clipboard"))
+                Logger.log(module.metadata['name'], Translation.get("data_queued_for_clipboard"))
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
-                tab['vm'].selection = action[1]
+                module.vm.selection = action[1]
             else:
-                tab['vm'].selection = []
+                module.vm.selection = []
 
-            tab['vm'].context.setContextProperty(
-                "resultListModelTree", tab['vm'].selection)
+            module.vm.selection_changed(module.vm.selection)
 
-            if tab['vm'].selection_thread:
-                tab['vm'].selection_thread.join()
+            if module.vm.selection_thread:
+                module.vm.selection_thread.join()
 
-            tab['vm'].make_selection()
+            module.vm.make_selection()
 
         elif action[0] == Action.close:
             # Don't close and stay on the same depth if the user explicitly requested to not close after last input
-            if not tab['vm'].minimize_disabled:
-                self.window.close()
+            if not module.vm.minimize_disabled:
+                module.vm.close_request()
 
                 selection = []  # type: List[Dict[SelectionType, str]]
             else:
-                selection = tab['vm'].selection[:-1]
+                selection = module.vm.selection[:-1]
 
-            tab['vm'].minimize_disabled = False
+            module.vm.minimize_disabled = False
 
-            tab['vm'].queue.put([Action.set_selection, selection])
+            module.vm.queue.put([Action.set_selection, selection])
 
         elif action[0] == Action.set_entry_info:
             if len(action) > 2:
-                tab['vm'].extra_info_entries[str(action[1])] = str(action[2])
+                module.vm.extra_info_entries[str(action[1])] = str(action[2])
             else:
                 try:
-                    del tab['vm'].extra_info_entries[str(action[1])]
+                    del module.vm.extra_info_entries[str(action[1])]
                 except KeyError:
                     pass
 
         elif action[0] == Action.replace_entry_info_dict:
             if len(action) > 1:
-                tab['vm'].extra_info_entries = action[1]
+                module.vm.extra_info_entries = action[1]
             else:
-                tab['vm'].extra_info_entries = {}
+                module.vm.extra_info_entries = {}
 
         elif action[0] == Action.set_command_info:
             if len(action) > 2:
-                tab['vm'].extra_info_commands[str(action[1])] = str(action[2])
+                module.vm.extra_info_commands[str(action[1])] = str(action[2])
             else:
                 try:
-                    del tab['vm'].extra_info_commands[str(action[1])]
+                    del module.vm.extra_info_commands[str(action[1])]
                 except KeyError:
                     pass
 
         elif action[0] == Action.replace_command_info_dict:
             if len(action) > 1:
-                tab['vm'].extra_info_commands = action[1]
+                module.vm.extra_info_commands = action[1]
             else:
-                tab['vm'].extra_info_commands = {}
+                module.vm.extra_info_commands = {}
 
         elif action[0] == Action.set_base_info:
             if len(action) > 1:
-                tab['vm'].update_base_info_panel(action[1])
+                module.vm.update_base_info_panel(action[1])
             else:
-                tab['vm'].update_base_info_panel("")
+                module.vm.update_base_info_panel("")
 
         elif action[0] == Action.set_entry_context:
             if len(action) > 2:
-                tab['vm'].context_menu_entries[str(action[1])] = action[2]
+                module.vm.context_menu_entries[str(action[1])] = action[2]
             else:
                 try:
-                    del tab['vm'].context_menu_entries[str(action[1])]
+                    del module.vm.context_menu_entries[str(action[1])]
                 except KeyError:
                     pass
 
         elif action[0] == Action.replace_entry_context_dict:
             if len(action) > 1:
-                tab['vm'].context_menu_entries = action[1]
+                module.vm.context_menu_entries = action[1]
             else:
-                tab['vm'].context_menu_entries = {}
+                module.vm.context_menu_entries = {}
 
         elif action[0] == Action.set_command_context:
             if len(action) > 2:
-                tab['vm'].context_menu_commands[str(action[1])] = action[2]
+                module.vm.context_menu_commands[str(action[1])] = action[2]
             else:
                 try:
-                    del tab['vm'].context_menu_commands[str(action[1])]
+                    del module.vm.context_menu_commands[str(action[1])]
                 except KeyError:
                     pass
 
         elif action[0] == Action.replace_command_context_dict:
             if len(action) > 1:
-                tab['vm'].context_menu_commands = action[1]
+                module.vm.context_menu_commands = action[1]
             else:
-                tab['vm'].context_menu_commands = {}
+                module.vm.context_menu_commands = {}
 
         elif action[0] == Action.set_base_context:
             if len(action) > 1:
-                tab['vm'].context_menu_base = action[1]
+                module.vm.context_menu_base = action[1]
             else:
-                tab['vm'].context_menu_base = []
-
-            tab['vm'].context_menu_model_base_list.setStringList(str(entry) for entry in tab['vm'].context_menu_base)
+                module.vm.context_menu_base = []
 
         else:
             print('WARN: Module requested unknown action {}'.format(action[0]))
 
-        if active_tab and tab['entries_processed'] >= 100:
-            tab['vm'].search(new_entries=True)
-            tab['entries_processed'] = 0
+        if focused_module and module.entries_processed >= 100:
+            module.vm.search(new_entries=True)
+            module.entries_processed = 0
 
-        tab['queue'].task_done()
+        module.vm.queue.task_done()
 
     def run(self) -> None:
         """Process actions modules put in the queue and keep the window working."""
@@ -890,33 +935,29 @@ class MainLoop():
             self.app.processEvents()
             Logger.show_next_message()
 
-            current_tab = QQmlProperty.read(self.window.tabs, "currentIndex")
-
             all_empty = True
-            for tab_id, tab in enumerate(self.window.tab_bindings):
-                if not tab['init']:
+            for index, module in enumerate(Core.get_modules()):
+                if not module.init:
                     continue
 
-                tab['vm'].context.setContextProperty(
-                    "unprocessedCount", tab['queue'].qsize())
-                if tab_id == current_tab:
-                    active_tab = True
-                    tab['vm'].context.setContextProperty(
-                        "resultListModelHasEntries", True if tab['vm'].entry_list or tab['vm'].command_list else False)
+                module.vm.unprocessed_count_changed(module.vm.queue.qsize())
+
+                if index == Core.get_focused_module_id():
+                    focused_module = True
                 else:
-                    active_tab = False
+                    focused_module = False
 
                 try:
-                    self._process_tab_action(tab, active_tab)
-                    tab['entries_processed'] += 1
+                    self._process_module_action(index, module, focused_module)
+                    module.entries_processed += 1
                     all_empty = False
                 except Empty:
-                    if active_tab and tab['entries_processed']:
-                        tab['vm'].search(new_entries=True)
+                    if focused_module and module.entries_processed:
+                        module.vm.search(new_entries=True)
 
-                    tab['entries_processed'] = 0
+                    module.entries_processed = 0
                 except Exception as e:
-                    print('WARN: Module {} caused exception {}'.format(tab['metadata']['name'], e))
+                    print('WARN: Module {} caused exception {}'.format(module.metadata['name'], e))
                     traceback.print_exc()
 
             if all_empty:
@@ -1085,27 +1126,27 @@ class ProfileManager():
         """List the existing profiles."""
         return os.listdir(self.profile_dir)
 
-    def save_modules(self, profile: str, modules: List[Dict]) -> None:
+    def save_modules(self, profile: str, modules: List[UiModule]) -> None:
         """Save the list of open modules and their settings to the profile."""
         config = configparser.ConfigParser()
         for number, module in enumerate(modules):
             settings = {}
-            for setting in module['settings']:
+            for setting in module.settings:
                 # Only save non-internal variables
                 if setting[0] != "_":
-                    value = module['settings'][setting]
+                    value = module.settings[setting]
                     settings[setting] = str(value) if value is not None else ''
 
             # Append Pext state variables
-            for setting in module['vm'].settings:
+            for setting in module.vm.settings:
                 try:
-                    value = module['vm'].settings[setting].name
+                    value = module.vm.settings[setting].name
                 except KeyError:
-                    value = module['vm'].settings[setting]
+                    value = module.vm.settings[setting]
 
                 settings[setting] = str(value) if value is not None else ''
 
-            config['{}_{}'.format(number, module['metadata']['id'])] = settings
+            config['{}_{}'.format(number, module.metadata['id'])] = settings
 
         with open(os.path.join(self.profile_dir, profile, 'modules'), 'w') as configfile:
             config.write(configfile)
@@ -1315,7 +1356,7 @@ class ModuleManager():
 
         return None
 
-    def load(self, window: 'Window', module: Dict[str, Any]) -> bool:
+    def load(self, module: Dict[str, Any], index=None, window=None) -> bool:
         """Load a module and attach it to the main window."""
         # Append modulePath if not yet appendend
         module_path = os.path.join(ConfigRetriever.get_path(), 'modules')
@@ -1352,35 +1393,8 @@ class ModuleManager():
 
         module['settings'] = module_settings
 
-        # Prepare viewModel and context
+        # Prepare ViewModel
         vm = ViewModel(view_settings)
-        module_context = QQmlContext(window.context)
-        module_context.setContextProperty(
-            "sortMode", vm.sort_mode)
-        module_context.setContextProperty(
-            "resultListModel", vm.result_list_model_list)
-        module_context.setContextProperty(
-            "resultListModelNormalEntries", len(vm.filtered_entry_list))
-        module_context.setContextProperty(
-            "resultListModelCommandEntries", len(vm.filtered_command_list))
-        module_context.setContextProperty(
-            "resultListModelHasEntries", False)
-        module_context.setContextProperty(
-            "resultListModelCommandMode", False)
-        module_context.setContextProperty(
-            "resultListModelTree", [])
-        module_context.setContextProperty(
-            "unprocessedCount", 0)
-        module_context.setContextProperty(
-            "contextMenuModel", vm.context_menu_model_list)
-        module_context.setContextProperty(
-            "contextMenuModelFull", vm.context_menu_model_list_full)
-        module_context.setContextProperty(
-            "contextMenuModelEntrySpecificCount", 0)
-        module_context.setContextProperty(
-            "contextMenuEnabled", False)
-        module_context.setContextProperty(
-            "searchInputFieldEmpty", True)
 
         # Prepare module
         try:
@@ -1488,68 +1502,33 @@ class ModuleManager():
             args=(module['settings'], q))
         module_thread.start()
 
-        # Add tab
-        tab_data = QQmlComponent(window.engine)
-        tab_data.loadUrl(
-            QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'ModuleData.qml')))
-        window.engine.setContextForObject(tab_data, module_context)
-        window.tabs.addTab(module['metadata']['name'], tab_data)
+        # Turn this into an UiModule
+        vm.bind_queue(q)
+        vm.bind_module(module_code)
+        ui_module = UiModule(vm, module_code, module_import, module['metadata'], module['settings'])
+        Core.add_module(ui_module, index)
 
-        # Store tab/viewModel combination
-        # tabData is not used but stored to prevent segfaults caused by
-        # Python garbage collecting it
-        window.tab_bindings.append({'init': False,
-                                    'queue': q,
-                                    'vm': vm,
-                                    'module': module_code,
-                                    'module_context': module_context,
-                                    'module_import': module_import,
-                                    'metadata': module['metadata'],
-                                    'tab_data': tab_data,
-                                    'settings': module['settings'],
-                                    'entries_processed': 0})
-
-        # Open tab to trigger loading
-        QQmlProperty.write(
-            window.tabs, "currentIndex", QQmlProperty.read(window.tabs, "count") - 1)
-
-        # Save active modules
-        ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
-
-        # First module? Enforce load
-        if len(window.tab_bindings) == 1:
-            window.tabs.currentIndexChanged.emit()
+        # Ask Window to attach
+        if window:
+            return window.add_module(ui_module, index)
 
         return True
 
-    def stop(self, window: 'Window', tab_id: int) -> None:
-        """Call a module's stop function by ID."""
+    def stop(self, index: int) -> None:
+        """Call a module's stop function by index."""
+        module = Core.get_module(index)
         try:
-            window.tab_bindings[tab_id]['vm'].stop()
+            module.vm.stop()
         except Exception as e:
             print('WARN: Module {} caused exception {} on unload'
-                  .format(window.tab_bindings[tab_id]['metadata']['name'], e))
+                  .format(module.metadata['name'], e))
             traceback.print_exc()
 
-    def unload(self, window: 'Window', tab_id: int) -> None:
-        """Unload a module by tab ID."""
-        if QQmlProperty.read(window.tabs, "currentIndex") == tab_id:
-            tab_count = QQmlProperty.read(window.tabs, "count")
-            if tab_count == 1:
-                QQmlProperty.write(window.tabs, "currentIndex", "-1")
-            elif tab_id + 1 < tab_count:
-                QQmlProperty.write(window.tabs, "currentIndex", tab_id + 1)
-            else:
-                QQmlProperty.write(window.tabs, "currentIndex", "0")
-
-        window.tabs.removeRequest.emit(tab_id)
-        del window.tab_bindings[tab_id]
-
-        # Save active modules
-        ProfileManager().save_modules(Settings.get('profile'), window.tab_bindings)
-
-        # Ensure a proper refresh on the UI side
-        window.tabs.currentIndexChanged.emit()
+    def unload(self, index: int, window=None) -> None:
+        """Unload a module by tab index."""
+        Core.remove_module(index)
+        if window:
+            window.remove_module(index)
 
     def get_info(self, module_id: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return the metadata and source of one single module."""
@@ -1559,31 +1538,29 @@ class ModuleManager():
         """Return a list of modules together with their source."""
         return ObjectManager().list_objects(self.module_dir)
 
-    def reload_step_unload(self, window: 'Window', tab_id: int) -> Dict[str, str]:
-        """Reload a module by tab ID: Unload step."""
+    def reload_step_unload(self, index: int, window=None) -> Dict[str, str]:
+        """Reload a module by index: Unload step."""
         # Get the needed info to load the module
-        module_data = window.tab_bindings[tab_id]
+        module_data = Core.get_module(index)
         module = {
-            'metadata': module_data['metadata'],
-            'settings': module_data['settings'],
-            'module_import': module_data['module_import']
+            'metadata': module_data.metadata,
+            'settings': module_data.settings,
+            'module_import': module_data.module_import
         }
 
         # Stop the module
-        self.stop(window, tab_id)
+        self.stop(index)
 
         # Disable with reason: update
-        window.disable_module(tab_id, 2)
+        if window:
+            window.disable_module(index, 2)
 
         return module
 
-    def reload_step_load(self, window: 'Window', tab_id: int, module_data: Dict[str, Any]) -> bool:
-        """Reload a module by tab ID: Load step."""
-        # Get currently active tab
-        current_index = QQmlProperty.read(window.tabs, "currentIndex")
-
+    def reload_step_load(self, index: int, module_data: Dict[str, Any], window=None) -> bool:
+        """Reload a module by index: Load step."""
         # Unload the module
-        self.unload(window, tab_id)
+        self.unload(index, window)
 
         # Force a reload to make code changes happen
         reload(module_data['module_import'])
@@ -1594,22 +1571,8 @@ class ModuleManager():
             'settings': module_data['settings']
         }
 
-        if not self.load(window, module):
+        if not self.load(module, index, window):
             return False
-
-        # Get new position
-        new_tab_id = len(window.tab_bindings) - 1
-
-        # Move to correct position if there is more than 1 tab
-        if new_tab_id > 0:
-            window.tabs.moveTab(new_tab_id, tab_id)
-            window.tab_bindings.insert(tab_id, window.tab_bindings.pop(new_tab_id))
-
-            # Focus on active tab
-            QQmlProperty.write(window.tabs, "currentIndex", str(current_index))
-
-        # Ensure a proper refresh on the UI side
-        window.tabs.currentIndexChanged.emit()
 
         return True
 
@@ -1921,17 +1884,21 @@ class ViewModel():
         # Temporary values to allow binding. These will be properly set when
         # possible and relevant.
         self._settings = {}  # type: Dict[str, Any]
-        self.command_list = []  # type: List
         self.entry_list = []  # type: List
         self.filtered_entry_list = []  # type: List
+        self.command_list = []  # type: List
         self.filtered_command_list = []  # type: List
-        self.result_list_model_list = QStringListModel()
+        self.result_list = []  # type: List
+        self.result_list_index = -1
         self.result_list_model_max_index = -1
         self.selection = []  # type: List[Dict[SelectionType, str]]
+        self.search_string = ""
         self.last_search = ""
-        self.context_menu_model_list = QStringListModel()
-        self.context_menu_model_base_list = QStringListModel()
-        self.context_menu_model_list_full = QStringListModel()
+        self.context_menu_enabled = False
+        self.context_menu_index = -1
+        self.context_menu_list = []  # type: List
+        self.context_menu_base_list = []  # type: List
+        self.context_menu_list_full = []  # type: List
         self.extra_info_entries = {}  # type: Dict[str, str]
         self.extra_info_commands = {}  # type: Dict[str, str]
         self.context_menu_entries = {}  # type: Dict[str, List[str]]
@@ -1943,6 +1910,21 @@ class ViewModel():
         self.settings = view_settings
 
         self.stopped = False
+
+        # Callback functions
+        self.search_string_changed = lambda search_string: None
+        self.result_list_changed = lambda results, normal_count, entry_count: None
+        self.result_list_index_changed = lambda index: None
+        self.context_menu_enabled_changed = lambda value: None
+        self.context_menu_index_changed = lambda index: None
+        self.context_menu_list_changed = lambda base, entry_specific: None
+        self.context_info_panel_changed = lambda value: None
+        self.sort_mode_changed = lambda mode: None
+        self.unprocessed_count_changed = lambda count: None
+        self.selection_changed = lambda selection: None
+        self.header_text_changed = lambda value: None
+
+        self.close_request = lambda manual, force_tray: None
 
     @property
     def settings(self):
@@ -1971,12 +1953,10 @@ class ViewModel():
     def sort_mode(self, sort_mode: SortMode):
         """Set the new sorting mode."""
         self._settings['__pext_sort_mode'] = sort_mode
-        try:
-            self.context.setContextProperty("sortMode", self.sort_mode)
-            # Force a resort
-            self.search(new_entries=True)
-        except AttributeError:
-            pass
+        self.sort_mode_changed(self.sort_mode)
+
+        # Force a resort
+        self.search(new_entries=True)
 
     def stop(self) -> None:
         """Stop the module."""
@@ -2057,7 +2037,7 @@ class ViewModel():
             # We fully match a string
             return ''.join(common_chars)
 
-    def _clear_queue(self) -> None:
+    def clear_queue(self) -> None:
         while True:
             try:
                 self.queue.get_nowait()
@@ -2065,22 +2045,100 @@ class ViewModel():
                 return
             self.queue.task_done()
 
-    def bind_context(self, queue: Queue, context: QQmlContext, window: 'Window', search_input_model: QObject,
-                     header_text: QObject, result_list_model: QObject, context_menu_model: QObject,
-                     base_info_panel: QObject, context_info_panel: QObject) -> None:
-        """Bind the QML context so we can communicate with the QML front-end."""
-        self.queue = queue
-        self.context = context
-        self.window = window
-        self.search_input_model = search_input_model
-        self.header_text = header_text
-        self.result_list_model = result_list_model
-        self.context_menu_model = context_menu_model
-        self.base_info_panel = base_info_panel
-        self.context_info_panel = context_info_panel
+    def bind_search_string_changed_callback(self, function: Callable[[str], None]) -> None:
+        """Bind the search_string_changed callback.
 
-        # Force propagation of settings values to QML
-        self.settings = self._settings
+        This ensures we can notify the window when the search string changes.
+        """
+        self.search_string_changed = function
+
+    def bind_result_list_changed_callback(self, function: Callable[[List[str], int, int], None]) -> None:
+        """Bind the result_list_changed callback.
+
+        This ensures we can notify the window when the result list changes.
+        """
+        self.result_list_changed = function
+
+    def bind_result_list_index_changed_callback(self, function: Callable[[int], None]) -> None:
+        """Bind the result_list_index_changed callback.
+
+        This ensures we can notify the window when the result list index changes.
+        """
+        self.result_list_index_changed = function
+
+    def bind_context_menu_enabled_changed_callback(self, function: Callable[[bool], None]) -> None:
+        """Bind the context_menu_enabled_changed callback.
+
+        This ensures we can notify the window when the state of the context menu changes.
+        """
+        self.context_menu_enabled_changed = function
+
+    def bind_context_menu_index_changed_callback(self, function: Callable[[int], None]) -> None:
+        """Bind the context_menu_index_changed callback.
+
+        This ensures we can notify the window when the context menu index changes.
+        """
+        self.context_menu_index_changed = function
+
+    def bind_context_menu_list_changed_callback(self, function: Callable[[List[str], List[str]], None]) -> None:
+        """Bind the context_menu_list_changed callback.
+
+        This ensures we can notify the window when the context menu's list changes.
+        """
+        self.context_menu_list_changed = function
+
+    def bind_context_info_panel_changed_callback(self, function: Callable[[str], None]) -> None:
+        """Bind the context_info_panel_changed callback.
+
+        This ensures we can notify the window when the context info menu changes.
+        """
+        self.context_info_panel_changed = function
+
+    def bind_base_info_panel_changed_callback(self, function: Callable[[str], None]) -> None:
+        """Bind the base_info_panel_changed callback.
+
+        This ensures we can notify the window when the base info menu changes.
+        """
+        self.base_info_panel_changed = function
+
+    def bind_sort_mode_changed_callback(self, function: Callable[[str], None]) -> None:
+        """Bind the sort_mode_changed callback.
+
+        This ensures we can notify the window when the sort mode changes.
+        """
+        self.sort_mode_changed = function
+
+    def bind_unprocessed_count_changed_callback(self, function: Callable[[int], None]) -> None:
+        """Bind the unprocessed_count_changed callback.
+
+        This ensures we can notify the window when the unprocessed count changes.
+        """
+        self.unprocessed_count_changed = function
+
+    def bind_selection_changed_callback(self, function: Callable[[List[Dict[SelectionType, str]]], None]) -> None:
+        """Bind the selection_changed callback.
+
+        This ensures we can notify the window when the selection changes.
+        """
+        self.selection_changed = function
+
+    def bind_header_text_changed_callback(self, function: Callable[[str], None]) -> None:
+        """Bind the header_text_changed callback.
+
+        This ensures we can notify the window when the header text changes.
+        """
+        self.header_text_changed = function
+
+    def bind_close_request_callback(self, function: Callable[[bool, bool], None]) -> None:
+        """Bind the close_request callback.
+
+        This ensures we can notify the window when a window closure is requested.
+        """
+        self.close_request = function
+
+    def bind_queue(self, queue: Queue) -> None:
+        """Bind the queue."""
+        self.queue = queue
 
     def bind_module(self, module: ModuleBase) -> None:
         """Bind the module.
@@ -2091,20 +2149,19 @@ class ViewModel():
 
     def go_up(self, to_base=False) -> None:
         """Go one level up.
-
         This means that, if we're currently in the entry content list, we go
         back to the entry list. If we're currently in the entry list, we clear
         the search bar. If we're currently in the entry list and the search bar
         is empty, we tell the window to hide/close itself.
         """
-        if self.context.contextProperty("contextMenuEnabled"):
+        if self.context_menu_enabled:
             self.hide_context()
             if not to_base:
                 return
 
-        if QQmlProperty.read(self.search_input_model, "text") != "":
-            QQmlProperty.write(self.search_input_model, "text", "")
-            self.context.setContextProperty("searchInputFieldEmpty", True)
+        if self.search_string != "":
+            self.search_string = ""
+            self.search_string_changed(self.search_string)
             if not to_base:
                 return
 
@@ -2125,14 +2182,13 @@ class ViewModel():
 
             self.search(new_entries=True)
 
-            self.context.setContextProperty(
-                "resultListModelTree", self.selection)
+            self.selection_changed(self.selection)
 
-            self._clear_queue()
+            self.clear_queue()
 
             self.make_selection()
         else:
-            self.window.close(manual=True)
+            self.close_request(manual=True)
 
     def search(self, new_entries=False, manual=False) -> None:
         """Filter the entry list.
@@ -2144,21 +2200,21 @@ class ViewModel():
         if self.stopped:
             return
 
-        search_string = QQmlProperty.read(self.search_input_model, "text")
-        self.context.setContextProperty("searchInputFieldEmpty", not search_string)
-
         # Don't search if nothing changed
-        if not new_entries and search_string == self.last_search:
+        if not new_entries and self.search_string == self.last_search:
             return
 
+        # Notify window the search string changed
+        self.search_string_changed(self.search_string)
+
         # Enable checking for changes next time
-        self.last_search = search_string
+        self.last_search = self.search_string
 
         current_match = None
         current_index = 0
 
         # If context menu is open, search in context menu
-        if self.context.contextProperty("contextMenuEnabled"):
+        if self.context_menu_enabled:
             current_entry = self._get_entry()
             try:
                 if current_entry['type'] == SelectionType.entry:
@@ -2182,8 +2238,7 @@ class ViewModel():
 
             # Get current match
             try:
-                current_match = self.context_menu_model_list_full.stringList()[
-                        QQmlProperty.read(self.context_menu_model, "currentIndex")]
+                current_match = self.context_menu_list_full[self.context_menu_index]
             except IndexError:
                 pass
         # Else, search in normal list
@@ -2203,25 +2258,19 @@ class ViewModel():
 
             # Get current match
             try:
-                current_match = self.result_list_model_list.stringList()[QQmlProperty.read(self.result_list_model,
-                                                                                           "currentIndex")]
+                current_match = self.result_list[self.result_list_index]
             except IndexError:
                 pass
 
         # If empty, show all
-        if not search_string and not new_entries:
-            if self.context.contextProperty("contextMenuEnabled"):
+        if not self.search_string and not new_entries:
+            if self.context_menu_enabled:
                 self.filtered_context_list = entry_list
                 self.filtered_context_base_list = self.context_menu_base
                 self.sorted_filtered_context_list = self.sorted_context_list
                 self.sorted_filtered_context_base_list = self.sorted_context_base_list
 
-                combined_list = self.sorted_filtered_context_list + self.sorted_filtered_context_base_list
-
-                self.context_menu_model_list.setStringList(str(entry) for entry in self.sorted_filtered_context_list)
-                self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
-                self.context.setContextProperty(
-                    "contextMenuModelEntrySpecificCount", len(self.sorted_filtered_context_list))
+                self.context_menu_list_changed(self.sorted_filtered_context_base_list, self.sorted_filtered_context_list)
             else:
                 self.filtered_entry_list = self.entry_list
                 self.filtered_command_list = self.command_list
@@ -2230,12 +2279,8 @@ class ViewModel():
 
                 combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
 
-                self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
-
-                self.context.setContextProperty(
-                    "resultListModelNormalEntries", len(self.sorted_filtered_entry_list))
-                self.context.setContextProperty(
-                    "resultListModelCommandEntries", len(self.sorted_filtered_command_list))
+                self.result_list = combined_list
+                self.result_list_changed(self.result_list, len(self.sorted_filtered_entry_list), len(self.sorted_filtered_command_list))
 
             # Keep existing selection, otherwise ensure something is selected
             if current_match:
@@ -2244,16 +2289,18 @@ class ViewModel():
                 except ValueError:
                     current_index = 0
 
-            if self.context.contextProperty("contextMenuEnabled"):
-                QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
+            if self.context_menu_enabled:
+                self.context_menu_index = current_index
+                self.context_menu_index_changed(self.context_menu_index)
             else:
-                QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
+                self.result_list_index = current_index
+                self.result_list_index_changed(self.result_list_index)
 
             self.update_context_info_panel()
 
             return
 
-        if self.context.contextProperty("contextMenuEnabled"):
+        if self.context_menu_enabled:
             self.filtered_context_list = []
             self.filtered_context_base_list = []
         else:
@@ -2261,14 +2308,14 @@ class ViewModel():
             self.filtered_command_list = []
 
         # String matching logic
-        list_match = search_string.lower().split(' ')
+        list_match = self.search_string.lower().split(' ')
 
         def check_list_match(entries, string_list) -> List[str]:
             return_list = []  # type: List[str]
             for entry in entries:
                 lower_entry = entry.lower()
-                for search_string_part in string_list:
-                    if search_string_part not in lower_entry:
+                for self.search_string_part in string_list:
+                    if self.search_string_part not in lower_entry:
                         break
                 else:
                     # If exact match, put on top
@@ -2280,29 +2327,20 @@ class ViewModel():
 
             return return_list
 
-        if self.context.contextProperty("contextMenuEnabled"):
+        if self.context_menu_enabled:
             self.filtered_context_list = check_list_match(self.sorted_context_list, list_match)
             self.filtered_context_base_list = check_list_match(self.sorted_context_base_list, list_match)
         else:
             self.filtered_entry_list = check_list_match(self.sorted_entry_list, list_match)
             self.filtered_command_list = check_list_match(self.sorted_command_list, list_match)
 
-        if self.context.contextProperty("contextMenuEnabled"):
+        if self.context_menu_enabled:
+            self.context_menu_list_changed(self.filtered_context_base_list, self.filtered_context_list)
             combined_list = self.filtered_context_list + self.filtered_context_base_list
         else:
             combined_list = self.filtered_entry_list + self.filtered_command_list
-
-            self.context.setContextProperty(
-                "resultListModelNormalEntries", len(self.filtered_entry_list))
-            self.context.setContextProperty(
-                "resultListModelCommandEntries", len(self.filtered_command_list))
-
-        if self.context.contextProperty("contextMenuEnabled"):
-            self.context_menu_model_list.setStringList(str(entry) for entry in self.filtered_context_list)
-            self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
-            self.context.setContextProperty("contextMenuModelEntrySpecificCount", len(self.filtered_context_list))
-        else:
-            self.result_list_model_list.setStringList(str(entry) for entry in combined_list)
+            self.result_list = combined_list
+            self.result_list_changed(self.result_list, len(self.filtered_entry_list), len(self.filtered_command_list))
 
         # See if we have an exact match
         if combined_list and len(list_match) == 1 and combined_list[0].lower() == list_match[0]:
@@ -2315,21 +2353,23 @@ class ViewModel():
             except ValueError:
                 current_index = 0
 
-        if self.context.contextProperty("contextMenuEnabled"):
-            QQmlProperty.write(self.context_menu_model, "currentIndex", current_index)
+        if self.context_menu_enabled:
+            self.context_menu_index = current_index
+            self.context_menu_index_changed(self.context_menu_index)
         else:
-            QQmlProperty.write(self.result_list_model, "currentIndex", current_index)
+            self.result_list_index = current_index
+            self.result_list_index_changed(self.result_list_index)
 
         self.update_context_info_panel()
 
         # Turbo mode: Select entry if only entry left
-        if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty() and search_string:
+        if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty() and self.search_string:
             self.select(force_args=True)
 
     def _get_entry(self, include_context=False) -> Dict:
         """Get info on the entry that's currently focused."""
-        if include_context and self.context.contextProperty("contextMenuEnabled"):
-            current_index = QQmlProperty.read(self.context_menu_model, "currentIndex")
+        if include_context and self.context_menu_enabled:
+            current_index = self.context_menu_index
 
             selected_entry = self._get_entry()
 
@@ -2346,7 +2386,7 @@ class ViewModel():
 
             return selected_entry
 
-        current_index = QQmlProperty.read(self.result_list_model, "currentIndex")
+        current_index = self.result_list_index
 
         if current_index >= len(self.filtered_entry_list):
             # Selection is a command
@@ -2378,10 +2418,9 @@ class ViewModel():
         selection["args"] = command_args
         self.selection.append(selection)
 
-        self.context.setContextProperty(
-            "contextMenuEnabled", False)
-        self.context.setContextProperty(
-            "resultListModelTree", self.selection)
+        self.context_menu_enabled = False
+        self.context_menu_enabled_changed(self.context_menu_enabled)
+        self.selection_changed(self.selection)
 
         self.entry_list = []
         self.command_list = []
@@ -2390,16 +2429,20 @@ class ViewModel():
         self.context_menu_entries = {}
         self.context_menu_commands = {}
 
-        QQmlProperty.write(self.search_input_model, "text", "")
-        self.context.setContextProperty("searchInputFieldEmpty", True)
+        if self.search_string != "":
+            self.search_string = ""
+            self.search_string_changed(self.search_string)
         self.search(new_entries=True, manual=True)
-        self._clear_queue()
+        self.clear_queue()
 
         self.make_selection(disable_minimize=disable_minimize)
 
     def show_context(self) -> None:
         """Show the context menu of the selected entry."""
         if self.stopped:
+            return
+
+        if not self.filtered_command_list and not self.filtered_entry_list:
             return
 
         current_entry = self._get_entry()
@@ -2423,13 +2466,13 @@ class ViewModel():
             Logger.log(None, Translation.get("no_context_menu_available"))
             return
 
-        QQmlProperty.write(self.context_menu_model, "currentIndex", 0)
-        self.context.setContextProperty(
-            "contextMenuEnabled", True)
+        self.context_menu_enabled = True
+        self.context_menu_enabled_changed(self.context_menu_enabled)
+        self.context_menu_index_changed(0)
 
-        if QQmlProperty.read(self.search_input_model, "text") != "":
-            QQmlProperty.write(self.search_input_model, "text", "")
-            self.context.setContextProperty("searchInputFieldEmpty", True)
+        if self.search_string != "":
+            self.search_string = ""
+            self.search_string_changed(self.search_string)
         self.search(new_entries=True)
 
     def hide_context(self) -> None:
@@ -2437,12 +2480,12 @@ class ViewModel():
         if self.stopped:
             return
 
-        self.context.setContextProperty(
-            "contextMenuEnabled", False)
+        self.context_menu_enabled = False
+        self.context_menu_enabled_changed(self.context_menu_enabled)
 
-        if QQmlProperty.read(self.search_input_model, "text") != "":
-            QQmlProperty.write(self.search_input_model, "text", "")
-            self.context.setContextProperty("searchInputFieldEmpty", True)
+        if self.search_string != "":
+            self.search_string = ""
+            self.search_string_changed(self.search_string)
         self.search()
 
     def update_context_info_panel(self, request_update=True) -> None:
@@ -2451,7 +2494,7 @@ class ViewModel():
             return
 
         if not self.filtered_entry_list and not self.filtered_command_list:
-            QQmlProperty.write(self.context_info_panel, "text", "")
+            self.context_info_panel_changed("")
             return
 
         current_entry = self._get_entry()
@@ -2465,19 +2508,19 @@ class ViewModel():
 
         try:
             if current_entry['type'] == SelectionType.entry:
-                QQmlProperty.write(self.context_info_panel, "text", self.extra_info_entries[current_entry['value']])
+                self.context_info_panel_changed(self.extra_info_entries[current_entry['value']])
             else:
-                QQmlProperty.write(self.context_info_panel, "text", self.extra_info_commands[current_entry['value']])
+                self.context_info_panel_changed(self.extra_info_commands[current_entry['value']])
         except KeyError:
-            QQmlProperty.write(self.context_info_panel, "text", "")
+            self.context_info_panel_changed("")
 
     def update_base_info_panel(self, base_info: str) -> None:
         """Update the base info panel based on the current module state."""
-        QQmlProperty.write(self.base_info_panel, "text", str(base_info))
+        self.base_info_panel_changed(str(base_info))
 
     def set_header(self, content) -> None:
         """Set the header text."""
-        QQmlProperty.write(self.header_text, "text", str(content))
+        self.header_text_changed(str(content))
 
     def tab_complete(self) -> None:
         """Tab-complete based on the current seach input.
@@ -2488,7 +2531,7 @@ class ViewModel():
         if self.stopped:
             return
 
-        current_input = QQmlProperty.read(self.search_input_model, "text")
+        current_input = self.search_string
         combined_list = self.filtered_entry_list + self.filtered_command_list
 
         entry = self._get_longest_common_string(
@@ -2499,7 +2542,8 @@ class ViewModel():
                 [Action.add_error, Translation.get("no_tab_completion_possible")])
             return
 
-        QQmlProperty.write(self.search_input_model, "text", entry)
+        self.search_string = entry
+        self.search_string_changed(entry)
         self.search()
 
     def input_args(self) -> None:
@@ -2513,12 +2557,12 @@ class ViewModel():
             return
 
         selected_entry = self._get_entry(include_context=True)
-        if not self.context.contextProperty("contextMenuEnabled") and selected_entry["type"] != SelectionType.command:
+        if not self.context_menu_enabled and selected_entry["type"] != SelectionType.command:
             if len(self.filtered_command_list) > 0:
                 # Jump to the first command in case the current selection
                 # is not a command
-                QQmlProperty.write(self.result_list_model, "currentIndex",
-                                   len(self.filtered_entry_list))
+                self.result_list_index = len(self.filtered_entry_list)
+                self.result_list_index_changed(self.result_list_index)
                 selected_entry = self._get_entry(include_context=True)
             else:
                 self.queue.put(
@@ -3199,7 +3243,7 @@ def main(ui_type: UIType) -> None:
 
     # Prepare UI-specific
     if ui_type == UIType.Qt5:
-        from ui.qt5 import Window, Tray, HotkeyHandler, SignalHandler
+        from ui.qt5 import Window, WindowModule, Tray, HotkeyHandler, SignalHandler
     else:
         raise ValueError("Invalid UI type requested")
 
@@ -3221,11 +3265,11 @@ def main(ui_type: UIType) -> None:
         window.bind_tray(tray)
 
     # Clean up on exit
-    atexit.register(Core._shut_down, window)
+    atexit.register(Core._shut_down)
 
     # Create a main loop
     main_loop_queue = Queue()  # type: Queue[Callable[[], None]]
-    main_loop = MainLoop(app, window, main_loop_queue)
+    main_loop = MainLoop(app, main_loop_queue, module_manager, window)
 
     if ui_type == UIType.Qt5:
         # Handle SIGUSR1 UNIX signal

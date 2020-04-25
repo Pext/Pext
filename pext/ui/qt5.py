@@ -41,13 +41,15 @@ from subprocess import Popen
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QAction, QMenu, QSystemTrayIcon
-from PyQt5.Qt import QClipboard, QObject, QQmlApplicationEngine, QQmlProperty, QUrl
+from PyQt5.Qt import QClipboard, QObject, QStringListModel, QQmlApplicationEngine, QQmlComponent, QQmlContext, QQmlProperty, QUrl
 from PyQt5.QtGui import QWindow
 
 from __main__ import (AppFile, ConfigRetriever, Core, InternalCallProcessor, LocaleManager, Logger, ModuleManager,
-                      MinimizeMode, OutputMode, OutputSeparator, ProfileManager, RunConseq, Settings, ThemeManager,
-                      Translation, UpdateManager)
+                      MinimizeMode, OutputMode, OutputSeparator, ProfileManager, RunConseq, Settings, SortMode, ThemeManager,
+                      Translation, UiModule, UpdateManager)
 from constants import USE_INTERNAL_UPDATER
+
+from pext_helpers import SelectionType  # noqa: E402
 
 pyautogui_error = None
 if platform.system() == 'Darwin':
@@ -77,6 +79,65 @@ if platform.system() == "Linux":
         traceback.print_exc()
         print("python3-opengl is not installed. If Pext fails to render, please try installing it. "
               "See https://github.com/Pext/Pext/issues/11.")
+
+
+class WindowModule():
+    """A model's state in the window."""
+
+    def __init__(self, window: 'Window', uiModule: UiModule, module_context: QQmlContext, tab_data, result_list_model_list: QStringListModel, context_menu_model_list: QStringListModel, context_menu_list_full: QStringListModel) -> None:
+        self.window = window
+        self.uiModule = uiModule
+        self.context = module_context
+        self.tab_data = tab_data
+        self.result_list_model_list = result_list_model_list
+        self.context_menu_model_list = context_menu_model_list
+        self.context_menu_model_list_full = context_menu_model_list
+
+    def search_string_changed(self, search_string: str) -> None:
+        QQmlProperty.write(self.window.search_input_model, "text", search_string)
+        self.context.setContextProperty("searchInputFieldEmpty", True if search_string else False)
+
+    def result_list_changed(self, entries: List[str], normal_count: int, command_count: int) -> None:
+        self.result_list_model_list.setStringList(str(entry) for entry in entries)
+        self.context.setContextProperty("resultListModelNormalEntries", normal_count)
+        self.context.setContextProperty("resultListModelCommandEntries", command_count)
+        self.context.setContextProperty("resultListModelHasEntries", True if entries else False)
+
+    def result_list_index_changed(self, index: int) -> None:
+        QQmlProperty.write(self.result_list_model, "currentIndex", index)
+
+    def context_menu_enabled_changed(self, value: bool) -> None:
+        self.context.setContextProperty("contextMenuEnabled", value)
+
+    def context_menu_index_changed(self, index: int) -> None:
+        QQmlProperty.write(self.context_menu_model, "currentIndex", index)
+
+    def context_menu_list_changed(self, base: List[str], entry_specific: List[str]) -> None:
+        self.context_menu_model_list.setStringList(str(entry) for entry in entry_specific)
+        combined_list = entry_specific + base
+        self.context_menu_model_list_full.setStringList(str(entry) for entry in combined_list)
+
+        self.context.setContextProperty("contextMenuModel", self.context_menu_model_list)
+        self.context.setContextProperty("contextMenuModelFull", self.context_menu_model_list_full)
+        self.context.setContextProperty("contextMenuModelEntrySpecificCount", len(entry_specific))
+
+    def context_info_panel_changed(self, value: str) -> None:
+        QQmlProperty.write(self.context_info_panel, "text", value)
+
+    def base_info_panel_changed(self, value: str) -> None:
+        QQmlProperty.write(self.base_info_panel, "text", value)
+
+    def sort_mode_changed(self, sort_mode: SortMode) -> None:
+        self.context.setContextProperty("sortMode", str(sort_mode))
+
+    def unprocessed_count_changed(self, count: int) -> None:
+        self.context.setContextProperty("unprocessedCount", count)
+
+    def selection_changed(self, selection: List[Dict[SelectionType, str]]) -> None:
+        self.context.setContextProperty("resultListModelTree", selection)
+
+    def header_text_changed(self, value: str) -> None:
+        QQmlProperty.write(self.header_text, "text", value)
 
 
 class Window():
@@ -367,6 +428,9 @@ class Window():
 
         # Bind the context when the tab is loaded
         self.tabs.currentIndexChanged.connect(self._bind_context)
+        
+        # Update active module when the tab is changed
+        self.tabs.currentIndexChanged.connect(self._update_active_module)
 
         # Show the window if not --background
         if platform.system() == 'Darwin' and Settings.get('background'):
@@ -403,10 +467,10 @@ class Window():
         # Start binding the modules
         if len(Settings.get('modules')) > 0:
             for module in Settings.get('modules'):
-                self.module_manager.load(self, module)
+                self.module_manager.load(module, None, self)
         else:
             for module in ProfileManager().retrieve_modules(Settings.get('profile')):
-                self.module_manager.load(self, module)
+                self.module_manager.load(module, None, self)
 
         # If there's only one module passed through the command line, enforce
         # loading it now. Otherwise, switch back to the first module in the
@@ -423,6 +487,14 @@ class Window():
 
         hotkey('command', 'tab')
 
+    def _update_active_module(self) -> None:
+        """Mark this module as the focused module."""
+        current_tab = QQmlProperty.read(self.tabs, "currentIndex")
+        if current_tab < 0:
+            return
+
+        Core.set_focused_module_id(current_tab)
+
     def _bind_context(self) -> None:
         """Bind the context for the module."""
         current_tab = QQmlProperty.read(self.tabs, "currentIndex")
@@ -432,61 +504,63 @@ class Window():
         element = self.tab_bindings[current_tab]
 
         # Only initialize once, ensure filter is applied
-        if element['init']:
-            element['vm'].search(new_entries=True)
+        if element.uiModule.init:
+            element.uiModule.vm.search(new_entries=True)
             return
 
         # Get the header
-        header_text = self.tabs.getTab(
+        element.header_text = self.tabs.getTab(
             current_tab).findChild(QObject, "headerText")
 
         # Get the list
-        result_list_model = self.tabs.getTab(
+        element.result_list_model = self.tabs.getTab(
             current_tab).findChild(QObject, "resultListModel")
 
         # Get the info panels
-        base_info_panel = self.tabs.getTab(
+        element.base_info_panel = self.tabs.getTab(
             current_tab).findChild(QObject, "baseInfoPanel")
-        context_info_panel = self.tabs.getTab(
+        element.context_info_panel = self.tabs.getTab(
             current_tab).findChild(QObject, "contextInfoPanel")
 
         # Get the context menu
-        context_menu_model = self.tabs.getTab(
+        element.context_menu_model = self.tabs.getTab(
             current_tab).findChild(QObject, "contextMenuModel")
 
         # Enable mouse selection support
-        result_list_model.entryClicked.connect(element['vm'].select)
-        result_list_model.selectExplicitNoMinimize.connect(
-                    lambda: element['vm'].select(disable_minimize=True))
-        result_list_model.openContextMenu.connect(element['vm'].show_context)
-        result_list_model.openArgumentsInput.connect(element['vm'].input_args)
-        context_menu_model.entryClicked.connect(element['vm'].select)
-        context_menu_model.selectExplicitNoMinimize.connect(
-                    lambda: element['vm'].select(disable_minimize=True))
-        context_menu_model.openArgumentsInput.connect(element['vm'].input_args)
-        context_menu_model.closeContextMenu.connect(element['vm'].hide_context)
+        element.result_list_model.entryClicked.connect(element.uiModule.vm.select)
+        element.result_list_model.selectExplicitNoMinimize.connect(
+                    lambda: element.uiModule.vm.select(disable_minimize=True))
+        element.result_list_model.openContextMenu.connect(element.uiModule.vm.show_context)
+        element.result_list_model.openArgumentsInput.connect(element.uiModule.vm.input_args)
+        element.context_menu_model.entryClicked.connect(element.uiModule.vm.select)
+        element.context_menu_model.selectExplicitNoMinimize.connect(
+                    lambda: element.uiModule.vm.select(disable_minimize=True))
+        element.context_menu_model.openArgumentsInput.connect(element.uiModule.vm.input_args)
+        element.context_menu_model.closeContextMenu.connect(element.uiModule.vm.hide_context)
 
         # Enable changing sort mode
-        result_list_model.sortModeChanged.connect(element['vm'].next_sort_mode)
+        element.result_list_model.sortModeChanged.connect(element.uiModule.vm.next_sort_mode)
 
         # Enable info pane
-        result_list_model.currentIndexChanged.connect(element['vm'].update_context_info_panel)
+        element.result_list_model.currentIndexChanged.connect(element.uiModule.vm.update_context_info_panel)
 
-        # Bind it to the viewmodel
-        element['vm'].bind_context(element['queue'],
-                                   element['module_context'],
-                                   self,
-                                   self.search_input_model,
-                                   header_text,
-                                   result_list_model,
-                                   context_menu_model,
-                                   base_info_panel,
-                                   context_info_panel)
-
-        element['vm'].bind_module(element['module'])
+        # Bind everything to the viewmodel
+        element.uiModule.vm.bind_search_string_changed_callback(element.search_string_changed)
+        element.uiModule.vm.bind_result_list_changed_callback(element.result_list_changed)
+        element.uiModule.vm.bind_result_list_index_changed_callback(element.result_list_index_changed)
+        element.uiModule.vm.bind_context_menu_enabled_changed_callback(element.context_menu_enabled_changed)
+        element.uiModule.vm.bind_context_menu_index_changed_callback(element.context_menu_index_changed)
+        element.uiModule.vm.bind_context_menu_list_changed_callback(element.context_menu_list_changed)
+        element.uiModule.vm.bind_context_info_panel_changed_callback(element.context_info_panel_changed)
+        element.uiModule.vm.bind_base_info_panel_changed_callback(element.base_info_panel_changed)
+        element.uiModule.vm.bind_sort_mode_changed_callback(element.sort_mode_changed)
+        element.uiModule.vm.bind_unprocessed_count_changed_callback(element.unprocessed_count_changed)
+        element.uiModule.vm.bind_selection_changed_callback(element.selection_changed)
+        element.uiModule.vm.bind_header_text_changed_callback(element.header_text_changed)
+        element.uiModule.vm.bind_close_request_callback(self.close)
 
         # Done initializing
-        element['init'] = True
+        element.uiModule.init = True
 
     def _process_window_state(self, event) -> None:
         if event & Qt.WindowMinimized:
@@ -501,11 +575,11 @@ class Window():
             # No tabs
             return None
 
-    def _go_up(self) -> None:
+    def _go_up(self, to_base=False) -> None:
         element = self._get_current_element()
         if element:
             try:
-                element['vm'].go_up()
+                element.uiModule.vm.go_up()
             except TypeError:
                 pass
 
@@ -513,7 +587,7 @@ class Window():
         element = self._get_current_element()
         if element:
             try:
-                element['vm'].go_up(True)
+                self.go_up(to_base=True)
             except TypeError:
                 pass
 
@@ -536,19 +610,19 @@ class Window():
 
         metadata = ModuleManager().get_info(identifier)['metadata']  # type: ignore
         module = {'metadata': metadata, 'settings': module_settings}
-        self.module_manager.load(self, module)
+        self.module_manager.load(module, None, self)
 
     def _close_tab(self) -> None:
         if len(self.tab_bindings) > 0:
             tab_id = QQmlProperty.read(self.tabs, "currentIndex")
-            self.module_manager.stop(self, tab_id)
-            self.module_manager.unload(self, tab_id)
+            self.module_manager.stop(tab_id)
+            self.module_manager.unload(tab_id, self)
 
     def _reload_active_module(self) -> None:
         if len(self.tab_bindings) > 0:
             tab_id = QQmlProperty.read(self.tabs, "currentIndex")
-            module_data = self.module_manager.reload_step_unload(self, tab_id)
-            self.module_manager.reload_step_load(self, tab_id, module_data)
+            module_data = self.module_manager.reload_step_unload(tab_id, self)
+            self.module_manager.reload_step_load(tab_id, module_data, self)
 
     def _menu_install_module(self, module_url: str, identifier: str, name: str) -> None:
         functions = [
@@ -587,7 +661,7 @@ class Window():
             return
 
         for tab in self.tab_bindings:
-            if tab['metadata']['id'] == identifier:
+            if tab.uiModule.metadata['id'] == identifier:
                 data = self.module_manager.get_info(identifier)
                 self.add_actionable(
                     "object_update_available_in_use_{}".format(data['metadata']['id']),  # type: ignore
@@ -815,6 +889,7 @@ class Window():
             rmtree(new_path)
         except IOError:
             pass
+
         copytree(os.path.join(AppFile.get_path(), 'Pext.workflow'), new_path)
         Popen(['open', new_path])
 
@@ -845,7 +920,8 @@ class Window():
         element = self._get_current_element()
         if element:
             try:
-                element['vm'].search(manual=True)
+                element.uiModule.vm.search_string = QQmlProperty.read(self.search_input_model, "text")
+                element.uiModule.vm.search(manual=True)
             except TypeError:
                 pass
 
@@ -853,7 +929,7 @@ class Window():
         element = self._get_current_element()
         if element:
             try:
-                element['vm'].select()
+                element.uiModule.vm.select()
             except TypeError:
                 pass
 
@@ -861,7 +937,7 @@ class Window():
         element = self._get_current_element()
         if element:
             try:
-                element['vm'].tab_complete()
+                element.uiModule.vm.tab_complete()
             except TypeError:
                 pass
 
@@ -869,7 +945,7 @@ class Window():
         element = self._get_current_element()
         if element:
             try:
-                element['vm'].input_args()
+                element.uiModule.vm.input_args()
             except TypeError:
                 pass
 
@@ -961,6 +1037,92 @@ class Window():
     def _remove_actionable(self, index: int) -> None:
         self.actionables.pop(index)
         QQmlProperty.write(self.window, 'actionables', self.actionables)
+
+    def add_module(self, uiModule: UiModule, index=None) -> bool:
+        # Prepare necessary lists
+        result_list_model_list = QStringListModel()
+        context_menu_model_list = QStringListModel()
+        context_menu_model_list_full = QStringListModel()
+
+        # Prepare context
+        module_context = QQmlContext(self.context)
+        module_context.setContextProperty(
+            "sortMode", uiModule.vm.sort_mode)
+        module_context.setContextProperty(
+            "resultListModel", result_list_model_list)
+        module_context.setContextProperty(
+            "resultListModelNormalEntries", 0)
+        module_context.setContextProperty(
+            "resultListModelCommandEntries", 0)
+        module_context.setContextProperty(
+            "resultListModelHasEntries", False)
+        module_context.setContextProperty(
+            "resultListModelCommandMode", False)
+        module_context.setContextProperty(
+            "resultListModelTree", [])
+        module_context.setContextProperty(
+            "unprocessedCount", 0)
+        module_context.setContextProperty(
+            "contextMenuModel", context_menu_model_list)
+        module_context.setContextProperty(
+            "contextMenuModelFull", context_menu_model_list_full)
+        module_context.setContextProperty(
+            "contextMenuModelEntrySpecificCount", 0)
+        module_context.setContextProperty(
+            "contextMenuEnabled", False)
+        module_context.setContextProperty(
+            "searchInputFieldEmpty", True)
+
+        # Add tab
+        tab_data = QQmlComponent(self.engine)
+        tab_data.loadUrl(
+            QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'ModuleData.qml')))
+        self.engine.setContextForObject(tab_data, module_context)
+        self.tabs.addTab(uiModule.metadata['name'], tab_data)
+
+        # Create module
+        window_module = WindowModule(self, uiModule, module_context, tab_data, result_list_model_list, context_menu_model_list, context_menu_model_list_full)
+
+        # Store tab/viewModel combination
+        # tabData is not used but stored to prevent segfaults caused by
+        # Python garbage collecting it
+        if index:
+            self.tab_bindings[index] = window_module
+        else:
+            self.tab_bindings.append(window_module)
+
+        # Open tab to trigger loading
+        if index:
+            QQmlProperty.write(
+                self.tabs, "currentIndex", index)
+        else:
+            QQmlProperty.write(
+                self.tabs, "currentIndex", QQmlProperty.read(self.tabs, "count") - 1)
+
+        # Save active modules
+        ProfileManager().save_modules(Settings.get('profile'), [windowModule.uiModule for windowModule in self.tab_bindings])
+
+        # First module? Enforce load
+        if len(self.tab_bindings) == 1:
+            self.tabs.currentIndexChanged.emit()
+
+        return True
+
+    def remove_module(self, tab_id: int) -> None:
+        if QQmlProperty.read(self.tabs, "currentIndex") == tab_id:
+            tab_count = QQmlProperty.read(self.tabs, "count")
+            if tab_count == 1:
+                QQmlProperty.write(self.tabs, "currentIndex", "-1")
+            elif tab_id + 1 < tab_count:
+                QQmlProperty.write(self.tabs, "currentIndex", tab_id + 1)
+            else:
+                QQmlProperty.write(self.tabs, "currentIndex", "0")
+
+        self.tabs.removeRequest.emit(tab_id)
+        del self.tab_bindings[tab_id]
+
+        # Ensure a proper refresh on the UI side
+        self.tabs.currentIndexChanged.emit()
 
     def disable_module(self, tab_id: int, reason: int) -> None:
         """Disable a module by tab ID.
@@ -1145,7 +1307,7 @@ class Tray():
             tray_menu.addSeparator()
 
         for tab_id, tab in enumerate(self.window.tab_bindings):
-            tray_menu_item = QAction(tab['metadata']['name'], tray_menu)
+            tray_menu_item = QAction(tab.uiModule.metadata['name'], tray_menu)
             tray_menu_item.triggered.connect(partial(
                 lambda tab_id: [self.window.switch_tab(tab_id), self.window.show()], tab_id=tab_id))  # type: ignore
             tray_menu.addAction(tray_menu_item)
