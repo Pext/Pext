@@ -2353,9 +2353,12 @@ class ViewModel():
 
         selection = self._get_entry(include_context=True)
         if selection['type'] == SelectionType.command:
-            if force_args or selection['context_option'] == Translation.get("enter_arguments"):
+            if not command_args and (force_args or selection['context_option'] == Translation.get("enter_arguments")):
                 self.input_args()
                 return
+
+        if selection['context_option'] == Translation.get("enter_arguments"):
+            selection['context_option'] = None
 
         selection["args"] = command_args
         self.selection.append(selection)
