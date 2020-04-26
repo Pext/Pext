@@ -177,6 +177,10 @@ class WindowModule():
         """Update the UI when the header text changes."""
         QQmlProperty.write(self.header_text, "text", value)
 
+    def update_result_list_index(self) -> None:
+        """Update the ViewModel's result list index."""
+        self.uiModule.vm.update_result_list_index(QQmlProperty.read(self.result_list_model, "currentIndex"))
+
 
 class Window():
     """The main Pext window."""
@@ -590,6 +594,7 @@ class Window():
 
         # Enable info pane
         result_list_model.currentIndexChanged.connect(element.uiModule.vm.update_context_info_panel)
+        result_list_model.currentIndexChanged.connect(element.update_result_list_index)
 
         # Bind to the WindowModule
         element.bind_header_text(header_text)
@@ -634,7 +639,10 @@ class Window():
         element = self._get_current_element()
         if element:
             try:
-                element.uiModule.vm.go_up()
+                if element.uiModule.vm.stopped:
+                    self.close(True, False)
+                else:
+                    element.uiModule.vm.go_up()
             except TypeError:
                 pass
 
@@ -642,7 +650,10 @@ class Window():
         element = self._get_current_element()
         if element:
             try:
-                self._go_up(to_base=True)
+                if element.uiModule.vm.stopped:
+                    self.close(True, False)
+                else:
+                    self._go_up(to_base=True)
             except TypeError:
                 pass
 
