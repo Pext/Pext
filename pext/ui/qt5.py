@@ -95,13 +95,13 @@ class WindowModule():
 
     def search_string_changed(self, search_string: str) -> None:
         QQmlProperty.write(self.window.search_input_model, "text", search_string)
-        self.context.setContextProperty("searchInputFieldEmpty", True if search_string else False)
+        self.context.setContextProperty("searchInputFieldEmpty", False if search_string else True)
 
-    def result_list_changed(self, entries: List[str], normal_count: int, command_count: int) -> None:
+    def result_list_changed(self, entries: List[str], normal_count: int, command_count: int, unfiltered_entry_count: int) -> None:
         self.result_list_model_list.setStringList(str(entry) for entry in entries)
         self.context.setContextProperty("resultListModelNormalEntries", normal_count)
         self.context.setContextProperty("resultListModelCommandEntries", command_count)
-        self.context.setContextProperty("resultListModelHasEntries", True if entries else False)
+        self.context.setContextProperty("resultListModelHasEntries", True if unfiltered_entry_count else False)
 
     def result_list_index_changed(self, index: int) -> None:
         QQmlProperty.write(self.result_list_model, "currentIndex", index)

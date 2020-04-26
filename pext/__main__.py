@@ -1913,7 +1913,7 @@ class ViewModel():
 
         # Callback functions
         self.search_string_changed = lambda search_string: None
-        self.result_list_changed = lambda results, normal_count, entry_count: None
+        self.result_list_changed = lambda results, normal_count, entry_count, unfiltered_entry_count: None
         self.result_list_index_changed = lambda index: None
         self.context_menu_enabled_changed = lambda value: None
         self.context_menu_index_changed = lambda index: None
@@ -2052,7 +2052,7 @@ class ViewModel():
         """
         self.search_string_changed = function
 
-    def bind_result_list_changed_callback(self, function: Callable[[List[str], int, int], None]) -> None:
+    def bind_result_list_changed_callback(self, function: Callable[[List[str], int, int, int], None]) -> None:
         """Bind the result_list_changed callback.
 
         This ensures we can notify the window when the result list changes.
@@ -2280,7 +2280,7 @@ class ViewModel():
                 combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
 
                 self.result_list = combined_list
-                self.result_list_changed(self.result_list, len(self.sorted_filtered_entry_list), len(self.sorted_filtered_command_list))
+                self.result_list_changed(self.result_list, len(self.sorted_filtered_entry_list), len(self.sorted_filtered_command_list), len(self.entry_list) + len(self.command_list))
 
             # Keep existing selection, otherwise ensure something is selected
             if current_match:
@@ -2340,7 +2340,7 @@ class ViewModel():
         else:
             combined_list = self.filtered_entry_list + self.filtered_command_list
             self.result_list = combined_list
-            self.result_list_changed(self.result_list, len(self.filtered_entry_list), len(self.filtered_command_list))
+            self.result_list_changed(self.result_list, len(self.filtered_entry_list), len(self.filtered_command_list), len(self.entry_list) + len(self.command_list))
 
         # See if we have an exact match
         if combined_list and len(list_match) == 1 and combined_list[0].lower() == list_match[0]:
