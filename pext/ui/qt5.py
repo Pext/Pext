@@ -181,6 +181,10 @@ class WindowModule():
         """Update the ViewModel's result list index."""
         self.uiModule.vm.update_result_list_index(QQmlProperty.read(self.result_list_model, "currentIndex"))
 
+    def update_context_menu_index(self) -> None:
+        """Update the ViewModel's context menu index."""
+        self.uiModule.vm.update_context_menu_index(QQmlProperty.read(self.context_menu_model, "currentIndex"))
+
 
 class Window():
     """The main Pext window."""
@@ -583,6 +587,7 @@ class Window():
                     lambda: element.uiModule.vm.select(disable_minimize=True))
         result_list_model.openContextMenu.connect(element.uiModule.vm.show_context)
         result_list_model.openArgumentsInput.connect(element.uiModule.vm.input_args)
+        context_menu_model.currentIndexChanged.connect(element.update_context_menu_index)
         context_menu_model.entryClicked.connect(element.uiModule.vm.select)
         context_menu_model.selectExplicitNoMinimize.connect(
                     lambda: element.uiModule.vm.select(disable_minimize=True))

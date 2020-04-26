@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Info menu something not showing up
 - Command argument handling
+- Can't minimize with escape during module update
 
 ## [0.30] - 2020-04-17
 ### Changed

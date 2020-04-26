@@ -2082,6 +2082,10 @@ class ViewModel():
         """Update the result list index."""
         self.result_list_index = index
 
+    def update_context_menu_index(self, index: int) -> None:
+        """Update the context menu index."""
+        self.context_menu_index = index
+
     def go_up(self, to_base=False) -> None:
         """Go one level up.
 
