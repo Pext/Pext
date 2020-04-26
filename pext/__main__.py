@@ -41,7 +41,6 @@ import psutil
 from datetime import datetime
 from distutils.util import strtobool
 from enum import IntEnum
-from functools import partial
 from importlib import reload  # type: ignore
 from inspect import getmembers, isfunction, ismethod, signature
 from pkg_resources import parse_version
@@ -61,7 +60,7 @@ from dulwich.repo import Repo
 from dulwich.contrib.paramiko_vendor import ParamikoSSHVendor
 
 from PyQt5.QtWidgets import QApplication, QStyleFactory, QSystemTrayIcon
-from PyQt5.Qt import QIcon, QLocale, QObject, QTranslator, QQmlProperty
+from PyQt5.Qt import QIcon, QLocale, QTranslator, QQmlProperty
 from PyQt5.QtGui import QPalette, QColor
 
 from watchdog.events import FileSystemEventHandler
@@ -71,6 +70,10 @@ client.get_ssh_vendor = ParamikoSSHVendor
 # Windows doesn't support getuid
 if platform.system() == 'Windows':
     import getpass  # NOQA
+
+if False:
+    # To make MyPy understand Window exists...
+    import Window
 
 
 class AppFile():
@@ -131,7 +134,10 @@ class OutputSeparator(IntEnum):
 
 
 class UiModule():
+    """The module and all the relevant data to make UI display possible."""
+
     def __init__(self, vm: 'ViewModel', module_code, module_import, metadata, settings) -> None:
+        """Put together the module and relevant classes and data."""
         self.init = False
         self.vm = vm
         self.module_code = module_code
@@ -143,7 +149,9 @@ class UiModule():
 
 
 class Core():
-    __active_modules = []
+    """Core-related functionality."""
+
+    __active_modules = []  # type: List[UiModule]
     __focused_module = -1
 
     @staticmethod
@@ -158,26 +166,32 @@ class Core():
 
     @staticmethod
     def remove_module(index: int) -> None:
+        """Remove a module from the list of active modules."""
         del Core.__active_modules[index]
 
     @staticmethod
     def get_module(index: int) -> UiModule:
+        """Get a module by index."""
         return Core.__active_modules[index]
 
     @staticmethod
     def get_modules() -> List[UiModule]:
+        """Get all active modules."""
         return Core.__active_modules
 
     @staticmethod
     def get_focused_module_id() -> int:
+        """Get the id (index) of the focused module."""
         return Core.__focused_module
 
     @staticmethod
     def set_focused_module_id(index: int) -> None:
+        """Set the id (index) of the focused module."""
         Core.__focused_module = index
 
     @staticmethod
     def restart(extra_args=None):
+        """Restart Pext, possibly with extra arguments."""
         # Call _shut_down manually because it isn't called when using os.execv
         Core._shut_down()
 
@@ -290,7 +304,7 @@ class InternalCallProcessor():
     temp_module_datas = []  # type: List[Dict[str, Any]]
 
     @staticmethod
-    def bind(window: 'Window', module_manager: 'ModuleManager', theme_manager: 'ThemeManager') -> None:
+    def bind(window: 'Window', module_manager: 'ModuleManager', theme_manager: 'ThemeManager') -> None:  # noqa: F821
         """Bind the Window, ModuleManager and ThemeManager to the InternalCallProcessor."""
         if window is not None:
             InternalCallProcessor.window = window
@@ -401,13 +415,11 @@ class Logger():
     last_update = None  # type: Optional[float]
 
     window = None
-    status_text = None  # type: QObject
 
     @staticmethod
-    def bind_window(window: 'Window') -> None:
+    def bind_window(window: 'Window') -> None:  # noqa: F821
         """Give the logger the ability to log info to the main window."""
         Logger.window = window
-        Logger.status_text = window.window.findChild(QObject, "statusText")
 
     @staticmethod
     def _queue_message(module_name: str, message: str, type_name: str) -> None:
@@ -516,7 +528,7 @@ class Logger():
 
         if len(Logger.queued_messages) == 0:
             if not Logger.last_update or current_time - 5 > Logger.last_update:
-                QQmlProperty.write(Logger.status_text, "text", "")
+                Logger.window.set_status_text("")
                 Logger.last_update = None
         else:
             message = Logger.queued_messages.pop(0)
@@ -528,7 +540,7 @@ class Logger():
                 statusbar_message = message['message']
                 icon = QSystemTrayIcon.Information
 
-            QQmlProperty.write(Logger.status_text, "text", statusbar_message)
+            Logger.window.set_status_text(statusbar_message)
 
             if Logger.window.tray:
                 Logger.window.tray.tray.showMessage('Pext', message['message'], icon)
@@ -539,7 +551,7 @@ class Logger():
 class PextFileSystemEventHandler(FileSystemEventHandler):
     """Watches the file system to ensure state changes when relevant."""
 
-    def __init__(self, window: 'Window', modules_path: str):
+    def __init__(self, window: 'Window', modules_path: str):  # noqa: F821
         """Initialize filesystem event handler."""
         self.window = window
         self.modules_path = modules_path
@@ -565,7 +577,7 @@ class Translation():
     __window = None
 
     @staticmethod
-    def bind_window(window: 'Window') -> None:
+    def bind_window(window: 'Window') -> None:  # noqa: F821
         """Give the translator access to the translations stored in the window."""
         Translation.__window = window
 
@@ -589,7 +601,8 @@ class MainLoop():
     ensures these events get managed without locking up the UI.
     """
 
-    def __init__(self, app: QApplication, main_loop_queue: Queue, module_manager: 'ModuleManager', window: 'Window') -> None:
+    def __init__(self, app: QApplication, main_loop_queue: Queue, module_manager: 'ModuleManager',
+                 window: 'Window') -> None:  # noqa: F821
         """Initialize the main loop."""
         self.app = app
         self.main_loop_queue = main_loop_queue
@@ -667,142 +680,49 @@ class MainLoop():
             module.vm.search_string_changed(module.vm.search_string)
 
         elif action[0] in [Action.ask_question, Action.ask_question_default_yes, Action.ask_question_default_no]:
-            question_dialog = self.window.window.findChild(QObject, "questionDialog")
-            # Disconnect possibly existing handlers
-            try:
-                question_dialog.questionAccepted.disconnect()
-            except TypeError:
-                pass
-            try:
-                question_dialog.questionRejected.disconnect()
-            except TypeError:
-                pass
-
-            if len(signature(module.vm.module.process_response).parameters) == 2:
-                question_dialog.questionAccepted.connect(partial(
-                    lambda arg: module.vm.module.process_response(True, arg),
-                    arg=(action[2] if len(action) > 2 else None)))
-                question_dialog.questionRejected.connect(partial(
-                    lambda arg: module.vm.module.process_response(False, arg),
-                    arg=(action[2] if len(action) > 2 else None)))
-            else:
-                question_dialog.questionAccepted.connect(
-                    lambda: module.vm.module.process_response(True))
-                question_dialog.questionRejected.connect(
-                    lambda: module.vm.module.process_response(False))
-
-            question_dialog.showQuestionDialog.emit(module.metadata['name'], action[1])
+            self.window.ask_question(
+                module.metadata['name'],
+                action[1],
+                action[2] if len(action) > 2 else None,
+                module.vm.module.process_response)
 
         elif action[0] == Action.ask_choice:
-            choice_dialog = self.window.window.findChild(QObject, "choiceDialog")
-            # Disconnect possibly existing handlers
-            try:
-                choice_dialog.choiceAccepted.disconnect()
-            except TypeError:
-                pass
-            try:
-                choice_dialog.choiceRejected.disconnect()
-            except TypeError:
-                pass
-
-            if len(signature(module.vm.module.process_response).parameters) == 2:
-                choice_dialog.choiceAccepted.connect(partial(
-                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-                choice_dialog.choiceRejected.connect(partial(
-                    lambda arg: module.vm.module.process_response(None, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-            else:
-                choice_dialog.choiceAccepted.connect(
-                    lambda userinput: module.vm.module.process_response(userinput))
-                choice_dialog.choiceRejected.connect(
-                    lambda: module.vm.module.process_response(None))
-
-            choice_dialog.showChoiceDialog.emit(module.metadata['name'], action[1], action[2])
+            self.window.ask_choice(
+                module.metadata['name'],
+                action[1],
+                action[2],
+                action[3] if len(action) > 3 else None,
+                module.vm.module.process_response)
 
         elif action[0] == Action.ask_input:
-            input_request = self.window.window.findChild(QObject, "inputRequests")
-            # Disconnect possibly existing handlers
-            try:
-                input_request.inputRequestAccepted.disconnect()
-            except TypeError:
-                pass
-            try:
-                input_request.inputRequestRejected.disconnect()
-            except TypeError:
-                pass
-
-            if len(signature(module.vm.module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(partial(
-                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-                input_request.inputRequestRejected.connect(partial(
-                    lambda arg: module.vm.module.process_response(None, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-            else:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: module.vm.module.process_response(userinput))
-                input_request.inputRequestRejected.connect(
-                    lambda: module.vm.module.process_response(None))
-
-            input_request.inputRequest.emit(module.metadata['name'], action[1], False, False,
-                                            action[2] if len(action) > 2 else "")
+            self.window.ask_input(
+                module.metadata['name'],
+                action[1],
+                action[2] if len(action) > 2 else "",
+                False,
+                False,
+                action[3] if len(action) > 3 else None,
+                module.vm.module.process_response)
 
         elif action[0] == Action.ask_input_password:
-            input_request = self.window.window.findChild(QObject, "inputRequests")
-            # Disconnect possibly existing handlers
-            try:
-                input_request.inputRequestAccepted.disconnect()
-            except TypeError:
-                pass
-            try:
-                input_request.inputRequestRejected.disconnect()
-            except TypeError:
-                pass
-
-            if len(signature(module.vm.module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(partial(
-                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-                input_request.inputRequestRejected.connect(partial(
-                    lambda arg: module.vm.module.process_response(None, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-            else:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: module.vm.module.process_response(userinput))
-                input_request.inputRequestRejected.connect(
-                    lambda: module.vm.module.process_response(None))
-
-            input_request.inputRequest.emit(module.metadata['name'], action[1], True, False,
-                                            action[2] if len(action) > 2 else "")
+            self.window.ask_input(
+                module.metadata['name'],
+                action[1],
+                action[2] if len(action) > 2 else "",
+                True,
+                False,
+                action[3] if len(action) > 3 else None,
+                module.vm.module.process_response)
 
         elif action[0] == Action.ask_input_multi_line:
-            input_request = self.window.window.findChild(QObject, "inputRequests")
-            # Disconnect possibly existing handlers
-            try:
-                input_request.inputRequestAccepted.disconnect()
-            except TypeError:
-                pass
-            try:
-                input_request.inputRequestRejected.disconnect()
-            except TypeError:
-                pass
-
-            if len(signature(module.vm.module.process_response).parameters) == 2:
-                input_request.inputRequestAccepted.connect(partial(
-                    lambda userinput, arg: module.vm.module.process_response(userinput, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-                input_request.inputRequestRejected.connect(partial(
-                    lambda arg: module.vm.module.process_response(None, arg),
-                    arg=(action[3] if len(action) > 3 else None)))
-            else:
-                input_request.inputRequestAccepted.connect(
-                    lambda userinput: module.vm.module.process_response(userinput))
-                input_request.inputRequestRejected.connect(
-                    lambda: module.vm.module.process_response(None))
-
-            input_request.inputRequest.emit(module.metadata['name'], action[1], False, True,
-                                            action[2] if len(action) > 2 else "")
+            self.window.ask_input(
+                module.metadata['name'],
+                action[1],
+                action[2] if len(action) > 2 else "",
+                False,
+                True,
+                action[3] if len(action) > 3 else None,
+                module.vm.module.process_response)
 
         elif action[0] == Action.copy_to_clipboard:
             # Copy the given data to the user-chosen clipboard
@@ -828,7 +748,7 @@ class MainLoop():
         elif action[0] == Action.close:
             # Don't close and stay on the same depth if the user explicitly requested to not close after last input
             if not module.vm.minimize_disabled:
-                module.vm.close_request()
+                module.vm.close_request(False, False)
 
                 selection = []  # type: List[Dict[SelectionType, str]]
             else:
@@ -1559,7 +1479,6 @@ class ModuleManager():
 
     def reload_step_load(self, index: int, module_data: Dict[str, Any], window=None) -> bool:
         """Reload a module by index: Load step."""
-
         # Unload the module
         self.unload(index, True, window)
 
@@ -1913,19 +1832,22 @@ class ViewModel():
         self.stopped = False
 
         # Callback functions
-        self.search_string_changed = lambda search_string: None
-        self.result_list_changed = lambda results, normal_count, entry_count, unfiltered_entry_count: None
-        self.result_list_index_changed = lambda index: None
-        self.context_menu_enabled_changed = lambda value: None
-        self.context_menu_index_changed = lambda index: None
-        self.context_menu_list_changed = lambda base, entry_specific: None
-        self.context_info_panel_changed = lambda value: None
-        self.sort_mode_changed = lambda mode: None
-        self.unprocessed_count_changed = lambda count: None
-        self.selection_changed = lambda selection: None
-        self.header_text_changed = lambda value: None
+        self.search_string_changed = lambda search_string: None  # type: Callable[[str], None]
+        self.result_list_changed = lambda results, normal_count, entry_count, unfiltered_entry_count: None \
+            # type: Callable[[List[str], int, int, int], None]
+        self.result_list_index_changed = lambda index: None  # type: Callable[[int], None]
+        self.context_menu_enabled_changed = lambda value: None  # type: Callable[[bool], None]
+        self.context_menu_index_changed = lambda index: None  # type: Callable[[int], None]
+        self.context_menu_list_changed = lambda base, entry_specific: None \
+            # type: Callable[[List[str], List[str]], None]
+        self.context_info_panel_changed = lambda value: None  # type: Callable[[str], None]
+        self.sort_mode_changed = lambda mode: None  # type: Callable[[str], None]
+        self.unprocessed_count_changed = lambda count: None  # type: Callable[[int], None]
+        self.selection_changed = lambda selection: None  # type: Callable[[List[Dict[SelectionType, str]]], None]
+        self.header_text_changed = lambda value: None  # type: Callable[[str], None]
 
-        self.close_request = lambda manual, force_tray: None
+        self.ask_argument = lambda entry, callback: None  # type: Callable[[str, Callable], None]
+        self.close_request = lambda manual, force_tray: None  # type: Callable[[bool, bool], None]
 
     @property
     def settings(self):
@@ -2039,6 +1961,7 @@ class ViewModel():
             return ''.join(common_chars)
 
     def clear_queue(self) -> None:
+        """Clear all enqueued actions."""
         while True:
             try:
                 self.queue.get_nowait()
@@ -2130,6 +2053,13 @@ class ViewModel():
         """
         self.header_text_changed = function
 
+    def bind_ask_argument_callback(self, function: Callable[[str, Callable], None]) -> None:
+        """Bind the ask_argument callback.
+
+        This ensures we can notify the window when an argument is requested.
+        """
+        self.ask_argument = function
+
     def bind_close_request_callback(self, function: Callable[[bool, bool], None]) -> None:
         """Bind the close_request callback.
 
@@ -2150,6 +2080,7 @@ class ViewModel():
 
     def go_up(self, to_base=False) -> None:
         """Go one level up.
+
         This means that, if we're currently in the entry content list, we go
         back to the entry list. If we're currently in the entry list, we clear
         the search bar. If we're currently in the entry list and the search bar
@@ -2189,7 +2120,7 @@ class ViewModel():
 
             self.make_selection()
         else:
-            self.close_request(manual=True)
+            self.close_request(True, False)
 
     def search(self, new_entries=False, manual=False) -> None:
         """Filter the entry list.
@@ -2271,7 +2202,9 @@ class ViewModel():
                 self.sorted_filtered_context_list = self.sorted_context_list
                 self.sorted_filtered_context_base_list = self.sorted_context_base_list
 
-                self.context_menu_list_changed(self.sorted_filtered_context_base_list, self.sorted_filtered_context_list)
+                self.context_menu_list_changed(
+                    self.sorted_filtered_context_base_list,
+                    self.sorted_filtered_context_list)
             else:
                 self.filtered_entry_list = self.entry_list
                 self.filtered_command_list = self.command_list
@@ -2281,7 +2214,11 @@ class ViewModel():
                 combined_list = self.sorted_filtered_entry_list + self.sorted_filtered_command_list
 
                 self.result_list = combined_list
-                self.result_list_changed(self.result_list, len(self.sorted_filtered_entry_list), len(self.sorted_filtered_command_list), len(self.entry_list) + len(self.command_list))
+                self.result_list_changed(
+                    self.result_list,
+                    len(self.sorted_filtered_entry_list),
+                    len(self.sorted_filtered_command_list),
+                    len(self.entry_list) + len(self.command_list))
 
             # Keep existing selection, otherwise ensure something is selected
             if current_match:
@@ -2341,7 +2278,11 @@ class ViewModel():
         else:
             combined_list = self.filtered_entry_list + self.filtered_command_list
             self.result_list = combined_list
-            self.result_list_changed(self.result_list, len(self.filtered_entry_list), len(self.filtered_command_list), len(self.entry_list) + len(self.command_list))
+            self.result_list_changed(
+                self.result_list,
+                len(self.filtered_entry_list),
+                len(self.filtered_command_list),
+                len(self.entry_list) + len(self.command_list))
 
         # See if we have an exact match
         if combined_list and len(list_match) == 1 and combined_list[0].lower() == list_match[0]:
@@ -2570,11 +2511,7 @@ class ViewModel():
                     [Action.add_error, Translation.get("no_command_available_for_current_filter")])
                 return
 
-        args_request = self.window.window.findChild(QObject, "commandArgsDialog")
-        args_request.commandArgsRequestAccepted.connect(
-            lambda args: self.select(args))
-
-        args_request.showCommandArgsDialog.emit(selected_entry["value"])
+        self.ask_argument(selected_entry["value"], self.select)
 
 
 class ThemeManager():
@@ -3244,7 +3181,7 @@ def main(ui_type: UIType) -> None:
 
     # Prepare UI-specific
     if ui_type == UIType.Qt5:
-        from ui.qt5 import Window, WindowModule, Tray, HotkeyHandler, SignalHandler
+        from ui.qt5 import Window, Tray, HotkeyHandler, SignalHandler
     else:
         raise ValueError("Invalid UI type requested")
 
