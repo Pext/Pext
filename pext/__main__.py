@@ -149,8 +149,8 @@ class Core():
     @staticmethod
     def add_module(module: UiModule, index=None) -> int:
         """Add a module to the list of active modules."""
-        if index:
-            Core.__active_modules[index] = module
+        if index is not None:
+            Core.__active_modules.insert(index, module)
             return index
 
         Core.__active_modules.append(module)
@@ -550,10 +550,10 @@ class PextFileSystemEventHandler(FileSystemEventHandler):
             return
 
         if event.src_path.startswith(self.modules_path):
-            for tab_id, tab in enumerate(self.window.tab_bindings):
-                if event.src_path == os.path.join(self.modules_path, tab['metadata']['id'].replace('.', '_')):
-                    print("Module {} was removed, sending unload event".format(tab['metadata']['id']))
-                    self.window.module_manager.unload(self.window, tab_id)
+            for index, module in enumerate(Core.get_modules()):
+                if event.src_path == os.path.join(self.modules_path, module.metadata['id'].replace('.', '_')):
+                    print("Module {} was removed, sending unload event".format(module.metadata['id']))
+                    self.window.module_manager.unload(index, False, self.window)
 
 
 class Translation():
@@ -1524,11 +1524,11 @@ class ModuleManager():
                   .format(module.metadata['name'], e))
             traceback.print_exc()
 
-    def unload(self, index: int, window=None) -> None:
+    def unload(self, index: int, for_reload=False, window=None) -> None:
         """Unload a module by tab index."""
         Core.remove_module(index)
         if window:
-            window.remove_module(index)
+            window.remove_module(index, for_reload)
 
     def get_info(self, module_id: str) -> Optional[Dict[str, Optional[Union[str, Dict[str, str]]]]]:
         """Return the metadata and source of one single module."""
@@ -1559,8 +1559,9 @@ class ModuleManager():
 
     def reload_step_load(self, index: int, module_data: Dict[str, Any], window=None) -> bool:
         """Reload a module by index: Load step."""
+
         # Unload the module
-        self.unload(index, window)
+        self.unload(index, True, window)
 
         # Force a reload to make code changes happen
         reload(module_data['module_import'])

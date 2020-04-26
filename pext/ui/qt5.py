@@ -428,7 +428,7 @@ class Window():
 
         # Bind the context when the tab is loaded
         self.tabs.currentIndexChanged.connect(self._bind_context)
-        
+
         # Update active module when the tab is changed
         self.tabs.currentIndexChanged.connect(self._update_active_module)
 
@@ -616,7 +616,7 @@ class Window():
         if len(self.tab_bindings) > 0:
             tab_id = QQmlProperty.read(self.tabs, "currentIndex")
             self.module_manager.stop(tab_id)
-            self.module_manager.unload(tab_id, self)
+            self.module_manager.unload(tab_id, False, self)
 
     def _reload_active_module(self) -> None:
         if len(self.tab_bindings) > 0:
@@ -1073,12 +1073,11 @@ class Window():
         module_context.setContextProperty(
             "searchInputFieldEmpty", True)
 
-        # Add tab
+        # Create tab
         tab_data = QQmlComponent(self.engine)
         tab_data.loadUrl(
             QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'ModuleData.qml')))
         self.engine.setContextForObject(tab_data, module_context)
-        self.tabs.addTab(uiModule.metadata['name'], tab_data)
 
         # Create module
         window_module = WindowModule(self, uiModule, module_context, tab_data, result_list_model_list, context_menu_model_list, context_menu_model_list_full)
@@ -1086,13 +1085,21 @@ class Window():
         # Store tab/viewModel combination
         # tabData is not used but stored to prevent segfaults caused by
         # Python garbage collecting it
-        if index:
-            self.tab_bindings[index] = window_module
+        if index is not None:
+            self.tab_bindings.insert(index, window_module)
         else:
             self.tab_bindings.append(window_module)
 
+        # Add/replace tab
+        if index is not None:
+            self.tabs.insertTab(index, uiModule.metadata['name'], tab_data)
+            self.tabs.removeRequest.emit(index + 1)
+            del self.tab_bindings[index + 1]
+        else:
+            self.tabs.addTab(uiModule.metadata['name'], tab_data)
+
         # Open tab to trigger loading
-        if index:
+        if index is not None:
             QQmlProperty.write(
                 self.tabs, "currentIndex", index)
         else:
@@ -1108,7 +1115,12 @@ class Window():
 
         return True
 
-    def remove_module(self, tab_id: int) -> None:
+    def remove_module(self, tab_id: int, for_reload=False) -> None:
+        if for_reload:
+            # We'll reload the module very soon
+            # Don't delete it yet
+            return
+
         if QQmlProperty.read(self.tabs, "currentIndex") == tab_id:
             tab_count = QQmlProperty.read(self.tabs, "count")
             if tab_count == 1:
