@@ -27,6 +27,8 @@ after_test:
   - cd ..\Build
   - echo !define APPNAME "Pext" > Pext.nsi
   - echo Name ${APPNAME} >> Pext.nsi
+  - echo !define VERSIONMAJOR 0 > Pext.nsi
+  - echo !define VERSIONMINOR 30 > Pext.nsi
   - echo Icon 'Pext\pext\images\scalable\pext.ico' >> Pext.nsi
   - echo OutFile 'Pext.exe' >> Pext.nsi
   - echo RequestExecutionLevel admin >> Pext.nsi
@@ -44,6 +46,8 @@ after_test:
   - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S" >> Pext.nsi
   - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "InstallLocation" "$\"$INSTDIR$\"" >> Pext.nsi
   - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayIcon" "$\"$INSTDIR\Pext\pext\images\scalable\pext.ico$\"" >> Pext.nsi
+  - echo WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "VersionMajor" ${VERSIONMAJOR} >> Pext.nsi
+  - echo WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "VersionMinor" ${VERSIONMINOR} >> Pext.nsi
   - echo WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoModify" 1 >> Pext.nsi
   - echo WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "NoRepair" 1 >> Pext.nsi
   - echo SectionEnd >> Pext.nsi
