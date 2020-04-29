@@ -448,7 +448,7 @@ class Logger():
         """Show in the module disabled screen."""
         if identifier and Logger.window:
             for tab_id, tab in enumerate(Logger.window.tab_bindings):  # type: ignore
-                if tab['metadata']['id'] == identifier:
+                if tab.uiModule.metadata['id'] == identifier:
                     Logger.window.update_state(tab_id, message)
 
     @staticmethod
