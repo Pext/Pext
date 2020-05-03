@@ -48,7 +48,7 @@ Dialog {
             visible: !isMultiline
             id: userInput
             echoMode: isPassword ? TextInput.Password : TextInput.Normal
-            placeholderText: prefill
+            text: prefill
             width: root.width
         }
 
