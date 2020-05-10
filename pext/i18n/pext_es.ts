@@ -465,12 +465,12 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module crashed.</source>
-        <translation>Archivo dañado </translation>
+        <translation>Archivo dañado.</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation>Actualizando módulo</translation>
+        <translation>Actualizando módulo…</translation>
     </message>
 </context>
 <context>
