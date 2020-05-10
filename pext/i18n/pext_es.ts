@@ -465,12 +465,12 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module crashed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Archivo dañado </translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation type="unfinished"></translation>
+        <translation>Actualizando módulo</translation>
     </message>
 </context>
 <context>
@@ -679,7 +679,7 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     <message>
         <location filename="../qml/main.qml" line="777"/>
         <source>Nothing</source>
-        <translation type="unfinished">Nada</translation>
+        <translation>Nada</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="799"/>
