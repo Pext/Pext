@@ -497,7 +497,9 @@ class Logger():
                     "%20on%20",
                     quote_plus(sys.platform),
                     "%0A%0A",
-                    quote_plus(detailed_message)
+                    "```%0A",
+                    quote_plus(detailed_message),
+                    "```"
                 ])
             else:
                 bugtracker_url = metadata['bugtracker']

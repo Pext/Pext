@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Search bar content is now unique per module
 - ask_input prefill now fills text instead of placeholder
+- Report error traceback in bug report as code block
 
 ### Fixed
 - Info menu something not showing up
