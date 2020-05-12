@@ -465,12 +465,12 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module crashed.</source>
-        <translation>Archivo dañado </translation>
+        <translation>Archivo dañado.</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation>Actualizando módulo</translation>
+        <translation>Actualizando módulo…</translation>
     </message>
 </context>
 <context>
@@ -789,7 +789,7 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     <message>
         <location filename="../qml/main.qml" line="1103"/>
         <source>Go back to module&apos;s base level and minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Regrese al nivel base del módulo y minimice</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1137"/>
@@ -955,7 +955,7 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     <message>
         <location filename="../qml/main.qml" line="1310"/>
         <source>Failed to check for updates for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al buscar actualizaciones para el módulo {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
