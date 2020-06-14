@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Info menu something not showing up
 - Command argument handling
 - Can't minimize with escape during module update
+- Crash in forecast of weather module
 
 ## [0.30] - 2020-04-17
 ### Changed

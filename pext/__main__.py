@@ -2160,9 +2160,9 @@ class ViewModel():
             current_entry = self._get_entry()
             try:
                 if current_entry['type'] == SelectionType.entry:
-                    entry_list = [str(entry) for entry in self.context_menu_entries[current_entry['value']]]
+                    entry_list = [entry for entry in self.context_menu_entries[current_entry['value']]]
                 else:
-                    entry_list = [str(entry) for entry in self.context_menu_commands[current_entry['value']]]
+                    entry_list = [entry for entry in self.context_menu_commands[current_entry['value']]]
             except KeyError:
                 entry_list = []
 
@@ -2261,13 +2261,13 @@ class ViewModel():
         def check_list_match(entries, string_list) -> List[str]:
             return_list = []  # type: List[str]
             for entry in entries:
-                lower_entry = entry.lower()
+                lower_entry = str(entry).lower()
                 for self.search_string_part in string_list:
                     if self.search_string_part not in lower_entry:
                         break
                 else:
                     # If exact match, put on top
-                    if len(string_list) == 1 and string_list[0] == entry.lower():
+                    if len(string_list) == 1 and string_list[0] == lower_entry:
                         return_list.insert(0, entry)
                     # otherwise, put on bottom
                     else:
@@ -2295,7 +2295,7 @@ class ViewModel():
                 len(self.entry_list) + len(self.command_list))
 
         # See if we have an exact match
-        if combined_list and len(list_match) == 1 and combined_list[0].lower() == list_match[0]:
+        if combined_list and len(list_match) == 1 and str(combined_list[0]).lower() == list_match[0]:
             current_index = 0
         # Otherwise, keep existing selection
         elif current_match:
