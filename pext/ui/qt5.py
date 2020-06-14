@@ -231,9 +231,16 @@ class Window():
                                         LocaleManager.find_best_locale(Settings.get('locale')).name())
         self.context.setContextProperty("locales", self.locale_manager.get_locales())
 
+        # Prepare dependencies for the main UI
+        self.module_manager = module_manager
+        self.theme_manager = theme_manager
+        self.profile_manager = ProfileManager()
+
         # Load the main UI
+        self.engine.objectCreated.connect(self._bind_to_loaded_ui)
         self.engine.load(QUrl.fromLocalFile(os.path.join(AppFile.get_path(), 'qml', 'main.qml')))
 
+    def _bind_to_loaded_ui(self, object: QObject, url: QUrl):
         self.window = self.engine.rootObjects()[0]
 
         # Give the translator a reference to the window
@@ -251,15 +258,12 @@ class Window():
 
         # Give QML the module info
         self.intro_screen = self.window.findChild(QObject, "introScreen")
-        self.module_manager = module_manager
         self._update_modules_info_qml()
 
         # Give QML the theme info
-        self.theme_manager = theme_manager
         self._update_themes_info_qml()
 
         # Give QML the profile info
-        self.profile_manager = ProfileManager()
         self._update_profiles_info_qml()
 
         # Bind global shortcuts
