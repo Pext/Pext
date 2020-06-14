@@ -171,7 +171,16 @@ class WindowModule():
 
     def selection_changed(self, selection: List[Dict[SelectionType, str]]) -> None:
         """Update the UI when the user selection tree changes."""
-        self.context.setContextProperty("resultListModelTree", selection)
+        # Normalize for display in the tree list, fixes QML displaying things like QVariant instead of text
+        normalized_selection = []
+        for entry in selection:
+            normalized_entry = dict.copy(entry)
+            normalized_entry['value'] = str(normalized_entry['value'])
+            if 'context_option' in normalized_entry and normalized_entry['context_option'] is not None:
+                normalized_entry['context_option'] = str(normalized_entry['context_option'])
+            normalized_selection.append(normalized_entry)
+
+        self.context.setContextProperty("resultListModelTree", normalized_selection)
 
     def header_text_changed(self, value: str) -> None:
         """Update the UI when the header text changes."""
