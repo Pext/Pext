@@ -1708,6 +1708,23 @@ class UpdateManager():
         return url
 
     @staticmethod
+    def get_wanted_branch(directory: str) -> bytes:
+        """Get the wanted branch from the metadata.json for this git object."""
+        branch = "master"
+        branch_type = "stable"
+        if Settings.get('_force_module_branch_type'):
+            branch_type = Settings.get('_force_module_branch_type')
+
+        try:
+            with open(os.path.join(directory, "metadata.json"), 'r') as metadata_json:
+                branch = json.load(metadata_json)["git_branch_{}".format(branch_type)]
+        except (FileNotFoundError, IndexError, KeyError, json.decoder.JSONDecodeError):
+            print("Couldn't figure out branch for type {} of {}, defaulting to master".format(branch_type, directory))
+            pass
+
+        return "refs/heads/{}".format(branch).encode()
+
+    @staticmethod
     def get_remote_url(directory: str) -> str:
         """Get the url of the given remote for the specified git-managed directory."""
         with UpdateManager._path_to_repo(directory) as repo:
@@ -1715,10 +1732,28 @@ class UpdateManager():
             return config.get(("remote".encode(), "origin".encode()), "url".encode()).decode()
 
     @staticmethod
-    def has_update(directory: str, branch=b'refs/heads/master') -> bool:
+    def ensure_repo_branch(directory: str, branch: bytes) -> None:
         """Check if an update is available for the git-managed directory."""
         # Get current commit
         with UpdateManager._path_to_repo(directory) as repo:
+            # Get current branch
+            current_branch = repo.refs.get_symrefs()[b"HEAD"]
+
+            if current_branch != branch:
+                # Ensure a clean state on the wanted branch
+                repo.reset_index(repo[branch].tree)
+                repo.refs.set_symbolic_ref(b"HEAD", branch)
+
+    @staticmethod
+    def has_update(directory: str, branch=None) -> bool:
+        """Check if an update is available for the git-managed directory."""
+        if branch is None:
+            branch = UpdateManager.get_wanted_branch(directory)
+
+        # Get current commit
+        with UpdateManager._path_to_repo(directory) as repo:
+            UpdateManager.ensure_repo_branch(directory, branch)
+
             old_commit = repo[repo.head()]
             remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
             try:
@@ -2618,14 +2653,14 @@ class ThemeManager():
         try:
             with open(os.path.join(theme_path, "metadata.json"), 'r') as metadata_json:
                 name = json.load(metadata_json)['name']
-        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+        except (FileNotFoundError, IndexError, KeyError, json.decoder.JSONDecodeError):
             name = identifier
 
         try:
             with open(os.path.join(theme_path, "metadata_{}.json".format(
                       LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
                 name = json.load(metadata_json_i18n)['name']
-        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+        except (FileNotFoundError, IndexError, KeyError, json.decoder.JSONDecodeError):
             pass
 
         if verbose:
@@ -2659,14 +2694,14 @@ class ThemeManager():
         try:
             with open(os.path.join(theme_path, "metadata.json"), 'r') as metadata_json:
                 name = json.load(metadata_json)['name']
-        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+        except (FileNotFoundError, IndexError, KeyError, json.decoder.JSONDecodeError):
             name = identifier
 
         try:
             with open(os.path.join(theme_path, "metadata_{}.json".format(
                       LocaleManager.find_best_locale(Settings.get('locale')).name())), 'r') as metadata_json_i18n:
                 name = json.load(metadata_json_i18n)['name']
-        except (FileNotFoundError, IndexError, json.decoder.JSONDecodeError):
+        except (FileNotFoundError, IndexError, KeyError, json.decoder.JSONDecodeError):
             pass
 
         if verbose:
@@ -2711,6 +2746,7 @@ class Settings():
         '_launch_app': True,  # Keep track if launching is normal
         '_window_geometry': None,
         '_portable': False,
+        '_force_module_branch_type': None,  # TODO: Remove in favor of a proper per-module selection
         'background': False,
         'turbo_mode': False,
         'locale': None,
@@ -2891,6 +2927,9 @@ def _parse_args(argv: List[str]) -> argparse.Namespace:
                         help='automatically select entries when expecting the user to want to (possibly dangerous).')
     parser.add_argument('--no-turbo', action='store_false', dest='turbo_mode', default=None,
                         help='do not automatically select entries (safer).')
+    # TODO: Remove in favor of a proper per-module selection
+    parser.add_argument('--force-module-branch-type',
+                        help='Set to beta if you want to test beta versions of all modules. Please report breakage.')
 
     # Remove weird macOS-added parameter
     # https://stackoverflow.com/questions/10242115/os-x-strange-psn-command-line-parameter-when-launched-from-finder
@@ -3110,6 +3149,10 @@ def _load_settings(args: argparse.Namespace) -> None:
 
     if args.turbo_mode is not None:
         Settings.set('turbo_mode', args.turbo_mode)
+
+    # TODO: Remove in favor of a proper per-module selection
+    if args.force_module_branch_type is not None:
+        Settings.set('_force_module_branch_type', args.force_module_branch_type)
 
     # Set up the parsed modules
     if '_modules' in args:

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Search bar content is now unique per module
 - ask_input prefill now fills text instead of placeholder
 - Report error traceback in bug report as code block
+- Use git_branch_stable in metadata.json for modules and themes by default instead of forcing master
 
 ### Fixed
 - Info menu something not showing up
