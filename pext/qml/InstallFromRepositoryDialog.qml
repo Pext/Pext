@@ -164,7 +164,9 @@ Dialog {
 
     onAccepted: {
         if (urlSelectionBox.currentText && objects[objectComboBox.currentIndex].id) {
-            installRequest(urlSelectionBox.currentText, objects[objectComboBox.currentIndex].id, objects[objectComboBox.currentIndex].name);
+            var branch = objects[objectComboBox.currentIndex].git_branch_stable ? objects[objectComboBox.currentIndex].git_branch_stable : "master";
+
+            installRequest(urlSelectionBox.currentText, objects[objectComboBox.currentIndex].id, objects[objectComboBox.currentIndex].name, branch);
         }
         destroy();
     }

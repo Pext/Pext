@@ -1498,7 +1498,7 @@ class ModuleManager():
 
         return True
 
-    def install(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
+    def install(self, url: str, identifier: str, name: str, branch: bytes, verbose=False, interactive=True) -> bool:
         """Install a module."""
         module_path = os.path.join(self.module_dir, identifier.replace('.', '_'))
         dep_path = os.path.join(self.module_dependencies_dir, identifier.replace('.', '_'))
@@ -1514,6 +1514,7 @@ class ModuleManager():
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
+            UpdateManager.ensure_repo_branch(module_path, branch)
         except Exception as e:
             if verbose:
                 Logger.log_critical(
@@ -1708,21 +1709,32 @@ class UpdateManager():
         return url
 
     @staticmethod
-    def get_wanted_branch(directory: str) -> bytes:
-        """Get the wanted branch from the metadata.json for this git object."""
+    def get_wanted_branch_from_metadata(metadata: Dict[Any, Any]) -> bytes:
+        """Get the wanted branch from the given metadata.json."""
         branch = "master"
         branch_type = "stable"
         if Settings.get('_force_module_branch_type'):
             branch_type = Settings.get('_force_module_branch_type')
 
         try:
-            with open(os.path.join(directory, "metadata.json"), 'r') as metadata_json:
-                branch = json.load(metadata_json)["git_branch_{}".format(branch_type)]
-        except (FileNotFoundError, IndexError, KeyError, json.decoder.JSONDecodeError):
+             branch = json.load(metadata_json)["git_branch_{}".format(branch_type)]
+        except (IndexError, KeyError, json.decoder.JSONDecodeError):
             print("Couldn't figure out branch for type {} of {}, defaulting to master".format(branch_type, directory))
-            pass
+            return "refs/heads/master".encode()
 
         return "refs/heads/{}".format(branch).encode()
+
+    @staticmethod
+    def get_wanted_branch(directory: str) -> bytes:
+        """Get the wanted branch from the metadata.json for this git object."""
+        try:
+            with open(os.path.join(directory, "metadata.json"), 'r') as metadata_json:
+                branch = UpdateManager.get_wanted_branch_from_metadata(metadata_json)
+        except FileNotFoundError:
+            print("Couldn't figure out branch for type {} of {}, defaulting to master".format(branch_type, directory))
+            return "refs/heads/master".encode()
+
+        return branch
 
     @staticmethod
     def get_remote_url(directory: str) -> str:
@@ -1740,6 +1752,10 @@ class UpdateManager():
             current_branch = repo.refs.get_symrefs()[b"HEAD"]
 
             if current_branch != branch:
+                # Update to wanted branch
+                remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
+                porcelain.pull(repo, remote_url, branch)
+
                 # Ensure a clean state on the wanted branch
                 repo.reset_index(repo[branch].tree)
                 repo.refs.set_symbolic_ref(b"HEAD", branch)
@@ -2612,7 +2628,7 @@ class ThemeManager():
         """Apply the palette to the app (use this before creating a window)."""
         app.setPalette(palette)
 
-    def install(self, url: str, identifier: str, name: str, verbose=False, interactive=True) -> bool:
+    def install(self, url: str, identifier: str, name: str, branch: bytes, verbose=False, interactive=True) -> bool:
         """Install a theme."""
         theme_path = os.path.join(self.theme_dir, identifier.replace('.', '_'))
 
@@ -2627,6 +2643,7 @@ class ThemeManager():
 
         try:
             porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
+            UpdateManager.ensure_repo_branch(theme_path, branch)
         except Exception as e:
             if verbose:
                 Logger.log_critical(
@@ -3024,6 +3041,7 @@ def _load_settings(args: argparse.Namespace) -> None:
                 if not ModuleManager().install(metadata['git_urls'][0],
                                                metadata['id'],
                                                metadata['name'],
+                                               UpdateManager.get_wanted_branch_from_metadata(metadata),
                                                verbose=True):
                     sys.exit(3)
             except Exception as e:
@@ -3077,6 +3095,7 @@ def _load_settings(args: argparse.Namespace) -> None:
                 if not ThemeManager().install(metadata['git_urls'][0],
                                               metadata['id'],
                                               metadata['name'],
+                                              UpdateManager.get_wanted_branch_from_metadata(metadata),
                                               verbose=True):
                     sys.exit(3)
             except Exception as e:

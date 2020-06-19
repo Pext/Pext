@@ -508,7 +508,7 @@ ApplicationWindow {
                 objectName: "menuInstallModule"
                 title: qsTr("Install module")
 
-                signal installModuleRequest(string url, string identifier, string name)
+                signal installModuleRequest(string url, string identifier, string name, string branch)
 
                 MenuItem {
                     id: menuInstallModuleFromList
@@ -600,7 +600,7 @@ ApplicationWindow {
                 objectName: "menuInstallTheme"
                 title: qsTr("Install theme")
 
-                signal installThemeRequest(string url, string identifier, string name)
+                signal installThemeRequest(string url, string identifier, string name, string branch)
 
                 MenuItem {
                     id: menuInstallThemeFromList

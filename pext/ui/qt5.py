@@ -708,11 +708,11 @@ class Window():
             module_data = self.module_manager.reload_step_unload(tab_id, self)
             self.module_manager.reload_step_load(tab_id, module_data, self)
 
-    def _menu_install_module(self, module_url: str, identifier: str, name: str) -> None:
+    def _menu_install_module(self, module_url: str, identifier: str, name: str, branch: str) -> None:
         functions = [
             {
                 'name': self.module_manager.install,
-                'args': (module_url, identifier, name,),
+                'args': (module_url, identifier, name, "refs/heads/{}".format(branch).encode()),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -830,11 +830,11 @@ class Window():
         ]
         threading.Thread(target=RunConseq, args=(functions,)).start()  # type: ignore
 
-    def _menu_install_theme(self, theme_url: str, identifier: str, name: str) -> None:
+    def _menu_install_theme(self, theme_url: str, identifier: str, name: str, branch: str) -> None:
         functions = [
             {
                 'name': self.theme_manager.install,
-                'args': (theme_url, identifier, name,),
+                'args': (theme_url, identifier, name, "refs/heads/{}".format(branch).encode()),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,
