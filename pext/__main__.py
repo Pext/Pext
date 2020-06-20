@@ -1709,7 +1709,7 @@ class UpdateManager():
         return url
 
     @staticmethod
-    def get_wanted_branch_from_metadata(metadata: Dict[Any, Any]) -> bytes:
+    def get_wanted_branch_from_metadata(metadata: str, identifier: str) -> bytes:
         """Get the wanted branch from the given metadata.json."""
         branch = "master"
         branch_type = "stable"
@@ -1717,9 +1717,9 @@ class UpdateManager():
             branch_type = Settings.get('_force_module_branch_type')
 
         try:
-             branch = json.load(metadata_json)["git_branch_{}".format(branch_type)]
+            branch = json.loads(metadata)["git_branch_{}".format(branch_type)]
         except (IndexError, KeyError, json.decoder.JSONDecodeError):
-            print("Couldn't figure out branch for type {} of {}, defaulting to master".format(branch_type, directory))
+            print("Couldn't figure out branch for type {} of {}, defaulting to master".format(branch_type, identifier))
             return "refs/heads/master".encode()
 
         return "refs/heads/{}".format(branch).encode()
@@ -1729,9 +1729,9 @@ class UpdateManager():
         """Get the wanted branch from the metadata.json for this git object."""
         try:
             with open(os.path.join(directory, "metadata.json"), 'r') as metadata_json:
-                branch = UpdateManager.get_wanted_branch_from_metadata(metadata_json)
+                branch = UpdateManager.get_wanted_branch_from_metadata(metadata_json.read(), directory)
         except FileNotFoundError:
-            print("Couldn't figure out branch for type {} of {}, defaulting to master".format(branch_type, directory))
+            print("Couldn't figure out branch for {}, defaulting to master".format(directory))
             return "refs/heads/master".encode()
 
         return branch
@@ -3041,7 +3041,7 @@ def _load_settings(args: argparse.Namespace) -> None:
                 if not ModuleManager().install(metadata['git_urls'][0],
                                                metadata['id'],
                                                metadata['name'],
-                                               UpdateManager.get_wanted_branch_from_metadata(metadata),
+                                               UpdateManager.get_wanted_branch_from_metadata(metadata, metadata['id']),
                                                verbose=True):
                     sys.exit(3)
             except Exception as e:
@@ -3095,7 +3095,7 @@ def _load_settings(args: argparse.Namespace) -> None:
                 if not ThemeManager().install(metadata['git_urls'][0],
                                               metadata['id'],
                                               metadata['name'],
-                                              UpdateManager.get_wanted_branch_from_metadata(metadata),
+                                              UpdateManager.get_wanted_branch_from_metadata(metadata, metadata['id']),
                                               verbose=True):
                     sys.exit(3)
             except Exception as e:
