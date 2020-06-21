@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.31] - 2020-06-21
 ### Changed
 - Search bar content is now unique per module
 - ask_input prefill now fills text instead of placeholder
