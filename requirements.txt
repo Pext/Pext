@@ -1,4 +1,4 @@
-dulwich==0.20.3
+dulwich==0.20.5
 paramiko==2.7.1
 psutil==5.7.0
 pynput==1.6.8
