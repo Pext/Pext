@@ -84,7 +84,7 @@ This will stop any running module and the global hotkey will not work until you 
 Are you sure you want to quit?</source>
         <translation>Ön most kilép a Pextből.
 
-Minden jelenleg futó modul leáll, és  a gyorsbillentyűt sem tudja használni, amíg újból el nem indítja a Pextet.
+Minden jelenleg futó modul leáll, és a gyorsbillentyűt sem tudja használni, amíg újból el nem indítja a Pextet.
 
 Biztosan ki szeretne lépni?</translation>
     </message>
@@ -855,7 +855,7 @@ Biztosan ki szeretne lépni?</translation>
     <message>
         <location filename="../qml/main.qml" line="1290"/>
         <source>Module&apos;s Module class does not implement ModuleBase</source>
-        <translation>Module&apos;s Module class does not implement ModuleBase</translation>
+        <translation type="unfinished">A modul modulkategóriája nem alkalmazza a ModuleBase- ot</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1291"/>
