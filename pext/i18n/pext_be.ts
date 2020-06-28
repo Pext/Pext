@@ -310,7 +310,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="44"/>
         <source>Choose the module to load:</source>
-        <translation>Выбярыце  модуль:</translation>
+        <translation>Выбярыце модуль:</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
