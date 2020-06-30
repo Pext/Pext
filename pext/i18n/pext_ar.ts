@@ -71,9 +71,9 @@ This will stop any running module.
 Are you sure you want to quit?</source>
         <translation>انت على وشك اغلاق Pext
 
-هذا سوف يوقف من تشغيل أي  عنصر.
+هذا سوف يوقف من تشغيل أي عنصر.
 
-هل  انت متأكد من الخروج؟</translation>
+هل انت متأكد من الخروج؟</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
