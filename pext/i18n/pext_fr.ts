@@ -21,7 +21,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="101"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation>Voulez-vous aider à traduire Pext? Cliquez ici s&apos;il vous plaît.</translation>
+        <translation>Voulez-vous aider à traduire Pext ? Cliquez ici s&apos;il vous plaît.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="102"/>
@@ -185,17 +185,17 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="131"/>
         <source>Creator: </source>
-        <translation>Créateur(trice): </translation>
+        <translation>Créateur(trice) : </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="138"/>
         <source>Description: </source>
-        <translation></translation>
+        <translation>Description : </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="145"/>
         <source>License: </source>
-        <translation>Licence: </translation>
+        <translation>Licence : </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="152"/>
@@ -251,12 +251,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
-        <translation></translation>
+        <translation>Developer : </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
         <source>Description: </source>
-        <translation></translation>
+        <translation>Description : </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
@@ -338,7 +338,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation>Remarque: Pext redémarrera pour changer de profil.</translation>
+        <translation>Remarque : Pext redémarrera pour changer de profil.</translation>
     </message>
 </context>
 <context>
@@ -361,7 +361,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>Remarque: Pext redémarrera pour appliquer le nouveau thème.</translation>
+        <translation>Remarque : Pext redémarrera pour appliquer le nouveau thème.</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
@@ -384,22 +384,22 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation>Identifiant: %1</translation>
+        <translation>Identifiant : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
         <source>Version: %1 (%2)</source>
-        <translation></translation>
+        <translation>Version : %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="77"/>
         <source>Developer: %1</source>
-        <translation>Développeur: %1</translation>
+        <translation>Développeur : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="85"/>
         <source>Description: %1</source>
-        <translation></translation>
+        <translation>Description : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="93"/>
@@ -409,12 +409,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/ManageDialog.qml" line="101"/>
         <source>Homepage: %1</source>
-        <translation>Page d&apos;accueil: %1</translation>
+        <translation>Page d&apos;accueil : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
-        <translation>Source de téléchargement: %1</translation>
+        <translation>Source de téléchargement : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="136"/>
@@ -860,7 +860,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1291"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation>Échec en retrouvez la module {0}: la {1} fonction contient {2} paramètres (en excluant ce paramètre), attendus {3}</translation>
+        <translation>Échec en retrouvez la module {0} : la {1} fonction contient {2} paramètres (en excluant ce paramètre), attendus {3}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1292"/>
@@ -875,7 +875,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1294"/>
         <source>Failed to download {0}: {1}</source>
-        <translation>Échec du téléchargement de {0}: {1}</translation>
+        <translation>Échec du téléchargement de {0} : {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1295"/>
@@ -920,7 +920,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1303"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation>Impossible de télécharger la mise à jour pour {0}: {1}</translation>
+        <translation>Impossible de télécharger la mise à jour pour {0} : {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1304"/>
@@ -945,7 +945,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1308"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation>Échec de la recherche de mises à jour Pext: {0}</translation>
+        <translation>Échec de la recherche de mises à jour Pext : {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1309"/>
@@ -1136,7 +1136,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1279"/>
         <source>Processing: %1 (%2)</source>
-        <translation>En cours de traitement: %1 (%2)</translation>
+        <translation>En cours de traitement : %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1281"/>
