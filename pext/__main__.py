@@ -1256,10 +1256,11 @@ class ModuleManager():
                        'install',
                        '--isolated']
 
-        # FIXME: Cheap hack to work around Debian's faultily-patched pip
-        # We try to prevent false positives by checking for (mini)conda or a venv
+        # FIXME: Cheap hack to work around faultily-patched pip in Debian
+        # Strech and below. We try to prevent false positives by checking for
+        # (mini)conda or a venv
         if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
-                'Debian' in open('/etc/issue.net', 'r').read() and
+                re.match('Debian GNU/Linux \d$', open('/etc/issue.net', 'r').read()) and
                 not hasattr(sys, 'real_prefix') and
                 not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
             pip_command += ['--system']
