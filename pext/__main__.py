@@ -47,9 +47,9 @@ from pkg_resources import parse_version
 from shutil import rmtree
 from subprocess import check_output, CalledProcessError
 try:
-    from typing import Any, Callable, Dict, List, Optional, Set, Union
+    from typing import Any, Callable, Dict, List, Optional, Union
 except ImportError:
-    from backports.typing import Any, Callable, Dict, List, Optional, Set, Union  # type: ignore  # noqa: F401
+    from backports.typing import Any, Callable, Dict, List, Optional, Union  # type: ignore  # noqa: F401
 from urllib.parse import quote_plus
 from queue import Queue, Empty
 
@@ -1714,7 +1714,6 @@ class UpdateManager():
     @staticmethod
     def get_wanted_branch_from_metadata(metadata: str, identifier: str) -> bytes:
         """Get the wanted branch from the given metadata.json."""
-        branch = "master"
         branch_type = "stable"
         if Settings.get('_force_module_branch_type'):
             branch_type = Settings.get('_force_module_branch_type')
