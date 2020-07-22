@@ -1262,7 +1262,7 @@ class ModuleManager():
         # This is tracked upstream at https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=830892
         # It has been fixed in Debian Buster (10)
         if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
-                'Debian GNU/Linux 9' in open('/etc/issue.net', 'r').read() and
+                re.match('Debian GNU/Linux \d$', open('/etc/issue.net', 'r').read()) and
                 not hasattr(sys, 'real_prefix') and
                 not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
             pip_command += ['--system']
