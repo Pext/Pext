@@ -1256,21 +1256,13 @@ class ModuleManager():
                        'install',
                        '--isolated']
 
-<<<<<<< HEAD
-        # FIXME: Cheap hack to work around faultily-patched pip in Debian
-        # Strech and below. We try to prevent false positives by checking for
-        # (mini)conda or a venv
-        if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
-                re.match('Debian GNU/Linux \d$', open('/etc/issue.net', 'r').read()) and
-=======
         # TODO: Remove after Debian 9 is no longer supported
         # This works around Debian 9's faultily-patched pip
         # We try to prevent false positives by checking for (mini)conda or a venv
         # This is tracked upstream at https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=830892
         # It has been fixed in Debian Buster (10)
         if ("conda" not in sys.version and os.path.isfile('/etc/issue.net') and
-                'Debian GNU/Linux 9' in open('/etc/issue.net', 'r').read() and
->>>>>>> 88540d4bde1f9712da6402da5e1b6c71e15220ca
+                re.match('Debian GNU/Linux \d$', open('/etc/issue.net', 'r').read()) and
                 not hasattr(sys, 'real_prefix') and
                 not (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)):
             pip_command += ['--system']
