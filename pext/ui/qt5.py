@@ -712,7 +712,7 @@ class Window():
         functions = [
             {
                 'name': self.module_manager.install,
-                'args': (module_url, identifier, name, "refs/heads/{}".format(branch).encode()),
+                'args': (module_url, identifier, name, branch.encode()),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_modules_info_qml,
@@ -834,7 +834,7 @@ class Window():
         functions = [
             {
                 'name': self.theme_manager.install,
-                'args': (theme_url, identifier, name, "refs/heads/{}".format(branch).encode()),
+                'args': (theme_url, identifier, name, branch.encode()),
                 'kwargs': {'interactive': False, 'verbose': True}
             }, {
                 'name': self._update_themes_info_qml,

@@ -59,7 +59,8 @@ Dialog {
                 responseStart = xmlhttp.responseText.length;
             } else if (xmlhttp.readyState == XMLHttpRequest.DONE && xmlhttp.status == 200) {
                 var metadata = JSON.parse(xmlhttp.response.substring(responseStart));
-                installRequest(metadata.git_urls[0], metadata.id, metadata.name);
+                var branch = metadata.git_branch_stable || "master";
+                installRequest(metadata.git_urls[0], metadata.id, metadata.name, branch);
 
                 destroy();
             }

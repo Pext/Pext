@@ -1516,8 +1516,7 @@ class ModuleManager():
             Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
-            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), module_path)
-            UpdateManager.ensure_repo_branch(module_path, branch)
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), target=module_path, checkout=branch)
         except Exception as e:
             if verbose:
                 Logger.log_critical(
@@ -1712,14 +1711,14 @@ class UpdateManager():
         return url
 
     @staticmethod
-    def get_wanted_branch_from_metadata(metadata: str, identifier: str) -> bytes:
+    def get_wanted_branch_from_metadata(metadata: Dict[Any, Any], identifier: str) -> bytes:
         """Get the wanted branch from the given metadata.json."""
         branch_type = "stable"
         if Settings.get('_force_module_branch_type'):
             branch_type = Settings.get('_force_module_branch_type')
 
         try:
-            branch = json.loads(metadata)["git_branch_{}".format(branch_type)]
+            branch = metadata["git_branch_{}".format(branch_type)]
         except (IndexError, KeyError, json.decoder.JSONDecodeError):
             print("Couldn't figure out branch for type {} of {}, defaulting to master".format(branch_type, identifier))
             return "refs/heads/master".encode()
@@ -1731,8 +1730,8 @@ class UpdateManager():
         """Get the wanted branch from the metadata.json for this git object."""
         try:
             with open(os.path.join(directory, "metadata.json"), 'r') as metadata_json:
-                branch = UpdateManager.get_wanted_branch_from_metadata(metadata_json.read(), directory)
-        except FileNotFoundError:
+                branch = UpdateManager.get_wanted_branch_from_metadata(json.load(metadata_json), directory)
+        except (FileNotFoundError, json.decoder.JSONDecodeError):
             print("Couldn't figure out branch for {}, defaulting to master".format(directory))
             return "refs/heads/master".encode()
 
@@ -2644,8 +2643,7 @@ class ThemeManager():
             Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
-            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), theme_path)
-            UpdateManager.ensure_repo_branch(theme_path, branch)
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), target=theme_path, checkout=branch)
         except Exception as e:
             if verbose:
                 Logger.log_critical(
@@ -2994,6 +2992,10 @@ def _load_settings(args: argparse.Namespace) -> None:
     if args.locale:
         Settings.set('locale', args.locale)
 
+    # TODO: Remove in favor of a proper per-module selection
+    if args.force_module_branch_type is not None:
+        Settings.set('_force_module_branch_type', args.force_module_branch_type)
+
     if args.list_locales:
         locales = LocaleManager.get_locales()
         for locale in locales:
@@ -3170,10 +3172,6 @@ def _load_settings(args: argparse.Namespace) -> None:
 
     if args.turbo_mode is not None:
         Settings.set('turbo_mode', args.turbo_mode)
-
-    # TODO: Remove in favor of a proper per-module selection
-    if args.force_module_branch_type is not None:
-        Settings.set('_force_module_branch_type', args.force_module_branch_type)
 
     # Set up the parsed modules
     if '_modules' in args:
