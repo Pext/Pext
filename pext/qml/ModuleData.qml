@@ -85,7 +85,7 @@ Item {
                 delegate: Component {
                     Item {
                         property variant itemData: model.modelData
-                        width: parent.width
+                        width: parent ? parent.width : 0
                         height: column.height
                         Column {
                             id: column
@@ -254,7 +254,7 @@ Item {
                 delegate: Component {
                     Item {
                         property variant itemData: model.modelData
-                        width: parent.width
+                        width: parent ? parent.width : 0
                         height: text.height
                         Column {
                             Text {
