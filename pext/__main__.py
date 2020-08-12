@@ -1755,11 +1755,14 @@ class UpdateManager():
             if current_branch != branch:
                 # Update to wanted branch
                 remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
-                porcelain.pull(repo, remote_url, branch)
-
-                # Ensure a clean state on the wanted branch
-                repo.reset_index(repo[branch].tree)
-                repo.refs.set_symbolic_ref(b"HEAD", branch)
+                try:
+                    porcelain.pull(repo, remote_url, branch)
+                    # Ensure a clean state on the wanted branch
+                    repo.reset_index(repo[branch].tree)
+                    repo.refs.set_symbolic_ref(b"HEAD", branch)
+                except KeyError as e:
+                    Logger.log_error(None, Translation.get("failed_to_checkout_branch").format(directory, e))
+                    traceback.print_exc()
 
     @staticmethod
     def has_update(directory: str, branch=None) -> bool:
