@@ -26,7 +26,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="100"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation>Os programadores do Pext agradecem a esses usuários por traduzirem o Pext:</translation>
+        <translation>Os programadores do Pext agradecem a esses utilizadores por traduzirem o Pext:</translation>
     </message>
 </context>
 <context>
@@ -84,7 +84,7 @@ This will stop any running module and the global hotkey will not work until you 
 Are you sure you want to quit?</source>
         <translation>Estás prestes a deixar o Pext.
 
-Isto irá parar qualquer módulo em execução e a tecla de atalho global não irá funcionar até que você reinicie o Pext manualmente.
+Isto irá parar qualquer módulo em execução e a tecla de atalho global não irá funcionar até que reinicie o Pext manualmente.
 
 Tens a certeza que queres desistir?</translation>
     </message>
@@ -333,7 +333,7 @@ Tens a certeza que queres desistir?</translation>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="51"/>
         <source>Open in a new window</source>
-        <translation>Abrir em uma nova janela</translation>
+        <translation>Abrir numa nova janela</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
@@ -995,12 +995,12 @@ Tens a certeza que queres desistir?</translation>
     <message>
         <location filename="../qml/main.qml" line="1288"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation>As atualizações automáticas estão ativadas; você pode alterar isso nas configurações.</translation>
+        <translation>As atualizações automáticas estão ativadas; pode alterar-lo nas configurações.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1289"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation>Pext {0} está disponível. Você está atualmente executando Pext {1}.</translation>
+        <translation>Pext {0} está disponível. Está atualmente executando Pext {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1290"/>
