@@ -465,12 +465,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module crashed.</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल दुर्घटनाग्रस्त हो गया।</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल अपडेट हो रहा है …</translation>
     </message>
 </context>
 <context>
@@ -739,103 +739,103 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1094"/>
         <source>Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext को अग्रभूमि में ले जाएं</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1099"/>
         <source>Minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>छोटा</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1112"/>
         <source>Tabs</source>
-        <translation type="unfinished"></translation>
+        <translation>टैब्स</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1114"/>
         <source>Open a new tab</source>
-        <translation type="unfinished"></translation>
+        <translation>एक नया टैब खोलें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1118"/>
         <source>Reload active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>सक्रिय टैब पुनः लोड करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1122"/>
         <source>Close active tab</source>
-        <translation type="unfinished"></translation>
+        <translation>सक्रिय टैब बंद करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1126"/>
         <source>Switch to next tab</source>
-        <translation type="unfinished"></translation>
+        <translation>अगले टैब पर जाएं</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1130"/>
         <source>Switch to previous tab</source>
-        <translation type="unfinished"></translation>
+        <translation>पिछले टैब पर स्विच करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1135"/>
         <source>Modules</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1107"/>
         <source>Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>पूरा इनपुट</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1103"/>
         <source>Go back to module&apos;s base level and minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल के आधार स्तर पर वापस जाएं और छोटा करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1137"/>
         <source>Go back</source>
-        <translation type="unfinished"></translation>
+        <translation>वापस जाओ</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1141"/>
         <source>Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>हाइलाइट की गई प्रविष्टि सक्रिय करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1142"/>
         <source>Left mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>बायाँ माउस बटन</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1145"/>
         <source>Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>हाइलाइट की गई प्रविष्टि सक्रिय करें (इसे कभी भी कम से कम न करें)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1146"/>
         <source>Middle mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>मध्य माउस बटन</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
         <source>Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>हाइलाइट की गई कमांड के लिए तर्क दर्ज करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1150"/>
         <location filename="../qml/main.qml" line="1154"/>
         <source>Right mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>दायाँ माउस बटन</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1153"/>
         <source>Open context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>संदर्भ मेनू खोलें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1157"/>
         <source>Change sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>छँटाई शैली बदलें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1235"/>
@@ -955,7 +955,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1310"/>
         <source>Failed to check for updates for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>मॉड्यूल {0}: {1} के अपडेट की जांच करने में विफल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
@@ -1121,17 +1121,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1162"/>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>चेतावनी</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1164"/>
         <source>Accept</source>
-        <translation type="unfinished"></translation>
+        <translation>स्वीकार करना</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1168"/>
         <source>Decline</source>
-        <translation type="unfinished"></translation>
+        <translation>अवनति</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1279"/>
