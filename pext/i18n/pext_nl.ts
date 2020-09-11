@@ -959,101 +959,106 @@ Weet je zeker dat je wilt afsluiten?</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
+        <source>Failed to checkout branch for module {0}: {1}</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1312"/>
         <source>Data queued for typing</source>
         <translation>Gegevens in wachtrij voor typen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1312"/>
+        <location filename="../qml/main.qml" line="1313"/>
         <source>All queued data has been typed</source>
         <translation>Alle gegevens in de wachtrij zijn getypt</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1313"/>
+        <location filename="../qml/main.qml" line="1314"/>
         <source>Data queued for clipboard</source>
         <translation>Gegevens in wachtrij voor klembord</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1314"/>
+        <location filename="../qml/main.qml" line="1315"/>
         <source>Data copied to clipboard</source>
         <translation>Gegevens gekopieerd naar klembord</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1315"/>
+        <location filename="../qml/main.qml" line="1316"/>
         <source>Enter arguments</source>
         <translation>Voer aanvullende opties in</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1316"/>
+        <location filename="../qml/main.qml" line="1317"/>
         <source>No context menu available</source>
         <translation>Geen rechtermuisknopmenu beschikbaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1317"/>
+        <location filename="../qml/main.qml" line="1318"/>
         <source>No tab completion possible</source>
         <translation>Geen tabvervollediging beschikbaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1318"/>
+        <location filename="../qml/main.qml" line="1319"/>
         <source>No entry selected</source>
         <translation>Geen item geselecteerd</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1319"/>
+        <location filename="../qml/main.qml" line="1320"/>
         <source>No command available for current filter</source>
         <translation>Geen opdracht beschikbaar voor huidig filter</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1320"/>
+        <location filename="../qml/main.qml" line="1321"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput is niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1321"/>
+        <location filename="../qml/main.qml" line="1322"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI is niet beschikbaar</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1323"/>
+        <location filename="../qml/main.qml" line="1324"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
         <translation>Automatische updates zijn ingeschakeld. Je kunt dit aanpassen in de instellingen.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1324"/>
+        <location filename="../qml/main.qml" line="1325"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
         <translation>Pext {0} is beschikbaar. Momenteel gebruik je Pext {1}.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1325"/>
+        <location filename="../qml/main.qml" line="1326"/>
         <source>Open download page</source>
         <translation>Ga naar de downloadpagina</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1326"/>
+        <location filename="../qml/main.qml" line="1327"/>
         <source>{0} can be updated.</source>
         <translation>{0} kan worden bijgewerkt.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1327"/>
+        <location filename="../qml/main.qml" line="1328"/>
         <source>Update</source>
         <translation>Bijwerken</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1328"/>
+        <location filename="../qml/main.qml" line="1329"/>
         <source>{0} can be updated but is currently in use.</source>
         <translation>{0} kan worden bijgewerkt, maar is momenteel in gebruik.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1329"/>
+        <location filename="../qml/main.qml" line="1330"/>
         <source>Update and reload</source>
         <translation>Bijwerken en herladen</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1330"/>
+        <location filename="../qml/main.qml" line="1331"/>
         <source>An error occured in {0}: {1}.</source>
         <translation>Er is een fout opgetreden in {0}: {1}.</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1331"/>
+        <location filename="../qml/main.qml" line="1332"/>
         <source>Report as bug</source>
         <translation>Meld dit als bug</translation>
     </message>

@@ -959,101 +959,106 @@ Are you sure you want to quit?</source>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
+        <source>Failed to checkout branch for module {0}: {1}</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1312"/>
         <source>Data queued for typing</source>
         <translation>在佇列中等待輸入的資料</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1312"/>
+        <location filename="../qml/main.qml" line="1313"/>
         <source>All queued data has been typed</source>
         <translation>已輸入所有在佇列中的資料</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1313"/>
+        <location filename="../qml/main.qml" line="1314"/>
         <source>Data queued for clipboard</source>
         <translation>剪貼簿的資料佇列</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1314"/>
+        <location filename="../qml/main.qml" line="1315"/>
         <source>Data copied to clipboard</source>
         <translation>資料已複製到剪貼簿</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1315"/>
+        <location filename="../qml/main.qml" line="1316"/>
         <source>Enter arguments</source>
         <translation>輸入參數</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1316"/>
+        <location filename="../qml/main.qml" line="1317"/>
         <source>No context menu available</source>
         <translation>沒有可用的右鍵選單</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1317"/>
+        <location filename="../qml/main.qml" line="1318"/>
         <source>No tab completion possible</source>
         <translation>無法使用 Tab 鍵補完</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1318"/>
+        <location filename="../qml/main.qml" line="1319"/>
         <source>No entry selected</source>
         <translation>沒有已選取的項目</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1319"/>
+        <location filename="../qml/main.qml" line="1320"/>
         <source>No command available for current filter</source>
         <translation>目前的過濾器沒有可用的指令</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1320"/>
+        <location filename="../qml/main.qml" line="1321"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput 不可用</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1321"/>
+        <location filename="../qml/main.qml" line="1322"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI 不可用</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1323"/>
+        <location filename="../qml/main.qml" line="1324"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
         <translation>自動更新檢查已啟用。您可以在設定中變更此項目。</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1324"/>
+        <location filename="../qml/main.qml" line="1325"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
         <translation>Pext {0} 可供升級。您目前正在執行 Pext {1}。</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1325"/>
+        <location filename="../qml/main.qml" line="1326"/>
         <source>Open download page</source>
         <translation>開啟下載頁面</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1326"/>
+        <location filename="../qml/main.qml" line="1327"/>
         <source>{0} can be updated.</source>
         <translation>{0} 可以被更新。</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1327"/>
+        <location filename="../qml/main.qml" line="1328"/>
         <source>Update</source>
         <translation>更新</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1328"/>
+        <location filename="../qml/main.qml" line="1329"/>
         <source>{0} can be updated but is currently in use.</source>
         <translation>{0} 可以更新，但目前正在使用。</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1329"/>
+        <location filename="../qml/main.qml" line="1330"/>
         <source>Update and reload</source>
         <translation>更新並重新載入</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1330"/>
+        <location filename="../qml/main.qml" line="1331"/>
         <source>An error occured in {0}: {1}.</source>
         <translation>在 {0} 中遇到錯誤：{1}。</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1331"/>
+        <location filename="../qml/main.qml" line="1332"/>
         <source>Report as bug</source>
         <translation>回報臭蟲</translation>
     </message>

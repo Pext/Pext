@@ -959,101 +959,106 @@ Czy na pewno chcesz wyjść?</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
-        <source>Data queued for typing</source>
+        <source>Failed to checkout branch for module {0}: {1}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
-        <source>All queued data has been typed</source>
+        <source>Data queued for typing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1313"/>
-        <source>Data queued for clipboard</source>
+        <source>All queued data has been typed</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1314"/>
-        <source>Data copied to clipboard</source>
+        <source>Data queued for clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1315"/>
-        <source>Enter arguments</source>
+        <source>Data copied to clipboard</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1316"/>
-        <source>No context menu available</source>
+        <source>Enter arguments</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1317"/>
-        <source>No tab completion possible</source>
+        <source>No context menu available</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1318"/>
-        <source>No entry selected</source>
+        <source>No tab completion possible</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1319"/>
-        <source>No command available for current filter</source>
+        <source>No entry selected</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1320"/>
-        <source>Pynput is unavailable</source>
+        <source>No command available for current filter</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1321"/>
+        <source>Pynput is unavailable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1322"/>
         <source>PyAutoGUI is unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1323"/>
+        <location filename="../qml/main.qml" line="1324"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1324"/>
+        <location filename="../qml/main.qml" line="1325"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1325"/>
+        <location filename="../qml/main.qml" line="1326"/>
         <source>Open download page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1326"/>
+        <location filename="../qml/main.qml" line="1327"/>
         <source>{0} can be updated.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1327"/>
+        <location filename="../qml/main.qml" line="1328"/>
         <source>Update</source>
         <translation type="unfinished">Aktualizacja</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1328"/>
+        <location filename="../qml/main.qml" line="1329"/>
         <source>{0} can be updated but is currently in use.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1329"/>
+        <location filename="../qml/main.qml" line="1330"/>
         <source>Update and reload</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1330"/>
+        <location filename="../qml/main.qml" line="1331"/>
         <source>An error occured in {0}: {1}.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1331"/>
+        <location filename="../qml/main.qml" line="1332"/>
         <source>Report as bug</source>
         <translation type="unfinished"></translation>
     </message>

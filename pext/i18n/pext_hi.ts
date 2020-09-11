@@ -959,101 +959,106 @@ Are you sure you want to quit?</source>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
+        <source>Failed to checkout branch for module {0}: {1}</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../qml/main.qml" line="1312"/>
         <source>Data queued for typing</source>
         <translation>टाइप करने के लिए डेटा कतार में है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1312"/>
+        <location filename="../qml/main.qml" line="1313"/>
         <source>All queued data has been typed</source>
         <translation>सभी पंक्तिबद्ध डेटा टाइप किया जा चुक्का है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1313"/>
+        <location filename="../qml/main.qml" line="1314"/>
         <source>Data queued for clipboard</source>
         <translation>क्लिपबोर्ड के लिए डेटा कतारबद्ध है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1314"/>
+        <location filename="../qml/main.qml" line="1315"/>
         <source>Data copied to clipboard</source>
         <translation>क्लिपबोर्ड पर कॉपी किया गया डेटा</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1315"/>
+        <location filename="../qml/main.qml" line="1316"/>
         <source>Enter arguments</source>
         <translation>तर्क दर्ज करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1316"/>
+        <location filename="../qml/main.qml" line="1317"/>
         <source>No context menu available</source>
         <translation>कोई संदर्भ मेनू उपलब्ध नहीं है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1317"/>
+        <location filename="../qml/main.qml" line="1318"/>
         <source>No tab completion possible</source>
         <translation>कोई टैब पूरा नहीं हो पा रहा है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1318"/>
+        <location filename="../qml/main.qml" line="1319"/>
         <source>No entry selected</source>
         <translation>कोई प्रविष्टि चयनित नहीं है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1319"/>
+        <location filename="../qml/main.qml" line="1320"/>
         <source>No command available for current filter</source>
         <translation>वर्तमान फ़िल्टर के लिए कोई कमांड उपलब्ध नहीं है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1320"/>
+        <location filename="../qml/main.qml" line="1321"/>
         <source>Pynput is unavailable</source>
         <translation>Pynput अनुपलब्ध है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1321"/>
+        <location filename="../qml/main.qml" line="1322"/>
         <source>PyAutoGUI is unavailable</source>
         <translation>PyAutoGUI अनुपलब्ध है</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1323"/>
+        <location filename="../qml/main.qml" line="1324"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
         <translation>स्वतः अपडेट जांच सक्षम हैं। आप इसे सेटिंग्स में बदल सकते हैं।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1324"/>
+        <location filename="../qml/main.qml" line="1325"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
         <translation>Pext {0} उपलब्ध है। आप वर्तमान में Pext {1} चला रहे हैं।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1325"/>
+        <location filename="../qml/main.qml" line="1326"/>
         <source>Open download page</source>
         <translation>डाउनलोड पृष्ठ खोलें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1326"/>
+        <location filename="../qml/main.qml" line="1327"/>
         <source>{0} can be updated.</source>
         <translation>{0} को अपडेट किया जा सकता है।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1327"/>
+        <location filename="../qml/main.qml" line="1328"/>
         <source>Update</source>
         <translation>अपडेट</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1328"/>
+        <location filename="../qml/main.qml" line="1329"/>
         <source>{0} can be updated but is currently in use.</source>
         <translation>{0} को अपडेट किया जा सकता है लेकिन वर्तमान में उपयोग में है।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1329"/>
+        <location filename="../qml/main.qml" line="1330"/>
         <source>Update and reload</source>
         <translation>अपडेट और पुनः लोड करें</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1330"/>
+        <location filename="../qml/main.qml" line="1331"/>
         <source>An error occured in {0}: {1}.</source>
         <translation>{0}: {1} में एक त्रुटि हुई।</translation>
     </message>
     <message>
-        <location filename="../qml/main.qml" line="1331"/>
+        <location filename="../qml/main.qml" line="1332"/>
         <source>Report as bug</source>
         <translation>बग के रूप में रिपोर्ट करें</translation>
     </message>
