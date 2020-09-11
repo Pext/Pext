@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Modules with Python dependencies could not install on Debian Buster
 - Fix installing modules and themes from URL and command line
+- Crash when failing to checkout branch
 
 ## [0.31] - 2020-06-21
 ### Changed
