@@ -960,7 +960,7 @@ Weet je zeker dat je wilt afsluiten?</translation>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
         <source>Failed to checkout branch for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>De tak van de module &apos;{0}&apos; kan niet worden opgehaald: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
