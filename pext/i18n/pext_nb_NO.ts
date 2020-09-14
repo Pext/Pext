@@ -960,7 +960,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
         <source>Failed to checkout branch for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Klarte ikke å sjekke ut forgrening for modul {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>

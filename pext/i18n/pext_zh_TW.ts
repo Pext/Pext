@@ -960,7 +960,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
         <source>Failed to checkout branch for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>檢出模組 {0} 的分支時失敗：{1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
