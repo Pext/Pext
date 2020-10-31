@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.32] - 2020-10-31
 ### Fixed
 - Modules with Python dependencies could not install on Debian Buster
 - Fix installing modules and themes from URL and command line
