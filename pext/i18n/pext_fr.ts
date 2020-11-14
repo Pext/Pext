@@ -21,7 +21,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="101"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation>Voulez-vous aider à traduire Pext&#x202f;? Cliquez ici s&apos;il vous plaît.</translation>
+        <translation>Voulez-vous aider à traduire Pext ? Cliquez ici s&apos;il vous plaît.</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="102"/>
@@ -185,17 +185,17 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="131"/>
         <source>Creator: </source>
-        <translation>Créateur(trice)&#x202f;: </translation>
+        <translation>Créateur(trice) : </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="138"/>
         <source>Description: </source>
-        <translation>Description&#x202f;: </translation>
+        <translation>Description : </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="145"/>
         <source>License: </source>
-        <translation>Licence&#x202f;: </translation>
+        <translation>Licence : </translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="152"/>
@@ -251,12 +251,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
-        <translation>Developer&#x202f;: </translation>
+        <translation>Developer : </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
         <source>Description: </source>
-        <translation>Description&#x202f;: </translation>
+        <translation>Description : </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="79"/>
@@ -338,7 +338,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation>Remarque&#x202f;: Pext redémarrera pour changer de profil.</translation>
+        <translation>Remarque : Pext redémarrera pour changer de profil.</translation>
     </message>
 </context>
 <context>
@@ -361,7 +361,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>Remarque&#x202f;: Pext redémarrera pour appliquer le nouveau thème.</translation>
+        <translation>Remarque : Pext redémarrera pour appliquer le nouveau thème.</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
@@ -384,22 +384,22 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/ManageDialog.qml" line="61"/>
         <source>Identifier: %1</source>
-        <translation>Identifiant&#x202f;: %1</translation>
+        <translation>Identifiant : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="69"/>
         <source>Version: %1 (%2)</source>
-        <translation>Version&#x202f;: %1 (%2)</translation>
+        <translation>Version : %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="77"/>
         <source>Developer: %1</source>
-        <translation>Développeur&#x202f;: %1</translation>
+        <translation>Développeur : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="85"/>
         <source>Description: %1</source>
-        <translation>Description&#x202f;: %1</translation>
+        <translation>Description : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="93"/>
@@ -409,12 +409,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/ManageDialog.qml" line="101"/>
         <source>Homepage: %1</source>
-        <translation>Page d&apos;accueil&#x202f;: %1</translation>
+        <translation>Page d&apos;accueil : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
-        <translation>Source de téléchargement&#x202f;: %1</translation>
+        <translation>Source de téléchargement : %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="136"/>
@@ -465,12 +465,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module crashed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Le module a planté.</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
         <source>Updating module…</source>
-        <translation type="unfinished"></translation>
+        <translation>Mise à jour du module…</translation>
     </message>
 </context>
 <context>
@@ -709,12 +709,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="850"/>
         <source>Automatically check for module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Rechercher automatiquement les mises à jour des modules et des thèmes</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="856"/>
         <source>Automatically install module and theme updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Installer automatiquement les mises à jour des modules et des thèmes</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="865"/>
@@ -739,7 +739,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1094"/>
         <source>Move Pext to the foreground</source>
-        <translation type="unfinished"></translation>
+        <translation>Déplacer Pext au premier plan</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1099"/>
@@ -784,12 +784,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1107"/>
         <source>Complete input</source>
-        <translation type="unfinished"></translation>
+        <translation>Saisie complète</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1103"/>
         <source>Go back to module&apos;s base level and minimize</source>
-        <translation type="unfinished"></translation>
+        <translation>Revenir au niveau de base du module et minimiser</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1137"/>
@@ -799,58 +799,58 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1141"/>
         <source>Activate highlighted entry</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer l&apos;entrée en surbrillance</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1142"/>
         <source>Left mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Bouton gauche de la souris</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1145"/>
         <source>Activate highlighted entry (never minimize)</source>
-        <translation type="unfinished"></translation>
+        <translation>Activer l&apos;entrée en surbrillance (ne jamais minimiser)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1146"/>
         <source>Middle mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Bouton central de la souris</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1149"/>
         <source>Enter arguments for highlighted command</source>
-        <translation type="unfinished"></translation>
+        <translation>Entrez les arguments pour la commande en surbrillance</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1150"/>
         <location filename="../qml/main.qml" line="1154"/>
         <source>Right mouse button</source>
-        <translation type="unfinished"></translation>
+        <translation>Bouton droit de la souris</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1153"/>
         <source>Open context menu</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir le menu contextuel</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1157"/>
         <source>Change sorting style</source>
-        <translation type="unfinished"></translation>
+        <translation>Changer le style de tri</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1235"/>
         <source>Sort: Module</source>
-        <translation type="unfinished"></translation>
+        <translation>Trier : Module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1237"/>
         <source>Sort: Ascending</source>
-        <translation type="unfinished"></translation>
+        <translation>Trier par ordre croissant</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1239"/>
         <source>Sort: Descending</source>
-        <translation type="unfinished"></translation>
+        <translation>Trier par ordre décroissant</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1290"/>
@@ -860,7 +860,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1291"/>
         <source>Failed to load module {0}: {1} function has {2} parameters (excluding self), expected {3}</source>
-        <translation>Échec en retrouvez la module {0}&#x202f;: la {1} fonction contient {2} paramètres (en excluant ce paramètre), attendus {3}</translation>
+        <translation>Échec en retrouvez la module {0} : la {1} fonction contient {2} paramètres (en excluant ce paramètre), attendus {3}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1292"/>
@@ -875,7 +875,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1294"/>
         <source>Failed to download {0}: {1}</source>
-        <translation>Échec du téléchargement de {0}&#x202f;: {1}</translation>
+        <translation>Échec du téléchargement de {0} : {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1295"/>
@@ -920,7 +920,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1303"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation>Impossible de télécharger la mise à jour pour {0}&#x202f;: {1}</translation>
+        <translation>Impossible de télécharger la mise à jour pour {0} : {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1304"/>
@@ -945,7 +945,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1308"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation>Échec de la recherche de mises à jour Pext&#x202f;: {0}</translation>
+        <translation>Échec de la recherche de mises à jour Pext : {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1309"/>
@@ -955,12 +955,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1310"/>
         <source>Failed to check for updates for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec de la recherche de mises à jour pour le module {0} : {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
         <source>Failed to checkout branch for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Échec de l&apos;extraction de la branche pour le module {0} : {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
@@ -1020,22 +1020,22 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1324"/>
         <source>Automatic update checks are enabled. You can change this in settings.</source>
-        <translation type="unfinished"></translation>
+        <translation>Les vérifications de mise à jour automatiques sont activées. Vous pouvez modifier ceci dans les paramètres.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1325"/>
         <source>Pext {0} is available. You are currently running Pext {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Pext {0} est disponible. Vous exécutez actuellement Pext {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1326"/>
         <source>Open download page</source>
-        <translation type="unfinished"></translation>
+        <translation>Ouvrir la page de téléchargement</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1327"/>
         <source>{0} can be updated.</source>
-        <translation type="unfinished"></translation>
+        <translation>{0} peut être mis à jour.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1328"/>
@@ -1055,12 +1055,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1331"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation type="unfinished"></translation>
+        <translation>Une erreur s&apos;est produite dans {0} : {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1332"/>
         <source>Report as bug</source>
-        <translation type="unfinished"></translation>
+        <translation>Signaler comme erreur</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="486"/>
@@ -1126,22 +1126,22 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1162"/>
         <source>Alerts</source>
-        <translation type="unfinished"></translation>
+        <translation>Alertes</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1164"/>
         <source>Accept</source>
-        <translation type="unfinished"></translation>
+        <translation>Accepter</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1168"/>
         <source>Decline</source>
-        <translation type="unfinished"></translation>
+        <translation>Refuser</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1279"/>
         <source>Processing: %1 (%2)</source>
-        <translation>En cours de traitement&#x202f;: %1 (%2)</translation>
+        <translation>En cours de traitement : %1 (%2)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1281"/>
