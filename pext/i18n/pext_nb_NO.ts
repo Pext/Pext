@@ -465,7 +465,7 @@ Er du sikker på at du vil avslutte?</translation>
     <message>
         <location filename="../qml/ModuleData.qml" line="412"/>
         <source>Module crashed.</source>
-        <translation>Modul kræsjet.</translation>
+        <translation>Modul krasjet.</translation>
     </message>
     <message>
         <location filename="../qml/ModuleData.qml" line="415"/>
