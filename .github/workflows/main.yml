@@ -22,6 +22,8 @@ jobs:
       PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         run: |
           bash -xe ci/bootstrap-container.sh
@@ -58,6 +60,8 @@ jobs:
       PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Set up Python 3.6
         uses: actions/setup-python@v2
         with:
