@@ -94,3 +94,5 @@ ENV/
 
 # Pext specific
 pext/i18n/*.qm
+
+# nano editor
