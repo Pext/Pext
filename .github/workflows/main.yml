@@ -1,4 +1,4 @@
-name: CI
+name: Packaging
 
 on:
   push:
@@ -13,8 +13,13 @@ on:
 
 jobs:
   linux:
-    name: Linux
+    strategy:
+      matrix:
+        PEXT_BUILD_PORTABLE: [0, 1]
+    name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ubuntu-16.04
+    env:
+      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
