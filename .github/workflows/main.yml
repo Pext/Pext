@@ -44,7 +44,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: AppImage x86_64
+          name: AppImage-x86_64
           path: |
             build/Pext*.AppImage
             pext/VERSION
