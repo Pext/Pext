@@ -102,4 +102,4 @@ jobs:
         run: |
             wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
             chmod +x pyuploadtool-x86_64.AppImage
-            ./pyuploadtool-x86_64.AppImage **/Pext*.{AppImage,dmg,zip} **/VERSION
+            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
