@@ -25,7 +25,7 @@ from abc import ABC  # type: ignore
 from queue import Queue
 from typing import Any, Dict, List, Union
 
-from pext_helpers import SelectionType
+from pext_helpers import Selection
 
 
 class ModuleBase(ABC):
@@ -71,7 +71,7 @@ class ModuleBase(ABC):
         """
         pass
 
-    def selection_made(self, selection: List[Dict[SelectionType, str]]) -> None:
+    def selection_made(self, selection: List[Selection]) -> None:
         """Introduced in API version 0.1.0.
 
         Last changed in API version 0.8.0.
@@ -105,7 +105,7 @@ class ModuleBase(ABC):
         """
         pass
 
-    def extra_info_request(self, selection: List[Dict[SelectionType, str]]) -> None:
+    def extra_info_request(self, selection: List[Selection]) -> None:
         """Introduced in API version 0.3.0.
 
         Called when the user selects a different entry.

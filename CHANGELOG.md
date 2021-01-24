@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### API changes
+- Bump API version to 0.13.0
+- Return instances of Selection class instead of dict
+
 ## [0.32] - 2020-10-31
 ### Fixed
 - Modules with Python dependencies could not install on Debian Buster

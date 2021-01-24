@@ -30,6 +30,7 @@ import time
 import traceback
 import webbrowser
 
+from copy import copy
 from functools import partial
 from inspect import signature
 try:
@@ -51,7 +52,7 @@ from __main__ import (AppFile, ConfigRetriever, Core, InternalCallProcessor, Loc
                       ThemeManager, Translation, UiModule, UpdateManager)
 from constants import USE_INTERNAL_UPDATER
 
-from pext_helpers import SelectionType  # noqa: E402
+from pext_helpers import Selection  # noqa: E402
 
 pyautogui_error = None
 if platform.system() == 'Darwin':
@@ -169,16 +170,16 @@ class WindowModule():
         """Update the UI when the unprocessed change count changes."""
         self.context.setContextProperty("unprocessedCount", count)
 
-    def selection_changed(self, selection: List[Dict[SelectionType, str]]) -> None:
+    def selection_changed(self, selection: List[Selection]) -> None:
         """Update the UI when the user selection tree changes."""
         # Normalize for display in the tree list, fixes QML displaying things like QVariant instead of text
         normalized_selection = []
         for entry in selection:
-            normalized_entry = dict.copy(entry)
-            normalized_entry['value'] = str(normalized_entry['value'])
-            if 'context_option' in normalized_entry and normalized_entry['context_option'] is not None:
-                normalized_entry['context_option'] = str(normalized_entry['context_option'])
-            normalized_selection.append(normalized_entry)
+            normalized_entry = copy(entry)
+            normalized_entry.value = str(normalized_entry.value)
+            if normalized_entry.context_option is not None:
+                normalized_entry.context_option = str(normalized_entry.context_option)
+            normalized_selection.append(vars(normalized_entry))
 
         self.context.setContextProperty("resultListModelTree", normalized_selection)
 

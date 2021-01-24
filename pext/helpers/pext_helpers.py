@@ -22,6 +22,7 @@ and modules and helps keep the API consistent.
 """
 
 from enum import Enum
+from typing import List, Optional
 
 
 class Action(Enum):
@@ -430,3 +431,39 @@ class SelectionType(Enum):
     entry = 0
     command = 1
     none = 2
+
+
+class Selection():
+    """A single selection made."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        """Create a new Selection either from a dictionary or keyword arguments."""
+        self.type = SelectionType.none
+        self.context_option = None  # type: Optional[str]
+        self.value = None  # type: Optional[str]
+        self.args = []  # type: List[str]
+
+        if len(kwargs.items()) != 0:
+            self._fill_in(kwargs.items())
+        elif len(args) == 1:
+            print(args[0])
+            self._fill_in(args[0].items())
+        else:
+            raise TypeError("Cannot convert to Selection class")
+
+    def __getitem__(self, item):
+        """Get an entry in a dict style (for backwards compatibility)."""
+        return getattr(self, item)
+
+    def _fill_in(self, items):
+        for key, value in items:
+            if key == 'type':
+                self.type = value
+            elif key == 'context_option':
+                self.context_option = value
+            elif key == 'value':
+                self.value = value
+            elif key == 'args':
+                self.args = value
+            else:
+                print("WARN: UNKNOWN SELECTION KEY {}".format(key))

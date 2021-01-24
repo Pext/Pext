@@ -90,7 +90,7 @@ sys.path.append(os.path.join(AppFile.get_path(), 'helpers'))
 sys.path.append(os.path.join(AppFile.get_path()))
 
 from pext_base import ModuleBase  # noqa: E402
-from pext_helpers import Action, SelectionType  # noqa: E402
+from pext_helpers import Action, SelectionType, Selection  # noqa: E402
 
 
 class UIType(IntEnum):
@@ -736,7 +736,10 @@ class MainLoop():
 
         elif action[0] == Action.set_selection:
             if len(action) > 1:
-                module.vm.selection = action[1]
+                module.vm.selection = [
+                    entry if isinstance(entry, Selection) else Selection(entry)
+                    for entry in action[1]
+                ]
             else:
                 module.vm.selection = []
 
@@ -752,7 +755,7 @@ class MainLoop():
             if not module.vm.minimize_disabled:
                 module.vm.close_request(False, False)
 
-                selection = []  # type: List[Dict[SelectionType, str]]
+                selection = []  # type: List[Selection]
             else:
                 selection = module.vm.selection[:-1]
 
@@ -1415,7 +1418,7 @@ class ModuleManager():
         # Prefill API version and locale
         locale = LocaleManager.find_best_locale(Settings.get('locale')).name()
 
-        module['settings']['_api_version'] = [0, 12, 0]
+        module['settings']['_api_version'] = [0, 13, 0]
         module['settings']['_locale'] = locale
         module['settings']['_portable'] = Settings.get('_portable')
 
@@ -1868,7 +1871,7 @@ class ViewModel():
         self.result_list = []  # type: List
         self.result_list_index = -1
         self.result_list_model_max_index = -1
-        self.selection = []  # type: List[Dict[SelectionType, str]]
+        self.selection = []  # type: List[Selection]
         self.search_string = ""
         self.last_search = ""
         self.context_menu_enabled = False
@@ -1900,7 +1903,7 @@ class ViewModel():
         self.context_info_panel_changed = lambda value: None  # type: Callable[[str], None]
         self.sort_mode_changed = lambda mode: None  # type: Callable[[str], None]
         self.unprocessed_count_changed = lambda count: None  # type: Callable[[int], None]
-        self.selection_changed = lambda selection: None  # type: Callable[[List[Dict[SelectionType, str]]], None]
+        self.selection_changed = lambda selection: None  # type: Callable[[List[Selection]], None]
         self.header_text_changed = lambda value: None  # type: Callable[[str], None]
 
         self.ask_argument = lambda entry, callback: None  # type: Callable[[str, Callable], None]
@@ -2096,7 +2099,7 @@ class ViewModel():
         """
         self.unprocessed_count_changed = function
 
-    def bind_selection_changed_callback(self, function: Callable[[List[Dict[SelectionType, str]]], None]) -> None:
+    def bind_selection_changed_callback(self, function: Callable[[List[Selection]], None]) -> None:
         """Bind the selection_changed callback.
 
         This ensures we can notify the window when the selection changes.
@@ -2373,7 +2376,7 @@ class ViewModel():
         if Settings.get('turbo_mode') and len(combined_list) == 1 and self.queue.empty() and self.search_string:
             self.select(force_args=True)
 
-    def _get_entry(self, include_context=False) -> Dict:
+    def _get_entry(self, include_context=False) -> Selection:
         """Get info on the entry that's currently focused."""
         if include_context and self.context_menu_enabled:
             current_index = self.context_menu_index
@@ -2383,13 +2386,13 @@ class ViewModel():
             # Return entry-specific option if selected, otherwise base option
             if current_index >= len(self.filtered_context_list):
                 # Selection is a base entry
-                return {'type': SelectionType.none,
-                        'value': None,
-                        'context_option': self.filtered_context_base_list[
-                            current_index - len(self.filtered_context_list)]
-                        }
+                return Selection(
+                    type=SelectionType.none,
+                    value=None,
+                    context_option=self.filtered_context_base_list[current_index - len(self.filtered_context_list)]
+                )
             else:
-                selected_entry['context_option'] = self.filtered_context_list[current_index]
+                selected_entry.context_option = self.filtered_context_list[current_index]
 
             return selected_entry
 
@@ -2403,7 +2406,7 @@ class ViewModel():
             selection_type = SelectionType.entry
             entry = self.filtered_entry_list[current_index]
 
-        return {'type': selection_type, 'value': entry, 'context_option': None}
+        return Selection(type=selection_type, value=entry, context_option=None)
 
     def select(self, command_args="", force_args=False, disable_minimize=False) -> None:
         """Notify the module of our selection entry."""
@@ -2417,15 +2420,15 @@ class ViewModel():
             return
 
         selection = self._get_entry(include_context=True)
-        if selection['type'] == SelectionType.command:
-            if not command_args and (force_args or selection['context_option'] == Translation.get("enter_arguments")):
+        if selection.type == SelectionType.command:
+            if not command_args and (force_args or selection.context_option == Translation.get("enter_arguments")):
                 self.input_args()
                 return
 
-        if selection['context_option'] == Translation.get("enter_arguments"):
-            selection['context_option'] = None
+        if selection.context_option == Translation.get("enter_arguments"):
+            selection.context_option = None
 
-        selection["args"] = command_args
+        selection.args = command_args
         self.selection.append(selection)
 
         self.context_menu_enabled = False
@@ -2517,10 +2520,11 @@ class ViewModel():
             threading.Thread(target=self.module.extra_info_request, args=(info_selection,)).start()
 
         try:
-            if current_entry['type'] == SelectionType.entry:
-                self.context_info_panel_changed(self.extra_info_entries[current_entry['value']])
-            else:
-                self.context_info_panel_changed(self.extra_info_commands[current_entry['value']])
+            if current_entry.value is not None:
+                if current_entry.type == SelectionType.entry:
+                    self.context_info_panel_changed(self.extra_info_entries[current_entry.value])
+                else:
+                    self.context_info_panel_changed(self.extra_info_commands[current_entry.value])
         except KeyError:
             self.context_info_panel_changed("")
 
