@@ -43,7 +43,9 @@ class TestLocaleManager(unittest.TestCase):
         locales = self.locale_manager.get_locales()
         self.assertIn('American English', locales)
         self.assertIn('Nederlands', locales)
-        self.assertEqual(locales['magyar'], 'hu')
+
+        # hu language no longer available
+        # self.assertEqual(locales['magyar'], 'hu')
 
     def test_get_current_locale(self):
         # Load English locale
