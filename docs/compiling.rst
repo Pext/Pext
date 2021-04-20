@@ -21,8 +21,8 @@ Starting Pext
 
 Pext can be ran by ran from a command window by running one of the following commands in the place where you saved Pext to (type ``cd place_you_saved_pext`` to go there):
 
-- ``python pext`` to start Pext itself
-- ``python pext_dev`` to start the Pext tools for module and theme developmentAlternatively, see See [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
+- ``python -m pext`` to start Pext itself
+- ``python -m pext_dev`` to start the Pext tools for module and theme developmentAlternatively, see See [Installing Pext from source](INSTALL_FROM_SOURCE.md) (not recommended and unsupported)
 
 macOS
 -----
@@ -45,8 +45,8 @@ Starting Pext
 
 After installing the dependencies, Pext can be ran by running one of the following commands in a terminal window in the place where you saved Pext to:
 
-- ``python3 pext`` to start Pext itself
-- ``python3 pext_dev`` to start the Pext tools for module and theme development
+- ``python3 -m pext`` to start Pext itself
+- ``python3 -m pext_dev`` to start the Pext tools for module and theme development
 
 If desired, it can also be installed using the following command::
 
@@ -69,8 +69,8 @@ openSUSE     libnotify-tools python3-dulwich python3-pip python3-qt5
 
 After installing the dependencies, Pext can be ran by running one of the following commands in the place where you saved Pext to:
 
-- ``python3 pext`` to start Pext itself
-- ``python3 pext_dev`` to start the Pext tools for module and theme development
+- ``python3 -m pext`` to start Pext itself
+- ``python3 -m pext_dev`` to start the Pext tools for module and theme development
 
 If desired, it can also be installed using the following command (pip instead of pip3 on some systems)::
 
