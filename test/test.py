@@ -4,7 +4,7 @@ import tempfile
 import unittest
 
 from PyQt5.QtWidgets import QApplication
-from pext.__main__ import ConfigRetriever, LocaleManager
+from pext.app import ConfigRetriever, LocaleManager
 
 test_src = os.path.dirname(__file__)
 
