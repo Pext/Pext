@@ -1,0 +1,14 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: pyqt5
+    versions:
+    - 5.15.3
+  - dependency-name: watchdog
+    versions:
+    - 2.0.1
