@@ -71,9 +71,9 @@ This will stop any running module.
 Are you sure you want to quit?</source>
         <translation>Vous êtes sur le point de quitter Pext.
 
-Cela arrêtera tout module en cours d&apos;exécution.
+Ceci arrêtera tout module en cours d&apos;exécution.
 
-Êtes-vous sûr de vouloir quitter ?</translation>
+Êtes-vous sûr(e) de vouloir quitter&#xa0;?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -84,9 +84,9 @@ This will stop any running module and the global hotkey will not work until you 
 Are you sure you want to quit?</source>
         <translation>Vous êtes sur le point de quitter Pext.
 
-Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier global ne fonctionnera pas tant que vous n&apos;aurez pas redémarré Pext manuellement.
+Ceci arrêtera tout module en cours d&apos;exécution et le raccourci clavier global ne fonctionnera pas tant que vous n&apos;aurez pas redémarré Pext manuellement.
 
-Êtes-vous sûr de vouloir quitter ?</translation>
+Êtes-vous sûr(e) de vouloir quitter ?</translation>
     </message>
 </context>
 <context>
@@ -175,7 +175,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="115"/>
         <source>This module does not seem to support %1.</source>
-        <translation>Ce module ne semble pas supporter %1.</translation>
+        <translation>Ce module ne semble pas prendre en charge %1.</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="123"/>
@@ -251,7 +251,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="71"/>
         <source>Developer: </source>
-        <translation>Developer : </translation>
+        <translation>Développeur : </translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="75"/>
@@ -840,7 +840,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1235"/>
         <source>Sort: Module</source>
-        <translation>Trier : Module</translation>
+        <translation>Trier&#xa0;: Module</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1237"/>
@@ -955,12 +955,12 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1310"/>
         <source>Failed to check for updates for module {0}: {1}</source>
-        <translation>Échec de la recherche de mises à jour pour le module {0} : {1}</translation>
+        <translation>Échec de la recherche de mises à jour pour le module {0}&#xa0;: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1311"/>
         <source>Failed to checkout branch for module {0}: {1}</source>
-        <translation>Échec de l&apos;extraction de la branche pour le module {0} : {1}</translation>
+        <translation>Échec de l&apos;extraction de la branche pour le module {0}&#xa0;: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
@@ -1055,7 +1055,7 @@ Cela arrêtera tout module en cours d&apos;exécution et le raccourci clavier gl
     <message>
         <location filename="../qml/main.qml" line="1331"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation>Une erreur s&apos;est produite dans {0} : {1}.</translation>
+        <translation>Une erreur s&apos;est produite dans {0}&#xa0;: {1}.</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1332"/>
