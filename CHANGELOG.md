@@ -10,9 +10,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Bump API version to 0.13.0
 - Return instances of Selection class instead of dict
 
-### Fixed
-- TypeError on launch
-
 ## [0.32] - 2020-10-31
 ### Fixed
 - Modules with Python dependencies could not install on Debian Buster

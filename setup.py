@@ -78,8 +78,8 @@ setup(
         'pext/helpers',
         'pext_dev'
     ],
-    package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/128x128/*', 'images/scalable/*', 'app/*', 'qml/*', 'ui/*', 'helpers/*', '*.py', 'Pext.workflow/*'],
-                  'pext_dev': ['app/*', 'module/*', 'theme/*', '*.py']},
+    package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/128x128/*', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py', 'Pext.workflow/*'],
+                  'pext_dev': ['module/*', 'theme/*', '*.py']},
     zip_safe=False,
     entry_points={
         'gui_scripts': [
