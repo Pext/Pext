@@ -160,7 +160,7 @@ Tens a certeza que queres desistir?</translation>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="93"/>
         <source>Download source:</source>
-        <translation>Fonte de download:</translation>
+        <translation>Fonte de descarrega:</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="107"/>
@@ -231,7 +231,7 @@ Tens a certeza que queres desistir?</translation>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="45"/>
         <source>Choose the preferred download source:</source>
-        <translation>Escolha a fonte de download preferida:</translation>
+        <translation>Escolha a fonte de descarrega preferida:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="55"/>
@@ -414,7 +414,7 @@ Tens a certeza que queres desistir?</translation>
     <message>
         <location filename="../qml/ManageDialog.qml" line="118"/>
         <source>Download source: %1</source>
-        <translation>Fonte de download: %1</translation>
+        <translation>Fonte de descarrega: %1</translation>
     </message>
     <message>
         <location filename="../qml/ManageDialog.qml" line="136"/>
@@ -1030,7 +1030,7 @@ Tens a certeza que queres desistir?</translation>
     <message>
         <location filename="../qml/main.qml" line="1326"/>
         <source>Open download page</source>
-        <translation>Abrir página de download</translation>
+        <translation>Abrir página de descarrega</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1327"/>
