@@ -93,9 +93,8 @@ If you need support or just want to chat with our community, we have the followi
 
 - Matrix: #pext:matrix.org ([webchat](https://riot.im/app/#/room/#pext:matrix.org))
 - Telegram: [@PextTool](https://t.me/PextTool)
-- IRC: #pext on FreeNode ([webchat](http://webchat.freenode.net/?channels=%23pext&uio=MTY9dHJ1ZQ79))
 
-All these channels are linked to each other, so there is no need to worry about missing out.
+Both channels are linked to each other, so there is no need to worry about missing out.
 
 We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
 
