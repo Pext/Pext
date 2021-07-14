@@ -76,7 +76,8 @@ setup(
     packages=[
         'pext',
         'pext/helpers',
-        'pext_dev'
+        'pext_dev',
+        'pext/ui',
     ],
     package_data={'pext': ['VERSION', 'i18n/*.qm', 'images/128x128/*', 'images/scalable/*', 'qml/*', 'helpers/*', '*.py', 'Pext.workflow/*'],
                   'pext_dev': ['module/*', 'theme/*', '*.py']},
