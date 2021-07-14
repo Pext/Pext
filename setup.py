@@ -83,7 +83,7 @@ setup(
     zip_safe=False,
     entry_points={
         'gui_scripts': [
-            'pext=pext.__main__:main'
+            'pext=pext.__main__:run_qt5'
         ],
         'console_scripts': [
             'pext_dev=pext_dev.__main__:main'
