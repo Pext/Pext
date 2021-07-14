@@ -3313,5 +3313,10 @@ def main(ui_type: UIType) -> None:
     main_loop.run()
 
 
+def run_qt5():
+    """Entrypoint for starting with Qt5 UI"""
+    main(UIType.Qt5)
+
+
 if __name__ == "__main__":
     main(UIType.Qt5)
