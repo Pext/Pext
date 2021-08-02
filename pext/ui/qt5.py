@@ -47,7 +47,7 @@ from PyQt5.Qt import (QClipboard, QObject, QStringListModel, QQmlApplicationEngi
                       QQmlProperty, QUrl)
 from PyQt5.QtGui import QWindow
 
-from __main__ import (AppFile, ConfigRetriever, Core, InternalCallProcessor, LocaleManager, Logger, ModuleManager,
+from pext.__main__ import (AppFile, ConfigRetriever, Core, InternalCallProcessor, LocaleManager, Logger, ModuleManager,
                       MinimizeMode, OutputMode, OutputSeparator, ProfileManager, RunConseq, Settings, SortMode,
                       ThemeManager, Translation, UiModule, UpdateManager)
 from constants import USE_INTERNAL_UPDATER
