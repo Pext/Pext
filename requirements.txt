@@ -1,5 +1,5 @@
 dulwich==0.20.25
-paramiko==2.7.2
+paramiko==2.8.0
 psutil==5.8.0
 pynput==1.7.3
 pyqt5==5.15.4
