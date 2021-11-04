@@ -531,7 +531,7 @@ class Window():
                 if geometry:
                     print("Invalid geometry: {}".format(e))
                 screen_size = self.window.screen().size()
-                self.window.setGeometry((screen_size.width() - 800) / 2, (screen_size.height() - 600) / 2, 800, 600)
+                self.window.setGeometry((screen_size.width() - 800) // 2, (screen_size.height() - 600) // 2, 800, 600)
 
         # Start binding the modules
         if len(Settings.get('modules')) > 0:
