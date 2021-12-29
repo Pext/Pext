@@ -960,7 +960,7 @@ Esto detendrá cualquier módulo en ejecución y el atajo de teclado global no f
     <message>
         <location filename="../qml/main.qml" line="1311"/>
         <source>Failed to checkout branch for module {0}: {1}</source>
-        <translation type="unfinished"></translation>
+        <translation>Ha fallado cambiar a la rama del módulo {0}: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
