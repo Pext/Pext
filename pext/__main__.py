@@ -861,7 +861,6 @@ class MainLoop():
             self.app.processEvents()
             Logger.show_next_message()
 
-            all_empty = True
             for index, module in enumerate(Core.get_modules()):
                 if not module.init:
                     continue
