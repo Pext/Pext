@@ -848,7 +848,7 @@ class MainLoop():
         """Process actions modules put in the queue and keep the window working."""
         while True:
             try:
-                main_loop_request = self.main_loop_queue.get_nowait()
+                main_loop_request = self.main_loop_queue.get(True, (1 / 30))  # Ever going above 30FPS is just a waste of CPU
                 main_loop_request()
             except Empty:
                 pass
@@ -884,12 +884,6 @@ class MainLoop():
                 except Exception as e:
                     print('WARN: Module {} caused exception {}'.format(module.metadata['name'], e))
                     traceback.print_exc()
-
-            if all_empty:
-                if self.window.window.isVisible():
-                    time.sleep(0.01)
-                else:
-                    time.sleep(0.1)
 
 
 class LocaleManager():

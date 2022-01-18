@@ -48,8 +48,8 @@ from PyQt5.Qt import (QClipboard, QObject, QStringListModel, QQmlApplicationEngi
 from PyQt5.QtGui import QWindow
 
 from pext.__main__ import (AppFile, ConfigRetriever, Core, InternalCallProcessor, LocaleManager, Logger, ModuleManager,
-                      MinimizeMode, OutputMode, OutputSeparator, ProfileManager, RunConseq, Settings, SortMode,
-                      ThemeManager, Translation, UiModule, UpdateManager)
+                           MinimizeMode, OutputMode, OutputSeparator, ProfileManager, RunConseq, Settings, SortMode,
+                           ThemeManager, Translation, UiModule, UpdateManager)
 from constants import USE_INTERNAL_UPDATER
 
 from pext_helpers import Selection  # noqa: E402
