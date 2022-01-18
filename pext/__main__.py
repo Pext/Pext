@@ -3256,7 +3256,7 @@ def main(ui_type: UIType) -> None:
 
     # Prepare UI-specific
     if ui_type == UIType.Qt5:
-        from pext.ui.qt5 import Window, Tray, HotkeyHandler, SignalHandler
+        from ui_qt5 import Window, Tray, HotkeyHandler, SignalHandler
     else:
         raise ValueError("Invalid UI type requested")
 
