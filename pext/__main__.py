@@ -848,7 +848,8 @@ class MainLoop():
         """Process actions modules put in the queue and keep the window working."""
         while True:
             try:
-                main_loop_request = self.main_loop_queue.get(True, (1 / 30))  # Ever going above 30FPS is just a waste of CPU
+                # Ever going above 30FPS is just a waste of CPU
+                main_loop_request = self.main_loop_queue.get(True, (1 / 30))
                 main_loop_request()
             except Empty:
                 pass
@@ -875,7 +876,6 @@ class MainLoop():
                 try:
                     self._process_module_action(index, module, focused_module)
                     module.entries_processed += 1
-                    all_empty = False
                 except Empty:
                     if focused_module and module.entries_processed:
                         module.vm.search(new_entries=True)
