@@ -43,7 +43,7 @@ from subprocess import Popen
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QAction, QMenu, QSystemTrayIcon
-from PyQt5.Qt import (QClipboard, QObject, QStringListModel, QQmlApplicationEngine, QQmlComponent, QQmlContext,
+from PyQt5.Qt import (QClipboard, QIcon, QObject, QStringListModel, QQmlApplicationEngine, QQmlComponent, QQmlContext,
                       QQmlProperty, QUrl)
 from PyQt5.QtGui import QWindow
 
@@ -1493,12 +1493,12 @@ class Window():
 class Tray():
     """Handle the system tray."""
 
-    def __init__(self, window: Window, app_icon: str) -> None:
+    def __init__(self, window: Window, app_icon: QIcon) -> None:
         """Initialize the system tray."""
         self.window = window
 
         self.tray = QSystemTrayIcon(app_icon)
-        self.tray.activated.connect(self.icon_clicked)
+        self.tray.activated.connect(self.icon_clicked)  # type: ignore
         self.tray.setToolTip(QQmlProperty.read(self.window.window, "title"))
 
         self.window.tabs.currentIndexChanged.connect(self._update_context_menu)
@@ -1508,14 +1508,14 @@ class Tray():
         """Update the context menu to list the loaded modules."""
         tray_menu = QMenu()
         tray_menu_item = QAction(QQmlProperty.read(self.window.window, "title"), tray_menu)
-        tray_menu_item.triggered.connect(self.window.show)
+        tray_menu_item.triggered.connect(self.window.show)  # type: ignore
         tray_menu.addAction(tray_menu_item)
         if len(self.window.tab_bindings) > 0:
             tray_menu.addSeparator()
 
         for tab_id, tab in enumerate(self.window.tab_bindings):
             tray_menu_item = QAction(tab.uiModule.metadata['name'], tray_menu)
-            tray_menu_item.triggered.connect(partial(
+            tray_menu_item.triggered.connect(partial(  # type: ignore
                 lambda tab_id: [self.window.switch_tab(tab_id), self.window.show()], tab_id=tab_id))  # type: ignore
             tray_menu.addAction(tray_menu_item)
 

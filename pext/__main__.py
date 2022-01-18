@@ -858,7 +858,7 @@ class MainLoop():
             InternalCallProcessor.process()
 
             self.app.sendPostedEvents()
-            self.app.processEvents()
+            self.app.processEvents()  # type: ignore
             Logger.show_next_message()
 
             for index, module in enumerate(Core.get_modules()):
@@ -2586,8 +2586,8 @@ class ThemeManager():
         """Initialize the module manager."""
         self.theme_dir = os.path.join(ConfigRetriever.get_path(), 'themes')
 
-    def _get_palette_mappings(self) -> Dict[str, Dict[str, str]]:
-        mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[str, str]]
+    def _get_palette_mappings(self) -> Dict[str, Dict[Any, Any]]:
+        mapping = {'colour_roles': {}, 'colour_groups': {}}  # type: Dict[str, Dict[Any, Any]]
         for key in dir(QPalette):
             value = getattr(QPalette, key)
             if isinstance(value, QPalette.ColorRole):
@@ -3236,12 +3236,12 @@ def main(ui_type: UIType) -> None:
     app.setWindowIcon(app_icon)
 
     if Settings.get('style') is not None:
-        app.setStyle(QStyleFactory().create(Settings.get('style')))
+        app.setStyle(QStyleFactory().create(Settings.get('style')))  # type: ignore
 
     # Qt5's default style for macOS seems to have sizing bugs for buttons, so
     # we force the Fusion theme instead
     if platform.system() == 'Darwin':
-        app.setStyle(QStyleFactory().create('Fusion'))
+        app.setStyle(QStyleFactory().create('Fusion'))  # type: ignore
 
     theme_identifier = Settings.get('theme')
     if theme_identifier is not None:
@@ -3249,7 +3249,7 @@ def main(ui_type: UIType) -> None:
         # If the user doesn't explicitly chose a style, but wants theming, we force
         # it to use Fusion, which gets themed properly
         if platform.system() == 'Windows' and Settings.get('style') is None:
-            app.setStyle(QStyleFactory().create('Fusion'))
+            app.setStyle(QStyleFactory().create('Fusion'))  # type: ignore
 
         theme = theme_manager.load(theme_identifier)
         theme_manager.apply(theme, app)
