@@ -4,6 +4,6 @@ psutil==5.9.0
 pynput==1.7.6
 pyqt5==5.15.6
 requests==2.27.1
-watchdog==2.1.6
+watchdog==2.1.7
 PyAutoGUI==0.9.53; sys.platform == 'darwin'
 PyOpenGL==3.1.5; sys.platform == 'linux'
