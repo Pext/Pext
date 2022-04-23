@@ -26,6 +26,7 @@ after_test:
   - DEL ..\Build\Pext.bat1
   - cd ..\Build
   - echo !define APPNAME "Pext" > Pext.nsi
+  - ps: "!define BUILD_DATE `"$((Get-Date).ToString('yyMMdd'))`"" >> Pext.nsi
   - echo Name ${APPNAME} >> Pext.nsi
   - echo Icon 'Pext\pext\images\scalable\pext.ico' >> Pext.nsi
   - echo OutFile 'Pext.exe' >> Pext.nsi
@@ -40,6 +41,8 @@ after_test:
   - echo WriteUninstaller '$INSTDIR\uninstall.exe' >> Pext.nsi
   - echo CreateShortcut '$SMPROGRAMS\Pext.lnk' '$INSTDIR\Pext.bat' '' '$INSTDIR\Pext\pext\images\scalable\pext.ico' >> Pext.nsi
   - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayName" "${APPNAME}" >> Pext.nsi
+  - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "Publisher" "Pext.io" >> Pext.nsi
+  - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "DisplayVersion" "${BUILD_DATE}" >> Pext.nsi
   - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "UninstallString" "$\"$INSTDIR\uninstall.exe$\"" >> Pext.nsi
   - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "QuietUninstallString" "$\"$INSTDIR\uninstall.exe$\" /S" >> Pext.nsi
   - echo WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APPNAME}" "InstallLocation" "$\"$INSTDIR$\"" >> Pext.nsi
