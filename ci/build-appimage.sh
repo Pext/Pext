@@ -103,13 +103,13 @@ export PIP_VERBOSE=1
 
 # remove unused files from AppDir manually
 # these files are nothing the conda plugin could remove manually
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/QtWebEngine* || true
-rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/translations/qtwebengine* || true
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/resources/qtwebengine* || true
-rm -r AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/qml/QtWebEngine* || true
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/plugins/webview/libqtwebview* || true
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess* || true
-rm AppDir/usr/conda/lib/python3.6/site-packages/PyQt5/Qt/lib/libQt5WebEngine* || true
+rm AppDir/usr/conda/lib/python3/site-packages/PyQt5/QtWebEngine* || true
+rm -r AppDir/usr/conda/lib/python3/site-packages/PyQt5/Qt/translations/qtwebengine* || true
+rm AppDir/usr/conda/lib/python3/site-packages/PyQt5/Qt/resources/qtwebengine* || true
+rm -r AppDir/usr/conda/lib/python3/site-packages/PyQt5/Qt/qml/QtWebEngine* || true
+rm AppDir/usr/conda/lib/python3/site-packages/PyQt5/Qt/plugins/webview/libqtwebview* || true
+rm AppDir/usr/conda/lib/python3/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess* || true
+rm AppDir/usr/conda/lib/python3/site-packages/PyQt5/Qt/lib/libQt5WebEngine* || true
 
 # now, actually build AppImage
 # the extracted AppImage files will be cleaned up now

@@ -12,7 +12,7 @@ Preparation
 Assuming you have no previous python installation, either
 
 - Use a package manager like `Chocolatey <http://chocolatey.org/>`__ to install Python 3
-- Install Python 3.6 manually from `python.org <https://www.python.org/downloads/windows/>`__
+- Install Python 3.10 manually from `python.org <https://www.python.org/downloads/windows/>`__
 
 Then, assuming python and pip are installed, run `pip install dulwich PyQt5 pynput` in a command window.
 
@@ -38,7 +38,7 @@ Before running the Install Certificates command, which is only necessary to be a
 
   brew install libnotify python3 qt5
   pip3 install certifi dulwich pyqt5 urllib3
-  /Applications/Python\ 3.6/Install\ Certificates.command
+  /Applications/Python\ 3.10/Install\ Certificates.command
 
 Starting Pext
 `````````````
@@ -52,7 +52,7 @@ If desired, it can also be installed using the following command::
 
   pip3 install . --user --upgrade --no-deps
 
-After doing this (and adding "$HOME/Library/Python/3.6/bin" to your $PATH), you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
+After doing this (and adding "$HOME/Library/Python/3.10/bin" to your $PATH), you can start Pext like any application, or use ``pext`` and ``pext_dev`` on the command line.
 
 GNU/Linux
 ---------
