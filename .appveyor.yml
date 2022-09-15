@@ -26,7 +26,7 @@ after_test:
   - DEL ..\Build\Pext.bat1
   - cd ..\Build
   - echo !define APPNAME "Pext" > Pext.nsi
-  - ps: "!define BUILD_DATE `"$((Get-Date).ToString('yyMMdd'))`"" >> Pext.nsi
+  - ps: '!define BUILD_DATE "$((Get-Date).ToString(''yyMMdd''))" >> Pext.nsi'
   - echo Name ${APPNAME} >> Pext.nsi
   - echo Icon 'Pext\pext\images\scalable\pext.ico' >> Pext.nsi
   - echo OutFile 'Pext.exe' >> Pext.nsi
