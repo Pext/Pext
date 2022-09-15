@@ -1512,7 +1512,7 @@ class ModuleManager():
             Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
-            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), target=module_path, checkout=branch)
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), target=module_path, checkout=branch, force=True)
         except Exception as e:
             if verbose:
                 Logger.log_critical(
@@ -1752,7 +1752,7 @@ class UpdateManager():
                 # Update to wanted branch
                 remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
                 try:
-                    porcelain.pull(repo, remote_url, branch)
+                    porcelain.pull(repo, remote_url, branch, force=True)
                     # Ensure a clean state on the wanted branch
                     repo.reset_index(repo[branch].tree)
                     repo.refs.set_symbolic_ref(b"HEAD", branch)
@@ -1791,7 +1791,7 @@ class UpdateManager():
 
             # Update
             remote_url = UpdateManager.fix_git_url_for_dulwich(UpdateManager.get_remote_url(directory))
-            porcelain.pull(repo, remote_url)
+            porcelain.pull(repo, remote_url, force=True)
 
             # See if anything was updated
             return old_commit != repo[repo.head()]
@@ -2643,7 +2643,7 @@ class ThemeManager():
             Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
-            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), target=theme_path, checkout=branch)
+            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), target=theme_path, checkout=branch, force=True)
         except Exception as e:
             if verbose:
                 Logger.log_critical(
