@@ -1,18 +1,20 @@
 #! /bin/bash
 
-# install Python 3.6
-sudo add-apt-repository -y ppa:deadsnakes/ppa
+# Install Python
 sudo apt-get update
-sudo apt-get install -y python3.6 python3.6-venv python3.6-dev
+sudo apt-get install -y python3.8 python3.8-venv python3.8-dev
 
-# install proper cross-distro libcurl
-sudo sh -c "echo 'deb http://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/curl-httponly.list"
-wget https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key -O- | sudo apt-key add -
-sudo apt-get update
+# Install curl
+sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
 
-sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 bc
-
-# install somewhat up-to-date Qt
-sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-xenial
+# Install Qt
+sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
 sudo apt-get update
 sudo apt-get install -y qt514tools
+
+# Create the Python vEnv and install requirements
+/usr/bin/python3.8 -m venv pext-env
+source pext-env/bin/activate
+pip install --upgrade pip
+pip install tox-travis
+pip install -r requirements.txt

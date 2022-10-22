@@ -3,7 +3,7 @@ name: Packaging
 on:
   push:
     branches-ignore:
-      # Also, don't build i18n, the only changes are uncompiled translation files
+      # Also, don't build i18n, the only changes are un-compiled translation files
       - 'i18n'
     tags-ignore:
       # Do not build tags that we create when we upload to GitHub Releases
@@ -27,15 +27,15 @@ jobs:
       - name: Install dependencies
         run: |
           bash -xe ci/bootstrap-container.sh
-          # beware: the line below is a DIRTY HACK -- it will override the system pip -- the proper way to do this would be a virtualenv
-          wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
       - name: Compile translations
         run: |
           source /opt/qt514/bin/qt514-env.sh || true
           bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
           lrelease pext/pext.pro
       - name: Run tests
-        run: xvfb-run tox -v -e py36
+        run: |
+          source pext-env/bin/activate
+          xvfb-run tox -v -e py38
       - name: Build AppImage
         run: |
           mkdir -p build
