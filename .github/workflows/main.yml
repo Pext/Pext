@@ -27,6 +27,7 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: |
+          pwd
           bash -xe ci/bootstrap-container.sh
           # beware: the line below is a DIRTY HACK -- it will override the system pip -- the proper way to do this would be a virtualenv
           # wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
@@ -39,11 +40,11 @@ jobs:
           source pext-env/bin/activate
           python --version
           pip install tox-travis
+          pip install -r requirements.txt
           pip list
       - name: Compile translations
         run: |
           ls -lha /opt/qt514/bin/qt514-env.sh
-          ls -lhaR /opt/qt514/
           cat /opt/qt514/bin/qt514-env.sh
           # exit 115
           source /opt/qt514/bin/qt514-env.sh || true
