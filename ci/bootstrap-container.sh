@@ -6,7 +6,7 @@ set -xv
 #sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt-get update
 sudo apt-get upgrade
-sudo apt-get install python3.6
+sudo apt-get install python3.6 python3.6-venv python3.6-dev
 #sudo apt-get install -y python3.6 python3.6-venv python3.6-dev
 
 # install proper cross-distro libcurl
@@ -44,7 +44,12 @@ sudo apt-get install python3.6
 echo "###########################################"
 sudo apt list --installed | grep -i curl
 echo "###########################################"
-sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 bc
+sudo apt list --installed | grep -i bc
+echo "###########################################"
+#sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 bc
+sudo apt-get install -y libcurl4-gnutls-dev libcurl3 bc
+echo "###########################################"
+sudo apt list --installed | grep -i curl
 echo "###########################################"
 
 # install somewhat up-to-date Qt
