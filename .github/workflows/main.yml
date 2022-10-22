@@ -44,8 +44,6 @@ jobs:
           pip install --upgrade pip
           pip --version
           pip3 --version
-          pip install PyQt5
-          # pip install --user PyQt5==5.15.7
           pip list
           pip install tox-travis
           pip install -r requirements.txt
@@ -65,10 +63,12 @@ jobs:
           python --version
           whereis python
           whereis tox
+          pip --version
+          pip list
           xvfb-run --help
-          xvfb-run tox -v -e py36
-          ls -lha py36
-          cat py36
+          xvfb-run tox -v -e py38
+          ls -lha py38
+          ls -lhaR py38
       - name: Build AppImage
         run: |
           mkdir -p build
