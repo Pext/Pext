@@ -8,6 +8,7 @@ set -xv
 
 # Install Python 3.10
 sudo apt-get update
+sudo apt search "python3.10"
 sudo apt-get install python3.10 python3.10-venv python3.10-dev
 
 # Install proper cross-distro libcurl
