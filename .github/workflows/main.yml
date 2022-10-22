@@ -42,12 +42,13 @@ jobs:
           pip list
       - name: Compile translations
         run: |
-          # ls -lha /opt/qt514/bin/qt514-env.sh
-          # cat /opt/qt514/bin/qt514-env.sh
+          ls -lha /opt/qt514/bin/qt514-env.sh
+          cat /opt/qt514/bin/qt514-env.sh
           # exit 115
-          # source /opt/qt514/bin/qt514-env.sh || true
+          source /opt/qt514/bin/qt514-env.sh || true
           bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
           lrelease pext/pext.pro
+          cat pext/pext.pro
       - name: Run tests
         run: xvfb-run tox -v -e py36
       - name: Build AppImage
