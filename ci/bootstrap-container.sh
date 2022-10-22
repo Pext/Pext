@@ -6,9 +6,9 @@ set -xv
 # VERSION_CODENAME=bionic
 # UBUNTU_CODENAME=bionic
 
-# Install Python 3.6
+# Install Python 3.10
 sudo apt-get update
-sudo apt-get install python3.7 python3.7-venv python3.7-dev
+sudo apt-get install python3.10 python3.10-venv python3.10-dev
 
 # Install proper cross-distro libcurl
 #echo 'deb [trusted=yes] https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' | sudo tee /etc/apt/sources.list.d/curl-httponly.list
