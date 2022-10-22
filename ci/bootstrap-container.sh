@@ -32,6 +32,7 @@ echo "###########################################"
 #sudo apt-key add - < Release.key
 #sudo apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key
 #echo "${?}"
+sudo apt-key adv --keyserver keyserver.opensuse.org --recv-keys 662394A9577D6015
 echo "###########################################"
 sudo apt-key list
 #sudo apt-key list | grep -A 1 expired
