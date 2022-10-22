@@ -28,7 +28,14 @@ sudo cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list
 sudo cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list.save
 echo "###########################################"
 #sudo apt-key add - < Release.key
-sudo apt-key add Release.key
+#sudo apt-key add Release.key
+#sudo apt-key add - < Release.key
+sudo apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key
+echo "${?}"
+echo "###########################################"
+sudo apt-key list | grep -A 1 expired
+echo "###########################################"
+
 echo "###########################################"
 sudo rm -f Release.key
 echo "###########################################"
