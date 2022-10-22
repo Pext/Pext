@@ -35,8 +35,9 @@ jobs:
           sudo /usr/bin/python3.6 --version
           sudo whereis python3.6
           /usr/bin/python3.6 -m venv pext-env
+          ls -lha pext-env/bin/activate
           source pext-env/bin/activate
-          pyton --version
+          python --version
           pip install tox-travis
           pip list
       - name: Compile translations
