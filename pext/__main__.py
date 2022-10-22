@@ -1512,7 +1512,9 @@ class ModuleManager():
             Logger.log(None, Translation.get("downloading_from_url").format(name, url))
 
         try:
-            porcelain.clone(UpdateManager.fix_git_url_for_dulwich(url), target=module_path, checkout=branch, force=True)
+            porcelain.clone(
+                UpdateManager.fix_git_url_for_dulwich(url), target=module_path, checkout=branch, force=True
+            )
         except Exception as e:
             if verbose:
                 Logger.log_critical(
