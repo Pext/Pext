@@ -43,6 +43,7 @@ jobs:
       - name: Compile translations
         run: |
           ls -lha /opt/qt514/bin/qt514-env.sh
+          ls -lhaR /opt/qt514/
           cat /opt/qt514/bin/qt514-env.sh
           # exit 115
           source /opt/qt514/bin/qt514-env.sh || true
@@ -50,7 +51,10 @@ jobs:
           lrelease pext/pext.pro
           cat pext/pext.pro
       - name: Run tests
-        run: xvfb-run tox -v -e py36
+        run: |
+          python --version
+          xvfb-run --help
+          xvfb-run tox -v -e py36
       - name: Build AppImage
         run: |
           mkdir -p build
