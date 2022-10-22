@@ -41,9 +41,11 @@ sudo apt-get install python3.6
 #sudo rm -f Release.key
 #echo "###########################################"
 #sudo apt-get update
-#echo "###########################################"
-
+echo "###########################################"
+sudo apt list --installed | grep -i curl
+echo "###########################################"
 sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 bc
+echo "###########################################"
 
 # install somewhat up-to-date Qt
 sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-xenial
