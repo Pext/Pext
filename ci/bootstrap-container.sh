@@ -2,19 +2,9 @@
 
 set -xv
 
-echo "###########################################"
-sudo lsb_release -a
-echo "###########################################"
-sudo cat /etc/os-release
-echo "###########################################"
-sudo cat /etc/issue
-echo "###########################################"
-sudo hostnamectl
-echo "###########################################"
 # VERSION="18.04.6 LTS (Bionic Beaver)"
 # VERSION_CODENAME=bionic
 # UBUNTU_CODENAME=bionic
-exit 128
 
 # install Python 3.6
 #sudo add-apt-repository -y ppa:deadsnakes/ppa
