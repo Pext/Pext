@@ -67,8 +67,8 @@ jobs:
           pip list
           xvfb-run --help
           xvfb-run tox -v -e py38
-          ls -lha py38
-          ls -lhaR py38
+          ls -lha .tox/py38
+          ls -lhaR .tox/py38
       - name: Build AppImage
         run: |
           mkdir -p build
