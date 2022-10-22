@@ -5,6 +5,7 @@ set -xv
 # install Python 3.6
 #sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt-get update
+sudo apt-get upgrade
 sudo apt-get install python3.6
 #sudo apt-get install -y python3.6 python3.6-venv python3.6-dev
 
