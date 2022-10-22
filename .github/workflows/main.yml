@@ -15,8 +15,7 @@ jobs:
   linux:
     strategy:
       matrix:
-#        PEXT_BUILD_PORTABLE: [0, 1]
-        PEXT_BUILD_PORTABLE: [1]
+        PEXT_BUILD_PORTABLE: [0, 1]
     name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ubuntu-18.04
     env:
@@ -27,48 +26,16 @@ jobs:
           fetch-depth: 0
       - name: Install dependencies
         run: |
-          pwd
           bash -xe ci/bootstrap-container.sh
-          # beware: the line below is a DIRTY HACK -- it will override the system pip -- the proper way to do this would be a virtualenv
-          # wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
-          # wget https://bootstrap.pypa.io/pip/3.6/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
-          sudo ls -lha /usr/bin/python*
-          sudo /usr/bin/python3.8 --version
-          sudo whereis python3.8
-          /usr/bin/python3.8 -m venv pext-env
-          ls -lha pext-env/bin/activate
-          source pext-env/bin/activate
-          python --version
-          pip --version
-          pip3 --version
-          pip install --upgrade pip
-          pip --version
-          pip3 --version
-          pip list
-          pip install tox-travis
-          pip install -r requirements.txt
-          pip list
       - name: Compile translations
         run: |
-          ls -lha /opt/qt514/bin/qt514-env.sh
-          cat /opt/qt514/bin/qt514-env.sh
-          # exit 115
           source /opt/qt514/bin/qt514-env.sh || true
           bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
           lrelease pext/pext.pro
-          cat pext/pext.pro
       - name: Run tests
         run: |
           source pext-env/bin/activate
-          python --version
-          whereis python
-          whereis tox
-          pip --version
-          pip list
-          xvfb-run --help
           xvfb-run tox -v -e py38
-          ls -lha .tox/py38
-          ls -lhaR .tox/py38
       - name: Build AppImage
         run: |
           mkdir -p build
@@ -83,57 +50,57 @@ jobs:
             build/Pext*.AppImage.zsync
             pext/VERSION
 
-#  osx:
-#    strategy:
-#      matrix:
-#        PEXT_BUILD_PORTABLE: [0, 1]
-#      fail-fast: false
-#    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-#    runs-on: macos-10.15
-#    env:
-#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          fetch-depth: 0
-#      - name: Set up Python 3.6
-#        uses: actions/setup-python@v2
-#        with:
-#          python-version: 3.6
-#      - name: Install dependencies
-#        run: pip3 install tox-travis
-#      - name: Compile translations
-#        run: |
-#          brew install qt jq
-#          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-#          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
-#      - name: Run tests
-#        run: tox -v -e py36
-#      - name: Build dmg for macOS
-#        run: bash -xe ci/build-dmg.sh
-#      - name: Archive artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: macOS
-#          path: |
-#            Pext*.zip
-#            Pext*.dmg
-#
-#  upload:
-#    name: Create release and upload artifacts
-#    needs:
-#      - linux
-#      - osx
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download artifacts
-#        uses: actions/download-artifact@v2
-#      - name: Inspect directory after downloading artifacts
-#        run: ls -alFR
-#      - name: Create release and upload artifacts
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: |
-#            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
-#            chmod +x pyuploadtool-x86_64.AppImage
-#            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
+  osx:
+    strategy:
+      matrix:
+        PEXT_BUILD_PORTABLE: [0, 1]
+      fail-fast: false
+    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+    runs-on: macos-10.15
+    env:
+      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.6
+      - name: Install dependencies
+        run: pip3 install tox-travis
+      - name: Compile translations
+        run: |
+          brew install qt jq
+          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
+          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
+      - name: Run tests
+        run: tox -v -e py36
+      - name: Build dmg for macOS
+        run: bash -xe ci/build-dmg.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: macOS
+          path: |
+            Pext*.zip
+            Pext*.dmg
+
+  upload:
+    name: Create release and upload artifacts
+    needs:
+      - linux
+      - osx
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v2
+      - name: Inspect directory after downloading artifacts
+        run: ls -alFR
+      - name: Create release and upload artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
+            chmod +x pyuploadtool-x86_64.AppImage
+            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
