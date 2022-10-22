@@ -8,7 +8,6 @@ set -xv
 
 # Install Python 3.8
 sudo apt-get update
-sudo apt search python3.*
 sudo apt-get install python3.8 python3.8-venv python3.8-dev
 
 
