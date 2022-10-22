@@ -32,7 +32,7 @@ jobs:
           # wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
           # wget https://bootstrap.pypa.io/pip/3.6/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
           sudo ls -lha /usr/bin/python*
-          sudo pyton3 --version
+          sudo pyton3.6 --version
           sudo whereis python3.6
           python3.6 -m venv pext-env
           source pext-env/bin/activate
