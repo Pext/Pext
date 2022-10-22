@@ -2,6 +2,7 @@
 
 set -xv
 
+sudo lsb_release -a
 # VERSION="18.04.6 LTS (Bionic Beaver)"
 # VERSION_CODENAME=bionic
 # UBUNTU_CODENAME=bionic
