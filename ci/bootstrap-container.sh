@@ -17,15 +17,15 @@ wget -nv https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageL
 echo "###########################################"
 ls -lhaR /etc/apt/sources.list.d/
 echo "###########################################"
-cat /etc/apt/sources.list.d/curl-httponly.list
-cat /etc/apt/sources.list.d/git-core-ubuntu-ppa-bionic.list
-cat /etc/apt/sources.list.d/git-core-ubuntu-ppa-bionic.list.save
-cat /etc/apt/sources.list.d/github_git-lfs.list.save
-cat /etc/apt/sources.list.d/microsoft-prod.list
-cat /etc/apt/sources.list.d/microsoft-prod.list.save
-cat /etc/apt/sources.list.d/ondrej-ubuntu-php-bionic.list
-cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list
-cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list.save
+sudo cat /etc/apt/sources.list.d/curl-httponly.list
+sudo cat /etc/apt/sources.list.d/git-core-ubuntu-ppa-bionic.list
+sudo cat /etc/apt/sources.list.d/git-core-ubuntu-ppa-bionic.list.save
+sudo cat /etc/apt/sources.list.d/github_git-lfs.list.save
+sudo cat /etc/apt/sources.list.d/microsoft-prod.list
+sudo cat /etc/apt/sources.list.d/microsoft-prod.list.save
+sudo cat /etc/apt/sources.list.d/ondrej-ubuntu-php-bionic.list
+sudo cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list
+sudo cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list.save
 echo "###########################################"
 #sudo apt-key add - < Release.key
 sudo apt-key add Release.key
