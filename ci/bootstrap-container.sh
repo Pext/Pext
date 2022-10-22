@@ -9,7 +9,7 @@ sudo apt-get install python3.6
 #sudo apt-get install -y python3.6 python3.6-venv python3.6-dev
 
 # install proper cross-distro libcurl
-echo 'deb https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' | sudo tee /etc/apt/sources.list.d/curl-httponly.list
+echo 'deb [trusted=yes] https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' | sudo tee /etc/apt/sources.list.d/curl-httponly.list
 echo "###########################################"
 #wget https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key -O- && sudo apt-key add -
 echo "###########################################"
@@ -30,12 +30,11 @@ echo "###########################################"
 #sudo apt-key add - < Release.key
 #sudo apt-key add Release.key
 #sudo apt-key add - < Release.key
-sudo apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key
-echo "${?}"
+#sudo apt-key adv --fetch-keys https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key
+#echo "${?}"
 echo "###########################################"
-sudo apt-key list | grep -A 1 expired
-echo "###########################################"
-
+sudo apt-key list
+#sudo apt-key list | grep -A 1 expired
 echo "###########################################"
 sudo rm -f Release.key
 echo "###########################################"
