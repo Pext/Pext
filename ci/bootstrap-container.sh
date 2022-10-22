@@ -6,14 +6,11 @@ set -xv
 # VERSION_CODENAME=bionic
 # UBUNTU_CODENAME=bionic
 
-# install Python 3.6
-#sudo add-apt-repository -y ppa:deadsnakes/ppa
+# Install Python 3.6
 sudo apt-get update
-#sudo apt-get upgrade
 sudo apt-get install python3.6 python3.6-venv python3.6-dev
-#sudo apt-get install -y python3.6 python3.6-venv python3.6-dev
 
-# install proper cross-distro libcurl
+# Install proper cross-distro libcurl
 #echo 'deb [trusted=yes] https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' | sudo tee /etc/apt/sources.list.d/curl-httponly.list
 #echo "###########################################"
 ##wget https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key -O- && sudo apt-key add -
@@ -45,18 +42,17 @@ sudo apt-get install python3.6 python3.6-venv python3.6-dev
 #sudo rm -f Release.key
 #echo "###########################################"
 #sudo apt-get update
-echo "###########################################"
-sudo apt list --installed | grep -i curl
-echo "###########################################"
+#echo "###########################################"
+#sudo apt list --installed | grep -i curl
+#echo "###########################################"
 #sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 bc
 sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
-echo "###########################################"
-sudo apt list --installed | grep -i curl
-echo "###########################################"
+#echo "###########################################"
+#sudo apt list --installed | grep -i curl
+#echo "###########################################"
 
-# install somewhat up-to-date Qt
-#sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
-#sudo apt-get update
-#sudo apt-get install -y qt514tools
-
+# Install somewhat up-to-date Qt
+sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
+sudo apt-get update
+sudo apt-get install -y qt514tools
 #sudo apt list --installed | grep -i ".*qt.*"

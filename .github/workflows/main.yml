@@ -30,12 +30,20 @@ jobs:
           bash -xe ci/bootstrap-container.sh
           # beware: the line below is a DIRTY HACK -- it will override the system pip -- the proper way to do this would be a virtualenv
           # wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
-          wget https://bootstrap.pypa.io/pip/3.6/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
+          # wget https://bootstrap.pypa.io/pip/3.6/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
+          pyton --version
+          whereis python3.6
+          python3.6 -m venv pext-env
+          source pext-env/bin/activate
+          pyton --version
+          pip install tox-travis
+          pip list
       - name: Compile translations
         run: |
-          find / -type f -iname "*qt5*.sh" 2>/dev/null
           ls -lha /opt/qt514/bin/qt514-env.sh
-          source /opt/qt514/bin/qt514-env.sh || true
+          cat /opt/qt514/bin/qt514-env.sh
+          exit 128
+          # source /opt/qt514/bin/qt514-env.sh || true
           bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
           lrelease pext/pext.pro
       - name: Run tests
