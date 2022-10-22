@@ -11,7 +11,9 @@ sudo cat /etc/issue
 echo "###########################################"
 sudo hostnamectl
 echo "###########################################"
-
+# VERSION="18.04.6 LTS (Bionic Beaver)"
+# VERSION_CODENAME=bionic
+# UBUNTU_CODENAME=bionic
 exit 128
 
 # install Python 3.6
@@ -63,6 +65,6 @@ sudo apt list --installed | grep -i curl
 echo "###########################################"
 
 # install somewhat up-to-date Qt
-sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-xenial
+sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
 sudo apt-get update
 sudo apt-get install -y qt514tools
