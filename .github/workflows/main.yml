@@ -15,7 +15,8 @@ jobs:
   linux:
     strategy:
       matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
+#        PEXT_BUILD_PORTABLE: [0, 1]
+        PEXT_BUILD_PORTABLE: [1]
     name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ubuntu-18.04
     env:
@@ -50,57 +51,57 @@ jobs:
             build/Pext*.AppImage.zsync
             pext/VERSION
 
-  osx:
-    strategy:
-      matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
-      fail-fast: false
-    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-    runs-on: macos-10.15
-    env:
-      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Set up Python 3.6
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.6
-      - name: Install dependencies
-        run: pip3 install tox-travis
-      - name: Compile translations
-        run: |
-          brew install qt jq
-          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
-      - name: Run tests
-        run: tox -v -e py36
-      - name: Build dmg for macOS
-        run: bash -xe ci/build-dmg.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: macOS
-          path: |
-            Pext*.zip
-            Pext*.dmg
-
-  upload:
-    name: Create release and upload artifacts
-    needs:
-      - linux
-      - osx
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-      - name: Inspect directory after downloading artifacts
-        run: ls -alFR
-      - name: Create release and upload artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
-            chmod +x pyuploadtool-x86_64.AppImage
-            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
+#  osx:
+#    strategy:
+#      matrix:
+#        PEXT_BUILD_PORTABLE: [0, 1]
+#      fail-fast: false
+#    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+#    runs-on: macos-10.15
+#    env:
+#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - name: Set up Python 3.6
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.6
+#      - name: Install dependencies
+#        run: pip3 install tox-travis
+#      - name: Compile translations
+#        run: |
+#          brew install qt jq
+#          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
+#          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
+#      - name: Run tests
+#        run: tox -v -e py36
+#      - name: Build dmg for macOS
+#        run: bash -xe ci/build-dmg.sh
+#      - name: Archive artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: macOS
+#          path: |
+#            Pext*.zip
+#            Pext*.dmg
+#
+#  upload:
+#    name: Create release and upload artifacts
+#    needs:
+#      - linux
+#      - osx
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v2
+#      - name: Inspect directory after downloading artifacts
+#        run: ls -alFR
+#      - name: Create release and upload artifacts
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
+#            chmod +x pyuploadtool-x86_64.AppImage
+#            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")

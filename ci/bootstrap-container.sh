@@ -5,7 +5,7 @@ set -xv
 echo "###########################################"
 sudo lsb_release -a
 echo "###########################################"
-sudo cat etc/os-release
+sudo cat /etc/os-release
 echo "###########################################"
 sudo cat /etc/issue
 echo "###########################################"
