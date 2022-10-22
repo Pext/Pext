@@ -49,7 +49,7 @@ echo "###########################################"
 sudo apt list --installed | grep -i curl
 echo "###########################################"
 #sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 bc
-sudo apt-get install -y libcurl4-gnutls-dev libcurl3 bc
+sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3 libcurl3-gnutls bc
 echo "###########################################"
 sudo apt list --installed | grep -i curl
 echo "###########################################"

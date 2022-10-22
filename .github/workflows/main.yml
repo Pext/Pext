@@ -33,6 +33,7 @@ jobs:
           wget https://bootstrap.pypa.io/pip/3.6/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
       - name: Compile translations
         run: |
+          ls -lha /opt/qt514/bin/qt514-env.sh
           source /opt/qt514/bin/qt514-env.sh || true
           bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
           lrelease pext/pext.pro
