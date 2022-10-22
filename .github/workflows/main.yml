@@ -39,6 +39,8 @@ jobs:
           ls -lha pext-env/bin/activate
           source pext-env/bin/activate
           python --version
+          pip install PyQt5
+          pip list
           pip install tox-travis
           pip install -r requirements.txt
           pip list

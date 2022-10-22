@@ -8,7 +8,7 @@ set -xv
 
 # Install Python 3.6
 sudo apt-get update
-sudo apt-get install python3.6 python3.6-venv python3.6-dev
+sudo apt-get install python3.7 python3.7-venv python3.7-dev
 
 # Install proper cross-distro libcurl
 #echo 'deb [trusted=yes] https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' | sudo tee /etc/apt/sources.list.d/curl-httponly.list
