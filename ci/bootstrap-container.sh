@@ -9,7 +9,7 @@ sudo apt-get install python3.6
 #sudo apt-get install -y python3.6 python3.6-venv python3.6-dev
 
 # install proper cross-distro libcurl
-sudo sh -c "echo 'deb https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/curl-httponly.list"
+sudo echo 'deb https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/ /' > /etc/apt/sources.list.d/curl-httponly.list
 echo "###########################################"
 #wget https://download.opensuse.org/repositories/home:/TheAssassin:/AppImageLibraries/xUbuntu_18.04/Release.key -O- && sudo apt-key add -
 echo "###########################################"
@@ -18,8 +18,16 @@ echo "###########################################"
 ls -lhaR /etc/apt/sources.list.d/
 echo "###########################################"
 cat /etc/apt/sources.list.d/curl-httponly.list
-#sudo apt-key add - < Release.key
+cat /etc/apt/sources.list.d/git-core-ubuntu-ppa-bionic.list
+cat /etc/apt/sources.list.d/git-core-ubuntu-ppa-bionic.list.save
+cat /etc/apt/sources.list.d/github_git-lfs.list.save
+cat /etc/apt/sources.list.d/microsoft-prod.list
+cat /etc/apt/sources.list.d/microsoft-prod.list.save
+cat /etc/apt/sources.list.d/ondrej-ubuntu-php-bionic.list
+cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list
+cat /etc/apt/sources.list.d/ubuntu-toolchain-r-ubuntu-test-bionic.list.save
 echo "###########################################"
+#sudo apt-key add - < Release.key
 sudo apt-key add Release.key
 echo "###########################################"
 sudo rm -f Release.key
