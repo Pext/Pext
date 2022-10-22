@@ -2,6 +2,18 @@
 
 set -xv
 
+echo "###########################################"
+sudo lsb_release -a
+echo "###########################################"
+sudo cat etc/os-release
+echo "###########################################"
+sudo cat /etc/issue
+echo "###########################################"
+sudo hostnamectl
+echo "###########################################"
+
+exit 128
+
 # install Python 3.6
 #sudo add-apt-repository -y ppa:deadsnakes/ppa
 sudo apt-get update
@@ -43,8 +55,6 @@ sudo apt-get install python3.6 python3.6-venv python3.6-dev
 #sudo apt-get update
 echo "###########################################"
 sudo apt list --installed | grep -i curl
-echo "###########################################"
-sudo apt list --installed | grep -i bc
 echo "###########################################"
 #sudo apt-get install -y curl libcurl4-gnutls-dev libcurl3-gnutls libcurl3 bc
 sudo apt-get install -y libcurl4-gnutls-dev libcurl3 bc
