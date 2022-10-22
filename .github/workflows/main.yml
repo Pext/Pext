@@ -31,7 +31,7 @@ jobs:
           # beware: the line below is a DIRTY HACK -- it will override the system pip -- the proper way to do this would be a virtualenv
           # wget https://bootstrap.pypa.io/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
           # wget https://bootstrap.pypa.io/pip/3.6/get-pip.py -O- | sudo python3.6; sudo pip install tox-travis
-          pyton --version
+          pyton3 --version
           whereis python3.6
           python3.6 -m venv pext-env
           source pext-env/bin/activate
