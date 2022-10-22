@@ -52,9 +52,14 @@ jobs:
           cat pext/pext.pro
       - name: Run tests
         run: |
+          source pext-env/bin/activate
           python --version
+          whereis python
+          whereis tox
           xvfb-run --help
           xvfb-run tox -v -e py36
+          ls -lha py36
+          cat py36
       - name: Build AppImage
         run: |
           mkdir -p build
