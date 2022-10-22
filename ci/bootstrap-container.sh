@@ -59,4 +59,4 @@ echo "###########################################"
 #sudo apt-get update
 #sudo apt-get install -y qt514tools
 
-sudo apt list | grep -i ".*qt.*"
+sudo apt list --installed | grep -i ".*qt.*"
