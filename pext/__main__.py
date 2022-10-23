@@ -3196,7 +3196,7 @@ def main(ui_type: UIType) -> None:
     # Load configuration
     ConfigRetriever.set_data_path(args.data_path)
     ConfigRetriever.make_portable(args.portable)
-    print(f"#2 ConfigRetriever.__config_temp_path:")
+    print("#3 ConfigRetriever:")
     print(ConfigRetriever)
     print(ConfigRetriever.__config_data_path)
     print(ConfigRetriever.__config_temp_path)
