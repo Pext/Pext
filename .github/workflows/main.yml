@@ -12,42 +12,42 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux:
-    strategy:
-      matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
-    name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-    runs-on: ubuntu-18.04
-    env:
-      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Install dependencies
-        run: bash -xe ci/bootstrap-container.sh
-      - name: Compile translations
-        run: |
-          source /opt/qt514/bin/qt514-env.sh || true
-          bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-          lrelease pext/pext.pro
-      - name: Run tests
-        run: |
-          source pext-env/bin/activate
-          xvfb-run tox -v -e py38
-      - name: Build AppImage
-        run: |
-          mkdir -p build
-          cd build
-          bash -xe ../ci/build-appimage.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: AppImage-x86_64
-          path: |
-            build/Pext*.AppImage
-            build/Pext*.AppImage.zsync
-            pext/VERSION
+#  linux:
+#    strategy:
+#      matrix:
+#        PEXT_BUILD_PORTABLE: [0, 1]
+#    name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+#    runs-on: ubuntu-18.04
+#    env:
+#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - name: Install dependencies
+#        run: bash -xe ci/bootstrap-container.sh
+#      - name: Compile translations
+#        run: |
+#          source /opt/qt514/bin/qt514-env.sh || true
+#          bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
+#          lrelease pext/pext.pro
+#      - name: Run tests
+#        run: |
+#          source pext-env/bin/activate
+#          xvfb-run tox -v -e py38
+#      - name: Build AppImage
+#        run: |
+#          mkdir -p build
+#          cd build
+#          bash -xe ../ci/build-appimage.sh
+#      - name: Archive artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: AppImage-x86_64
+#          path: |
+#            build/Pext*.AppImage
+#            build/Pext*.AppImage.zsync
+#            pext/VERSION
 
   osx:
     strategy:
@@ -85,21 +85,21 @@ jobs:
             Pext*.zip
             Pext*.dmg
 
-  upload:
-    name: Create release and upload artifacts
-    needs:
-      - linux
-      - osx
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-      - name: Inspect directory after downloading artifacts
-        run: ls -alFR
-      - name: Create release and upload artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
-            chmod +x pyuploadtool-x86_64.AppImage
-            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
+#  upload:
+#    name: Create release and upload artifacts
+#    needs:
+#      - linux
+#      - osx
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v2
+#      - name: Inspect directory after downloading artifacts
+#        run: ls -alFR
+#      - name: Create release and upload artifacts
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
+#            chmod +x pyuploadtool-x86_64.AppImage
+#            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
