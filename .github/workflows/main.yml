@@ -50,42 +50,42 @@ jobs:
             build/${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage.zsync
             pext/${{ matrix.OPERATIVE_SYSTEM }}/VERSION
 
-  osx:
-    strategy:
-      matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
-        OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
-      fail-fast: false
-    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
-    env:
-      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Set up Python 3.8 ${{ matrix.OPERATIVE_SYSTEM }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Install dependencies
-        run: pip3 install tox-travis
-      - name: Compile translations
-        run: |
-          brew install qt jq
-          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
-      - name: Run tests
-        run: tox -v -e py38
-      - name: Build dmg for macOS
-        run: bash -xve ci/build-dmg.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.OPERATIVE_SYSTEM }}
-          path: |
-            Pext*.zip
-            Pext*.dmg
+#  osx:
+#    strategy:
+#      matrix:
+#        PEXT_BUILD_PORTABLE: [0, 1]
+#        OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
+#      fail-fast: false
+#    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+#    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
+#    env:
+#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          fetch-depth: 0
+#      - name: Set up Python 3.8 ${{ matrix.OPERATIVE_SYSTEM }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: 3.8
+#      - name: Install dependencies
+#        run: pip3 install tox-travis
+#      - name: Compile translations
+#        run: |
+#          brew install qt jq
+#          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
+#          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
+#      - name: Run tests
+#        run: tox -v -e py38
+#      - name: Build dmg for macOS
+#        run: bash -xve ci/build-dmg.sh
+#      - name: Archive artifacts
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: ${{ matrix.OPERATIVE_SYSTEM }}
+#          path: |
+#            Pext*.zip
+#            Pext*.dmg
 
 #  upload:
 #    name: Create release and upload artifacts

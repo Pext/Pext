@@ -1,7 +1,17 @@
 #! /bin/bash
 
+sudo lsb_release -a || true
+sudo cat etc/os-release || true
+sudo cat /etc/issue || true
+sudo hostnamectl || true
+
 # Install Python
 sudo apt-get update
+echo "###################################################"
+sudo apt search venv
+echo "###################################################"
+sudo apt search python3.
+echo "###################################################"
 sudo apt-get install -y python3.8 python3.8-venv python3.8-dev
 
 # Install curl
