@@ -76,7 +76,7 @@ jobs:
       - name: Run tests
         run: tox -v -e py38
       - name: Build dmg for macOS
-        run: bash -xe ci/build-dmg.sh
+        run: bash -xve ci/build-dmg.sh
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
