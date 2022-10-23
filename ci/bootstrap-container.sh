@@ -3,12 +3,6 @@
 echo "##################################################"
 sudo echo "$VERSION" || true
 echo "##################################################"
-sudo . /etc/os-release; echo "${VERSION/*, /}" || true
-echo "##################################################"
-sudo . /etc/os-release
-read _ UBUNTU_VERSION_NAME <<< "$VERSION"
-echo "$UBUNTU_VERSION_NAME"
-echo "##################################################"
 sudo cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2
 echo "##################################################"
 sudo lsb_release -cs
