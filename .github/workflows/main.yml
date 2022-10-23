@@ -12,57 +12,59 @@ on:
   workflow_dispatch:
 
 jobs:
-#  linux:
-#    strategy:
-#      matrix:
-#        PEXT_BUILD_PORTABLE: [0, 1]
-#    name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-#    runs-on: ubuntu-18.04
-#    env:
-#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          fetch-depth: 0
-#      - name: Install dependencies
-#        run: bash -xe ci/bootstrap-container.sh
-#      - name: Compile translations
-#        run: |
-#          source /opt/qt514/bin/qt514-env.sh || true
-#          bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-#          lrelease pext/pext.pro
-#      - name: Run tests
-#        run: |
-#          source pext-env/bin/activate
-#          xvfb-run tox -v -e py38
-#      - name: Build AppImage
-#        run: |
-#          mkdir -p build
-#          cd build
-#          bash -xe ../ci/build-appimage.sh
-#      - name: Archive artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: AppImage-x86_64
-#          path: |
-#            build/Pext*.AppImage
-#            build/Pext*.AppImage.zsync
-#            pext/VERSION
-
-  osx:
+  linux:
     strategy:
       matrix:
         PEXT_BUILD_PORTABLE: [0, 1]
-      fail-fast: false
-    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-    runs-on: macos-10.15
+        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+    name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:
       PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Set up Python 3.8
+      - name: Install dependencies ${{ matrix.OPERATIVE_SYSTEM }}
+        run: bash -xe ci/bootstrap-container.sh
+      - name: Compile translations
+        run: |
+          source /opt/qt514/bin/qt514-env.sh || true
+          bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
+          lrelease pext/pext.pro
+      - name: Run tests
+        run: |
+          source pext-env/bin/activate
+          xvfb-run tox -v -e py38
+      - name: Build AppImage
+        run: |
+          mkdir -p build
+          cd build
+          bash -xe ../ci/build-appimage.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.OPERATIVE_SYSTEM }}-AppImage-x86_64
+          path: |
+            build/${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage
+            build/${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage.zsync
+            pext/${{ matrix.OPERATIVE_SYSTEM }}/VERSION
+
+  osx:
+    strategy:
+      matrix:
+        PEXT_BUILD_PORTABLE: [0, 1]
+        OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
+      fail-fast: false
+    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
+    env:
+      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.8 ${{ matrix.OPERATIVE_SYSTEM }}
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
@@ -80,7 +82,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: macOS
+          name: ${{ matrix.OPERATIVE_SYSTEM }}
           path: |
             Pext*.zip
             Pext*.dmg
