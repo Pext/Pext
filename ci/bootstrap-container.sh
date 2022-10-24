@@ -5,6 +5,11 @@ echo "UBUNTU_CODENAME: ${UBUNTU_CODENAME}"
 
 # Install Python
 sudo apt-get update
+echo "######################################"
+sudo python --version
+echo "######################################"
+python --version
+echo "######################################"
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
   sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
 elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
@@ -21,7 +26,7 @@ fi
 sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
 
 # Install Qt
-sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
+sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-"${UBUNTU_CODENAME}"
 sudo apt-get update
 sudo apt-get install -y qt514tools
 
