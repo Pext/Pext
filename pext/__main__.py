@@ -238,25 +238,17 @@ class ConfigRetriever():
     @staticmethod
     def make_portable(portable: Optional[bool]) -> None:
         """Make changes to locations so that Pext can be considered portable."""
-        print("def make_portable(...)")
-        print(f"portable: {portable}")
         if not portable:
             return
 
         if not ConfigRetriever.__config_data_path:
-            print("if not ConfigRetriever.__config_data_path:")
             if 'APPIMAGE' in os.environ:
-                print("if 'APPIMAGE' in os.environ:")
                 base_path = os.path.dirname(os.path.abspath(os.environ['APPIMAGE']))
             else:
-                print("if 'APPIMAGE' in os.environ: else")
                 base_path = AppFile.get_path()
-            print(f"base_path: {base_path}")
             ConfigRetriever.__config_data_path = os.path.join(base_path, 'pext_data')
-            print(f"#1 ConfigRetriever.__config_data_path: {ConfigRetriever.__config_data_path}")
 
         ConfigRetriever.__config_temp_path = os.path.join(ConfigRetriever.__config_data_path, 'pext_temp')
-        print(f"#2 ConfigRetriever.__config_temp_path: {ConfigRetriever.__config_data_path}")
 
     @staticmethod
     def get_path() -> str:

@@ -58,11 +58,6 @@ cat > Pext.app/Contents/MacOS/Pext <<\EAT
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 EAT
-echo "####################################################"
-cat Pext.app/Contents/MacOS/Pext
-echo "####################################################"
-echo "PEXT_BUILD_PORTABLE: ${PEXT_BUILD_PORTABLE}"
-echo "####################################################"
 
 if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
 cat >> Pext.app/Contents/MacOS/Pext <<\EAT
@@ -73,12 +68,6 @@ cat >> Pext.app/Contents/MacOS/Pext <<\EAT
   $DIR/../Resources/bin/python $DIR/../Resources/Pext/pext $@
 EAT
 fi
-echo "####################################################"
-echo "${@}"
-echo "####################################################"
-echo "####################################################"
-cat Pext.app/Contents/MacOS/Pext
-echo "####################################################"
 
 # make executable
 chmod a+x Pext.app/Contents/MacOS/Pext

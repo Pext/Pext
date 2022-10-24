@@ -16,13 +16,13 @@ jobs:
     strategy:
       matrix:
         PEXT_BUILD_PORTABLE: [0, 1]
-#        PEXT_BUILD_PORTABLE: [0]
-#        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
-#        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
-        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+        # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+        # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
+        OPERATIVE_SYSTEM: [ubuntu-20.04]
+        # Python versions: ["3.7", "3.8", "3.9"]
         # The Python versions 3.6 has problems with QT.
         # The Python versions 3.10 has problems with Tox Travis.
-        PYTHON_VERSION: ["3.7", "3.8", "3.9"]
+        PYTHON_VERSION: ["3.9"]
       fail-fast: false
     name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
@@ -47,70 +47,64 @@ jobs:
             build/Pext*.AppImage.zsync
             pext/VERSION
 
-#  osx:
-#    strategy:
-#      matrix:
-#        PEXT_BUILD_PORTABLE: [0, 1]
-#        OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
-#        # The Python versions 3.6 and 3.10 are not working correctly.
-#        PYTHON_VERSION: ["3.7", "3.8", "3.9"]
-#      fail-fast: false
-#    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
-#    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
-#    env:
-#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: Set up
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: ${{ matrix.PYTHON_VERSION }}
-#      - name: Install dependencies
-#        run: pip3 install tox-travis
-#      - name: Compile translations
-#        run: |
-#          brew install qt jq
-#          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/ex`po`rts/stats/pext/?format=json"
-#          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
-#      - name: Run tests
-#        run: |
-#          if [ "${{ matrix.PYTHON_VERSION }}" = "3.7" ]; then
-#            tox -v -e py37
-#          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.8" ]; then
-#            tox -v -e py38
-#          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.9" ]; then
-#            tox -v -e py39
-#          else
-#            echo "ERROR: Not all the Python versions are allowed. Current Python version: ${{ matrix.PYTHON_VERSION }}"
-#            exit 1
-#          fi
-#      - name: Build dmg for macOS
-#        run: bash -xve ci/build-dmg.sh
-#      - name: Archive artifacts
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
-#          path: |
-#            Pext*.zip
-#            Pext*.dmg
+  osx:
+    strategy:
+      matrix:
+        PEXT_BUILD_PORTABLE: [0, 1]
+        # Operative systems: [macos-10.15, macos-11, macos-12]
+        OPERATIVE_SYSTEM: [macos-12]
+        # Python versions: ["3.7", "3.8", "3.9"]
+        # The Python versions 3.6 and 3.10 are not working correctly.
+        PYTHON_VERSION: ["3.9"]
+      fail-fast: false
+    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
+    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
+    env:
+      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.PYTHON_VERSION }}
+      - name: Install dependencies
+        run: pip3 install tox-travis
+      - name: Compile translations
+        run: |
+          brew install qt jq
+          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/ex`po`rts/stats/pext/?format=json"
+          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
+      - name: Run tests
+        run: |
+          echo "${{ matrix.PYTHON_VERSION //./}}"
+          tox -v -e py"${{ matrix.PYTHON_VERSION //./}}"
+      - name: Build dmg for macOS
+        run: bash -xve ci/build-dmg.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+          path: |
+            Pext*.zip
+            Pext*.dmg
 
-#  upload:
-#    name: Create release and upload artifacts
-#    needs:
-#      - linux
-#      - osx
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download artifacts
-#        uses: actions/download-artifact@v3
-#      - name: Inspect directory after downloading artifacts
-#        run: ls -alFR
-#      - name: Create release and upload artifacts
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: |
-#            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
-#            chmod +x pyuploadtool-x86_64.AppImage
-#            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
+  upload:
+    name: Create release and upload artifacts
+    needs:
+      - linux
+      - osx
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+      - name: Inspect directory after downloading artifacts
+        run: ls -alFR
+      - name: Create release and upload artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
+            chmod +x pyuploadtool-x86_64.AppImage
+            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
