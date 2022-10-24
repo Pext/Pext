@@ -41,7 +41,8 @@ echo "######################################"
 #  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
 #fi
 #sudo apt-get update
-sudo apt-get install -y qttools5-dev-tools
+sudo apt-get install -y qt5-default qt5-qmake qtbase5-dev-tools
+#sudo apt-get install -y qttools5-dev-tools
 
 # Create the Python vEnv and install requirements
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
