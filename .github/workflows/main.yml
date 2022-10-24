@@ -31,7 +31,7 @@ jobs:
         run: bash -xve ci/bootstrap-container.sh
 #      - name: Compile translations
 #        run: |
-#          source /opt/qt515/bin/qt515-env.sh || true
+#          source /opt/qt514/bin/qt514-env.sh || true
 #          bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
 #          lrelease pext/pext.pro
 #      - name: Run tests

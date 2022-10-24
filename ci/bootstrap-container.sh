@@ -6,6 +6,9 @@ UBUNTU_RELEASE=$(sudo lsb_release -rs)
 # Install Python
 sudo apt-get update
 echo "######################################"
+sudo apt search qt5
+exit 1
+echo "######################################"
 sudo python --version
 echo "######################################"
 python --version
