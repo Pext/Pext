@@ -54,7 +54,7 @@ fi
 pwd
 ls -lha
 sudo mkdir -p build
-cd build && exit 1
+cd build || exit 1
 pwd
 ls -lha
 pwd

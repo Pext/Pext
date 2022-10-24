@@ -20,7 +20,7 @@ jobs:
 #        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
 #        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
         OPERATIVE_SYSTEM: [ubuntu-18.04]
-    name: "AppImage [${{ matrix.PEXT_BUILD_PORTABLE }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+    name: "AppImage [${{ matrix.OPERATIVE_SYSTEM }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:
       PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
@@ -28,22 +28,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Install dependencies ${{ matrix.OPERATIVE_SYSTEM }}
+      - name: Install dependencies [${{ matrix.OPERATIVE_SYSTEM }}]
         run: bash -xve ci/bootstrap-container.sh
-#      - name: Compile translations
-#        run: |
-#          source /opt/qt514/bin/qt514-env.sh || true
-#          bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-#          lrelease pext/pext.pro
-#      - name: Run tests
-#        run: |
-#          source pext-env/bin/activate
-#          xvfb-run tox -v -e py38
-#      - name: Build AppImage
-#        run: |
-#          mkdir -p build
-#          cd build
-#          bash -xe ../ci/build-appimage.sh
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
