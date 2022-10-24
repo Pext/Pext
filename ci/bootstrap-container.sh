@@ -5,15 +5,6 @@ UBUNTU_RELEASE=$(sudo lsb_release -rs)
 
 # Install Python
 sudo apt-get update
-echo "######################################"
-sudo apt search qt5
-echo "######################################"
-sudo python --version
-echo "######################################"
-python --version
-echo "######################################"
-sudo find /usr -iname "*qt*"
-echo "######################################"
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
   sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
 elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
@@ -41,8 +32,14 @@ echo "######################################"
 #  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
 #fi
 #sudo apt-get update
-sudo apt-get install -y qt5-default qt5-qmake qtbase5-dev-tools
+sudo apt-get install -y qt5-default qt5-qmake qtbase5-dev-tools qttools5-dev-tools
 #sudo apt-get install -y qttools5-dev-tools
+echo "######################################"
+sudo ls -lha /usr/lib/qt5/bin
+echo "######################################"
+sudo find /usr -iname "*qt5*"
+echo "######################################"
+
 
 # Create the Python vEnv and install requirements
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
