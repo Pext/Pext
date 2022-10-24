@@ -8,6 +8,7 @@ on:
     tags-ignore:
       # Do not build tags that we create when we upload to GitHub Releases
       - 'continuous'
+# TODO: Remove this comment about pull request execution.
 #  pull_request:
   workflow_dispatch:
 
@@ -72,7 +73,9 @@ jobs:
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
       - name: Build
-        run: bash -xve ci/build-macos.sh ${{ matrix.PYTHON_VERSION }}
+        run: |
+          ls -lha ci
+          bash -xve ci/build-macos.sh ${{ matrix.PYTHON_VERSION }}
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
