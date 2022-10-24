@@ -42,7 +42,7 @@ jobs:
       matrix:
         PEXT_BUILD_PORTABLE: [0, 1]
         OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
-        PYTHON_VERSION: [3.6, 3.7, 3.8, 3.9, 3.10]
+        PYTHON_VERSION: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
       fail-fast: false
     name: "macOS [${{ matrix.OPERATIVE_SYSTEM }} | Python ${{ matrix.PYTHON_VERSION }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
