@@ -13,7 +13,7 @@ elif [ "${UBUNTU_CODENAME}" = "bionic" ]; then
   sudo apt-get install -y python3.8 python3.8-venv python3.8-dev
 else
   echo "ERROR: The Ubuntu version '${UBUNTU_CODENAME}' is outside the scope (bionic, focal or jammy)."
-  sudo lsb_release -a
+  lsb_release -a
   exit 1
 fi
 
@@ -53,10 +53,10 @@ fi
 # Build the app
 pwd
 ls -lha
-sudo mkdir -p build
-cd build || exit 1
+mkdir -p build-ubuntu-"${UBUNTU_RELEASE}"
+cd build-ubuntu-"${UBUNTU_RELEASE}" || exit 1
 pwd
 ls -lha
 pwd
 ls -lha ../
-bash -xe ../ci/build-appimage.sh
+bash -xve ../ci/build-appimage.sh

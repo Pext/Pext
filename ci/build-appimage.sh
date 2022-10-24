@@ -130,4 +130,4 @@ chmod +x Pext*.AppImage*
 xvfb-run ./Pext*.AppImage* --version
 
 # move AppImage back to old CWD
-mv Pext*.AppImage* "$OLD_CWD"/
+sudo mv Pext*.AppImage* "$OLD_CWD"/
