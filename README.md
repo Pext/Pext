@@ -18,7 +18,7 @@
 
 - [Introduction](#introduction)
 - [How it works](#how-it-works)
-- [Installation](https://pext.readthedocs.io/en/latest/installation.html)
+- [Installation](#installation)
 - [Usage](#usage)
 - [Hotkeys](#hotkeys)
 - [Community](#community)
@@ -49,6 +49,10 @@ Simply put:
 - Search (for something)
 - Select (with Enter)
 - Hide (automatically)
+
+## Installation
+
+Check the install instructions at [Read the Docs](https://pext.readthedocs.io/en/latest/installation.html).
 
 ## Usage
 
