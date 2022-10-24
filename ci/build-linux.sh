@@ -20,7 +20,7 @@ python3 -m pip --version
 
 # Install vEnv
 #sudo apt-get install -y python"${PYTHON_VERSION}" python"${PYTHON_VERSION}"-venv python"${PYTHON_VERSION}"-dev
-python3 -m pip install --user virtualenv
+python3 -m pip install --user venv
 python3 -m pip show venv
 #sudo apt search "*python${PYTHON_VERSION}*"
 
