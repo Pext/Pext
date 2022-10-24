@@ -27,7 +27,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build [${{ matrix.OPERATIVE_SYSTEM }}]
-        run: bash -xve ci/bootstrap-container.sh
+        run: bash -xve ci/build-linux.sh
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
