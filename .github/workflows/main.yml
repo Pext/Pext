@@ -15,10 +15,10 @@ jobs:
   linux:
     strategy:
       matrix:
-        #PEXT_BUILD_PORTABLE: [0, 1]
+#        PEXT_BUILD_PORTABLE: [0, 1]
         PEXT_BUILD_PORTABLE: [0]
-        #OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
-        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
+        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+#        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
     name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:

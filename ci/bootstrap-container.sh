@@ -6,8 +6,7 @@ UBUNTU_RELEASE=$(sudo lsb_release -rs)
 # Install Python
 sudo apt-get update
 echo "######################################"
-sudo apt search qt5
-exit 1
+sudo apt search qttools5
 echo "######################################"
 sudo python --version
 echo "######################################"
@@ -29,15 +28,15 @@ fi
 sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
 
 # Install Qt
-if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
-  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-jammy
-elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
-  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-focal
-elif [ "${UBUNTU_CODENAME}" = "bionic" ]; then
-  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
-fi
-sudo apt-get update
-sudo apt-get install -y qt514tools
+#if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
+#  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-jammy
+#elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
+#  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-focal
+#elif [ "${UBUNTU_CODENAME}" = "bionic" ]; then
+#  sudo add-apt-repository -y ppa:beineri/opt-qt-5.14.2-bionic
+#fi
+#sudo apt-get update
+sudo apt-get install -y qttools5-dev-tools
 
 # Create the Python vEnv and install requirements
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
