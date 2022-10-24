@@ -12,40 +12,40 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux:
-    strategy:
-      matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
-        # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
-        # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
-        OPERATIVE_SYSTEM: [ubuntu-20.04]
-        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-        # The Python versions 3.6 has problems with QT.
-        # The Python versions 3.10 has problems with Tox Travis.
-        PYTHON_VERSION: ["3.9"]
-      fail-fast: false
-    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
-    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
-    env:
-      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Set up
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.PYTHON_VERSION }}
-      - name: Build
-        run: bash -xve ci/build-linux.sh ${{ matrix.PYTHON_VERSION }}
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
-          path: |
-            build/Pext*.AppImage
-            build/Pext*.AppImage.zsync
-            pext/VERSION
+#  linux:
+#    strategy:
+#      matrix:
+#        PEXT_BUILD_PORTABLE: [0, 1]
+#        # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+#        # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
+#        OPERATIVE_SYSTEM: [ubuntu-20.04]
+#        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+#        # The Python versions 3.6 has problems with QT.
+#        # The Python versions 3.10 has problems with Tox Travis.
+#        PYTHON_VERSION: ["3.9"]
+#      fail-fast: false
+#    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
+#    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
+#    env:
+#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#      - name: Set up
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: ${{ matrix.PYTHON_VERSION }}
+#      - name: Build
+#        run: bash -xve ci/build-linux.sh ${{ matrix.PYTHON_VERSION }}
+#      - name: Archive artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+#          path: |
+#            build/Pext*.AppImage
+#            build/Pext*.AppImage.zsync
+#            pext/VERSION
 
   osx:
     strategy:
@@ -71,20 +71,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
-      - name: Install dependencies
-        run: pip3 install tox-travis
-      - name: Compile translations
-        run: |
-          brew install qt jq
-          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
-      - name: Run tests
-        run: |
-          PYTHON_VERSION_SMART="$(echo ${{ matrix.PYTHON_VERSION}} | sed 's/[^0-9]*//g')"
-          echo "PYTHON_VERSION_SMART: ${PYTHON_VERSION_SMART}"
-          tox -v -e py"${PYTHON_VERSION_SMART}"
-      - name: Build dmg for macOS
-        run: bash -xve ci/build-dmg.sh
+      - name: Build
+        run: bash -xve ci/build-macos.sh ${{ matrix.PYTHON_VERSION }}
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
