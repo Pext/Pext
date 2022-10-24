@@ -28,7 +28,8 @@ fi
 sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
 
 # Install Qt
-sudo apt-get install -y qt5-default qt5-qmake qtbase5-dev-tools qttools5-dev-tools
+#sudo apt-get install -y qt5-default qt5-qmake qtbase5-dev-tools qttools5-dev-tools
+sudo apt-get install -y qtbase5-dev qt5-qmake qtbase5-dev-tools qttools5-dev-tools
 
 # Create the Python vEnv and install requirements
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
