@@ -1,20 +1,15 @@
 #! /bin/bash
 
 UBUNTU_CODENAME=$(sudo lsb_release -cs)
+echo "UBUNTU_CODENAME: ${UBUNTU_CODENAME}"
 
 # Install Python
 sudo apt-get update
-echo "###################################################"
-sudo apt search venv
-echo "###################################################"
-sudo apt search python3.
-echo "###################################################"
-echo "UBUNTU_CODENAME: ${UBUNTU_CODENAME}"
-if [ "${UBUNTU_CODENAME}" -eq jammy ]; then
+if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
   sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
-elif [ "${UBUNTU_CODENAME}" -eq focal ]; then
+elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
   sudo apt-get install -y python3.9 python3.9-venv python3.9-dev
-elif [ "${UBUNTU_CODENAME}" -eq bionic ]; then
+elif [ "${UBUNTU_CODENAME}" = "bionic" ]; then
   sudo apt-get install -y python3.8 python3.8-venv python3.8-dev
 else
   echo "ERROR: The Ubuntu version '${UBUNTU_CODENAME}' is outside the scope (bionic, focal or jammy)."
@@ -42,3 +37,9 @@ source pext-env/bin/activate
 pip install --upgrade pip
 pip install tox-travis
 pip install -r requirements.txt
+
+echo "###################################################"
+sudo apt search venv
+echo "###################################################"
+sudo apt search python3.
+echo "###################################################"
