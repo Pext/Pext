@@ -12,6 +12,8 @@ sudo python --version
 echo "######################################"
 python --version
 echo "######################################"
+sudo find /usr -iname "*qt*"
+echo "######################################"
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
   sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
 elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
