@@ -24,9 +24,9 @@ python3 setup.py || true
 
 VERSION="$(head -n 1 "$OLD_CWD"/pext/VERSION)"
 
-pushd "$BUILD_DIR"/
+pushd "$BUILD_DIR"/ || exit 1
 
-# install Miniconda, a self contained Python distribution
+# install Miniconda, a self-contained Python distribution
 wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh
 bash Miniconda3-latest-MacOSX-x86_64.sh -b -p ~/miniconda -f
 rm Miniconda3-latest-MacOSX-x86_64.sh 
@@ -84,7 +84,7 @@ echo "####################################################"
 chmod a+x Pext.app/Contents/MacOS/Pext
 
 # remove bloat
-pushd Pext.app/Contents/Resources
+pushd Pext.app/Contents/Resources || exit 1
 rm -rf pkgs
 find . -type d -iname '__pycache__' -print0 | xargs -0 rm -r
 #find . -type f -iname '*.so*' -print -exec strip '{}' \;
@@ -97,15 +97,17 @@ rm -r lib/python3.7/site-packages/PyQt5/Qt/qml/QtWebEngine* || true
 rm -r lib/python3.7/site-packages/PyQt5/Qt/plugins/webview/libqtwebview* || true
 rm lib/python3.7/site-packages/PyQt5/Qt/libexec/QtWebEngineProcess* || true
 rm lib/python3.7/site-packages/PyQt5/Qt/lib/libQt5WebEngine* || true
-popd
-popd
+popd || exit 1
+popd || exit 1
 
 # generate .dmg
 if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
-  mv "$BUILD_DIR"/Pext.app Pext-portable-$VERSION.app
-  zip -r Pext-portable-$VERSION.app.zip Pext-portable-*.app
+  mv "$BUILD_DIR"/Pext.app Pext-portable-"${VERSION}".app
+  zip -r Pext-portable-"${VERSION}".app.zip Pext-portable-*.app
 else
   brew install create-dmg
   # "--skip-jenkins" is a temporary workaround for https://github.com/create-dmg/create-dmg/issues/72
-  create-dmg --skip-jenkins --volname "Pext $VERSION" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app --app-drop-link 600 185 Pext-$VERSION.dmg "$BUILD_DIR"/
+  create-dmg --skip-jenkins --volname "Pext $VERSION" --volicon "$OLD_CWD"/pext/images/scalable/pext.icns \
+  --window-pos 200 120 --window-size 800 400 --icon-size 100 --icon Pext.app 200 190 --hide-extension Pext.app \
+  --app-drop-link 600 185 Pext-"${VERSION}".dmg "$BUILD_DIR"/
 fi
