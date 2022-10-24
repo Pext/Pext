@@ -22,7 +22,6 @@ python3 -m pip --version
 #sudo apt-get install -y python"${PYTHON_VERSION}" python"${PYTHON_VERSION}"-venv python"${PYTHON_VERSION}"-dev
 python3 -m pip install --user virtualenv
 python3 -m pip list
-python3 -m pip show --user venv
 #sudo apt search "*python${PYTHON_VERSION}*"
 
 # Install curl
@@ -43,6 +42,7 @@ source pext-env/bin/activate
 python3 -m pip install --user tox-travis
 #pip install -r requirements.txt
 python3 -m pip install --user -r requirements.txt
+python3 -m pip list
 
 # Generate translation
 bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
