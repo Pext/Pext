@@ -3,15 +3,10 @@
 UBUNTU_CODENAME=$(sudo lsb_release -cs)
 UBUNTU_RELEASE=$(sudo lsb_release -rs)
 
-# Install Python
+# Update APT repositories
 sudo apt-get update
-echo "###############################################"
-sudo apt search qt5
-echo "###############################################"
-sudo apt search qtbase
-echo "###############################################"
-sudo apt search qttools
-echo "###############################################"
+
+# Install Python
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
   sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
 elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
@@ -30,7 +25,7 @@ sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
 # Install Qt
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
   sudo apt-get install -y qtbase5-dev qt5-qmake qtbase5-dev-tools qttools5-dev-tools
-elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
+else
   sudo apt-get install -y qt5-default qt5-qmake qtbase5-dev-tools qttools5-dev-tools
 fi
 
@@ -62,12 +57,6 @@ elif [ "${UBUNTU_CODENAME}" = "bionic" ]; then
 fi
 
 # Build the app
-pwd
-ls -lha
 mkdir -p build-ubuntu-"${UBUNTU_RELEASE}"
 cd build-ubuntu-"${UBUNTU_RELEASE}" || exit 1
-pwd
-ls -lha
-pwd
-ls -lha ../
 bash -xve ../ci/build-app-image.sh
