@@ -42,7 +42,13 @@ lrelease pext/pext.pro
 
 # Run tests
 source pext-env/bin/activate
-xvfb-run tox -v -e "${UBUNTU_CODENAME}"
+if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
+  xvfb-run tox -v -e py310
+elif [ "${UBUNTU_CODENAME}" = "focal" ]; then
+  xvfb-run tox -v -e py39
+elif [ "${UBUNTU_CODENAME}" = "bionic" ]; then
+  xvfb-run tox -v -e py38
+fi
 
 # Build the app
 pwd
