@@ -1,8 +1,5 @@
 #! /bin/bash
 
-set -x
-set -e
-
 # use RAM disk if possible
 if [ -d /dev/shm ] && [ "$CI" != "" ]; then
     TEMP_BASE=/dev/shm
