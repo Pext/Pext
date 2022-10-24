@@ -12,37 +12,38 @@ on:
   workflow_dispatch:
 
 jobs:
-#  linux:
-#    strategy:
-#      matrix:
-#        PEXT_BUILD_PORTABLE: [0, 1]
-#        # ubuntu-22.04 is broken because tox-travis has problem with import name 'Set' from 'collections' in Python 3.10
-#        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
-#    name: "AppImage [${{ matrix.OPERATIVE_SYSTEM }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-#    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
-#    env:
-#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: Build [${{ matrix.OPERATIVE_SYSTEM }}]
-#        run: bash -xve ci/build-linux.sh
-#      - name: Archive artifacts
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: AppImage-x86_64-${{ matrix.OPERATIVE_SYSTEM }}
-#          path: |
-#            build/Pext*.AppImage
-#            build/Pext*.AppImage.zsync
-#            pext/VERSION
+  linux:
+    strategy:
+      matrix:
+        PEXT_BUILD_PORTABLE: [0, 1]
+        # ubuntu-22.04 is broken because...
+        # tox-travis has problem with import name 'Set' from 'collections' in Python 3.10
+        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
+    name: "AppImage [${{ matrix.OPERATIVE_SYSTEM }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
+    env:
+      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Build [${{ matrix.OPERATIVE_SYSTEM }}]
+        run: bash -xve ci/build-linux.sh
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: AppImage-x86_64-${{ matrix.OPERATIVE_SYSTEM }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+          path: |
+            build/Pext*.AppImage
+            build/Pext*.AppImage.zsync
+            pext/VERSION
 
   osx:
     strategy:
       matrix:
         PEXT_BUILD_PORTABLE: [0, 1]
         OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
-        PYTHON_VERSION: ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+        PYTHON_VERSION: ["3.6", "3.7", "3.8", "3.9", "3.10"]
       fail-fast: false
     name: "macOS [${{ matrix.OPERATIVE_SYSTEM }} | Python ${{ matrix.PYTHON_VERSION }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
@@ -81,7 +82,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.OPERATIVE_SYSTEM }}-${{ matrix.PYTHON_VERSION }}
+          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
           path: |
             Pext*.zip
             Pext*.dmg
