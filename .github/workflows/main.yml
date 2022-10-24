@@ -15,8 +15,7 @@ jobs:
   linux:
     strategy:
       matrix:
-#        PEXT_BUILD_PORTABLE: [0, 1]
-        PEXT_BUILD_PORTABLE: [0]
+        PEXT_BUILD_PORTABLE: [0, 1]
         # ubuntu-22.04 is broken because tox-travis has problem with import name 'Set' from 'collections' in Python 3.10
         OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
     name: "AppImage [${{ matrix.OPERATIVE_SYSTEM }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
@@ -34,8 +33,8 @@ jobs:
         with:
           name: AppImage-x86_64-${{ matrix.OPERATIVE_SYSTEM }}
           path: |
-            build-ubuntu-${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage
-            build-ubuntu-${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage.zsync
+            build-${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage
+            build-${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage.zsync
             pext/VERSION
 
 #  osx:
