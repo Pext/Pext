@@ -9,14 +9,20 @@ echo "UBUNTU_RELEASE: ${UBUNTU_RELEASE}"
 # Update APT repositories
 sudo apt-get update
 
-# Install Python
-#sudo apt-get install -y python"${PYTHON_VERSION}" python"${PYTHON_VERSION}"-venv python"${PYTHON_VERSION}"-dev
+# Update pip
+whereis python
+whereis python3
 python --version
 python3 --version
-pip --version
-pip3 --version
-pip show venv
-sudo apt search "*python${PYTHON_VERSION}*"
+python3 -m pip --version
+python3 -m pip install --user --upgrade pip
+python3 -m pip --version
+
+# Install vEnv
+#sudo apt-get install -y python"${PYTHON_VERSION}" python"${PYTHON_VERSION}"-venv python"${PYTHON_VERSION}"-dev
+python3 -m pip install --user virtualenv
+python3 -m pip show venv
+#sudo apt search "*python${PYTHON_VERSION}*"
 
 # Install curl
 sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
@@ -31,9 +37,11 @@ fi
 # Create the Python vEnv and install requirements
 /usr/bin/python"${PYTHON_VERSION}" -m venv pext-env
 source pext-env/bin/activate
-pip install --upgrade pip
-pip install tox-travis
-pip install -r requirements.txt
+#pip install --upgrade pip
+#pip install tox-travis
+python3 -m pip install --user tox-travis
+#pip install -r requirements.txt
+python3 -m pip install --user -r requirements.txt
 
 # Generate translation
 bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"

@@ -16,12 +16,13 @@ jobs:
   linux:
     strategy:
       matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
+#        PEXT_BUILD_PORTABLE: [0, 1]
+        PEXT_BUILD_PORTABLE: [0]
         # ubuntu-22.04 is broken because...
         # tox-travis has problem with import name 'Set' from 'collections' in Python 3.10
         OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
         # The Python versions 3.6 and 3.10 are not working correctly.
-        PYTHON_VERSION: [ "3.6", "3.7", "3.8", "3.9", "3.10", "3.11" ]
+        PYTHON_VERSION: [ "3.6", "3.7", "3.8", "3.9", "3.10" ]
       fail-fast: false
     name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
