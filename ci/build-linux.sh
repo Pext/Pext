@@ -32,14 +32,23 @@ else
   sudo apt-get install -y qt5-default qt5-qmake qtbase5-dev-tools qttools5-dev-tools
 fi
 
-# Create the Python vEnv and install requirements
+# Create the Python vEnv
 python3 -m venv pext-env
 source pext-env/bin/activate
-#pip install --upgrade pip
+whereis python3
+python3 --version
+python3 -m pip --version
+python3 -m pip install --upgrade pip
+python3 -m pip --version
+
+# Install Tox Travis
 #pip install tox-travis
-python3 -m pip install --user tox-travis
+python3 -m pip install tox-travis
+python3 -m pip list
+
+# Install requirements
 #pip install -r requirements.txt
-python3 -m pip install --user -r requirements.txt
+python3 -m pip install -r requirements.txt
 python3 -m pip list
 
 # Generate translation
