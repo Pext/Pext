@@ -5,11 +5,10 @@ on:
     branches-ignore:
       # Also, don't build i18n, the only changes are un-compiled translation files
       - 'i18n'
-      - 'fix-action-packaging-macos'
     tags-ignore:
       # Do not build tags that we create when we upload to GitHub Releases
       - 'continuous'
-  pull_request:
+#  pull_request:
   workflow_dispatch:
 
 jobs:
