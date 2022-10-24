@@ -17,9 +17,9 @@ jobs:
       matrix:
 #        PEXT_BUILD_PORTABLE: [0, 1]
         PEXT_BUILD_PORTABLE: [0]
-#        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
 #        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
-        OPERATIVE_SYSTEM: [ubuntu-18.04]
+#        OPERATIVE_SYSTEM: [ubuntu-18.04]
     name: "AppImage [${{ matrix.OPERATIVE_SYSTEM }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:
@@ -28,16 +28,16 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Install dependencies [${{ matrix.OPERATIVE_SYSTEM }}]
+      - name: Build [${{ matrix.OPERATIVE_SYSTEM }}]
         run: bash -xve ci/bootstrap-container.sh
       - name: Archive artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.OPERATIVE_SYSTEM }}-AppImage-x86_64
+          name: AppImage-x86_64-${{ matrix.OPERATIVE_SYSTEM }}
           path: |
-            build/${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage
-            build/${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage.zsync
-            pext/${{ matrix.OPERATIVE_SYSTEM }}/VERSION
+            build-ubuntu-${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage
+            build-ubuntu-${{ matrix.OPERATIVE_SYSTEM }}/Pext*.AppImage.zsync
+            pext/VERSION
 
 #  osx:
 #    strategy:

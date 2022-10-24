@@ -59,4 +59,4 @@ pwd
 ls -lha
 pwd
 ls -lha ../
-bash -xve ../ci/build-appimage.sh
+bash -xve ../ci/build-app-image.sh
