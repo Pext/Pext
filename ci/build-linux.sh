@@ -10,9 +10,7 @@ echo "UBUNTU_RELEASE: ${UBUNTU_RELEASE}"
 sudo apt-get update
 
 # Update pip
-whereis python
 whereis python3
-python --version
 python3 --version
 python3 -m pip --version
 python3 -m pip install --user --upgrade pip
@@ -35,7 +33,7 @@ else
 fi
 
 # Create the Python vEnv and install requirements
-/usr/bin/python"${PYTHON_VERSION}" -m venv pext-env
+python3 -m venv pext-env
 source pext-env/bin/activate
 #pip install --upgrade pip
 #pip install tox-travis
