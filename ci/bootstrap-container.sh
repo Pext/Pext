@@ -5,6 +5,13 @@ UBUNTU_RELEASE=$(sudo lsb_release -rs)
 
 # Install Python
 sudo apt-get update
+echo "###############################################"
+sudo apt search qt5
+echo "###############################################"
+sudo apt search qtbase
+echo "###############################################"
+sudo apt search qttools
+echo "###############################################"
 if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
   sudo apt-get install -y python3.10 python3.10-venv python3.10-dev
 elif [ "${UBUNTU_CODENAME}" = "focal" ]; then

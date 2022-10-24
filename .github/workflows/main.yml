@@ -19,7 +19,7 @@ jobs:
         PEXT_BUILD_PORTABLE: [0]
 #        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
 #        OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
-        OPERATIVE_SYSTEM: [ubuntu-20.04]
+        OPERATIVE_SYSTEM: [ubuntu-22.04]
     name: "AppImage [${{ matrix.OPERATIVE_SYSTEM }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:
