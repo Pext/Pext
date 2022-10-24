@@ -6,7 +6,7 @@ UBUNTU_RELEASE=$(sudo lsb_release -rs)
 # Install Python
 sudo apt-get update
 echo "######################################"
-sudo apt search qttools5
+sudo apt search qt5
 echo "######################################"
 sudo python --version
 echo "######################################"
@@ -26,6 +26,9 @@ fi
 
 # Install curl
 sudo apt-get install -y curl libcurl4 libcurl4-gnutls-dev bc
+echo "######################################"
+sudo whereis curl
+echo "######################################"
 
 # Install Qt
 #if [ "${UBUNTU_CODENAME}" = "jammy" ]; then
@@ -52,7 +55,7 @@ pip install tox-travis
 pip install -r requirements.txt
 
 # Generate translation
-source /opt/qt514/bin/qt514-env.sh || true
+#source /opt/qt514/bin/qt514-env.sh || true
 bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
 lrelease pext/pext.pro
 
