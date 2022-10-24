@@ -5,6 +5,7 @@ on:
     branches-ignore:
       # Also, don't build i18n, the only changes are un-compiled translation files
       - 'i18n'
+      - 'fix-action-packaging-macos'
     tags-ignore:
       # Do not build tags that we create when we upload to GitHub Releases
       - 'continuous'
@@ -19,7 +20,10 @@ jobs:
         # ubuntu-22.04 is broken because...
         # tox-travis has problem with import name 'Set' from 'collections' in Python 3.10
         OPERATIVE_SYSTEM: [ubuntu-18.04, ubuntu-20.04]
-    name: "AppImage [${{ matrix.OPERATIVE_SYSTEM }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
+        # The Python versions 3.6 and 3.10 are not working correctly.
+        PYTHON_VERSION: [ "3.6", "3.7", "3.8", "3.9", "3.10", "3.11" ]
+      fail-fast: false
+    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
     runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:
       PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
@@ -27,65 +31,69 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Build [${{ matrix.OPERATIVE_SYSTEM }}]
-        run: bash -xve ci/build-linux.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+      - name: Set up
+        uses: actions/setup-python@v4
         with:
-          name: AppImage-x86_64-${{ matrix.OPERATIVE_SYSTEM }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+          python-version: ${{ matrix.PYTHON_VERSION }}
+      - name: Build
+        run: bash -xve ci/build-linux.sh ${{ matrix.PYTHON_VERSION }}
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
           path: |
             build/Pext*.AppImage
             build/Pext*.AppImage.zsync
             pext/VERSION
 
-  osx:
-    strategy:
-      matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
-        OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
-        PYTHON_VERSION: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-      fail-fast: false
-    name: "macOS [${{ matrix.OPERATIVE_SYSTEM }} | Python ${{ matrix.PYTHON_VERSION }}] (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
-    env:
-      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Set up Python ${{ matrix.PYTHON_VERSION }} - ${{ matrix.OPERATIVE_SYSTEM }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.PYTHON_VERSION }}
-      - name: Install dependencies
-        run: pip3 install tox-travis
-      - name: Compile translations
-        run: |
-          brew install qt jq
-          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
-      - name: Run tests
-        run: |
-          if [ "${{ matrix.PYTHON_VERSION }}" = "3.6" ]; then
-            tox -v -e py36
-          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.7" ]; then
-            tox -v -e py37
-          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.8" ]; then
-            tox -v -e py38
-          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.9" ]; then
-            tox -v -e py39
-          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.10" ]; then
-            tox -v -e py310
-          fi
-      - name: Build dmg for macOS
-        run: bash -xve ci/build-dmg.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
-          path: |
-            Pext*.zip
-            Pext*.dmg
+#  osx:
+#    strategy:
+#      matrix:
+#        PEXT_BUILD_PORTABLE: [0, 1]
+#        OPERATIVE_SYSTEM: [macos-10.15, macos-11, macos-12]
+#        # The Python versions 3.6 and 3.10 are not working correctly.
+#        PYTHON_VERSION: ["3.7", "3.8", "3.9"]
+#      fail-fast: false
+#    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
+#    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
+#    env:
+#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#      - name: Set up
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: ${{ matrix.PYTHON_VERSION }}
+#      - name: Install dependencies
+#        run: pip3 install tox-travis
+#      - name: Compile translations
+#        run: |
+#          brew install qt jq
+#          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/ex`po`rts/stats/pext/?format=json"
+#          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
+#      - name: Run tests
+#        run: |
+#          if [ "${{ matrix.PYTHON_VERSION }}" = "3.7" ]; then
+#            tox -v -e py37
+#          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.8" ]; then
+#            tox -v -e py38
+#          elif [ "${{ matrix.PYTHON_VERSION }}" = "3.9" ]; then
+#            tox -v -e py39
+#          else
+#            echo "ERROR: Not all the Python versions are allowed. Current Python version: ${{ matrix.PYTHON_VERSION }}"
+#            exit 1
+#          fi
+#      - name: Build dmg for macOS
+#        run: bash -xve ci/build-dmg.sh
+#      - name: Archive artifacts
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+#          path: |
+#            Pext*.zip
+#            Pext*.dmg
 
 #  upload:
 #    name: Create release and upload artifacts
@@ -95,7 +103,7 @@ jobs:
 #    runs-on: ubuntu-latest
 #    steps:
 #      - name: Download artifacts
-#        uses: actions/download-artifact@v2
+#        uses: actions/download-artifact@v3
 #      - name: Inspect directory after downloading artifacts
 #        run: ls -alFR
 #      - name: Create release and upload artifacts
