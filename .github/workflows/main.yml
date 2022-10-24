@@ -74,7 +74,7 @@ jobs:
       - name: Compile translations
         run: |
           brew install qt jq
-          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/ex`po`rts/stats/pext/?format=json"
+          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
           PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
       - name: Run tests
         run: |
