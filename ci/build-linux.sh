@@ -56,6 +56,7 @@ elif [ "${UBUNTU_RELEASE}" = "18.04" ]; then
 fi
 
 # Build the app
-mkdir -p build-ubuntu-"${UBUNTU_RELEASE}"
-cd build-ubuntu-"${UBUNTU_RELEASE}" || exit 1
+rm -fR build
+mkdir -p build
+cd build || exit 1
 bash -xve ../ci/build-app-image.sh
