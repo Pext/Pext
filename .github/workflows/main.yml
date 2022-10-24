@@ -19,7 +19,7 @@ jobs:
         # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
         # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
         OPERATIVE_SYSTEM: [ubuntu-20.04]
-        # Python versions: ["3.7", "3.8", "3.9"]
+        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         # The Python versions 3.6 has problems with QT.
         # The Python versions 3.10 has problems with Tox Travis.
         PYTHON_VERSION: ["3.9"]
@@ -50,10 +50,12 @@ jobs:
   osx:
     strategy:
       matrix:
+        # Pext portable: [0, 1]
+        # The portable version is not working in macOS.
         PEXT_BUILD_PORTABLE: [0]
         # Operative systems: [macos-10.15, macos-11, macos-12]
         OPERATIVE_SYSTEM: [macos-12]
-        # Python versions: ["3.7", "3.8", "3.9"]
+        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         # The Python versions 3.6 and 3.10 are not working correctly.
         PYTHON_VERSION: ["3.9"]
       fail-fast: false
@@ -78,8 +80,9 @@ jobs:
           PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
       - name: Run tests
         run: |
-          echo "${${{ matrix.PYTHON_VERSION}}/.}"
-          tox -v -e py"${${{ matrix.PYTHON_VERSION}}/.}"
+          PYTHON_VERSION_SMART="$(echo ${{ matrix.PYTHON_VERSION}} | sed 's/[^0-9]*//g')"
+          echo "PYTHON_VERSION_SMART: ${PYTHON_VERSION_SMART}"
+          tox -v -e py"${PYTHON_VERSION_SMART}"
       - name: Build dmg for macOS
         run: bash -xve ci/build-dmg.sh
       - name: Archive artifacts
