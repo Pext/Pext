@@ -50,7 +50,7 @@ jobs:
   osx:
     strategy:
       matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
+        PEXT_BUILD_PORTABLE: [0]
         # Operative systems: [macos-10.15, macos-11, macos-12]
         OPERATIVE_SYSTEM: [macos-12]
         # Python versions: ["3.7", "3.8", "3.9"]
@@ -78,8 +78,8 @@ jobs:
           PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
       - name: Run tests
         run: |
-          echo "${${{ matrix.PYTHON_VERSION}}//./}"
-          tox -v -e py"${${{ matrix.PYTHON_VERSION}}//./}"
+          echo "${${{ matrix.PYTHON_VERSION}}/.}"
+          tox -v -e py"${${{ matrix.PYTHON_VERSION}}/.}"
       - name: Build dmg for macOS
         run: bash -xve ci/build-dmg.sh
       - name: Archive artifacts

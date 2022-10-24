@@ -3188,10 +3188,6 @@ def main(ui_type: UIType) -> None:
     # Load configuration
     ConfigRetriever.set_data_path(args.data_path)
     ConfigRetriever.make_portable(args.portable)
-    print("#3 ConfigRetriever:")
-    print(ConfigRetriever)
-    print(ConfigRetriever.__config_data_path)
-    print(ConfigRetriever.__config_temp_path)
 
     # Lock profile or call existing profile if running
     _init_persist(args.profile if args.profile else ProfileManager.default_profile_name(),
