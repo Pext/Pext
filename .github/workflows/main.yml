@@ -78,8 +78,8 @@ jobs:
           PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
       - name: Run tests
         run: |
-          echo "${{ matrix.PYTHON_VERSION //./}}"
-          tox -v -e py"${{ matrix.PYTHON_VERSION //./}}"
+          echo "${${{ matrix.PYTHON_VERSION}}//./}"
+          tox -v -e py"${${{ matrix.PYTHON_VERSION}}//./}"
       - name: Build dmg for macOS
         run: bash -xve ci/build-dmg.sh
       - name: Archive artifacts
