@@ -8,8 +8,7 @@ on:
     tags-ignore:
       # Do not build tags that we create when we upload to GitHub Releases
       - 'continuous'
-# TODO: Remove this comment about pull request execution.
-#  pull_request:
+  pull_request:
   workflow_dispatch:
 
 jobs:
