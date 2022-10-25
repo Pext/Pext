@@ -18,7 +18,7 @@ jobs:
         PEXT_BUILD_PORTABLE: [0, 1]
         # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
         # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
-        OPERATIVE_SYSTEM: [ubuntu-20.04]
+        OPERATIVE_SYSTEM: [ubuntu-latest]
         # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         # The Python versions 3.6 has problems with QT.
         # The Python versions 3.10 has problems with Tox Travis.
@@ -54,7 +54,7 @@ jobs:
         # The portable version is not working in macOS.
         PEXT_BUILD_PORTABLE: [0]
         # Operative systems: [macos-10.15, macos-11, macos-12]
-        OPERATIVE_SYSTEM: [macos-12]
+        OPERATIVE_SYSTEM: [macos-latest]
         # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
         # The Python versions 3.6 and 3.10 are not working correctly.
         PYTHON_VERSION: ["3.9"]
