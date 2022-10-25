@@ -13,40 +13,40 @@ on:
   workflow_dispatch:
 
 jobs:
-#  linux:
-#    strategy:
-#      matrix:
-#        PEXT_BUILD_PORTABLE: [0, 1]
-#        # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
-#        # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
-#        OPERATIVE_SYSTEM: [ubuntu-20.04]
-#        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
-#        # The Python versions 3.6 has problems with QT.
-#        # The Python versions 3.10 has problems with Tox Travis.
-#        PYTHON_VERSION: ["3.9"]
-#      fail-fast: false
-#    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
-#    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
-#    env:
-#      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: Set up
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: ${{ matrix.PYTHON_VERSION }}
-#      - name: Build
-#        run: bash -xve ci/build-linux.sh ${{ matrix.PYTHON_VERSION }}
-#      - name: Archive artifacts
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
-#          path: |
-#            build/Pext*.AppImage
-#            build/Pext*.AppImage.zsync
-#            pext/VERSION
+  linux:
+    strategy:
+      matrix:
+        PEXT_BUILD_PORTABLE: [0, 1]
+        # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+        # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
+        OPERATIVE_SYSTEM: [ubuntu-20.04]
+        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        # The Python versions 3.6 has problems with QT.
+        # The Python versions 3.10 has problems with Tox Travis.
+        PYTHON_VERSION: ["3.9"]
+      fail-fast: false
+    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
+    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
+    env:
+      PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.PYTHON_VERSION }}
+      - name: Build
+        run: bash -xve ci/build-linux.sh ${{ matrix.PYTHON_VERSION }}
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+          path: |
+            build/Pext*.AppImage
+            build/Pext*.AppImage.zsync
+            pext/VERSION
 
   osx:
     strategy:
@@ -73,9 +73,7 @@ jobs:
         with:
           python-version: ${{ matrix.PYTHON_VERSION }}
       - name: Build
-        run: |
-          ls -lha ci
-          bash -xve ci/build-macos.sh ${{ matrix.PYTHON_VERSION }}
+        run: bash -xve ci/build-macos.sh ${{ matrix.PYTHON_VERSION }}
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -84,21 +82,21 @@ jobs:
             Pext*.zip
             Pext*.dmg
 
-#  upload:
-#    name: Create release and upload artifacts
-#    needs:
-#      - linux
-#      - osx
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Download artifacts
-#        uses: actions/download-artifact@v3
-#      - name: Inspect directory after downloading artifacts
-#        run: ls -alFR
-#      - name: Create release and upload artifacts
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#        run: |
-#            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
-#            chmod +x pyuploadtool-x86_64.AppImage
-#            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
+  upload:
+    name: Create release and upload artifacts
+    needs:
+      - linux
+      - osx
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+      - name: Inspect directory after downloading artifacts
+        run: ls -alFR
+      - name: Create release and upload artifacts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
+            chmod +x pyuploadtool-x86_64.AppImage
+            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
