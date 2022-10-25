@@ -2,8 +2,8 @@
 
 PYTHON_VERSION="${1}"
 
-# Install Tox Travis
-pip3 install tox-travis
+# Install Tox
+pip3 install tox
 
 # Generate translation
 brew install qt jq
