@@ -41,7 +41,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+          name: ${{ matrix.OPERATIVE_SYSTEM }}_Python-${{ matrix.PYTHON_VERSION }}_Portable-${{ matrix.PEXT_BUILD_PORTABLE }}
           path: |
             build/Pext*.AppImage
             build/Pext*.AppImage.zsync
@@ -76,7 +76,7 @@ jobs:
       - name: Archive artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.OPERATIVE_SYSTEM }}-Python_${{ matrix.PYTHON_VERSION }}-Portable_${{ matrix.PEXT_BUILD_PORTABLE }}
+          name: ${{ matrix.OPERATIVE_SYSTEM }}_Python-${{ matrix.PYTHON_VERSION }}_Portable-${{ matrix.PEXT_BUILD_PORTABLE }}
           path: |
             Pext*.zip
             Pext*.dmg
