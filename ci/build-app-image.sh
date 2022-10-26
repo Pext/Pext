@@ -1,8 +1,5 @@
 #! /bin/bash
 
-set -x
-set -e
-
 # use RAM disk if possible
 if [ -d /dev/shm ] && [ "$CI" != "" ]; then
     TEMP_BASE=/dev/shm
@@ -21,10 +18,10 @@ cleanup () {
 trap cleanup EXIT
 
 # store repo root as variable
-REPO_ROOT=$(readlink -f $(dirname $(dirname "$0")))
-OLD_CWD=$(readlink -f .)
+REPO_ROOT="$(readlink -f $(dirname $(dirname "$0")))"
+OLD_CWD="$(readlink -f .)"
 
-pushd "$BUILD_DIR"/
+pushd "${BUILD_DIR}"/ || exit 1
 
 # set up custom AppRun script
 cat > AppRun.sh <<\EAT
@@ -119,10 +116,11 @@ ls -al AppDir/
 
 python "$REPO_ROOT/setup.py" || true
 if [ "$PEXT_BUILD_PORTABLE" -eq 1 ]; then
-  export VERSION=portable-$(cat "$REPO_ROOT/pext/VERSION")
+  VERSION=portable-$(cat "$REPO_ROOT/pext/VERSION")
 else
-  export VERSION=$(cat "$REPO_ROOT/pext/VERSION")
+  VERSION=$(cat "$REPO_ROOT/pext/VERSION")
 fi
+export VERSION
 
 wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
 chmod +x appimagetool*.AppImage
@@ -133,4 +131,4 @@ chmod +x Pext*.AppImage*
 xvfb-run ./Pext*.AppImage* --version
 
 # move AppImage back to old CWD
-mv Pext*.AppImage* "$OLD_CWD"/
+sudo mv Pext*.AppImage* "$OLD_CWD"/

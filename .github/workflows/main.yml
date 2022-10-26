@@ -16,35 +16,32 @@ jobs:
     strategy:
       matrix:
         PEXT_BUILD_PORTABLE: [0, 1]
-    name: "AppImage (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-    runs-on: ubuntu-18.04
+        # Operative systems: [ubuntu-18.04, ubuntu-20.04, ubuntu-22.04]
+        # The Ubuntu version 22.04 has problems with Linux script to deploy plugin conda.
+        OPERATIVE_SYSTEM: [ubuntu-18.04]
+        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        # The Python versions 3.6 has problems with QT.
+        # The Python versions 3.10 has problems with Tox Travis.
+        PYTHON_VERSION: ["3.9"]
+      fail-fast: false
+    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
+    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:
       PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Install dependencies
-        run: |
-          bash -xe ci/bootstrap-container.sh
-      - name: Compile translations
-        run: |
-          source /opt/qt514/bin/qt514-env.sh || true
-          bash -xe prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-          lrelease pext/pext.pro
-      - name: Run tests
-        run: |
-          source pext-env/bin/activate
-          xvfb-run tox -v -e py38
-      - name: Build AppImage
-        run: |
-          mkdir -p build
-          cd build
-          bash -xe ../ci/build-appimage.sh
-      - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+      - name: Set up
+        uses: actions/setup-python@v4
         with:
-          name: AppImage-x86_64
+          python-version: ${{ matrix.PYTHON_VERSION }}
+      - name: Build
+        run: bash -xve ci/build-linux.sh ${{ matrix.PYTHON_VERSION }}
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.OPERATIVE_SYSTEM }}_Python-${{ matrix.PYTHON_VERSION }}_Portable-${{ matrix.PEXT_BUILD_PORTABLE }}
           path: |
             build/Pext*.AppImage
             build/Pext*.AppImage.zsync
@@ -53,35 +50,33 @@ jobs:
   osx:
     strategy:
       matrix:
-        PEXT_BUILD_PORTABLE: [0, 1]
+        # Pext portable: [0, 1]
+        # The portable version is not working in macOS.
+        PEXT_BUILD_PORTABLE: [0]
+        # Operative systems: [macos-10.15, macos-11, macos-12]
+        OPERATIVE_SYSTEM: [macos-latest]
+        # Python versions: ["3.6", "3.7", "3.8", "3.9", "3.10"]
+        # The Python versions 3.6 and 3.10 are not working correctly.
+        PYTHON_VERSION: ["3.9"]
       fail-fast: false
-    name: "macOS (portable: ${{ matrix.PEXT_BUILD_PORTABLE }})"
-    runs-on: macos-10.15
+    name: "${{ matrix.OPERATIVE_SYSTEM }} Python-${{ matrix.PYTHON_VERSION }} Portable-${{ matrix.PEXT_BUILD_PORTABLE }}"
+    runs-on: ${{ matrix.OPERATIVE_SYSTEM }}
     env:
       PEXT_BUILD_PORTABLE: ${{ matrix.PEXT_BUILD_PORTABLE }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Set up Python 3.6
-        uses: actions/setup-python@v2
+      - name: Set up
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.6
-      - name: Install dependencies
-        run: pip3 install tox-travis
-      - name: Compile translations
-        run: |
-          brew install qt jq
-          bash prepare_activate_translations.sh 70 "https://hosted.weblate.org/exports/stats/pext/?format=json"
-          PATH="/usr/local/opt/qt/bin:$PATH" lrelease pext/pext.pro
-      - name: Run tests
-        run: tox -v -e py36
-      - name: Build dmg for macOS
-        run: bash -xe ci/build-dmg.sh
+          python-version: ${{ matrix.PYTHON_VERSION }}
+      - name: Build
+        run: bash -xve ci/build-macos.sh ${{ matrix.PYTHON_VERSION }}
       - name: Archive artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: macOS
+          name: ${{ matrix.OPERATIVE_SYSTEM }}_Python-${{ matrix.PYTHON_VERSION }}_Portable-${{ matrix.PEXT_BUILD_PORTABLE }}
           path: |
             Pext*.zip
             Pext*.dmg
@@ -94,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
       - name: Inspect directory after downloading artifacts
         run: ls -alFR
       - name: Create release and upload artifacts
