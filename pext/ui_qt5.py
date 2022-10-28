@@ -1557,7 +1557,7 @@ class HotkeyHandler():
             listener.start()
 
     def on_press(self, key) -> bool:
-        """Executed when a key is pressed."""
+        """Execute when a key is pressed."""
         if key is None:
             return True
 
@@ -1572,7 +1572,7 @@ class HotkeyHandler():
         return True
 
     def on_release(self, key) -> bool:
-        """Executed when a key is released."""
+        """Execute when a key is released."""
         try:
             self.modifiers.remove(key)
         except KeyError:
