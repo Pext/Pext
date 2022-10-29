@@ -80,22 +80,22 @@ jobs:
 #          path: |
 #            Pext*.zip
 #            Pext*.dmg
-
-  upload:
-    name: Create release and upload artifacts
-    needs:
-      - linux
-      - osx
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v3
-      - name: Inspect directory after downloading artifacts
-        run: ls -alFR
-      - name: Create release and upload artifacts
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
-            chmod +x pyuploadtool-x86_64.AppImage
-            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
+#
+#  upload:
+#    name: Create release and upload artifacts
+#    needs:
+#      - linux
+#      - osx
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v3
+#      - name: Inspect directory after downloading artifacts
+#        run: ls -alFR
+#      - name: Create release and upload artifacts
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: |
+#            wget -q https://github.com/TheAssassin/pyuploadtool/releases/download/continuous/pyuploadtool-x86_64.AppImage
+#            chmod +x pyuploadtool-x86_64.AppImage
+#            ./pyuploadtool-x86_64.AppImage $(find . -iname "Pext*.*") $(find . -iname "VERSION")
