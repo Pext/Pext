@@ -1,6 +1,6 @@
 dulwich==0.20.50
 paramiko==2.12.0
-psutil==5.9.3
+psutil==5.9.4
 pynput==1.7.6
 pyqt5==5.15.7
 requests==2.27.1
