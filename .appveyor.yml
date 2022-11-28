@@ -63,7 +63,7 @@ deploy:
   description: 'Continuous build'
   provider: GitHub
   auth_token:
-    secure: 65d53bVQDHWMI6lhm76+WQcIYtkNufVnmZ5XGVWyW3G/dD8aJwvpGzZoTxDP0gu6
+    secure: AT7vsVoEUawTJp7iKtCx8RUxmMjZP1sBu72NCX+G2EHvdd3ubt0zCLBVINBpBFIw
   artifact: Pext.exe
   draft: false
   prerelease: true
