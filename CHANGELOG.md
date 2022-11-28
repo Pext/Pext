@@ -5,10 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.33] - 2022-11-28
+### Packaging changes
+- Update Python to 3.11
+
 ### API changes
 - Bump API version to 0.13.0
 - Return instances of Selection class instead of dict
+
+### Fixed
+- Launcher icon not working
 
 ## [0.32] - 2020-10-31
 ### Fixed

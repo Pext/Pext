@@ -22,7 +22,7 @@ and modules and helps keep the API consistent.
 """
 
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional  # noqa: F401
 
 
 class Action(Enum):
