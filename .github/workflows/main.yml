@@ -89,6 +89,10 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
+      - name: Install libfuse
+        run: |
+          sudo add-apt-repository universe
+          sudo apt install libfuse2
       - name: Inspect directory after downloading artifacts
         run: ls -alFR
       - name: Create release and upload artifacts

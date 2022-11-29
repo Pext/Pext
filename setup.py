@@ -30,6 +30,7 @@ if not version_found:
             print(f"GitHub: Set version to {version_found} from GITHUB_REF_NAME")
         else:
             print(f"GitHub: Found {os.environ['GITHUB_REF_NAME']} in GITHUB_REF_NAME but GITHUB_REF_TYPE is {os.environ['GITHUB_REF_TYPE']} instead of tag")
+    else:
         print("GitHub: No valid version info")
 
 # Get version name from Dulwich
