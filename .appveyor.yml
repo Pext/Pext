@@ -10,6 +10,7 @@ after_test:
   - conda create -n Pext python --yes
   - CALL conda.bat activate Pext
   - pip install -r requirements.txt
+  - python setup.py || true
   - CALL conda.bat deactivate
   - ps: Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
   - ps: wsl sudo apt-get update
