@@ -33,14 +33,12 @@
 1. ```python3 setup.py sdist bdist_wheel```
 2. ```twine upload dist/*```
 
-## Open Build Service (OBS)
-1. Update the version number in the _service file
-
 ## Matrix
 1. Change the room topic: `Pext - Python-based Extendable Tool - https://pext.io/ - Latest release: <VERSION> (released <DATE>)`
 
 ## Server
-1. Set version/stable to ```v<VERSION>```
+1. Update links in index.html
+2. Set version/stable to ```v<VERSION>```
 
 ## Afterwards
 1. ```git reset --hard```

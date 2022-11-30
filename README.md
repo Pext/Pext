@@ -100,8 +100,6 @@ If you need support or just want to chat with our community, we have the followi
 
 Both channels are linked to each other, so there is no need to worry about missing out.
 
-We can also be reached on Twitter: [@PextTool](https://twitter.com/PextTool)
-
 ## License
 
 Pext is licensed under the [GNU GPLv3+](LICENSES/GPL-3.0-or-later.txt), with exception of artwork and documentation, which are licensed under the [Creative Commons Attribution Share-Alike 4.0 license](LICENSES/CC-BY-SA-4.0.txt).
