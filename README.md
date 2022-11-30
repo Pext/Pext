@@ -7,7 +7,7 @@
 ![Lilly the leoger](/assets/logo.png)
 
 [![REUSE status](https://api.reuse.software/badge/github.com/Pext/Pext)](https://api.reuse.software/info/github.com/Pext/Pext)
-[![Linux & macOS Build Status](https://travis-ci.org/Pext/Pext.svg?branch=master)](https://travis-ci.org/Pext/Pext)
+[![Linux & macOS Build Status](https://github.com/Pext/Pext/actions/workflows/main.yml/badge.svg)](https://github.com/Pext/Pext/actions/workflows/main.yml)
 [![Windows Build status](https://ci.appveyor.com/api/projects/status/73oaa4x1spa5vumx/branch/master?svg=true)](https://ci.appveyor.com/project/TheLastProject/pext/branch/master)
 [![ReadTheDocs](https://readthedocs.org/projects/pext/badge/?version=latest)](https://pext.readthedocs.io/en/latest/?badge=latest)
 [![Translation status](https://hosted.weblate.org/widgets/pext/-/svg-badge.svg)](https://hosted.weblate.org/engage/pext/?utm_source=widget)
