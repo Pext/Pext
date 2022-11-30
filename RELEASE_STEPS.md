@@ -17,12 +17,12 @@
 ## Preparation
 1. Update the ``<VERSION>`` in ``pext/VERSION``
 2. Update the ``<VERSION>`` in ``Info.plist``
-3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG``
+3. Update the ``<VERSION>`` and ``<DATE>`` in ``CHANGELOG.md``
 4. Update the minversion in the repology badge in `README.md`
 5. In case new features have been added, update the current GIF under the head Introduction in `README.md` using ```convert -delay 100 <IMAGES> -loop 0 pext_intro.gif```
 
 ## GitHub
-1. ```git add pext/VERSION Info.plist CHANGELOG README.md```
+1. ```git add pext/VERSION Info.plist CHANGELOG.md README.md```
 2. ```git commit -m "Release Pext v<VERSION>"```
 3. ```git tag -a v<VERSION> -m "Release Pext v<VERSION>"```
 4. ```git push```

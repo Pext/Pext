@@ -1,7 +1,7 @@
 # Pext
 
 <a href="https://repology.org/metapackage/pext/versions">
-    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.33" alt="Packaging status" align="right">
+    <img src="https://repology.org/badge/vertical-allrepos/pext.svg?minversion=0.34" alt="Packaging status" align="right">
 </a>
 
 ![Lilly the leoger](/assets/logo.png)
