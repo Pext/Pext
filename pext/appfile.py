@@ -17,10 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Pext constants.
+"""Pext.
 
-This file contains important constants that change Pext's behaviour. It is
-mostly intended to simplify specifics that differ per package.
+This is Pext's AppFile class.
 """
 
-USE_INTERNAL_UPDATER = True
+import os
+
+
+class AppFile():
+    """Get access to application-specific files."""
+
+    @staticmethod
+    def get_path() -> str:
+        """Return the absolute current path."""
+        return os.path.dirname(os.path.abspath(__file__))

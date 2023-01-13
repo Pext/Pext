@@ -17,10 +17,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Pext constants.
+"""Pext.
 
-This file contains important constants that change Pext's behaviour. It is
-mostly intended to simplify specifics that differ per package.
+This is Pext's UiModule class.
 """
 
-USE_INTERNAL_UPDATER = True
+from pext.viewmodel import ViewModel
+
+
+class UiModule():
+    """The module and all the relevant data to make UI display possible."""
+
+    def __init__(self, vm: ViewModel, module_code, module_import, metadata, settings) -> None:
+        """Put together the module and relevant classes and data."""
+        self.init = False
+        self.vm = vm
+        self.module_code = module_code
+        self.module_import = module_import
+        self.metadata = metadata
+        self.settings = settings
+
+        self.entries_processed = 0

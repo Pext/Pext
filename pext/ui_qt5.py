@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2015 - 2020 Sylvia van Os <sylvia@hackerchick.me>
+# Copyright (c) 2015 - 2023 Sylvia van Os <sylvia@hackerchick.me>
 #
 # This file is part of Pext.
 #
@@ -47,9 +47,13 @@ from PyQt5.Qt import (QClipboard, QIcon, QObject, QStringListModel, QQmlApplicat
                       QQmlProperty, QUrl)
 from PyQt5.QtGui import QWindow
 
-from pext.__main__ import (AppFile, ConfigRetriever, Core, InternalCallProcessor, LocaleManager, Logger, ModuleManager,
-                           MinimizeMode, OutputMode, OutputSeparator, ProfileManager, RunConseq, Settings, SortMode,
-                           ThemeManager, Translation, UiModule, UpdateManager)
+from pext.appfile import AppFile
+from pext.configretriever import ConfigRetriever
+from pext.enums import MinimizeMode, OutputMode, OutputSeparator, SortMode
+from pext.localemanager import LocaleManager
+from pext.settings import Logger, ProfileManager, Settings, UpdateManager
+from pext.translation import Translation
+from pext.__main__ import Core, InternalCallProcessor, ModuleManager, RunConseq, ThemeManager, UiModule
 from constants import USE_INTERNAL_UPDATER
 
 from pext_helpers import Selection  # noqa: E402

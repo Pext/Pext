@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Pext'
-copyright = '2015 - 2019, Sylvia van Os'
+copyright = '2015 - 2023, Sylvia van Os'
 author = 'Sylvia van Os'
 
 # The version info for the project you're documenting, acts as replacement for
