@@ -57,6 +57,10 @@ if version_found:
 
 version = version.lstrip("v")
 
+# Translate 3-parted git versions to PEP 440-compliant version strings
+if len(version_parts := version.split("-")) == 3:
+    version = f"{version_parts[0]}.dev{version_parts[1]}+{version_parts[2]}"
+
 with open(pext_version_path, "w") as version_file:
     version_file.write(version)
 
