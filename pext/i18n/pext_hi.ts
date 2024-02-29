@@ -120,7 +120,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
         <source>Module Installation</source>
-        <translation>मॉड्यूल संस्थापना</translation>
+        <translation>मॉड्यूल स्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallFromRepositoryDialog.qml" line="26"/>
@@ -221,7 +221,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation>मॉड्यूल संस्थापना</translation>
+        <translation>मॉड्यूल स्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="35"/>
@@ -274,7 +274,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="26"/>
         <source>Module installation</source>
-        <translation>मॉड्यूल संस्थापना</translation>
+        <translation>मॉड्यूल स्थापना</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
