@@ -1,7 +1,10 @@
 ---
 version: 2
 formats: all
-python:
-  version: 3
-  install:
-    - requirements: docs/requirements.txt
+build:
+  os: ubuntu-lts-latest
+  tools:
+    python:
+      version: 3
+      install:
+        - requirements: docs/requirements.txt
