@@ -6,7 +6,7 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="25"/>
         <source>About Pext</source>
-        <translation>पैक्स्ट के बारे में</translation>
+        <translation>Pext के बारे में</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="58"/>
@@ -21,12 +21,12 @@
     <message>
         <location filename="../qml/AboutDialog.qml" line="101"/>
         <source>Want to help translate Pext? Please click here.</source>
-        <translation>पैक्स्ट के अनुवाद करने में सहायता करना चाहते है? कृपया यहाँ क्लिक करें।</translation>
+        <translation>Pext के अनुवाद करने में सहायता करना चाहते है? कृपया यहाँ क्लिक करें।</translation>
     </message>
     <message>
         <location filename="../qml/AboutDialog.qml" line="102"/>
         <source>The Pext team would like to thank the following users for translating Pext:</source>
-        <translation>पैक्स्ट टीम पैक्स्ट के अनुवाद के लिए निम्नलिखित उपयोगकर्ताओं को धन्यवाद देना चाहती है:</translation>
+        <translation>Pext टीम Pext के अनुवाद के लिए निम्नलिखित उपयोगकर्ताओं को धन्यवाद देना चाहती है:</translation>
     </message>
 </context>
 <context>
@@ -34,12 +34,12 @@
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation>पैक्स्ट</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ChoiceDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation>पैक्स्ट- %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -60,7 +60,7 @@
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation>पैक्सट</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -69,11 +69,11 @@
 This will stop any running module.
 
 Are you sure you want to quit?</source>
-        <translation>आप अब पैक्सट बंद करने वाले हैं।
+        <translation>आप अब Pext बंद करने वाले हैं।
 
 यह कोई भी चल रहे मॉड्यूल को रोक देगा।
 
-क्या आप सच में पैक्सट बंद करना चाहते हैं?</translation>
+क्या आप वाकई बंद करना चाहते हैं?</translation>
     </message>
     <message>
         <location filename="../qml/ConfirmQuitDialog.qml" line="31"/>
@@ -82,11 +82,11 @@ Are you sure you want to quit?</source>
 This will stop any running module and the global hotkey will not work until you restart Pext manually.
 
 Are you sure you want to quit?</source>
-        <translation>आप अब पैक्सट को बंद करने वाले हैं।
+        <translation>आप अब Pext को बंद करने वाले हैं।
 
-यह सभी काम कर रहे पैक्सट के मॉड्यूल्स को रोक देगा एवं वैश्विक कुंजी कार्य करना बंद कर देगी।
+यह सभी काम कर रहे Pext के मॉड्यूल्स को रोक देगा एवं वैश्विक कुंजी कार्य करना बंद कर देगी।
 
-क्या आप सच में पैक्सट बंद करना चाहते हैं?</translation>
+क्या आप वाकई बंद करना चाहते हैं?</translation>
     </message>
 </context>
 <context>
@@ -94,12 +94,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation>पैक्सट</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/CriticalErrorDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation>पैक्सट - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -107,12 +107,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext</source>
-        <translation>पैक्सट</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/InputRequestDialog.qml" line="26"/>
         <source>Pext - %1</source>
-        <translation>पैक्सट - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -266,7 +266,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromRepositorySelectModuleDialog.qml" line="83"/>
         <source>As Pext modules are code, please make sure you trust the developer before continuing.</source>
-        <translation>पैक्स्ट मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
+        <translation>Pext मॉड्यूल कोड के रूप में हैं, कृपया सुनिश्चित करें कि जारी रखने से पहले आपको डेवलपर पर भरोसा है।</translation>
     </message>
 </context>
 <context>
@@ -279,7 +279,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the module to install:</source>
-        <translation>संस्थापित करने के लिए मॉड्यूल का मेटाडेटा यूआरएल दर्ज करें:</translation>
+        <translation>संस्थापित करने के लिए मॉड्यूल का मेटाडेटा URL दर्ज करें:</translation>
     </message>
     <message>
         <location filename="../qml/InstallModuleFromURLDialog.qml" line="42"/>
@@ -297,7 +297,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/InstallThemeFromURLDialog.qml" line="33"/>
         <source>Enter the metadata URL of the theme to install:</source>
-        <translation>संस्थापित करने के लिए थीम का मेटाडेटा यूआरएल दर्ज करें:</translation>
+        <translation>इंस्टॉल करने के लिए थीम का मेटाडेटा URL दर्ज करें:</translation>
     </message>
 </context>
 <context>
@@ -305,7 +305,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="26"/>
         <source>Load module</source>
-        <translation>लोड मॉड्यूल</translation>
+        <translation>मॉड्यूल लोड करें</translation>
     </message>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="44"/>
@@ -315,7 +315,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadModuleDialog.qml" line="99"/>
         <source>Get more modules</source>
-        <translation>और अधिक मॉड्यूल प्राप्त करें</translation>
+        <translation>अधिक मॉड्यूल प्राप्त करें</translation>
     </message>
 </context>
 <context>
@@ -323,7 +323,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="26"/>
         <source>Load profile</source>
-        <translation>प्रोफ़ाइल लोड</translation>
+        <translation>प्रोफ़ाइल लोड करें</translation>
     </message>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="40"/>
@@ -338,7 +338,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadProfileDialog.qml" line="56"/>
         <source>Note: Pext will restart to switch profile.</source>
-        <translation>नोट: पैक्स्ट प्रोफ़ाइल स्विच करने के लिए पुनरारंभ होगा।</translation>
+        <translation>ध्यान दें: प्रोफ़ाइल स्विच करने के लिए Pext पुनरारंभ होगा।</translation>
     </message>
 </context>
 <context>
@@ -346,12 +346,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="26"/>
         <source>Switch theme</source>
-        <translation>थीम स्विच करें</translation>
+        <translation>थीम बदलें</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="42"/>
         <source>Choose the theme to switch to:</source>
-        <translation>स्विच करने के लिए थीम चुनें:</translation>
+        <translation>बदलने के लिए थीम चुनें:</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="47"/>
@@ -361,12 +361,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="52"/>
         <source>Note: Pext will restart to apply the new theme.</source>
-        <translation>नोट: पैक्स्ट नई थीम लागू करने के लिए पुनरारंभ होगा।</translation>
+        <translation>ध्यान दें: नई थीम लागू करने के लिए Pext पुनः आरंभ होगा।</translation>
     </message>
     <message>
         <location filename="../qml/LoadThemeDialog.qml" line="56"/>
         <source>Get more themes</source>
-        <translation>और अधिक थीम प्राप्त करें</translation>
+        <translation>अधिक थीम प्राप्त करें</translation>
     </message>
 </context>
 <context>
@@ -424,7 +424,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/ManageDialog.qml" line="146"/>
         <source>Uninstall</source>
-        <translation>स्थापना रद्द करें</translation>
+        <translation>अनइंस्टॉल करें</translation>
     </message>
 </context>
 <context>
@@ -483,7 +483,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/NoModulesInstalledDialog.qml" line="27"/>
         <source>No modules installed, please install one first.</source>
-        <translation>कोई मॉड्यूल स्थापित नहीं, पहले एक स्थापित करें।</translation>
+        <translation>कोई मॉड्यूल इंस्टॉल नहीं है, कृपया पहले एक इंस्टॉल करें।</translation>
     </message>
 </context>
 <context>
@@ -491,12 +491,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="24"/>
         <source>No themes installed</source>
-        <translation>कोई थीम संस्थापित नहीं है</translation>
+        <translation>कोई थीम इंस्टॉल नहीं है</translation>
     </message>
     <message>
         <location filename="../qml/NoThemesInstalledDialog.qml" line="27"/>
         <source>No themes installed, please install one first.</source>
-        <translation>कोई थीम संस्थापित नहीं, पहले एक स्थापित करें।</translation>
+        <translation>कोई थीम इंस्टॉल नहीं है, कृपया पहले एक थीम इंस्टॉल करें।</translation>
     </message>
 </context>
 <context>
@@ -509,7 +509,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/OnlyOneProfileDialog.qml" line="27"/>
         <source>There is only one profile available. Please create a second profile first.</source>
-        <translation>वहां केवल एक प्रोफ़ाइल उपलब्ध है । कृपया पहले एक दूसरी प्रोफ़ाइल बनाएं ।</translation>
+        <translation>केवल एक प्रोफ़ाइल उपलब्ध है. कृपया पहले एक दूसरी प्रोफ़ाइल बनाएं।</translation>
     </message>
 </context>
 <context>
@@ -517,12 +517,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext</source>
-        <translation>पैक्स्ट</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/QuestionDialog.qml" line="24"/>
         <source>Pext - %1</source>
-        <translation>पैक्स्ट - %1</translation>
+        <translation>Pext - %1</translation>
     </message>
 </context>
 <context>
@@ -548,7 +548,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="421"/>
         <source>&amp;Module</source>
-        <translation>मॉड्यूल</translation>
+        <translation>&amp;मॉड्यूल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="425"/>
@@ -573,12 +573,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="465"/>
         <source>Load module</source>
-        <translation>लोड मॉड्यूल</translation>
+        <translation>मॉड्यूल लोड करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="509"/>
         <source>Install module</source>
-        <translation>मॉड्यूल स्थापित करें</translation>
+        <translation>मॉड्यूल इंस्टॉल करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="515"/>
@@ -589,27 +589,27 @@ Are you sure you want to quit?</source>
         <location filename="../qml/main.qml" line="538"/>
         <location filename="../qml/main.qml" line="630"/>
         <source>From URL</source>
-        <translation>यूआरएल से</translation>
+        <translation>URL से</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="550"/>
         <source>&amp;Theme</source>
-        <translation>थीम</translation>
+        <translation>&amp;थीम</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="558"/>
         <source>Switch theme</source>
-        <translation>थीम स्विच करें</translation>
+        <translation>थीम बदलें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="578"/>
         <source>Manage themes</source>
-        <translation>थीम का प्रबंधन करें</translation>
+        <translation>थीम प्रबंधित करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="601"/>
         <source>Install theme</source>
-        <translation>थीम स्थापित करें</translation>
+        <translation>थीम इंस्टॉल करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="607"/>
@@ -619,7 +619,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="646"/>
         <source>Switch profile</source>
-        <translation>प्रोफ़ाइल स्विच करें</translation>
+        <translation>प्रोफ़ाइल बदलें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="666"/>
@@ -629,7 +629,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="684"/>
         <source>&amp;Settings</source>
-        <translation>सेटिंग्स</translation>
+        <translation>&amp;सेटिंग्स</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="688"/>
@@ -659,7 +659,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="747"/>
         <source>Copy to selection clipboard (X11)</source>
-        <translation>चयन क्लिपबोर्ड (एक्स 11) पर कॉपी करें</translation>
+        <translation>चयन क्लिपबोर्ड (X11) पर कॉपी करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="755"/>
@@ -719,12 +719,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="865"/>
         <source>Move Pext to the foreground when global hotkey is pressed (%1)</source>
-        <translation>वैश्विक कुंजी को दबाने पर पैक्सट को अग्र भाग में लाए (%1)</translation>
+        <translation>वैश्विक कुंजी को दबाने पर Pext को अग्र भाग में लाए (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="877"/>
         <source>&amp;Help</source>
-        <translation>मदद</translation>
+        <translation>&amp;मदद</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="891"/>
@@ -794,7 +794,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1137"/>
         <source>Go back</source>
-        <translation>वापस जाओ</translation>
+        <translation>वापस जाएँ</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1141"/>
@@ -870,12 +870,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1293"/>
         <source>Downloading {0} from {1}</source>
-        <translation>{0} से {1} डाउनलोड करना</translation>
+        <translation>{1} से {0} डाउनलोड किया जा रहा है</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1294"/>
         <source>Failed to download {0}: {1}</source>
-        <translation>{0}: {1} डाउनलोड करने में विफल</translation>
+        <translation>{0} डाउनलोड करने में विफल: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1295"/>
@@ -890,7 +890,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1297"/>
         <source>Installed {0}</source>
-        <translation>स्थापित {0}</translation>
+        <translation>इंस्टॉल किया गया {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1298"/>
@@ -910,22 +910,22 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1301"/>
         <source>Updating {0}</source>
-        <translation>अद्यतन {0}</translation>
+        <translation>अपडेट किया जा रहा है {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1302"/>
         <source>{0} is already up to date</source>
-        <translation>{0} पहले से अद्यतित है</translation>
+        <translation>{0} पहले से ही अपडेट है</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1303"/>
         <source>Failed to download update for {0}: {1}</source>
-        <translation>{0}: {1} के लिए अपडेट डाउनलोड करने में विफल</translation>
+        <translation>{0} के लिए अपडेट डाउनलोड करने में विफल: {1}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1304"/>
         <source>Updating dependencies for {0}</source>
-        <translation>{0} के लिए निर्भरता को अद्यतन किया जा रहा है</translation>
+        <translation>{0} के लिए निर्भरताएँ अपडेट की जा रही हैं</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1305"/>
@@ -940,17 +940,17 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1307"/>
         <source>Checking for Pext updates</source>
-        <translation>Pext कि अद्यतनों के लिए जाँच कर रहा है</translation>
+        <translation>Pext अपडेट के लिए जाँच की जा रही है</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1308"/>
         <source>Failed to check for Pext updates: {0}</source>
-        <translation>Pext कि अद्यतनों की जांच करने में विफल: {0}</translation>
+        <translation>Pext अपडेट की जाँच करने में विफल: {0}</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1309"/>
         <source>Pext is already up-to-date</source>
-        <translation>Pext पहले से अद्यतित है</translation>
+        <translation>Pext पहले से ही अप-टू-डेट है</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1310"/>
@@ -965,12 +965,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1312"/>
         <source>Data queued for typing</source>
-        <translation>टाइप करने के लिए डेटा कतार में है</translation>
+        <translation>टाइपिंग के लिए डेटा कतारबद्ध</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1313"/>
         <source>All queued data has been typed</source>
-        <translation>सभी पंक्तिबद्ध डेटा टाइप किया जा चुक्का है</translation>
+        <translation>सभी कतारबद्ध डेटा टाइप किया गया है</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1314"/>
@@ -1055,7 +1055,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1331"/>
         <source>An error occured in {0}: {1}.</source>
-        <translation>{0}: {1} में एक त्रुटि हुई।</translation>
+        <translation>{0} में एक त्रुटि हुई:{1}।</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1332"/>
@@ -1071,22 +1071,22 @@ Are you sure you want to quit?</source>
         <location filename="../qml/main.qml" line="29"/>
         <location filename="../qml/main.qml" line="1092"/>
         <source>Pext</source>
-        <translation>पैक्स्ट</translation>
+        <translation>Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="29"/>
         <source>Pext (%1)</source>
-        <translation>पैक्स्ट (%1)</translation>
+        <translation>Pext (%1)</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="411"/>
         <source>&amp;Pext</source>
-        <translation>पैक्स्ट</translation>
+        <translation>&amp;Pext</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="642"/>
         <source>P&amp;rofile</source>
-        <translation>प्रोफ़ाइल</translation>
+        <translation>प्रो&amp;फ़ाइल</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="838"/>
@@ -1096,7 +1096,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="842"/>
         <source>Automatically check for Pext updates</source>
-        <translation>पैक्स्ट अपडेटस के लिए स्वचालित रूप से जांचें</translation>
+        <translation>Pext अपडेटस के लिए स्वचालित रूप से जांचें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="871"/>
@@ -1106,7 +1106,7 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="881"/>
         <source>About</source>
-        <translation>परिचय</translation>
+        <translation>बारे में</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="902"/>
@@ -1131,12 +1131,12 @@ Are you sure you want to quit?</source>
     <message>
         <location filename="../qml/main.qml" line="1164"/>
         <source>Accept</source>
-        <translation>स्वीकार करना</translation>
+        <translation>स्वीकार करें</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1168"/>
         <source>Decline</source>
-        <translation>अवनति</translation>
+        <translation>अस्वीकार</translation>
     </message>
     <message>
         <location filename="../qml/main.qml" line="1279"/>
